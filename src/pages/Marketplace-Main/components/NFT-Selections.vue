@@ -1,5 +1,6 @@
 <template>
   <q-page-container>
+		Main
   </q-page-container>
 </template>
 
@@ -22,7 +23,7 @@ export default defineComponent({
   }
 
   // methods: {
-    
+
   // }
 })
 </script>
