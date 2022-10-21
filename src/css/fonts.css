@@ -1,0 +1,29 @@
+@font-face {
+  font-family: Obviously;
+  src: url(../assets/fonts/Obviously-Regular-02.otf);
+}
+
+@font-face {
+  font-family: ProximaNova-Bold;
+  src: url(../assets/fonts/ProximaNova-Bold.otf);
+}
+
+@font-face {
+  font-family: ProximaNova-Regular;
+  src: url(../assets/fonts/ProximaNova-Regular.otf);
+}
+
+@font-face {
+  font-family: WorkSans;
+  src: url(../assets/fonts/WorkSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: WorkSans-Medium;
+  src: url(../assets/fonts/WorkSans-Medium.ttf);
+}
+
+@font-face {
+  font-family: Inter;
+  src: url(../assets/fonts/Inter-Regular.ttf);
+}

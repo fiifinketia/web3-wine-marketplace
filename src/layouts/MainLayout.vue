@@ -35,8 +35,10 @@ export default defineComponent({
     
   // },
 
-  // mounted() {
-
-  // },
+  mounted() {
+    // const test = process.env.TEST;
+    // console.log(console.info(process.env))
+    // console.log(test)
+  },
 });
 </script>
