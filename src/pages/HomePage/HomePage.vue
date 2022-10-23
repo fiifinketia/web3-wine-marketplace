@@ -1,10 +1,12 @@
 <template>
-  <q-page><div>hello</div> </q-page>
+  <q-page>
+    <ExclusiveOffers />
+  </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+import ExclusiveOffers from './components/ExclusiveOffers.vue';
 export default defineComponent({
   data() {
     return {
@@ -12,7 +14,9 @@ export default defineComponent({
     };
   },
 
-  components: {},
+  components: {
+    ExclusiveOffers,
+  },
 
   mounted() {
     console.log(this.test);
