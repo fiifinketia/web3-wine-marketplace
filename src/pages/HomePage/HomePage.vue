@@ -1,12 +1,14 @@
 <template>
   <q-page>
-    <ExclusiveOffers />
+    <!-- <ExclusiveOffers /> -->
+    <TrendingWines />
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
+import TrendingWines from './components/TrendingWines.vue';
 export default defineComponent({
   data() {
     return {
@@ -15,7 +17,8 @@ export default defineComponent({
   },
 
   components: {
-    ExclusiveOffers,
+    // ExclusiveOffers,
+    TrendingWines,
   },
 
   mounted() {
