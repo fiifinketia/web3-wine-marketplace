@@ -1,0 +1,213 @@
+.owned-by {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+
+  color: #9d9d9d;
+}
+
+.user-id {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+
+  letter-spacing: 0.03em;
+
+  color: #212131;
+}
+
+.metadata {
+  padding-top: 40px;
+  padding-left: 20px;
+}
+
+.metadata-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  /* identical to box height */
+
+  letter-spacing: 0.02em;
+
+  /* Secondary/dark blue */
+
+  color: #212131;
+  opacity: 0.6;
+}
+
+.border {
+  border-right: 1.08362px solid rgba(94, 151, 236, 0.27);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.wine-description {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 27px;
+  color: #212131;
+  width: 480px;
+  padding-left: 10px;
+  padding-top: 20px;
+  text-align: left;
+}
+
+.starting-from {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+
+  color: #9d9d9d;
+}
+
+.price-container {
+  padding-top: 50px;
+  padding-left: 40px;
+}
+
+.price1 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 39px;
+
+  display: flex;
+  align-items: center;
+
+  color: #212131;
+}
+
+.price2 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 14px;
+
+  display: flex;
+  align-items: center;
+
+  color: #9d9d9d;
+  padding-top: 5px;
+  padding-left: 8px;
+}
+
+.bid-container {
+  padding-left: 40px;
+  padding-top: 20px;
+}
+
+.bid-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+
+  color: #9d9d9d;
+}
+
+.bid-price1 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #3586ff;
+}
+
+.bid-price2 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: #9d9d9d;
+  padding-left: 8px;
+}
+
+.brand-name {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.wine-name {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 460;
+  font-size: 32px;
+  line-height: 50px;
+  text-align: center;
+  letter-spacing: 0.03em;
+  color: #212131;
+}
+
+.buy-now-button {
+  width: 205px;
+  height: 56px;
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 6px;
+  border: none;
+}
+
+.buy-now-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.02em;
+
+  color: #ffffff;
+}
+
+.make-offer-button {
+  width: 205px;
+  height: 56px;
+  background: linear-gradient(270.59deg, #33335b 25.46%, #83e0b3 206.28%);
+  border-radius: 6px;
+  border: none;
+}
+
+.update-metadata-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: #9d9d9d;
+}
