@@ -5,32 +5,32 @@
     </div>
     <div class="flex row">
       <div class="flex column q-pl-sm q-pt-md">
-        <div class="footer-bold-text q-py-sm">NFTs</div>
-        <div class="footer-normal-text q-py-sm">New Releases</div>
-        <div class="footer-normal-text q-py-sm">Recommended</div>
-        <div class="footer-bold-text q-py-sm">Favourites</div>
-        <div class="footer-bold-text q-py-sm">Stats</div>
-        <div class="footer-normal-text q-py-sm">Wine Statistics</div>
+        <a class="footer-bold-text q-py-sm">NFTs</a>
+        <a class="footer-normal-text q-py-sm">New Releases</a>
+        <a class="footer-normal-text q-py-sm">Recommended</a>
+        <a class="footer-bold-text q-py-sm">Favourites</a>
+        <a class="footer-bold-text q-py-sm">Stats</a>
+        <a class="footer-normal-text q-py-sm">Wine Statistics</a>
       </div>
       <div class="flex column footer-column">
-        <div class="footer-bold-text q-py-sm">Storefront</div>
-        <div class="footer-normal-text q-py-sm">New comings</div>
-        <div class="footer-normal-text q-py-sm">Recommended</div>
+        <a class="footer-bold-text q-py-sm">Storefront</a>
+        <a class="footer-normal-text q-py-sm">New comings</a>
+        <a class="footer-normal-text q-py-sm">Recommended</a>
       </div>
       <div class="flex column footer-column">
-        <div class="footer-bold-text q-py-sm">Profile</div>
-        <div class="footer-normal-text q-py-sm">Digital Wine Cellar</div>
-        <div class="footer-normal-text q-py-sm">Offers</div>
-        <div class="footer-normal-text q-py-sm">Trading History</div>
-        <div class="footer-normal-text q-py-sm">Notifications</div>
-        <div class="footer-bold-text q-py-sm">Settings</div>
+        <a class="footer-bold-text q-py-sm">Profile</a>
+        <a class="footer-normal-text q-py-sm">Digital Wine Cellar</a>
+        <a class="footer-normal-text q-py-sm">Offers</a>
+        <a class="footer-normal-text q-py-sm">Trading History</a>
+        <a class="footer-normal-text q-py-sm">Notifications</a>
+        <a class="footer-bold-text q-py-sm">Settings</a>
       </div>
       <div class="flex column footer-column">
-        <div class="footer-bold-text q-py-sm">Help</div>
-        <div class="footer-normal-text q-py-sm">Contact us</div>
-        <div class="footer-normal-text q-py-sm">FAQs</div>
-        <div class="footer-normal-text q-py-sm">Privacy Policy</div>
-        <div class="footer-normal-text q-py-sm">Terms & Conditions</div>
+        <a class="footer-bold-text q-py-sm">Help</a>
+        <a class="footer-normal-text q-py-sm">Contact us</a>
+        <a class="footer-normal-text q-py-sm">FAQs</a>
+        <a class="footer-normal-text q-py-sm">Privacy Policy</a>
+        <a class="footer-normal-text q-py-sm">Terms & Conditions</a>
       </div>
       <div class="flex column footer-column">
         <div class="footer-bold-text q-py-sm">Contact info:</div>
