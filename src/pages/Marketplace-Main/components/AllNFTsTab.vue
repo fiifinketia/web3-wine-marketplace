@@ -16,7 +16,8 @@
 			class="col-lg-3 col-md-4 col-sm-5"
 			:style="openSidebar ? 'display: block;' : 'display: none;'"
 		>
-			Sidebar
+			<!-- Sidebar Component -->
+			<MarketPlaceSidebar />
 		</section>
 
 		<!-- List Section -->
@@ -32,11 +33,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
+import MarketPlaceSidebar from './MarketPlaceSidebar.vue';
 
 export default defineComponent({
 
 	components: {
 		NFTSelections: NFTSelections,
+		MarketPlaceSidebar: MarketPlaceSidebar,
 	},
 	data() {
 		return {

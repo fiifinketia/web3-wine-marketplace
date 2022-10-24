@@ -1,1 +1,11 @@
 // app global css in SCSS form
+
+
+.dark-blue-border {
+	border: 1px solid rgba(94, 151, 236, 0.27);
+}
+
+.q-slider__thumb {
+	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
+	border-radius: 100px;
+}
