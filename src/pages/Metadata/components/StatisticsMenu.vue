@@ -1,11 +1,13 @@
 <template>
   <div class="flex justify-center">
     <q-tabs style="width: 80%" no-caps align="justify">
-      <q-tab name="history">
-        <div class="tab-text-not-clicked">NFT history</div>
-      </q-tab>
-      <q-tab class="tab-text-not-clicked" name="about">About</q-tab>
-      <q-tab name="wine-maker" class="tab-text-not-clicked">Wine-maker</q-tab>
+      <q-tab name="history" label="NFT history" />
+      <q-tab class="tab-text-not-clicked" name="about" label="About" />
+      <q-tab
+        name="wine-maker"
+        class="tab-text-not-clicked"
+        label="Wine-maker"
+      />
     </q-tabs>
   </div>
 </template>
@@ -24,8 +26,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.q-tab__indicator {
-  color: #3586ff;
-}
-</style>
+<style></style>
