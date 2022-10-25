@@ -1,5 +1,8 @@
 <template>
-  <div class="flex column justify-center items-center">
+  <div
+    class="flex column justify-center items-center"
+    @click="openModal === true ? 'modal' : 'content'"
+  >
     <div class="brand-name">The brand name</div>
     <div class="wine-name">The full name of the wine is here</div>
     <div class="flex row q-pt-lg">
@@ -55,14 +58,87 @@
         </div>
       </div>
     </div>
-    <div class="q-pt-lg flex row">
+    <div class="q-pt-lg flex row" :style="openModal === true ? '' : ''">
       <div class="q-pr-sm">
-        <button class="buy-now-button flex items-center justify-center">
+        <button
+          @click="openModal = !openModal"
+          class="buy-now-button flex items-center justify-center cursor-pointer"
+        >
           <div class="buy-now-text">Buy now</div>
         </button>
+        <div v-if="openModal == true" class="wine-container absolute">
+          <div class="flex row items-center">
+            <div class="buy-now-modal q-pl-lg q-pr-sm">Buy now</div>
+            <div class="border-container">
+              <div class="border-modal"></div>
+            </div>
+            <div
+              class="flex row justify-between items-center close-container q-pl-sm"
+            >
+              <div class="wine-name-modal">
+                The full name of the wine is here and here and here
+              </div>
+              <div class="close-button-wrapper" @click="openModal = !openModal">
+                <q-img
+                  src="../../../assets/closeButton.png"
+                  width="20px"
+                  height="20px"
+                  class="close-button cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="flex row" :class="openModal === true ? '' : ''">
+            <div class="image-container q-pb-lg q-pl-lg">
+              <q-img src="../../../assets/Nft-metadata.png" width="380px" />
+            </div>
+            <div class="process-container flex column">
+              <div class="q-pt-md timer">04:59</div>
+              <div class="modal-price flex column q-pl-lg">
+                <div class="modal-price">Price</div>
+                <div class="flex row justify-start items-center q-pt-sm">
+                  <div class="">
+                    <q-img src="../../../assets/ethereum.png" width="20px" />
+                  </div>
+                  <div class="modal-price1">00.00</div>
+                  <div class="modal-price2 q-pl-sm">/ $ 00.00</div>
+                </div>
+                <div class="q-pt-lg q-pl-sm flex column">
+                  <div>Fee</div>
+                  <div class="modal-price1 q-pt-sm">00.00 %</div>
+                </div>
+              </div>
+              <div class="modal-border q-pt-lg">
+                <div class="border-modal"></div>
+              </div>
+              <div class="flex column q-pt-lg">
+                <div class="total q-pl-lg">Total</div>
+                <div class="flex row q-pl-lg items-center q-pt-sm">
+                  <div>
+                    <q-img src="../../../assets/ethereum.png" width="25px" />
+                  </div>
+                  <div class="modal-total-price1">00.00</div>
+                  <div class="modal-total-price2 q-pl-sm">/ $ 00.00</div>
+                </div>
+                <div class="q-pl-lg flex row q-pt-lg">
+                  <input type="checkbox" />
+                  <div class="q-pl-sm">
+                    I agree with
+                    <label class="terms">Terms and Conditions</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex payment">
+                <div class="payment-text">Process payment</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="q-pl-sm">
-        <button class="make-offer-button flex items-center justify-center">
+        <button
+          class="make-offer-button flex items-center justify-center cursor-pointer"
+        >
           <div class="buy-now-text">Make an offer</div>
         </button>
       </div>
@@ -77,10 +153,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue-demi';
+import { filter } from 'compression';
+import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
 export default defineComponent({
   name: 'WineMetadata',
+  data() {
+    return {
+      openModal: false,
+      right: ref(false),
+    };
+  },
+  methods: {
+    // blurBackground() {
+    //   if (this.openModal) {
+    //     document.getElementById('i-container').addClass();
+    //   }
+    // },
+  },
 });
 </script>
 
