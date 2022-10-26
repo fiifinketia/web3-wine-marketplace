@@ -8,6 +8,8 @@ import { useQuasar } from 'quasar'
 
 const customIcons: { [key: string]: string } = {
   'app:price': 'img:/icons/price_icon.svg',
+	'app:filter': 'img:/icons/filter_icon.svg',
+	'app:down_arrow': 'img:/icons/down_arrow.svg',
 }
 export default defineComponent({
   name: 'App',

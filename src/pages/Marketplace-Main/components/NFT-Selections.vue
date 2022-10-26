@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-container class="q-pt-none">
 		Main
   </q-page-container>
 </template>

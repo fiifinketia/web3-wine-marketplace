@@ -1,23 +1,88 @@
 <template>
 	<div class="fit row wrap justify-start items-start content-start">
 		<!-- Header -->
-		<div class="col-xs-12">
-			<button
+		<div class="row col-xs-12 justify-between">
+			<!-- <button
 				:style="showToogleButton ? 'display: none;' : 'display : block;'"
 				@click="toggleSidebar()"
 			>
 				Side
-			</button>
+			</button> -->
+			<div class="col-sm-2 hidden-a-599">
+				NFTs <span class="text-weight-bold text-h6">{{ 283 }}</span>
+			</div>
+			<div class="q-mx-xs col-sm-7 col-12">
+				<div class="hidden-a-992 overflow-hidden">
+					<q-chip
+						v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
+						:key="filter"
+						removable
+						color="secondary"
+						text-color="white"
+						@remove="wineFiltersStore.removeFilter(filter)"
+					>
+						{{ filter }}
+					</q-chip>
+				</div>
+				<div class="row hidden-b-992">
+					<q-input
+						v-model="searchQuery"
+						class="col-10 q-mx-xs"
+						outlined
+						round
+						dense
+						placeholder="Search"
+						type="search"
+						color="primary"
+					>
+						<template #prepend>
+							<q-icon name="search" />
+						</template>
+					</q-input>
+					<q-btn
+						class="col-1 q-mx-xs"
+						dense
+						color="primary"
+						text-color="white"
+						label="GO"
+						@click="wineFiltersStore.searchQuery = searchQuery"
+					/>
+				</div>
+			</div>
+			<div class="row justify-end col-sm-2 hidden-a-599">
+				<q-btn
+					style="text-decoration: underline"
+					class="row hidden-a-992"
+					label="Clear All"
+					color="primary"
+					no-caps
+					flat
+					@click="wineFiltersStore.$reset()"
+				/>
+				<div class="hidden-b-992">
+					<span
+						class="q-pa-md text-weight-bolder text-h5"
+						style="vertical-align: middle"
+					>
+						{{ wineFiltersStore.getAllFiltersArray.length }}</span
+					>
+					<q-btn
+						class="col-10 q-pa-sm"
+						dense
+						color="secondary"
+						text-color="white"
+						icon="app:filter"
+						@click="toggleSidebar()"
+					/>
+				</div>
+			</div>
 		</div>
 
 		<!-- Sidebar -->
 
-		<section
-			class="col-lg-3 col-md-4 col-sm-5"
-			:style="openSidebar ? 'display: block;' : 'display: none;'"
-		>
+		<section class="col-lg-3 col-md-4 col-sm-5">
 			<!-- Sidebar Component -->
-			<MarketPlaceSidebar />
+			<MarketPlaceSidebar class="hidden-a-992" />
 		</section>
 
 		<!-- List Section -->
@@ -27,6 +92,60 @@
 		>
 			<NFTSelections />
 		</section>
+		<q-page-sticky
+			class="hidden-b-599 q-mr-sm"
+			position="bottom-right"
+			:offset="[18, 18]"
+		>
+			<q-card rounded class="row q-pa-xs rounded-borders">
+				<span
+					class="text-weight-bold text-h6 q-px-sm"
+					clickable
+					@click="toggleSidebar()"
+				>
+					{{ wineFiltersStore.getAllFiltersArray.length }}</span
+				>
+				<q-btn
+					dense
+					color="secondary"
+					text-color="white"
+					icon="app:filter"
+					@click="toggleSidebar()"
+				/>
+			</q-card>
+		</q-page-sticky>
+
+		<q-dialog
+			v-model="openSidebar"
+			full-height
+			position="right"
+			class="filter-modal-bg"
+		>
+			<div class="column no-box-shadow q-mr-md">
+				<MarketPlaceSidebar
+					class="hidden-b-992 all-pointer-events scroll"
+					style="height: 85%"
+				/>
+				<q-card
+					flat
+					bordered
+					class="main-filter-box hidden-b-992 dark-blue-border q-mt-md"
+				>
+					<q-card-section class="row justify-between q-pa-sm">
+						<q-btn
+							v-close-popup
+							style="text-decoration: underline"
+							label="Clear All"
+							color="primary"
+							no-caps
+							flat
+							@click="wineFiltersStore.$reset()"
+						/>
+						<q-btn v-close-popup label="Apply" color="primary" no-caps />
+					</q-card-section>
+				</q-card>
+			</div>
+		</q-dialog>
 	</div>
 </template>
 
@@ -34,17 +153,21 @@
 import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
 import MarketPlaceSidebar from './MarketPlaceSidebar.vue';
+import { useWineFilters } from 'src/stores/wine-filters';
 
 export default defineComponent({
-
 	components: {
 		NFTSelections: NFTSelections,
 		MarketPlaceSidebar: MarketPlaceSidebar,
 	},
 	data() {
+		const wineFiltersStore = useWineFilters();
+
 		return {
-			openSidebar: this.isMobile() ? ref(true) : ref(false),
 			showToogleButton: this.isMobile() ? ref(true) : ref(false),
+			wineFiltersStore,
+			searchQuery: '',
+			openSidebar: false,
 		};
 	},
 
@@ -55,7 +178,6 @@ export default defineComponent({
 			},
 		},
 	},
-
 	// mounted() {
 
 	// },
@@ -72,4 +194,13 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.filter-modal-bg {
+	background: linear-gradient(
+		289.94deg,
+		rgba(33, 33, 49, 0.4) 58.61%,
+		rgba(131, 224, 179, 0.4) 108.36%
+	);
+	backdrop-filter: blur(5px);
+}
+</style>
