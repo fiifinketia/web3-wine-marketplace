@@ -1,0 +1,57 @@
+.footer-container {
+  background: #212131;
+  min-height: 300px;
+}
+
+.footer-bold-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+
+  /* White/80% */
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-normal-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  cursor: pointer;
+  /* White/80% */
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-column {
+  margin-top: 16px;
+  margin-left: 10%;
+}
+
+@media screen and (max-width: 1360px) {
+  .footer-column {
+    margin-left: 9%;
+  }
+}
+
+@media screen and (max-width: 1240px) {
+  .footer-column {
+    margin-left: 8%;
+  }
+}
+@media screen and (max-width: 1140px) {
+  .footer-column {
+    margin-left: 6.2%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+}
+
+.first {
+  display: flex;
+  flex-direction: row;
+}
