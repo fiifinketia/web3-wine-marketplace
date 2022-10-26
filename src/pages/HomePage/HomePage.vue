@@ -1,10 +1,12 @@
 <template>
-  <q-page><div>hello</div> </q-page>
+  <q-page>
+    <PartnershipWines />
+  </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+import PartnershipWines from './components/PartnershipWines.vue';
 export default defineComponent({
   data() {
     return {
@@ -12,7 +14,7 @@ export default defineComponent({
     };
   },
 
-  components: {},
+  components: { PartnershipWines },
 
   mounted() {
     console.log(this.test);
