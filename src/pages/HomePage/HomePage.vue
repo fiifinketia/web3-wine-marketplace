@@ -1,7 +1,14 @@
 <template>
   <q-page>
-    <!-- <ExclusiveOffers /> -->
+     <ExclusiveOffers /> 
+
     <TrendingWines />
+
+
+    <LandingPageFooter />
+
+    <FAQ />
+
   </q-page>
 </template>
 
@@ -9,6 +16,12 @@
 import { defineComponent } from 'vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
 import TrendingWines from './components/TrendingWines.vue';
+
+
+import LandingPageFooter from './components/Footer.vue';
+
+import FAQ from './components/FAQ.vue';
+
 export default defineComponent({
   data() {
     return {
@@ -17,8 +30,13 @@ export default defineComponent({
   },
 
   components: {
-    // ExclusiveOffers,
+     ExclusiveOffers,
     TrendingWines,
+     ExclusiveOffers,
+    LandingPageFooter,
+
+    FAQ,
+
   },
 
   mounted() {
