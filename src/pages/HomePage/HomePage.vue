@@ -1,12 +1,9 @@
 <template>
   <q-page>
+    <PartnershipWines />
      <ExclusiveOffers /> 
-
     <TrendingWines />
-
-
     <LandingPageFooter />
-
     <FAQ />
 
   </q-page>
@@ -14,6 +11,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import PartnershipWines from './components/PartnershipWines.vue';
+
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
 import TrendingWines from './components/TrendingWines.vue';
 
@@ -29,12 +28,13 @@ export default defineComponent({
     };
   },
 
+
   components: {
      ExclusiveOffers,
     TrendingWines,
-     ExclusiveOffers,
+     
     LandingPageFooter,
-
+PartnershipWines
     FAQ,
 
   },
