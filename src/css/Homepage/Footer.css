@@ -1,6 +1,6 @@
 .footer-container {
   background: #212131;
-  height: 300px;
+  min-height: 300px;
 }
 
 .footer-bold-text {
@@ -28,5 +28,30 @@
 
 .footer-column {
   margin-top: 16px;
-  margin-left: 155px;
+  margin-left: 10%;
+}
+
+@media screen and (max-width: 1360px) {
+  .footer-column {
+    margin-left: 9%;
+  }
+}
+
+@media screen and (max-width: 1240px) {
+  .footer-column {
+    margin-left: 8%;
+  }
+}
+@media screen and (max-width: 1140px) {
+  .footer-column {
+    margin-left: 6.2%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+}
+
+.first {
+  display: flex;
+  flex-direction: row;
 }

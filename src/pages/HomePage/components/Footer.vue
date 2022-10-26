@@ -3,19 +3,21 @@
     <div class="q-pl-sm q-pt-md">
       <q-img src="../../../assets/wiv-logo.png" width="80px" />
     </div>
-    <div class="flex row">
-      <div class="flex column q-pl-sm q-pt-md">
-        <a class="footer-bold-text q-py-sm">NFTs</a>
-        <a class="footer-normal-text q-py-sm">New Releases</a>
-        <a class="footer-normal-text q-py-sm">Recommended</a>
-        <a class="footer-bold-text q-py-sm">Favourites</a>
-        <a class="footer-bold-text q-py-sm">Stats</a>
-        <a class="footer-normal-text q-py-sm">Wine Statistics</a>
-      </div>
-      <div class="flex column footer-column">
-        <a class="footer-bold-text q-py-sm">Storefront</a>
-        <a class="footer-normal-text q-py-sm">New comings</a>
-        <a class="footer-normal-text q-py-sm">Recommended</a>
+    <div class="flex row container">
+      <div class="first">
+        <div class="flex column q-pl-sm q-pt-md">
+          <a class="footer-bold-text q-py-sm">NFTs</a>
+          <a class="footer-normal-text q-py-sm">New Releases</a>
+          <a class="footer-normal-text q-py-sm">Recommended</a>
+          <a class="footer-bold-text q-py-sm">Favourites</a>
+          <a class="footer-bold-text q-py-sm">Stats</a>
+          <a class="footer-normal-text q-py-sm">Wine Statistics</a>
+        </div>
+        <div class="flex column footer-column">
+          <a class="footer-bold-text q-py-sm">Storefront</a>
+          <a class="footer-normal-text q-py-sm">New comings</a>
+          <a class="footer-normal-text q-py-sm">Recommended</a>
+        </div>
       </div>
       <div class="flex column footer-column">
         <a class="footer-bold-text q-py-sm">Profile</a>
@@ -37,7 +39,7 @@
         <div class="footer-normal-text q-py-sm">email@email.com</div>
         <div class="footer-normal-text q-py-sm">+ 0 000 000 0000</div>
       </div>
-      <div class="flex column footer-column">
+      <div class="flex column footer-column integrations">
         <div class="footer-bold-text q-py-sm">Integrations</div>
         <div class="flex row">
           <div class="q-pr-md">
