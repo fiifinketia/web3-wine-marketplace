@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <!-- <ExclusiveOffers /> -->
+    <ExclusiveOffers />
     <FAQ />
   </q-page>
 </template>
@@ -17,7 +17,7 @@ export default defineComponent({
   },
 
   components: {
-    // ExclusiveOffers,
+    ExclusiveOffers,
     FAQ,
   },
 
