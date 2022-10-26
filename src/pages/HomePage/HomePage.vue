@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <PartnershipWines />
     <ExclusiveOffers />
     <TrendingWines />
-    <LandingPageFooter />
+    <PartnershipWines />
     <FAQ />
+    <LandingPageFooter />
   </q-page>
 </template>
 
