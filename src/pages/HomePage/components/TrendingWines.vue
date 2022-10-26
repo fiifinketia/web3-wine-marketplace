@@ -1,128 +1,136 @@
 <template>
-  <div class="flex-block column justify-center items-center">
+  <div class="column justify-center items-center">
     <div class="trending-wines-title">Trending Wines</div>
-    <div class="q-pa-lg table">
-      <q-table
-        :rows="rows"
-        :columns="columns"
-        virtual-scroll
-        row-key="index"
-        @virtual-scroll="onScroll"
-        :loading="loading"
-        v-model:pagination="pagination"
-        hide-bottom
-        v-model="separator"
-        :separator="separator"
-        :class="columns[0].class"
-        :style="isDown === true ? 'color: red' : 'color: green'"
-      />
+    <div class="table column justify-center items-center">
+      <div class="flex row first justify-between items-center">
+        <div class="wine-name-container q-pa-md">
+          <div class="wine-name">Wine name</div>
+        </div>
+        <div class="flex row justify-between wine-statistics-container">
+          <div class="wine-name twentyFour-title">24 hrs</div>
+          <div class="wine-name three-mos">3 mos</div>
+          <div class="wine-name">6 mos</div>
+          <div class="wine-name price-name">Price</div>
+        </div>
+      </div>
+      <div class="wine-wrapper justify-center items-center">
+        <div class="card q-pa-md flex row" v-for="item in items" :key="item.id">
+          <div class="wine-name-container">
+            <div class="name">{{ item.name }}</div>
+          </div>
+          <div class="flex row justify-between wine-statistics-wrapper">
+            <div class="twentyFour">
+              <div class="flex items-center row justify-center">
+                <div class="q-pl-sm">5%</div>
+                <div class="q-pl-sm">
+                  <q-img
+                    src="../../../assets/up.png"
+                    width="14.5px"
+                    height="7.5px"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="three">
+              <div class="flex items-center row justify-center">
+                <div class="">5%</div>
+                <div class="q-pl-sm">
+                  <q-img
+                    src="../../../assets/up.png"
+                    width="14.5px"
+                    height="7.5px"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="six">
+              <div class="flex items-center row justify-center">
+                <div class="">5%</div>
+                <div class="q-pl-sm">
+                  <q-img
+                    src="../../../assets/up.png"
+                    width="14.5px"
+                    height="7.5px"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="price">
+              <div class="flex row items-center justify-center">
+                <q-img src="../../../assets/ethereum.png" width="20px" />
+                <div class="price1">00.00</div>
+                <div class="price2">/ $ 00.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+// import { remove } from '@vue/shared';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Homepage/TrendingWines.css';
 export default defineComponent({
   name: 'TrendingWines',
   data() {
     return {
-      columns,
-      rows,
-      pagination: ref({
-        rowsPerPage: 0,
-      }),
-      separator: ref('none'),
-      isDown: false,
+      items: [
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+        {
+          name: 'Vranac',
+          twenty: 0.5,
+          three: 5,
+          six: 0.5,
+          price: 23235,
+        },
+      ],
     };
   },
-  methods: {
-    // onScroll({ to, ref }) {
-    //   const lastIndex = rows.value.length - 1;
-    //   if (
-    //     loading.value !== true &&
-    //     nextPage.value < lastPage &&
-    //     to === lastIndex
-    //   ) {
-    //     loading.value = true;
-    //     setTimeout(() => {
-    //       nextPage.value++;
-    //       nextTick(() => {
-    //         ref.refresh();
-    //         loading.value = false;
-    //       });
-    //     }, 500);
-    //   }
-    // },
-  },
 });
-
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Wine Name',
-    align: 'left',
-    field: (row) => row.name,
-    format: (val) => `${val}`,
-    class: 'columns',
-  },
-  {
-    name: '24h',
-    align: 'center',
-    label: '24h',
-    field: 'twentyFour',
-  },
-  { name: '3mos', label: '3mos', field: 'threeMos' },
-  { name: '6mos', label: '6mos', field: 'sixMos' },
-  { name: 'Price', label: 'Price', field: 'price' },
-];
-
-const rows = [
-  {
-    name: 'Sauvignon',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-    class: 'rows',
-  },
-  {
-    name: 'Vranac',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-  },
-  {
-    name: 'Pro Corde',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-  },
-  {
-    name: 'Rose',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-  },
-  {
-    name: 'Moje Vino',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-  },
-  {
-    name: 'Sjekloca',
-    twentyFour: '1%',
-    threeMos: '14%',
-    sixMos: '39%',
-    price: 1505,
-  },
-];
 </script>
 
 <style></style>

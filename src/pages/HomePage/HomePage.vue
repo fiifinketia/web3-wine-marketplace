@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <ExclusiveOffers />
-    <TrendingWines />
-    <PartnershipWines />
-    <FAQ />
-    <LandingPageFooter />
+    <!-- <ExclusiveOffers /> -->
+    <TrendingWines class="trending" />
+    <!-- <PartnershipWines /> -->
+    <!-- <FAQ /> -->
+    <!-- <LandingPageFooter /> -->
   </q-page>
 </template>
 
@@ -22,13 +22,17 @@ import FAQ from './components/FAQ.vue';
 export default defineComponent({
   name: 'VueHomepage',
   components: {
-    ExclusiveOffers,
+    // ExclusiveOffers,
     TrendingWines,
-    LandingPageFooter,
-    PartnershipWines,
-    FAQ,
+    // LandingPageFooter,
+    // PartnershipWines,
+    // FAQ,
   },
 });
 </script>
 
-<style></style>
+<style>
+.trending {
+  margin-top: 270px;
+}
+</style>
