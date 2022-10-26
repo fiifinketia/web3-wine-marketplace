@@ -12,13 +12,13 @@
 .bg-gradient_blue-green {
 	background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
 }
-@media only screen and (max-width: 992px) {
-	.hidden-a-992 {
+@media only screen and (max-width: 1023px) {
+	.hidden-a-1023 {
 		display: none;
 	}
 }
-@media only screen and (min-width: 992px) {
-	.hidden-b-992{
+@media only screen and (min-width: 1024px) {
+	.hidden-b-1023{
 		display: none;
 	}
 }

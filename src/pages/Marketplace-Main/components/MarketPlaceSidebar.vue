@@ -1,7 +1,7 @@
 <template>
 	<!-- Main box -->
 	<q-card flat bordered class="main-filter-box dark-blue-border q-px-md">
-		<q-card-section class="hidden-a-992">
+		<q-card-section class="hidden-a-1023">
 			<q-input
 				v-model="searchQuery"
 				outlined

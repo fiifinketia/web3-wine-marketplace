@@ -12,7 +12,7 @@
 				NFTs <span class="text-weight-bold text-h6">{{ 283 }}</span>
 			</div>
 			<div class="q-mx-xs col-sm-7 col-12">
-				<div class="hidden-a-992 overflow-hidden">
+				<div class="hidden-a-1023 overflow-hidden">
 					<q-chip
 						v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
 						:key="filter"
@@ -24,7 +24,7 @@
 						{{ filter }}
 					</q-chip>
 				</div>
-				<div class="row hidden-b-992">
+				<div class="row hidden-b-1023">
 					<q-input
 						v-model="searchQuery"
 						class="col-10 q-mx-xs"
@@ -52,14 +52,14 @@
 			<div class="row justify-end col-sm-2 hidden-a-599">
 				<q-btn
 					style="text-decoration: underline"
-					class="row hidden-a-992"
+					class="row hidden-a-1023"
 					label="Clear All"
 					color="primary"
 					no-caps
 					flat
 					@click="wineFiltersStore.$reset()"
 				/>
-				<div class="hidden-b-992">
+				<div class="hidden-b-1023">
 					<span
 						class="q-pa-md text-weight-bolder text-h5"
 						style="vertical-align: middle"
@@ -80,18 +80,10 @@
 
 		<!-- Sidebar -->
 
-		<section class="col-lg-3 col-md-4 col-sm-5">
-			<!-- Sidebar Component -->
-			<MarketPlaceSidebar class="hidden-a-992" />
-		</section>
+		<MarketPlaceSidebar class="col-md-3 hidden-a-1023" />
 
 		<!-- List Section -->
-		<section
-			class="col-lg-9 col-md-8 col-sm-7 col-xs-12"
-			style="overflow: auto"
-		>
-			<NFTSelections />
-		</section>
+		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
 		<q-page-sticky
 			class="hidden-b-599 q-mr-sm"
 			position="bottom-right"
@@ -123,13 +115,13 @@
 		>
 			<div class="column no-box-shadow q-mr-md">
 				<MarketPlaceSidebar
-					class="hidden-b-992 all-pointer-events scroll"
+					class="hidden-b-1023 all-pointer-events scroll"
 					style="height: 85%"
 				/>
 				<q-card
 					flat
 					bordered
-					class="main-filter-box hidden-b-992 dark-blue-border q-mt-md"
+					class="main-filter-box hidden-b-1023 dark-blue-border q-mt-md"
 				>
 					<q-card-section class="row justify-between q-pa-sm">
 						<q-btn

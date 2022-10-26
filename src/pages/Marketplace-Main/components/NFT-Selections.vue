@@ -1,10 +1,11 @@
 <template>
-  <q-page-container>
+  <q-page-container class="flex justify-around q-pt-none">
 
     <q-btn
       v-for="token in allNFTs"
       :key="token.tokenID + ',' + token.network + ',' + token.smartContractAddress"
       flat
+			dense
       :ripple="false"
       no-caps
     >
