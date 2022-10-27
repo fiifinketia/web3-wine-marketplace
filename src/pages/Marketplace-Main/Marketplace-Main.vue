@@ -16,7 +16,7 @@
 				</q-tabs>
 				<q-tabs
 					v-model="tab"
-					class="row justify-between text-grey hidden-b-599 q-pa-sm q-px-md bg-gradient_blue-green"
+					class="row justify-between text-grey hidden-b-599 q-pa-sm q-px-lg bg-gradient_blue-green"
 					indicator-color="primary"
 					no-caps
 				>

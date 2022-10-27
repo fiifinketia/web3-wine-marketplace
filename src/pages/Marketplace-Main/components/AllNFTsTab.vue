@@ -24,7 +24,7 @@
 						{{ filter }}
 					</q-chip>
 				</div>
-				<div class="row hidden-b-1023 justify-between">
+				<div class="row hidden-b-1023 justify-between q-px-sm">
 					<q-input
 						v-model="searchQuery"
 						outlined
@@ -118,7 +118,7 @@
 			<div class="column no-box-shadow q-mr-md">
 				<MarketPlaceSidebar
 					class="hidden-b-1023 all-pointer-events scroll"
-					style="height: 85%"
+					style="height: 85%; min-width: 300px"
 				/>
 				<q-card
 					flat
