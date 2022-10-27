@@ -19,19 +19,19 @@
 					class="q-ma-sm"
 					color="primary"
 					outlined
-					label="Go"
+					label="GO"
 					@click="wineFiltersStore.searchQuery = searchQuery"
 				/>
 			</div>
 		</q-card-section>
-		<q-list class="q-pl-md q-pr-lg rounded-borders">
+		<q-list class=" rounded-borders">
 			<!-- Listed Only filter -->
 			<q-expansion-item
 				label="Listed Only"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.listedOnly"
@@ -47,7 +47,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.sortedAtoZ"
@@ -63,7 +63,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.type"
@@ -91,7 +91,7 @@
 					</template>
 				</q-input>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.brand"
@@ -107,7 +107,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.origin"
@@ -123,7 +123,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.producer"
@@ -139,7 +139,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.country"
@@ -155,7 +155,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.region"
@@ -171,7 +171,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.appelation"
@@ -279,7 +279,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.wineCase"
@@ -295,7 +295,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.format"
@@ -311,7 +311,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.investmentGrade"
@@ -327,7 +327,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.LWIN"
@@ -343,7 +343,7 @@
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
 				<q-list
-					class="q-pl-md q-pr-lg dark-blue-border rounded-borders q-my-sm"
+					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.heritage"

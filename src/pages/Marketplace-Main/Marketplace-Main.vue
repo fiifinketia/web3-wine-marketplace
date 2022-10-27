@@ -16,21 +16,21 @@
 				</q-tabs>
 				<q-tabs
 					v-model="tab"
-					class="row justify-between text-grey hidden-b-599 q-pa-sm bg-gradient_blue-green"
+					class="row justify-between text-grey hidden-b-599 q-pa-sm q-px-md bg-gradient_blue-green"
 					indicator-color="primary"
 					no-caps
 				>
-					<span class="col-6 text-white">
+					<span class="col text-white">
 						NFTs <span class="text-h6 text-weight-bolder"> {{ 283 }} </span>
 					</span>
 					<q-btn-dropdown
 						no-caps
-						class="col-6"
 						color="white"
 						text-color="secondary"
 						dropdown-icon="none"
 						icon-right="app:down_arrow"
 						auto-close
+						class="col-auto marketplace_tab-drowpdown"
 						:label="tabLabel"
 					>
 						<q-list>
@@ -83,4 +83,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.marketplace_tab-drowpdown .q-icon {
+	width: 0.7rem;
+}
+</style>

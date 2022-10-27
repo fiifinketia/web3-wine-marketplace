@@ -1,5 +1,5 @@
 <template>
-  <q-page-container class="flex justify-around q-pt-none">
+  <q-page-container class="row q-pt-none">
 
     <q-btn
       v-for="token in allNFTs"
@@ -8,9 +8,10 @@
 			dense
       :ripple="false"
       no-caps
+			class="col-md-3 col-sm-4 col-xs-6 no-outline"
     >
       <q-card
-        class="q-pa-sm main-marketplace-nft-card"
+        class="q-pa-xs main-marketplace-nft-card"
         flat
       >
         <img :src="token.image"/>

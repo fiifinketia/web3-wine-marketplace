@@ -8,11 +8,11 @@
 			>
 				Side
 			</button> -->
-			<div class="col-sm-2 hidden-a-599">
-				NFTs <span class="text-weight-bold text-h6">{{ 283 }}</span>
+			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
+				NFTs <span class="text-weight-bold text-h6 q-pl-sm">{{ 283 }}</span>
 			</div>
-			<div class="q-mx-xs col-sm-7 col-12">
-				<div class="hidden-a-1023 overflow-hidden">
+			<div class="col-sm-7 col-xs-12">
+				<div class="q-mx-xs hidden-a-1023 overflow-hidden">
 					<q-chip
 						v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
 						:key="filter"
@@ -24,27 +24,28 @@
 						{{ filter }}
 					</q-chip>
 				</div>
-				<div class="row hidden-b-1023">
+				<div class="row hidden-b-1023 justify-between">
 					<q-input
 						v-model="searchQuery"
-						class="col-10 q-mx-xs"
 						outlined
 						round
 						dense
 						placeholder="Search"
 						type="search"
 						color="primary"
+						class="col-10"
+						style="width:80%"
 					>
 						<template #prepend>
 							<q-icon name="search" />
 						</template>
 					</q-input>
 					<q-btn
-						class="col-1 q-mx-xs"
-						dense
 						color="primary"
 						text-color="white"
 						label="GO"
+						unelevated
+						class="col-2"
 						@click="wineFiltersStore.searchQuery = searchQuery"
 					/>
 				</div>
@@ -59,9 +60,9 @@
 					flat
 					@click="wineFiltersStore.$reset()"
 				/>
-				<div class="hidden-b-1023">
+				<div class="hidden-b-1023 q-pr-md">
 					<span
-						class="q-pa-md text-weight-bolder text-h5"
+						class="q-pa-sm text-weight-bolder text-h6"
 						style="vertical-align: middle"
 					>
 						{{ wineFiltersStore.getAllFiltersArray.length }}</span
@@ -69,6 +70,7 @@
 					<q-btn
 						class="col-10 q-pa-sm"
 						dense
+						unelevated
 						color="secondary"
 						text-color="white"
 						icon="app:filter"
@@ -85,7 +87,7 @@
 		<!-- List Section -->
 		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
 		<q-page-sticky
-			class="hidden-b-599 q-mr-sm"
+			class="hidden-b-599 q-mr-md"
 			position="bottom-right"
 			:offset="[18, 18]"
 		>
@@ -123,7 +125,7 @@
 					bordered
 					class="main-filter-box hidden-b-1023 dark-blue-border q-mt-md"
 				>
-					<q-card-section class="row justify-between q-pa-sm">
+					<q-card-section class="row justify-between q-pa-md">
 						<q-btn
 							v-close-popup
 							style="text-decoration: underline"
