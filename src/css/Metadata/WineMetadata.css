@@ -417,3 +417,51 @@
   -webkit-filter: blur(8px);
   filter: blur(8px);
 }
+
+.wine-image {
+  width: 370px;
+  height: 370px;
+}
+
+.wine-description-wrapper {
+  width: 70%;
+}
+
+@media screen and (max-width: 880px) {
+  .wine-image {
+    width: 220px;
+    height: 220px;
+  }
+
+  .wine-description {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .wine-image {
+    width: 170px;
+    height: 170px;
+  }
+  .wine-description {
+    font-size: 15px;
+  }
+  .metadata-text {
+    font-size: 15px;
+  }
+  .owned-by {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .wine-image {
+    width: 200px;
+    height: 200px;
+  }
+}

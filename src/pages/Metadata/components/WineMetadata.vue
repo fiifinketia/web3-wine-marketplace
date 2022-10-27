@@ -1,19 +1,12 @@
 <template>
-  <div
-    class="flex column justify-center items-center"
-    @click="openModal === true ? 'modal' : 'content'"
-  >
+  <div class="flex column justify-center items-center container">
     <div class="brand-name">The brand name</div>
     <div class="wine-name">The full name of the wine is here</div>
-    <div class="flex row q-pt-lg">
-      <div>
-        <q-img
-          src="../../../assets/Nft-metadata.png"
-          width="370px"
-          height="370px"
-        />
+    <div class="flex row q-pt-lg wrapper">
+      <div class="image-wrapper">
+        <q-img src="../../../assets/Nft-metadata.png" class="wine-image" />
       </div>
-      <div class="flex column">
+      <div class="flex column desc-wrapper">
         <div class="flex row">
           <div class="q-pl-lg">
             <q-img src="../../../assets/user.png" width="40px" height="40px" />
@@ -30,10 +23,12 @@
             <div class="metadata-text border">Italy</div>
             <div class="metadata-text q-pl-sm">The region name</div>
           </div>
-          <div class="wine-description">
-            Shiraz from old dry grown wineyards is blended with Viognier,
-            complementing the strenths and complexities of these individual
-            parcels of fruit...
+          <div class="wine-description-wrapper">
+            <div class="wine-description">
+              Shiraz from old dry grown wineyards is blended with Viognier,
+              complementing the strenths and complexities of these individual
+              parcels of fruit...
+            </div>
           </div>
           <div class="flex column price-container">
             <div class="starting-from">Starting from</div>
