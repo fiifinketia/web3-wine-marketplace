@@ -10,7 +10,7 @@
             <div class="border"></div>
           </div>
           <div
-            class="flex row items-center q-pl-sm"
+            class="flex row items-center q-pl-sm cursor-pointer"
             @click="clickedNew = !clickedNew"
           >
             <div
@@ -30,7 +30,7 @@
             </div>
           </div>
           <div
-            class="flex row items-center q-pl-lg"
+            class="flex row items-center cursor-pointer q-pl-lg"
             @click="clicked = !clicked"
           >
             <div
@@ -120,14 +120,16 @@
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
-            <td data-label="Staus" class="item4 flex row justify-center">
-              <button class="delete-button" @click="edit = !edit">
-                <q-img src="../../../assets/trash1.png" width="20px" />
-              </button>
-              <button class="accept-button" style="width: 50px">
-                <q-img src="../../../assets/tick.png" width="20px" />
-              </button>
-            </td>
+            <div class="justify-center items-center">
+              <td data-label="Staus" class="flex row justify-center">
+                <button class="delete-button" @click="edit = !edit">
+                  <q-img src="../../../assets/trash1.png" width="20px" />
+                </button>
+                <button class="accept-button" style="width: 50px">
+                  <q-img src="../../../assets/tick.png" width="20px" />
+                </button>
+              </td>
+            </div>
           </tr>
           <tr>
             <td class="justify-start row item">
@@ -154,7 +156,7 @@
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
-            <td data-label="Staus" class="item4">
+            <td data-label="Accept">
               <button class="accept-button" @click="accept = !accept">
                 <div class="button-accept-text">Accept</div>
                 <q-img src="../../../assets/tick.png" class="button-image" />
@@ -251,6 +253,8 @@ export default defineComponent({
   data() {
     return {
       edit: false,
+      clicked: false,
+      clickedNew: false,
     };
   },
 });

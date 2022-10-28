@@ -209,3 +209,7 @@
   background-clip: text;
   text-fill-color: transparent;
 }
+
+.btn-wrapper {
+  margin-bottom: 20px;
+}
