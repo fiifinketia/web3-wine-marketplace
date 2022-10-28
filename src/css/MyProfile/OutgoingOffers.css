@@ -1,0 +1,211 @@
+.edit-modal {
+  background: #ffffff;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  width: 750px;
+  height: 550px;
+  top: 50%;
+  left: 50%;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, -50%);
+}
+
+.edit-offer-modal {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #212131;
+}
+
+.edit-offer-name {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 460;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  color: #212131;
+  padding-top: 18px;
+}
+
+.border {
+  width: 15px;
+  border-bottom: 1px solid red;
+}
+
+.image-wrapper {
+  position: absolute;
+  top: 15%;
+  left: 2%;
+}
+
+.modal-timer {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #c11b1b;
+}
+
+.desc-modal-wrapper {
+  position: relative;
+}
+
+.highest-offer-title {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  color: #9d9d9d;
+}
+
+.highest-offer-price1 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.highest-offer-price2 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: #9d9d9d;
+}
+
+.modal-fee-percentage {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.your-price-text {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 16px;
+  line-height: 25px;
+  letter-spacing: 0.02em;
+  color: #9d9d9d;
+}
+
+.input {
+  border: 1px solid #c0c0c0;
+  backdrop-filter: blur(30px);
+  /* Note: backdrop-filter has minimal browser support */
+
+  border-radius: 6px;
+  width: 60px;
+  height: 30px;
+}
+
+.modal-total-price1 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 39px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.modal-total-price2 {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  color: #9d9d9d;
+}
+
+.terms {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #3586ff;
+}
+
+.terms-wrapper {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #212131;
+}
+
+.reset-button {
+  background: #ffffff;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 6px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.update-offer-button {
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 6px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.update-offer-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.reset-button-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.02em;
+
+  /* Gradien/Blue-Green */
+
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
