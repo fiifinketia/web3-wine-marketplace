@@ -1,0 +1,72 @@
+.q-menu {
+  box-shadow: none;
+  border: 1px solid rgba(94, 151, 236, 0.27);
+}
+.nav-bar {
+  background-color: transparent;
+  color: #212131;
+}
+
+.btn-dropdown-menu {
+  box-shadow: none;
+}
+
+.q-item {
+  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+
+  /* Secondary/dark blue */
+
+  color: #212131;
+}
+.q-item:last-child {
+  border-bottom: none;
+}
+
+.logo {
+  width: 130px;
+}
+
+.nav-bar-container-center,
+.block {
+  gap: 3rem;
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 20px;
+  line-height: 31px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #212131;
+}
+
+.nav-bar-container-right {
+  gap: 1rem;
+
+  .block {
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 0.02em;
+  }
+}
+
+.icons {
+  width: 20px;
+}
+
+.q-icon {
+  width: 20px;
+}
+
+.q-btn-dropdown__arrow {
+  font-size: 1.2rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

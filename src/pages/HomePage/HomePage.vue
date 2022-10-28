@@ -1,22 +1,18 @@
 <template>
-  <q-page><div>hello</div> </q-page>
+  <HeadlineComponent />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import '../../css/Homepage/HomePage.css';
+import HeadlineComponent from './components/HeadlineComponent.vue';
 
 export default defineComponent({
   data() {
-    return {
-      test: 'Hello',
-    };
+    return {};
   },
 
-  components: {},
-
-  mounted() {
-    console.log(this.test);
-  },
+  components: { HeadlineComponent },
 });
 </script>
 

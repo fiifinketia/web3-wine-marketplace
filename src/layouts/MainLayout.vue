@@ -1,21 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+    <NavBar />
 
     <q-page-container>
       <router-view />
@@ -25,18 +10,22 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import '../css/app.scss';
+import NavBar from './components/NavBar.vue';
 
 export default defineComponent({
   name: 'MainLayout',
-
-  // data() {
-
-  // },
-
-  mounted() {
-    // const test = process.env.TEST;
-    // console.log(console.info(process.env))
-    // console.log(test)
+  data() {
+    return {};
+  },
+  components: {
+    NavBar,
   },
 });
 </script>
+
+<style>
+body {
+  position: relative;
+}
+</style>
