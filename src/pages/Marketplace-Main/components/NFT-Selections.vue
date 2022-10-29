@@ -1,6 +1,6 @@
 <template>
-  <q-page-container class="row q-pt-none q-px-md q-gutter-y-md">
-    <div 
+  <q-page-container class="row justify-between q-pt-none q-px-none q-gutter-y-md">
+    <div
       v-for="token in allNFTs"
       :key="token.tokenID + ',' + token.network + ',' + token.smartContractAddress"
       class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
