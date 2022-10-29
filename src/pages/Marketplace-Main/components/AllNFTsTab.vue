@@ -82,7 +82,7 @@
 
 		<!-- Sidebar -->
 
-		<MarketPlaceSidebar class="col-md-3 hidden-a-1023" />
+		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
 
 		<!-- List Section -->
 		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
@@ -118,7 +118,7 @@
 			<div class="column no-box-shadow q-mr-md">
 				<MarketPlaceSidebar
 					class="hidden-b-1023 all-pointer-events scroll"
-					style="height: 85%; min-width: 300px"
+					style="height: 85%; min-width: 200px"
 				/>
 				<q-card
 					flat
