@@ -219,6 +219,7 @@
 					</q-card-section>
 					<q-item-section class="row col-12">
 						<q-range
+							id="filter_price"
 							v-model="price"
 							thumb-color="white"
 							class="col-8 q-px-lg"
@@ -259,6 +260,7 @@
 					</q-card-section>
 					<q-item-section class="row col-12">
 						<q-range
+							id="filter_maturity"
 							v-model="maturity"
 							thumb-color="white"
 							class="col-8 q-px-lg"
@@ -424,5 +426,9 @@ export default defineComponent({
 	/* Primary/Light blue */
 
 	border-radius: 18px;
+}
+#filter_price .q-slider__thumb, #filter_maturity .q-slider__thumb {
+	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
+	border-radius: 100px;
 }
 </style>
