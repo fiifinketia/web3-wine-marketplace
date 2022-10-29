@@ -222,7 +222,6 @@
 							v-model="price"
 							thumb-color="white"
 							class="col-8 q-px-lg"
-							label
 							:step="1"
 							:min="0"
 							:max="100"
@@ -263,7 +262,6 @@
 							v-model="maturity"
 							thumb-color="white"
 							class="col-8 q-px-lg"
-							label
 							:step="6"
 							:min="0"
 							:max="100"
