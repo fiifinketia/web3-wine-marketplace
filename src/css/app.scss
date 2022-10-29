@@ -1,1 +1,34 @@
 // app global css in SCSS form
+
+
+.dark-blue-border {
+	border: 1px solid rgba(94, 151, 236, 0.27);
+}
+
+.q-slider__thumb {
+	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
+	border-radius: 100px;
+}
+.bg-gradient_blue-green {
+	background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+}
+@media only screen and (max-width: 1023px) {
+	.hidden-a-1023 {
+		display: none;
+	}
+}
+@media only screen and (min-width: 1024px) {
+	.hidden-b-1023{
+		display: none;
+	}
+}
+@media only screen and (min-width: 600px) {
+	.hidden-b-599 {
+		display: none;
+	}
+}
+@media only screen and (max-width: 599px) {
+	.hidden-a-599 {
+		display: none;
+	}
+}
