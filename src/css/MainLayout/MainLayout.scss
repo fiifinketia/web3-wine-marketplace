@@ -5,6 +5,8 @@
 .nav-bar {
   background-color: transparent;
   color: #212131;
+
+  backdrop-filter: blur(10px);
 }
 
 .btn-dropdown-menu {
