@@ -1,70 +1,74 @@
 <template>
-  <div class="column justify-center items-center">
-    <div class="trending-wines-title">Trending Wines</div>
-    <div class="table column justify-center items-center">
-      <div class="flex row first justify-between items-center">
-        <div class="wine-name-container q-pa-md">
-          <div class="wine-name">Wine name</div>
-        </div>
-        <div class="flex row justify-between wine-statistics-container">
-          <div class="wine-name twentyFour-title">24 hrs</div>
-          <div class="wine-name three-mos">3 mos</div>
-          <div class="wine-name">6 mos</div>
-          <div class="wine-name price-name">Price</div>
-        </div>
-      </div>
-      <div class="wine-wrapper justify-center items-center">
-        <div class="card q-pa-md flex row" v-for="item in items" :key="item.id">
-          <div class="wine-name-container">
-            <div class="name">{{ item.name }}</div>
-          </div>
-          <div class="flex row justify-between wine-statistics-wrapper">
-            <div class="twentyFour">
-              <div class="flex items-center row justify-center">
-                <div class="q-pl-sm">5%</div>
-                <div class="q-pl-sm">
-                  <q-img
-                    src="../../../assets/up.png"
-                    width="14.5px"
-                    height="7.5px"
-                  />
+  <div>
+    <div class="flex justify-center items-center">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="flex items-start q-pl-md q-pt-sm">Wine name</th>
+            <th class="twentyFour q-pl-md q-pt-sm">24hrs</th>
+            <th class="three-mos q-pl-md q-pt-sm">3mos</th>
+            <th class="q-pl-md q-pt-sm">6mos</th>
+            <th class="trending-wines-price q-pl-md q-pt-sm">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="justify-start q-pl-md">
+              <div class="wine-name-label">The full wine name here</div>
+            </td>
+            <td>
+              <div class="flex justify-center row items-center">
+                <q-img src="../../../assets/up.png" width="20px" />
+                <div :class="positive === true ? 'positive' : 'negative'">
+                  0,67
                 </div>
               </div>
-            </div>
-            <div class="three">
-              <div class="flex items-center row justify-center">
-                <div class="">5%</div>
-                <div class="q-pl-sm">
-                  <q-img
-                    src="../../../assets/up.png"
-                    width="14.5px"
-                    height="7.5px"
-                  />
+            </td>
+            <td class="twentyFour">
+              <div class="flex justify-center items-center">
+                <q-img src="../../../assets/up.png" width="20px" />
+                <div :class="positive === true ? 'positive' : 'negative'">
+                  0,67
                 </div>
               </div>
-            </div>
-            <div class="six">
-              <div class="flex items-center row justify-center">
-                <div class="">5%</div>
-                <div class="q-pl-sm">
-                  <q-img
-                    src="../../../assets/up.png"
-                    width="14.5px"
-                    height="7.5px"
-                  />
+            </td>
+            <td class="three-mos">
+              <div class="flex justify-center items-center">
+                <q-img src="../../../assets/up.png" width="20px" />
+                <div :class="positive === true ? 'positive' : 'negative'">
+                  0,67
                 </div>
               </div>
-            </div>
-            <div class="price">
-              <div class="flex row items-center justify-center">
-                <q-img src="../../../assets/ethereum.png" width="20px" />
-                <div class="price1">00.00</div>
-                <div class="price2">/ $ 00.00</div>
+            </td>
+            <td class="trending-wines-price">
+              <div class="flex justify-center">
+                <div class="flex row items-center q-pt-sm">
+                  <q-img
+                    src="../../../assets/usdc.png"
+                    width="20px"
+                    height="20px"
+                  />
+                  <div class="q-pl-sm currency">00.00</div>
+                  <div class="price10 q-pl-sm">/ $ 00.00</div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </td>
+          </tr>
+          <!-- <tr>
+            <td class="justify-start row item">
+              <div class="nft-item">The full wine name</div>
+            </td>
+            <td data-label="Floor-price" class="item2 floor-price">
+              <div class="flex row justify-center">5%</div>
+            </td>
+            <td data-label="Age" class="item2">
+              <div class="flex row justify-center">5%</div>
+            </td>
+            <td data-label="from" class="from">0x554safdw5</td>
+            <td data-label="Accept">Hello</td>
+          </tr> -->
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -128,6 +132,11 @@ export default defineComponent({
           price: 23235,
         },
       ],
+    };
+  },
+  data() {
+    return {
+      positive: true,
     };
   },
 });
