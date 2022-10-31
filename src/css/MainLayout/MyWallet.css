@@ -1,0 +1,108 @@
+.my-wallet-background {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+    289.94deg,
+    rgba(33, 33, 49, 0.4) 58.61%,
+    rgba(131, 224, 179, 0.4) 108.36%
+  );
+  backdrop-filter: blur(5px);
+  z-index: 200;
+}
+
+.my-wallet-container {
+  height: 100vh;
+  width: fit-content;
+  padding: 1.5rem 2rem;
+  background: rgb(245, 245, 245);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  color: #212131;
+}
+
+.my-wallet-header {
+  gap: 2rem;
+  font-family: 'ProximaNova-Regular';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.02em;
+}
+
+.x-icon {
+  margin-left: 7rem;
+  cursor: pointer;
+}
+
+.my-wallet-ballance-container {
+  gap: 2.5rem;
+}
+
+.ballance-wrapper {
+  text-align: center;
+}
+
+.my-wallet-title {
+  font-family: 'ProximaNova-Regular';
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  /* Secondary/dark blue */
+
+  color: #212131;
+}
+
+.my-wallet-balance {
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 39px;
+
+  letter-spacing: 0.03em;
+
+  color: #3586ff;
+}
+
+.my-wallet-btn {
+  padding: 16px 32px;
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 6px;
+  border: none;
+
+  /* text */
+
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.02em;
+
+  color: #ffffff;
+}
+
+.my-wallet-logout {
+  width: 100%;
+  text-align: right;
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+
+  /* Secondary/dark blue */
+
+  color: #212131;
+}

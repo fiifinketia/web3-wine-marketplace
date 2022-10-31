@@ -1,0 +1,18 @@
+.burger-menu-background {
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  background-color: white;
+
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+
+  /* Secondary/dark blue */
+
+  color: #212131;
+}

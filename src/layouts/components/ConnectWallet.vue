@@ -1,6 +1,12 @@
 <template>
-  <div class="connect-wallet-background row justify-center items-center">
-    <div class="connect-wallet-container column justify-center items-center">
+  <div
+    @click="onClickBackground"
+    class="connect-wallet-background row justify-center items-center"
+  >
+    <div
+      @click.stop
+      class="connect-wallet-container column justify-center items-center"
+    >
       <img src="../../assets/images/wallet.svg" alt="wallet-icon" />
       <div class="connect-wallet-title">
         Connect your Web3 Wallet to signup.
@@ -20,6 +26,11 @@ import { defineComponent } from 'vue';
 import '../../css/MainLayout/ConnectWallet.css';
 export default defineComponent({
   name: 'ConnectWallet',
+  methods: {
+    onClickBackground() {
+      this.$emit('clicked', true);
+    },
+  },
 });
 </script>
 
