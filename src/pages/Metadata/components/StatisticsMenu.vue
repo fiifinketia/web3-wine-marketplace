@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
-    <q-tabs style="width: 80%" no-caps align="justify">
-      <q-tab name="history" label="NFT history" />
+    <q-tabs no-caps align="justify" class="tabs-menu">
+      <q-tab name="history" label="History" />
       <q-tab class="tab-text-not-clicked" name="about" label="About" />
       <q-tab
         name="wine-maker"

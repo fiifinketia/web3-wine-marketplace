@@ -1,7 +1,7 @@
 <template>
-  <!-- <NFTHistory /> -->
+  <NFTHistory />
   <!-- <About /> -->
-  <WineMaker />
+  <!-- <WineMaker /> -->
 </template>
 
 <script>
@@ -13,9 +13,9 @@ import WineMaker from './components/WineMaker.vue';
 export default defineComponent({
   name: 'MetadataPage',
   components: {
-    // NFTHistory,
+    NFTHistory,
     // About,
-    WineMaker,
+    // WineMaker,
   },
 });
 </script>

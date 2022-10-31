@@ -12,6 +12,7 @@
   align-items: center;
   color: #212131;
   padding-top: 40px;
+  padding-bottom: 20px;
 }
 
 .chart-container {
@@ -101,5 +102,50 @@
   padding-top: 20px;
 }
 
-.chart {
+@media screen and (max-width: 880px) {
+  .history-container {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .chart1 {
+    display: flex;
+    flex-direction: column-reverse;
+    /* align-items: flex-end; */
+    /* padding-left: 10px; */
+  }
+  .price-container {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: 100%;
+  }
+  .average-price {
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+  .radio-buttons {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 405px) {
+  #three_months {
+    display: none;
+  }
+  .price-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .chart-container {
+    width: 100%;
+    background: #ffffff;
+    box-shadow: none;
+  }
+  .price-history {
+    padding-bottom: 0px;
+  }
 }

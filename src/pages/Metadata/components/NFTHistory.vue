@@ -4,7 +4,7 @@
     <div class="flex items-start history-container column">
       <div class="price-history">Price history</div>
       <div class="flex column chart-container">
-        <div class="flex row items-center justify-between">
+        <div class="flex row items-center justify-between chart1">
           <div style="color: white" class="flex row items-center q-mb-sm">
             <div
               class="radio-button"
@@ -64,6 +64,7 @@
               <div class="radio-button-text">5 years</div>
             </div>
           </div>
+
           <div class="flex column price-container">
             <div class="flex row">
               <!-- <q-img src="../../../assets/.png" width="20px" /> -->
@@ -73,7 +74,7 @@
             <div class="average-price q-pt-sm">Average price</div>
           </div>
         </div>
-        <div>
+        <div class="real-chart">
           <apexchart
             ref="chart"
             id="chart"

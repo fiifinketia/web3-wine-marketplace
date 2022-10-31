@@ -25,7 +25,7 @@
         <div
           class="flex row justify-between property-container q-pt-lg q-pb-lg"
         >
-          <div class="flex column text-center items-center">
+          <div class="flex column text-center items-center column1">
             <div class="property-name">Property name</div>
             <div class="property-value">Property value</div>
           </div>
@@ -42,7 +42,7 @@
         <div
           class="flex row justify-between property-container q-pt-lg q-pb-lg"
         >
-          <div class="flex column text-center items-center">
+          <div class="flex column text-center items-center column1">
             <div class="property-name">Property name</div>
             <div class="property-value">Property value</div>
           </div>
@@ -57,7 +57,7 @@
         </div>
         <div id="border" />
         <div class="flex row justify-between property q-pt-lg">
-          <div class="flex column text-center items-center">
+          <div class="flex column text-center items-center column1">
             <div class="property-name">Property name</div>
             <div class="property-value">Property value</div>
           </div>

@@ -44,3 +44,12 @@
 .q-tab--active .q-tab__label {
   color: #3586ff;
 }
+.tabs-menu {
+  width: 80%;
+}
+
+@media screen and (max-width: 400px) {
+  .tabs-menu {
+    width: 95%;
+  }
+}

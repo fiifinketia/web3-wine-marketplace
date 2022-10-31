@@ -89,3 +89,30 @@
   position: relative;
   border-bottom: 1px solid rgba(94, 151, 236, 0.27);
 }
+
+@media screen and (max-width: 992px) {
+  .paragraph {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .property {
+    width: 85%;
+  }
+  .property-container {
+    width: 85%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .paragraph {
+    width: 100%;
+  }
+  .property {
+    width: 95%;
+  }
+  .property-container {
+    width: 95%;
+  }
+}
