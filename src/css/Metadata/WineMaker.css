@@ -40,3 +40,21 @@
   padding-top: 40px;
   padding-bottom: 20px;
 }
+
+.column1 {
+}
+
+@media screen and (max-width: 600px) {
+  .column1 {
+    display: none;
+  }
+  .table-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .winemaker-container {
+    width: 95%;
+  }
+}

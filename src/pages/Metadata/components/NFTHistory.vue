@@ -66,7 +66,7 @@
           </div>
           <div class="flex column price-container">
             <div class="flex row">
-              <q-img src="../../../assets/ethereum.png" width="20px" />
+              <!-- <q-img src="../../../assets/.png" width="20px" /> -->
               <div class="price1">00.00</div>
               <div class="price2 q-pl-sm">/ $ 00.00</div>
             </div>
