@@ -1,13 +1,22 @@
 <template>
-  <WineMetadata />
+  <!-- <NFTHistory /> -->
+  <!-- <About /> -->
+  <WineMaker />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue-demi';
-import WineMetadata from './components/WineMetadata.vue';
+import StatisticsMenu from './components/StatisticsMenu.vue';
+import NFTHistory from './components/NFTHistory.vue';
+import About from './components/About.vue';
+import WineMaker from './components/WineMaker.vue';
 export default defineComponent({
   name: 'MetadataPage',
-  components: { WineMetadata },
+  components: {
+    // NFTHistory,
+    // About,
+    WineMaker,
+  },
 });
 </script>
 
