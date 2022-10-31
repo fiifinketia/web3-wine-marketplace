@@ -5,15 +5,11 @@
   >
     <div class="brand-name">The brand name</div>
     <div class="wine-name">The full name of the wine is here</div>
-    <div class="flex row q-pt-lg">
-      <div>
-        <q-img
-          src="../../../assets/Nft-metadata.png"
-          width="370px"
-          height="370px"
-        />
+    <div class="flex r q-pt-lg test-class">
+      <div class="flex justify-center">
+        <q-img src="../../../assets/Nft-metadata.png" class="picture" />
       </div>
-      <div class="flex column">
+      <div class="flex column info">
         <div class="flex row">
           <div class="q-pl-lg">
             <q-img src="../../../assets/user.png" width="40px" height="40px" />
@@ -164,13 +160,7 @@ export default defineComponent({
       right: ref(false),
     };
   },
-  methods: {
-    // blurBackground() {
-    //   if (this.openModal) {
-    //     document.getElementById('i-container').addClass();
-    //   }
-    // },
-  },
+  methods: {},
 });
 </script>
 
