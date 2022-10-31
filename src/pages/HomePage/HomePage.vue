@@ -27,7 +27,7 @@ export default defineComponent({
     ExclusiveOffers,
     TrendingWines,
     LandingPageFooter,
-    PartnershipWines,
+    // PartnershipWines,
     FAQ,
   },
 });

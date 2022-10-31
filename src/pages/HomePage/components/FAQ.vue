@@ -3,17 +3,69 @@
     <div class="faq-title">Don't know how to start?</div>
     <div class="faq-small-text">Let us help you!</div>
     <div class="q-pa-md row items-start justify-center q-gutter-md container">
-      <q-card v-for="item in items" :key="item.text" class="my-card">
+      <q-card class="my-card">
         <div class="faq-image">
-          <q-img :src="item.image" width="60px" height="60px" />
+          <q-img src="../../../assets/wallet.png" width="60px" height="60px" />
         </div>
-        <q-card-section class="q-pt-none faq-text">
-          {{ item.text }}
+        <q-card-section class="q-pt-none faq-text row">
+          <div>To <label class="bold-text">sign up</label> click on</div>
+          <div class="q-pl-md">
+            <q-img src="../../../assets/user.png" width="35px" height="25px" />
+          </div>
+          <div>& connect your <label class="bold-text">wallet.</label></div>
         </q-card-section>
         <q-card-section class="q-pt-none faq-text">
-          {{ item.text2 }}
+          If you do not have a wallet, Click here to create one
         </q-card-section>
       </q-card>
+      <q-card class="my-card">
+        <div class="faq-image">
+          <q-img src="../../../assets/box.png" width="60px" height="60px" />
+        </div>
+        <q-card-section class="q-pt-none faq-text row">
+          To review, buy, or place a bid for an NFT, click on it to see the meta
+          data.
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card">
+        <div class="faq-image">
+          <q-img
+            src="../../../assets/heartFaq.png"
+            width="60px"
+            height="60px"
+          />
+        </div>
+        <q-card-section class="q-pt-none faq-text row">
+          <label class="bold-text">Hesitating</label> what to buy or want to
+          compare?
+        </q-card-section>
+        <q-card-section class="q-pt-none faq-text row">
+          <div>Add NFTs to the favs</div>
+          <div class="q-pl-sm">
+            <q-img src="../../../assets/heart.png" width="20px" height="20px" />
+          </div>
+          <div>
+            to <label class="bold-text">monitor</label> them & buy later
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card">
+        <div class="faq-image">
+          <q-img src="../../../assets/wine.png" width="60px" height="60px" />
+        </div>
+        <q-card-section class="q-pt-none faq-text row">
+          All your wies will be stored in a special place - Digital Wine Cellar.
+          It’s our web app to monitor manage the NFTs you own.
+        </q-card-section>
+        <q-card-section class="q-pt-none faq-text row">
+          <a class="visit-cellar">Visit Cellar</a>
+        </q-card-section>
+      </q-card>
+    </div>
+    <div class="still-have-question">Still have questions?</div>
+    <div class="still-have-question q-pt-sm">
+      <a class="contact-us">Contact us</a> or find answer in
+      <a class="contact-us">FAQs</a>
     </div>
   </div>
 </template>

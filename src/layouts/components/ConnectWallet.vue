@@ -1,5 +1,7 @@
 <template>
-  <div class="connect-wallet-background row justify-center items-center">
+  <div
+    class="connect-wallet-background row justify-center items-center overflow-hidden-y"
+  >
     <div class="connect-wallet-container column justify-center items-center">
       <img src="../../assets/images/wallet.svg" alt="wallet-icon" />
       <div class="connect-wallet-title">

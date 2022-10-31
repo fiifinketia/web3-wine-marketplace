@@ -203,4 +203,7 @@ export default defineComponent({
 body {
   position: relative;
 }
+
+.nav-bar {
+}
 </style>
