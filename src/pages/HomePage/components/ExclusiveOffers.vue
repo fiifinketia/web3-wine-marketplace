@@ -1,44 +1,41 @@
 <template>
-  <div class="flex justify-center column text-center">
+  <div class="flex column items-center">
     <div class="exclusive-offer-title">
-      Invest in wines to taste & exclusive offers
+      Invest in wines to taste & exclusive offers . . .
     </div>
-    <div
-      class="flex justify-center row text-center q-pa-md row items-start q-gutter-lg"
-    >
-      <div v-for="item in arrayOfObjects" :key="item.name">
-        <q-card class="my-card">
-          <q-img src="../../../assets/image.png" />
-
-          <q-card-section class="q-pt-sm card-title-text text-left q-pl-none">
+    <div class="cards">
+      <div class="q-gutter-lg items-center justify-center row q-pt-lg">
+        <q-card
+          class="flex column card-container no-shadow"
+          v-for="item in arrayOfObjects"
+          :key="item.name"
+        >
+          <q-img src="../../../assets/circle.png" width="250px" />
+          <div class="wine-name q-pt-sm">
             The full name of the wine is here and here and here
-          </q-card-section>
-
-          <q-card-section class="q-pl-none">
-            <div class="flex justify-between column card-border q-pa-md">
-              <div class="flex justify-between">
+          </div>
+          <div class="q-pt-md">
+            <div class="flex column box q-pt-md border">
+              <div class="flex row justify-between">
                 <div class="card-starting-from-title">Starting from</div>
                 <q-img
-                  src="../../../assets/heart.png"
-                  class="cursor-pointer"
+                  src="../../../assets/like.png"
                   width="20px"
+                  height="20px"
+                  class="cursor-pointer"
                 />
               </div>
-              <div>
-                <div class="flex items-center">
-                  <q-img
-                    src="../../../assets/Vector.png"
-                    width="18px"
-                    height="18px"
-                  />
-                  <div class="price flex row">
-                    <label class="currency"> &nbsp;00.00</label> &nbsp; / $
-                    00.00
-                  </div>
-                </div>
+              <div class="flex row items-center q-pt-sm">
+                <q-img
+                  src="../../../assets/usdc.png"
+                  width="20px"
+                  height="20px"
+                />
+                <div class="q-pl-sm currency">00.00</div>
+                <div class="price10 q-pl-sm">/ $ 00.00</div>
               </div>
             </div>
-          </q-card-section>
+          </div>
         </q-card>
       </div>
     </div>
@@ -48,7 +45,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/ExclusiveOffers.css';
-// import image from '../../../assets/image.png';
 export default defineComponent({
   name: 'ExclusiveOffers',
   data() {

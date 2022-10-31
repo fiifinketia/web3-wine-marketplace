@@ -3,7 +3,7 @@
   <ExclusiveOffers />
   <TrendingWines class="trending" />
   <PartnershipWines />
-  <!-- <FAQ /> -->
+  <FAQ />
   <LandingPageFooter />
 </template>
 
@@ -28,7 +28,7 @@ export default defineComponent({
     TrendingWines,
     LandingPageFooter,
     // PartnershipWines,
-    // FAQ,
+    FAQ,
   },
 });
 </script>
