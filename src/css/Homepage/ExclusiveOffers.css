@@ -64,11 +64,13 @@
 }
 
 .cards {
-  width: 85%;
+  width: 100%;
 }
 
 .card-container {
-  width: 280px;
+  width: 230px;
+  display: flex;
+  align-items: center;
 }
 
 .border {
@@ -84,5 +86,178 @@
 }
 
 .box {
-  width: 90%;
+  width: 96%;
+}
+
+.circle {
+  width: 230px;
+}
+
+.like {
+  width: 20px;
+}
+.usdc {
+  width: 20px;
+}
+
+.go-to-marketplace {
+  width: 230px;
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  height: 40px;
+}
+
+.go-to-marketplace-text {
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.02em;
+
+  color: #ffffff;
+}
+
+.go-to-marketplace-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.wine-name {
+  width: 230px;
+}
+
+.box {
+  width: 230px;
+}
+
+@media screen and (max-width: 1115px) {
+  .box {
+    width: 200px;
+  }
+  .wine-name {
+    width: 200px;
+  }
+  .circle {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .one {
+    display: none;
+  }
+  .circle {
+    width: 200px;
+  }
+  .box {
+    width: 200px;
+  }
+  .card-container {
+    width: 220px;
+  }
+  .go-to-marketplace {
+    width: 230px;
+  }
+  .wine-name {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .two {
+    display: none;
+  }
+  .go-to-marketplace {
+    width: 230px;
+  }
+  .box {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .circle {
+    width: 160px;
+  }
+  .card-container {
+    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-starting-from-title {
+    font-size: 14px;
+  }
+  .currency {
+    font-size: 15px;
+  }
+  .price10 {
+    font-size: 12px;
+  }
+  .usdc {
+    width: 15px;
+    height: 15px;
+  }
+  .box {
+    width: 160px;
+  }
+  .like {
+    width: 15px;
+    height: 15px;
+  }
+  .one,
+  .two {
+    display: none;
+  }
+  .go-to-marketplace {
+    width: 230px;
+  }
+  .price10 {
+    display: none;
+  }
+  .currency {
+    font-size: 18px;
+  }
+  .wine-name {
+    width: 160px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .circle {
+    width: 140px;
+  }
+  .card-container {
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .border {
+    width: 140px;
+  }
+  .one,
+  .two {
+    display: none;
+  }
+
+  .go-to-marketplace {
+    width: 70%;
+  }
+
+  .price10 {
+    display: none;
+  }
+  .currency {
+    font-size: 18px;
+  }
+  .wine-name {
+    width: 140px;
+  }
 }
