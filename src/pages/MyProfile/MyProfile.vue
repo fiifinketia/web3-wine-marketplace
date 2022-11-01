@@ -1,6 +1,6 @@
 <template>
-  <IncomingOffers />
-  <!-- <OutgoingOffers /> -->
+  <!-- <IncomingOffers /> -->
+  <OutgoingOffers />
 </template>
 
 <script>
@@ -9,8 +9,8 @@ import IncomingOffers from './components/IncomingOffers.vue';
 import OutgoingOffers from './components/OutgoingOffers.vue';
 export default defineComponent({
   name: 'MyProfile',
-  components: { IncomingOffers },
-  // components: { OutgoingOffers },
+  // components: { IncomingOffers },
+  components: { OutgoingOffers },
 });
 </script>
 

@@ -87,9 +87,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="flex items-start">NFT</th>
-            <th class="floor-price">Your offer</th>
-            <th>Highest Offer</th>
+            <th class="flex items-start nft-outgoing-title">NFT</th>
+            <th class="your-price">Your offer</th>
+            <th class="yours">Yours</th>
+            <th class="highest-price">Highest Offer</th>
             <th class="from">From</th>
             <th>Action</th>
           </tr>
@@ -116,20 +117,33 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
+                <div class="price2 q-pl-sm">
+                  <label class="slash">/</label> $ 10.00
+                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
-            <div class="justify-center items-center">
-              <td data-label="Staus" class="flex row justify-center">
-                <button class="delete-button" @click="edit = !edit">
-                  <q-img src="../../../assets/trash1.png" width="20px" />
-                </button>
-                <button class="accept-button" style="width: 50px">
+
+            <td>
+              <div class="flex row justify-center action">
+                <div class="q-pr-md">
+                  <button class="delete-button">
+                    <q-img
+                      src="../../../assets/trash1.png"
+                      width="20px"
+                      height="20px"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="accept-button"
+                  style="width: 50px"
+                  @click="edit = !edit"
+                >
                   <q-img src="../../../assets/tick.png" width="20px" />
                 </button>
-              </td>
-            </div>
+              </div>
+            </td>
           </tr>
           <tr>
             <td class="justify-start row item">
@@ -152,15 +166,31 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
+                <div class="price2 q-pl-sm">
+                  <label class="slash">/</label>$ 10.00
+                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
             <td data-label="Accept">
-              <button class="accept-button" @click="accept = !accept">
-                <div class="button-accept-text">Accept</div>
-                <q-img src="../../../assets/tick.png" class="button-image" />
-              </button>
+              <div class="flex row justify-center action">
+                <div class="q-pr-md">
+                  <button class="delete-button">
+                    <q-img
+                      src="../../../assets/trash1.png"
+                      width="20px"
+                      height="20px"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="accept-button"
+                  style="width: 50px"
+                  @click="edit = !edit"
+                >
+                  <q-img src="../../../assets/tick.png" width="20px" />
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>

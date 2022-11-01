@@ -213,3 +213,32 @@
 .btn-wrapper {
   margin-bottom: 20px;
 }
+
+/* .action {
+  width: 120px;
+} */
+
+.delete-button {
+  height: 100%;
+  width: 50px;
+}
+
+.yours {
+  display: none;
+}
+
+@media screen and (max-width: 880px) {
+  /* .delete-button {
+    height: 40px;
+  } */
+  .action {
+    width: 120px;
+  }
+  .highest-price {
+    display: none;
+  }
+
+  /* .yours {
+    display: table;
+  } */
+}
