@@ -9,6 +9,8 @@
   );
   backdrop-filter: blur(5px);
   z-index: 200;
+  transition: transform 2s cubic-bezier(0.63, 0.02, 0.16, 0.98) 0s,
+    opacity 2s ease 0s;
 }
 
 .my-wallet-container {
@@ -33,7 +35,12 @@
 
 .x-icon {
   margin-left: 7rem;
+  margin-right: 0;
   cursor: pointer;
+}
+
+.my-wallet-ballance-container {
+  gap: 2.5rem;
 }
 
 .my-wallet-ballance-container {
@@ -106,3 +113,29 @@
 
   color: #212131;
 }
+.id-mobile {
+  display: none;
+}
+@media screen and (max-width: 550px) {
+  /* .x-icon {
+    margin-left: 1rem;
+  } */
+  .wallet-id {
+    display: none;
+  }
+  .id-mobile {
+    display: block;
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 450px) {
+  .my-wallet-header {
+    gap: 0.5rem;
+  }
+}
+
+/* @media screen and (max-width: 450px) {
+  .my-wallet-header {
+    gap: 1rem;
+  }
+} */

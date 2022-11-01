@@ -1,14 +1,11 @@
 <template>
-  <div
-    @click="onClickBackground"
-    class="burger-menu-background column justify-between items-center"
-  >
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div class="row justify-between">
+  <div class="burger-menu-background column justify-around items-center">
+    <div class="burger-bolder-text">Marketplace</div>
+    <div>New Releases</div>
+    <div>recommended</div>
+    <div class="burger-bolder-text">stats</div>
+    <div class="burger-bolder-text">storefront</div>
+    <div class="burger-icons row justify-between">
       <img
         class="icons"
         src="../../assets/images/favs-icon.svg"
@@ -25,10 +22,12 @@
         alt="profile-icon"
       />
     </div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
-    <div>Marketplace</div>
+    <div>sign up</div>
+    <div class="burger-bolder-text">digital wine cellar</div>
+    <div>settings</div>
+    <div>contact us</div>
+    <div>faqs</div>
+    <div>log out</div>
   </div>
 </template>
 

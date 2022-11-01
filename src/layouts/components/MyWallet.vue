@@ -7,13 +7,14 @@
       <div class="my-wallet-header row">
         <div>MY WALLET</div>
         <img src="../../assets/images/metamask-icon.svg" alt="" />
-        <div>walletID</div>
+        <div class="wallet-id">walletID</div>
         <img
           @click="onClickBackground"
           class="x-icon"
           src="../../assets/images/x-icon.svg"
           alt=""
         />
+        <div class="id-mobile">walletID</div>
       </div>
       <div
         class="my-wallet-ballance-container column justify-center items-center"
