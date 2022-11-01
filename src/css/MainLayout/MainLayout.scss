@@ -1,3 +1,11 @@
+body {
+  position: relative;
+}
+
+.no-scroll {
+  overflow-y: hidden;
+}
+
 .q-menu {
   box-shadow: none;
   border: 1px solid rgba(94, 151, 236, 0.27);
@@ -5,12 +13,13 @@
 .nav-bar {
   background-color: transparent;
   color: #212131;
-
   backdrop-filter: blur(10px);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12);
 }
 
 .btn-dropdown-menu {
   box-shadow: none;
+  padding-left: 0;
 }
 
 .q-item {
@@ -23,9 +32,6 @@
   line-height: 28px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-
-  /* Secondary/dark blue */
-
   color: #212131;
 }
 .q-item:last-child {
@@ -33,7 +39,7 @@
 }
 
 .logo {
-  width: 130px;
+  width: 100px;
 }
 
 .nav-bar-container-center,
@@ -48,6 +54,9 @@
   text-transform: uppercase;
   color: #212131;
 }
+.nav-bar-container-center > div {
+  cursor: pointer;
+}
 
 .nav-bar-container-right {
   gap: 1rem;
@@ -57,6 +66,9 @@
     line-height: 28px;
     letter-spacing: 0.02em;
   }
+}
+.nav-bar-container-right > img {
+  cursor: pointer;
 }
 
 .icons {
@@ -71,4 +83,25 @@
   font-size: 1.2rem !important;
   margin: 0 !important;
   padding: 0 !important;
+  align-self: flex-end;
+}
+
+.menu-icon {
+  display: none;
+}
+
+@media screen and (max-width: 992px) {
+  .nav-bar-container-center {
+    gap: 2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .nav-bar-container-center,
+  .nav-bar-container-right {
+    display: none;
+  }
+  .menu-icon {
+    display: block;
+  }
 }
