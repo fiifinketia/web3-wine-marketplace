@@ -54,8 +54,11 @@
         </div>
       </div>
     </div>
-    <div class="q-pt-lg flex row" :style="openModal === true ? '' : ''">
-      <div class="q-pr-sm">
+    <div
+      class="q-pt-lg flex row modal-container"
+      :style="openModal === true ? '' : ''"
+    >
+      <div class="q-pr-sm whole-modal">
         <button
           @click="openModal = !openModal"
           class="buy-now-button flex items-center justify-center cursor-pointer"
@@ -86,7 +89,11 @@
           </div>
           <div class="flex row" :class="openModal === true ? '' : ''">
             <div class="image-container q-pb-lg q-pl-lg">
-              <q-img src="../../../assets/Nft-metadata.png" width="380px" />
+              <q-img
+                src="../../../assets/Nft-metadata.png"
+                class="modal-picture"
+                width="380px"
+              />
             </div>
             <div class="process-container flex column">
               <div class="q-pt-md timer">04:59</div>
