@@ -108,15 +108,19 @@
             <td data-label="Floor-price" class="item2 floor-price">
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
-                <div class="price1">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
+                <div class="flex row price-mobile-container">
+                  <div class="price1">10.00</div>
+                  <div class="price2 q-pl-sm">/ $ 10.00</div>
+                </div>
               </div>
             </td>
             <td data-label="Age" class="item2">
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
+                <div class="price2 q-pl-sm">
+                  <label class="slash">/</label>$ 10.00
+                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
@@ -148,7 +152,9 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
+                <div class="price2 q-pl-sm">
+                  <label class="slash">/</label> $ 10.00
+                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>

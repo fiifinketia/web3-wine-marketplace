@@ -337,6 +337,9 @@ table {
   .nft-image {
     display: none;
   }
+  .nft-item {
+    width: 100px;
+  }
 }
 
 @media screen and (max-width: 880px) {
@@ -350,7 +353,7 @@ table {
     width: 50%;
   }
   .nft-item {
-    width: 50%;
+    width: 100px;
     padding-left: 0;
     font-size: 15px;
   }
@@ -397,15 +400,30 @@ table {
   .button-wrapper {
     padding-left: 0px;
   }
+
+  .nft-item {
+    width: 100px;
+  }
 }
 
 @media screen and (max-width: 400px) {
   .nft-item {
-    width: 70%;
+    width: 70px;
     font-size: 14px;
+  }
+  .item2 {
+    width: 100px;
   }
   .price2 {
     display: flex;
+    font-size: 18px;
+  }
+  .slash {
+    display: none;
+  }
+  .price-mobile-container {
+    display: flex;
+    flex-direction: column;
   }
 }
 
