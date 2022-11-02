@@ -13,7 +13,7 @@ async function RetrieveAllNFTs() : Promise<ListingWithPricingAndImage[]> {
   const url = <string> process.env.MARKETPLACE_GET_ALL_NFTS;
 
   await axios.get(url, GETParams).then((data) => {
-    response = data.data.collection;
+    response = data.data.result;
   })
 
   return response;

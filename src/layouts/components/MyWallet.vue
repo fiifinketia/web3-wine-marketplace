@@ -21,7 +21,7 @@
         <img src="../../assets/images/wallet.svg" alt="wallet-icon" />
         <div class="ballance-wrapper column">
           <div class="my-wallet-title q-pb-sm">Your balance is</div>
-          <div class="my-wallet-balance">$00.00</div>
+          <div class="my-wallet-balance"> ${{ balance }}</div>
         </div>
         <button class="my-wallet-btn">Fund wallet</button>
       </div>
@@ -32,9 +32,21 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { useUserStore } from 'src/stores/user-store';
 import '../../css/MainLayout/MyWallet.css';
 export default defineComponent({
   name: 'MyWallet',
+  data() {
+
+    const userStore = useUserStore();
+    return {
+      balance: 0,
+      userStore
+    };
+  },
+  async beforeMount() {
+    this.balance = await this.userStore.getWalletBalance();
+  },
   methods: {
     onClickBackground() {
       this.$emit('clicked', true);

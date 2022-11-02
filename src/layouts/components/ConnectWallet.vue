@@ -12,7 +12,7 @@
         Connect your Web3 Wallet to signup.
       </div>
       <div>
-        <button class="connect-wallet-btns connect-btn">Connect wallet</button>
+        <q-btn class="connect-wallet-btns connect-btn" @click="userStore.magic.connect()" >Connect wallet</q-btn>
         <button class="connect-wallet-btns no-wallet-btn">
           I don't have a wallet
         </button>
@@ -22,10 +22,19 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { useUserStore } from 'src/stores/user-store';
 import '../../css/MainLayout/ConnectWallet.css';
 export default defineComponent({
   name: 'ConnectWallet',
+  data (){
+    const userStore = useUserStore();
+    const email = ref('kelvinnketiaachiampong@gmail.com');
+    return {
+      email,
+      userStore
+    }
+  },
   methods: {
     onClickBackground() {
       this.$emit('clicked', true);
