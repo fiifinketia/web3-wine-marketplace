@@ -1,6 +1,7 @@
 <template>
-  <ConnectWallet @clicked="onConnectWallet($event)" v-if="showConnectWallet" />
-  <MyWallet @clicked="onConnectWallet($event)" v-if="showMyWallet" />
+  <ConnectWallet @clicked="onCloseModals($event)" v-if="showConnectWallet" />
+  <MyWallet @clicked="onCloseModals($event)" v-if="showMyWallet" />
+  <BurgerMenu v-if="showBurgerMenu" />
 
   <q-layout view="lHh Lpr lFf">
     <q-header
@@ -15,7 +16,14 @@
           "
           class="nav-bar-container-left"
         >
-          <q-img class="logo" src="../assets/images/WiV-logo.svg" />
+          <q-img
+            @click="
+              {
+              }
+            "
+            class="logo"
+            src="../assets/images/WiV-logo.svg"
+          />
         </div>
         <div class="nav-bar-container-center row items-center">
           <q-btn-dropdown
@@ -24,46 +32,48 @@
             flat
             label="Marketplace"
           >
-            <q-list>
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>All NFTs</q-item-label>
-                </q-item-section>
-              </q-item>
+            <div class="q-btn-menu-div">
+              <q-list>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label>All NFTs</q-item-label>
+                  </q-item-section>
+                </q-item>
 
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>New Releases</q-item-label>
-                </q-item-section>
-              </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label>New Releases</q-item-label>
+                  </q-item-section>
+                </q-item>
 
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>Recomended</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label>Recomended</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-btn-dropdown>
           <div
             @click="
@@ -100,15 +110,30 @@
             src="../assets/images/bell-icon.svg"
           />
           <q-btn-dropdown
-            class="btn-dropdown-menu"
+            class="btn-dropdown-menu profile-dropdown"
             dense
             flat
-            icon="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIuNSIgY3k9IjUuNSIgcj0iNSIgc3Ryb2tlPSIjMjEyMTMxIi8+CjxwYXRoIGQ9Ik0yMi41IDE4QzIyLjUgMTkuMzg4MSAyMS40NjE2IDIwLjc1NDkgMTkuNTM4NyAyMS44MDM3QzE3LjYzNDggMjIuODQyMiAxNC45NzA0IDIzLjUgMTIgMjMuNUM5LjAyOTYxIDIzLjUgNi4zNjUxOSAyMi44NDIyIDQuNDYxMjUgMjEuODAzN0MyLjUzODQxIDIwLjc1NDkgMS41IDE5LjM4ODEgMS41IDE4QzEuNSAxNi42MTE5IDIuNTM4NDEgMTUuMjQ1MSA0LjQ2MTI1IDE0LjE5NjNDNi4zNjUxOSAxMy4xNTc4IDkuMDI5NjEgMTIuNSAxMiAxMi41QzE0Ljk3MDQgMTIuNSAxNy42MzQ4IDEzLjE1NzggMTkuNTM4NyAxNC4xOTYzQzIxLjQ2MTYgMTUuMjQ1MSAyMi41IDE2LjYxMTkgMjIuNSAxOFoiIHN0cm9rZT0iIzIxMjEzMSIvPgo8L3N2Zz4K"
+            icon="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzOCAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiByeD0iNiIgZmlsbD0iI0Q5RThGRiIgZmlsbC1vcGFjaXR5PSIwLjMiLz4KPGNpcmNsZSBjeD0iMTkuNSIgY3k9IjEyLjUiIHI9IjUiIHN0cm9rZT0iIzIxMjEzMSIvPgo8cGF0aCBkPSJNMjkuNSAyNUMyOS41IDI2LjM4ODEgMjguNDYxNiAyNy43NTQ5IDI2LjUzODcgMjguODAzN0MyNC42MzQ4IDI5Ljg0MjIgMjEuOTcwNCAzMC41IDE5IDMwLjVDMTYuMDI5NiAzMC41IDEzLjM2NTIgMjkuODQyMiAxMS40NjEzIDI4LjgwMzdDOS41Mzg0MSAyNy43NTQ5IDguNSAyNi4zODgxIDguNSAyNUM4LjUgMjMuNjExOSA5LjUzODQxIDIyLjI0NTEgMTEuNDYxMyAyMS4xOTYzQzEzLjM2NTIgMjAuMTU3OCAxNi4wMjk2IDE5LjUgMTkgMTkuNUMyMS45NzA0IDE5LjUgMjQuNjM0OCAyMC4xNTc4IDI2LjUzODcgMjEuMTk2M0MyOC40NjE2IDIyLjI0NTEgMjkuNSAyMy42MTE5IDI5LjUgMjVaIiBzdHJva2U9IiMyMTIxMzEiLz4KPC9zdmc+Cg=="
           >
             <q-list>
-              <q-item clickable v-close-popup @click="connectWallet">
+              <q-item
+                v-if="!user"
+                clickable
+                v-close-popup
+                @click="onOpenModals('connectWallet')"
+              >
                 <q-item-section>
-                  <q-item-label>My wallet</q-item-label>
+                  <q-item-label>sign up</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-if="user"
+                clickable
+                v-close-popup
+                @click="onOpenModals('myWallet')"
+              >
+                <q-item-section>
+                  <q-item-label>my wallet</q-item-label>
                 </q-item-section>
               </q-item>
 
@@ -138,8 +163,6 @@
                 </q-item-section>
               </q-item>
               <q-item
-                clickable
-                v-close-popup
                 @click="
                   {
                   }
@@ -200,20 +223,22 @@
             </q-list>
           </q-btn-dropdown>
         </div>
-        <q-btn
-          class="menu-icon"
-          flat
-          dense
-          @click="
-            {
-            }
-          "
-          icon="menu"
-          aria-label="Menu"
-        ></q-btn>
+        <img
+          v-if="!showBurgerMenu"
+          class="burger-menu-icon"
+          src="../assets/images/burger-icon.svg"
+          alt="burger-menu"
+          @click="onOpenModals('burgerMenu')"
+        />
+        <img
+          v-if="showBurgerMenu"
+          class="burger-menu-exit-icon"
+          src="../assets/images/x-burger-icon.svg"
+          alt="burger-menu"
+          @click="onCloseModals(true)"
+        />
       </q-toolbar>
     </q-header>
-    <BurgerMenu v-if="showBurgerMenu" />
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -232,6 +257,7 @@ export default defineComponent({
   name: 'MainLayout',
   data() {
     return {
+      user: true,
       showConnectWallet: false,
       showBurgerMenu: false,
       showMyWallet: false,
@@ -243,17 +269,28 @@ export default defineComponent({
     MyWallet,
   },
   methods: {
-    connectWallet() {
-      // this.showConnectWallet = true;
-      this.showMyWallet = true;
+    onOpenModals(modal: string) {
+      switch (modal) {
+        case 'connectWallet':
+          this.showConnectWallet = true;
+          break;
+        case 'myWallet':
+          this.showMyWallet = true;
+          break;
+        case 'burgerMenu':
+          this.showBurgerMenu = true;
+          break;
+      }
       document.body.classList.add('no-scroll');
     },
-    onConnectWallet(title: boolean) {
+
+    onCloseModals(title: boolean) {
       if (title === true) {
         this.showConnectWallet = false;
         this.showMyWallet = false;
+        this.showBurgerMenu = false;
+        document.body.classList.remove('no-scroll');
       }
-      document.body.classList.remove('no-scroll');
     },
   },
 });
