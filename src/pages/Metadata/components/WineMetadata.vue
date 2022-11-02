@@ -5,15 +5,11 @@
   >
     <div class="brand-name">The brand name</div>
     <div class="wine-name">The full name of the wine is here</div>
-    <div class="flex row q-pt-lg">
-      <div>
-        <q-img
-          src="../../../assets/Nft-metadata.png"
-          width="370px"
-          height="370px"
-        />
+    <div class="flex r q-pt-lg test-class">
+      <div class="flex justify-center">
+        <q-img src="../../../assets/Nft-metadata.png" class="picture" />
       </div>
-      <div class="flex column">
+      <div class="flex column info">
         <div class="flex row">
           <div class="q-pl-lg">
             <q-img src="../../../assets/user.png" width="40px" height="40px" />
@@ -58,8 +54,11 @@
         </div>
       </div>
     </div>
-    <div class="q-pt-lg flex row" :style="openModal === true ? '' : ''">
-      <div class="q-pr-sm">
+    <div
+      class="q-pt-lg flex row modal-container"
+      :style="openModal === true ? '' : ''"
+    >
+      <div class="q-pr-sm whole-modal">
         <button
           @click="openModal = !openModal"
           class="buy-now-button flex items-center justify-center cursor-pointer"
@@ -90,7 +89,11 @@
           </div>
           <div class="flex row" :class="openModal === true ? '' : ''">
             <div class="image-container q-pb-lg q-pl-lg">
-              <q-img src="../../../assets/Nft-metadata.png" width="380px" />
+              <q-img
+                src="../../../assets/Nft-metadata.png"
+                class="modal-picture"
+                width="380px"
+              />
             </div>
             <div class="process-container flex column">
               <div class="q-pt-md timer">04:59</div>
@@ -164,13 +167,7 @@ export default defineComponent({
       right: ref(false),
     };
   },
-  methods: {
-    // blurBackground() {
-    //   if (this.openModal) {
-    //     document.getElementById('i-container').addClass();
-    //   }
-    // },
-  },
+  methods: {},
 });
 </script>
 
