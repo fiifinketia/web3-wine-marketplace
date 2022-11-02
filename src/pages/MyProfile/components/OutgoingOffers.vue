@@ -211,15 +211,15 @@
         <div class="q-pr-md q-pt-lg cursor-pointer">
           <q-img
             src="../../../assets/close.png"
-            width="30px"
+            class="ethereum-image"
             @click="edit = !edit"
           />
         </div>
       </div>
       <div class="flex row items-center justify-start q-pl-md q-pt-lg">
         <div class="flex row justify-between">
-          <div class="modal-image">
-            <q-img src="../../../assets/nft1.png" width="300px" />
+          <div class="modal-image-wrapper">
+            <q-img src="../../../assets/nft1.png" class="modal-image" />
           </div>
           <!-- <div class="modal-timer">04:59</div> -->
         </div>
@@ -254,13 +254,15 @@
               I agree with <label class="terms">Terms and Conditions</label>
             </div>
           </div>
-          <div class="flex row justify-between q-pt-lg">
-            <div class="">
+        </div>
+        <div class="modal-buttons-wrapper">
+          <div class="flex row justify-between q-pt-lg modal-buttons">
+            <div>
               <button class="no-border reset-button">
                 <div class="reset-button-text">Reset</div>
               </button>
             </div>
-            <div class="">
+            <div>
               <button class="no-border update-offer-button">
                 <div class="update-offer-text">Update offer</div>
               </button>
