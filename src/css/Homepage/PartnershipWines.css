@@ -1,0 +1,76 @@
+.partner-container {
+  width: 95%;
+}
+
+.first-text {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 470;
+  font-size: 32px;
+  line-height: 48px;
+  letter-spacing: 0.03em;
+  color: #212131;
+}
+
+.second-text {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.partnership-container {
+  width: 90%;
+}
+
+.partnership-card-container {
+}
+
+.partnership-wine-name {
+  width: 200px;
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 460;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
+
+.partnership-wine-desc {
+  font-family: 'ProximaNova-Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  color: #9d9d9d;
+}
+
+.partnership-wine-price {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.partnership-border {
+  background: linear-gradient(
+    109.05deg,
+    rgba(255, 255, 255, 0.13) 15.61%,
+    rgba(255, 255, 255, 0.04) 98.78%
+  );
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  backdrop-filter: blur(20px);
+
+  border-radius: 6px;
+}

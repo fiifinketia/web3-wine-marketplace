@@ -1,0 +1,118 @@
+body {
+  position: relative;
+}
+
+.no-scroll {
+  overflow-y: hidden;
+}
+
+.transition {
+  opacity: 1;
+  transition: transform 2s cubic-bezier(0.63, 0.02, 0.16, 0.98) 0s,
+    opacity 2s ease 0s;
+}
+
+.nav-bar {
+  background-color: transparent;
+  color: #212131;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btn-dropdown-menu {
+  box-shadow: none;
+  padding-left: 0;
+}
+
+.btn-dropdown-menu .q-menu {
+  box-shadow: none;
+  border: 1px solid rgba(94, 151, 236, 0.27);
+}
+
+.q-item {
+  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #212131;
+}
+.q-item:last-child {
+  border-bottom: none;
+}
+
+.logo {
+  width: 100px;
+  cursor: pointer;
+}
+
+.nav-bar-container-center,
+.nav-bar-container-center .block {
+  gap: 3rem;
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 440;
+  font-size: 20px;
+  line-height: 31px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #212131;
+}
+.nav-bar-container-center > div {
+  cursor: pointer;
+}
+
+.nav-bar-container-right {
+  gap: 1rem;
+}
+.nav-bar-container-right > img {
+  cursor: pointer;
+}
+
+.icons {
+  width: 38px;
+}
+
+.profile-dropdown .q-icon {
+  font-size: 38px !important;
+}
+
+.btn-dropdown-menu .q-btn-dropdown__arrow {
+  font-size: 1.2rem !important;
+  margin: 0 !important;
+  margin-top: 5px !important;
+  padding: 0 !important;
+}
+
+.profile-dropdown .q-btn-dropdown__arrow {
+  margin-top: 4px !important;
+}
+
+.burger-menu-icon {
+  display: none;
+}
+
+.burger-menu-exit-icon {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 992px) {
+  .nav-bar-container-center {
+    gap: 2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .nav-bar-container-center,
+  .nav-bar-container-right {
+    display: none;
+  }
+  .burger-menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+}
