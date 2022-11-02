@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center justify-center q-pt-lg">
-    <div class="flex row justify-between partner-container items-center">
-      <div class="flex column text-container">
+  <div class="flex justify-center">
+    <div class="flex row justify-between items-center partnership-container">
+      <div class="flex column">
         <div class="first-text">
           Want to try some tasty wines sourced directly from producers?
         </div>
@@ -9,35 +9,29 @@
           Enjoy our specially selected partnership wines are coming soon!
         </div>
       </div>
-      <div class="flex row q-gutter-lg">
+      <div class="q-card-container row q-gutter-lg">
         <q-card
-          class="flex column shadow-0 card-container"
+          class="partnership-card-container column no-shadow"
           v-for="item in items"
           :key="item.name"
-          :class="item.class"
         >
-          <q-img src="../../../assets/circle.png" class="circle" />
-          <div class="name q-pt-sm">The full name is in this row</div>
-          <div class="description q-pt-sm">Sparkling water</div>
+          <q-img src="../../../assets/circle.png" width="200px" />
+          <div class="partnership-wine-name">The full name is in this row</div>
+          <div class="q-pt-sm partnership-wine-desc">Sparkling water</div>
           <div class="q-pt-sm">
-            <div class="flex column price-container q-pa-sm">
-              <div class="price-title">Price</div>
-              <div class="flex row items-center justify-between">
-                <div class="flex row items-center">
+            <div class="flex column partnership-border q-pa-sm">
+              <div class="partnership-wine-desc">Price</div>
+              <div class="flex row justify-between">
+                <div class="flex row q-pt-sm">
                   <q-img
                     src="../../../assets/usdc.png"
-                    width="18px"
-                    height="18px"
+                    width="25px"
+                    height="25px"
                   />
-                  <div class="price1 q-pl-sm">00.00</div>
-                  <div class="price2 q-pl-sm">/$ 00.00</div>
+                  <div class="partnership-wine-price q-pl-sm">00.00</div>
                 </div>
                 <div>
-                  <q-img
-                    class="cursor-pointer trash"
-                    src="../../../assets/trash.png"
-                    width="30px"
-                  />
+                  <q-img src="../../../assets/trash.png" width="30px" />
                 </div>
               </div>
             </div>

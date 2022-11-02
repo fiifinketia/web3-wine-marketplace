@@ -1,9 +1,10 @@
 .table {
   width: 80%;
   background: #ffffff;
-  border: 1px solid rgba(94, 151, 236, 0.27);
+  /* border: 1px solid rgba(94, 151, 236, 0.27); */
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
-  border-radius: 20px;
+  border-radius: 8px;
+  border-collapse: collapse;
 }
 
 .wine-name-label {
@@ -23,6 +24,7 @@
   font-size: 18px;
   line-height: 14px;
   color: #16a672;
+  padding: 15px;
 }
 
 .negative {
@@ -103,6 +105,10 @@
   line-height: 46px;
   text-align: center;
   color: #212131;
+}
+
+thead {
+  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
 }
 
 tr:nth-child(even) {

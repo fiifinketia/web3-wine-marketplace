@@ -22,23 +22,26 @@
   opacity: 0.6;
 }
 
-.name {
+.partnership-container {
+  width: 90%;
+}
+
+.partnership-card-container {
+}
+
+.partnership-wine-name {
+  width: 200px;
   font-family: 'Obviously';
   font-style: normal;
   font-weight: 460;
   font-size: 18px;
   line-height: 24px;
-  /* identical to box height, or 133% */
-
   letter-spacing: 0.02em;
-
-  /* Secondary/dark blue */
-
   color: #212131;
 }
 
-.description {
-  font-family: 'Proxima Nova';
+.partnership-wine-desc {
+  font-family: 'ProximaNova-Regular';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -46,13 +49,10 @@
   display: flex;
   align-items: center;
   letter-spacing: 0.5px;
-
-  /* Gray */
-
   color: #9d9d9d;
 }
 
-.price1 {
+.partnership-wine-price {
   font-family: 'Proxima Nova';
   font-style: normal;
   font-weight: 700;
@@ -63,30 +63,7 @@
   color: #212131;
 }
 
-.price2 {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  color: #9d9d9d;
-}
-
-.price-title {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.5px;
-  color: #9d9d9d;
-}
-
-.price-container {
+.partnership-border {
   background: linear-gradient(
     109.05deg,
     rgba(255, 255, 255, 0.13) 15.61%,
@@ -94,60 +71,6 @@
   );
   border: 1px solid rgba(94, 151, 236, 0.27);
   backdrop-filter: blur(20px);
-  /* Note: backdrop-filter has minimal browser support */
-  min-width: 230px;
+
   border-radius: 6px;
-}
-
-.text-container {
-  width: 40%;
-}
-
-@media screen and (max-width: 1400px) {
-  .price-container {
-    min-width: 200px;
-  }
-
-  .partner-container {
-    width: 80%;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .price-container {
-    min-width: 200px;
-  }
-  .partner-container {
-    width: 95%;
-  }
-}
-
-@media screen and (max-width: 772px) {
-  .second {
-    display: none;
-  }
-  .partner-container {
-    width: 97%;
-  }
-}
-
-@media screen and (max-width: 576px) {
-  .second {
-    display: none;
-  }
-  .card-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
-  .circle {
-    width: 100px;
-  }
-  .price-container {
-    min-width: 120px;
-  }
-  .trash {
-    max-width: 20px;
-  }
 }

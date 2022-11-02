@@ -2,8 +2,8 @@
   <HeadlineComponent />
   <ExclusiveOffers />
   <TrendingWines class="trending" />
-  <PartnershipWines />
-  <FAQ />
+  <PartnershipWines class="partnership" />
+  <FAQ class="faq" />
   <LandingPageFooter />
 </template>
 
@@ -27,7 +27,7 @@ export default defineComponent({
     ExclusiveOffers,
     TrendingWines,
     LandingPageFooter,
-    // PartnershipWines,
+    PartnershipWines,
     FAQ,
   },
 });

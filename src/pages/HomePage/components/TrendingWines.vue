@@ -5,17 +5,23 @@
       <table class="table q-pt-sm">
         <thead>
           <tr>
-            <th class="flex items-start q-pl-md">Wine name</th>
-            <th class="twentyFour q-pl-md q-pb-sm trending-titles">24hrs</th>
-            <th class="three-mos q-pl-md q-pb-sm trending-titles">3mos</th>
-            <th class="q-pl-md q-pb-sm trending-titles">6mos</th>
-            <th class="trending-wines-price q-pl-md q-pb-sm trending-titles">
+            <th class="flex items-start q-pl-md q-pt-md">Wine name</th>
+            <th class="twentyFour q-pl-md q-pb-sm q-pt-md trending-titles">
+              24hrs
+            </th>
+            <th class="three-mos q-pl-md q-pb-sm trending-titles q-pt-md">
+              3mos
+            </th>
+            <th class="q-pl-md q-pb-sm trending-titles q-pt-md">6mos</th>
+            <th
+              class="trending-wines-price q-pl-md q-pb-sm q-pt-md trending-titles"
+            >
               Price
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody class="tbody-class">
+          <tr class="tr-class">
             <td class="justify-start q-pl-md">
               <div class="wine-name-label">The full wine name here</div>
             </td>
