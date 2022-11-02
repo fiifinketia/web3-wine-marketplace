@@ -1,5 +1,5 @@
 <template>
-  <div class="flex column items-center justify-center">
+  <div class="flex column items-center justify-center faq-container">
     <div class="faq-title">Don't know how to start?</div>
     <div class="faq-small-text">Let us help you!</div>
     <div class="q-pa-md row items-start justify-center q-gutter-md container">
@@ -62,10 +62,12 @@
         </q-card-section>
       </q-card>
     </div>
-    <div class="still-have-question">Still have questions?</div>
-    <div class="still-have-question q-pt-sm">
-      <a class="contact-us">Contact us</a> or find answer in
-      <a class="contact-us">FAQs</a>
+    <div class="flex row items-center justify-center">
+      <div class="still-have-question">Still have questions?</div>
+      <div class="still-have-question q-pl-sm">
+        <a class="contact-us">Contact us</a> or find answer in
+        <a class="contact-us">FAQs</a>
+      </div>
     </div>
   </div>
 </template>

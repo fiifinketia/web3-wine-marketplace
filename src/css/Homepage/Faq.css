@@ -10,6 +10,10 @@
   color: #212131;
 }
 
+.faq-container {
+  background: rgba(217, 232, 255, 0.3);
+}
+
 .faq-small-text {
   font-family: 'Proxima Nova';
   font-style: normal;
