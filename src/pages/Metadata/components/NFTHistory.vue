@@ -196,6 +196,7 @@ export default defineComponent({
           labels: {
             format: 'dd/MM/yyyy',
             show: true,
+            overwriteCategories: false,
             rotate: -45,
             rotateAlways: false,
             hideOverlappingLabels: true,
