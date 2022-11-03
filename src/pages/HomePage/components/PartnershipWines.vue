@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
     <div class="flex row justify-between items-center partnership-container">
-      <div class="flex column">
+      <div class="flex column partnership-text-container">
         <div class="first-text">
           Want to try some tasty wines sourced directly from producers?
         </div>
@@ -14,8 +14,12 @@
           class="partnership-card-container column no-shadow"
           v-for="item in items"
           :key="item.name"
+          :class="item.class"
         >
-          <q-img src="../../../assets/circle.png" width="200px" />
+          <q-img
+            src="../../../assets/circle.png"
+            class="partnership-wines-image"
+          />
           <div class="partnership-wine-name">The full name is in this row</div>
           <div class="q-pt-sm partnership-wine-desc">Sparkling water</div>
           <div class="q-pt-sm">
@@ -53,12 +57,12 @@ export default defineComponent({
         {
           name: 'Vranac',
           price: 1111,
-          class: 'first',
+          class: 'vranac',
         },
         {
           name: 'Sauvignon',
           price: 1111,
-          class: 'second',
+          class: 'vranac1',
         },
       ],
     };

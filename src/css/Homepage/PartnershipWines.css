@@ -3,27 +3,36 @@
 }
 
 .first-text {
-  font-family: 'Obviously';
+  font-family: 'Obviously-Bold';
   font-style: normal;
   font-weight: 470;
   font-size: 32px;
   line-height: 48px;
   letter-spacing: 0.03em;
   color: #212131;
+  width: 80%;
 }
 
 .second-text {
-  font-family: 'Proxima Nova';
+  font-family: 'ProximaNova-Regular';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
   line-height: 36px;
   color: #212131;
   opacity: 0.6;
+  width: 70%;
 }
 
 .partnership-container {
   width: 90%;
+}
+/* .q-card-container {
+  width: 100%;
+} */
+
+.partnership-text-container {
+  width: 50%;
 }
 
 .partnership-card-container {
@@ -73,4 +82,70 @@
   backdrop-filter: blur(20px);
 
   border-radius: 6px;
+}
+
+.partnership-wines-image {
+  width: 200px;
+}
+
+@media screen and (max-width: 992px) {
+  .partnership-text-container {
+    width: 40%;
+  }
+  .partnership-container {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .vranac {
+    display: none;
+  }
+  .partnership-text-container {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .partnership-text-container {
+    width: 50%;
+  }
+  .partnership-wines-image {
+    width: 170px;
+  }
+  .first-text {
+    width: 100%;
+  }
+  .second-text {
+    width: 100%;
+  }
+  .partnership-wine-name {
+    width: 170px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .partnership-container {
+    width: 95%;
+  }
+  .partnership-text-container {
+    width: 100%;
+  }
+  .partnership-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .q-card-container {
+    padding-top: 20px;
+  }
+  .vranac {
+    display: flex;
+  }
+  .partnership-wines-image {
+    width: 140px;
+  }
+  .partnership-wine-name {
+    width: 140px;
+  }
 }
