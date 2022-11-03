@@ -8,7 +8,7 @@ import {
   LoginWithMagicLinkConfiguration,
 } from 'magic-sdk';
 import { ConnectExtension } from '@magic-ext/connect';
-import { ethers } from 'ethers';
+import Web3 from 'web3';
 import { ref } from 'vue';
 
 export const useUserStore = defineStore(
@@ -22,9 +22,9 @@ export const useUserStore = defineStore(
       extensions: [new ConnectExtension()],
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const provider = new ethers.providers.Web3Provider(<any>magic.rpcProvider);
-    const walletAddress = async () =>
-      await provider.listAccounts().then((accounts) => accounts[0]);
+    const web3 = new Web3(<any>magic.rpcProvider);
+
+    const walletAddress = ref('');
 
     // const user = ref<{ publicAddress: string | null }>({
     //   publicAddress: null,
@@ -35,11 +35,6 @@ export const useUserStore = defineStore(
     // const isConnected = () => {
     //   return !!provider.listAccounts().then((accounts) => accounts[0]);
     // };
-
-    const getWalletBalance = async () => {
-      // Get user's Ethereum public address
-      return provider.getBalance(await walletAddress());
-    };
 
     // const connect = async () => {
     //   try {
@@ -67,9 +62,10 @@ export const useUserStore = defineStore(
 
     return {
       magic,
-      provider,
+      web3,
+      // provider,
       walletAddress,
-      getWalletBalance,
+      // getWalletBalance,
       // isConnected,
       // walletBalance,
       // connect,
