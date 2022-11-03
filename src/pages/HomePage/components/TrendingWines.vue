@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody class="tbody-class">
-          <tr class="tr-class">
+          <tr>
             <td class="justify-start q-pl-md">
               <div class="wine-name-label">The full wine name here</div>
             </td>
@@ -58,7 +58,6 @@
                     height="20px"
                   />
                   <div class="q-pl-sm currency">00.00</div>
-                  <div class="price10 q-pl-sm">/ $ 00.00</div>
                 </div>
               </div>
             </td>
@@ -100,7 +99,6 @@
                     height="20px"
                   />
                   <div class="q-pl-sm currency">00.00</div>
-                  <div class="price10 q-pl-sm">/ $ 00.00</div>
                 </div>
               </div>
             </td>
@@ -141,11 +139,10 @@
                   height="20px"
                 />
                 <div class="q-pl-sm currency">00.00</div>
-                <div class="price10 q-pl-sm">/ $ 00.00</div>
               </div>
             </div>
           </td>
-          <tr>
+          <tr class="tr-width">
             <td class="justify-start q-pl-md">
               <div class="wine-name-label">The full wine name here</div>
             </td>
@@ -182,7 +179,6 @@
                     height="20px"
                   />
                   <div class="q-pl-sm currency">00.00</div>
-                  <div class="price10 q-pl-sm">/ $ 00.00</div>
                 </div>
               </div>
             </td>
