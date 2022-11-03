@@ -4,6 +4,11 @@
 }
 
 @font-face {
+  font-family: Obviously-Bold;
+  src: url(../assets/fonts/Obviously-Bold.otf);
+}
+
+@font-face {
   font-family: ProximaNova-Bold;
   src: url(../assets/fonts/ProximaNova-Bold.otf);
 }

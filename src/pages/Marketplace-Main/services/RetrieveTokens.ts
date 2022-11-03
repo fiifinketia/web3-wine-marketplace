@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 
-declare let window: any;
 const GETParams = {
   params: {
     t: new Date().getTime()
