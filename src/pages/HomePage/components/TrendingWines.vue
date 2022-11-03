@@ -19,9 +19,15 @@
               Price
             </th>
           </tr>
+          <div class="q-pl-sm">
+            <div class="thead"></div>
+          </div>
         </thead>
-        <tbody class="tbody-class">
+        <tbody>
           <tr>
+            <!-- <div class="q-pl-sm">
+              <div class="background-tr"></div>
+            </div> -->
             <td class="justify-start q-pl-md">
               <div class="wine-name-label">The full wine name here</div>
             </td>
@@ -62,6 +68,7 @@
               </div>
             </td>
           </tr>
+
           <tr>
             <td class="justify-start q-pl-md">
               <div class="wine-name-label">The full wine name here</div>

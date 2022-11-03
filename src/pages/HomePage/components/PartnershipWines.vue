@@ -2,7 +2,7 @@
   <div class="flex justify-center">
     <div class="flex row justify-between items-center partnership-container">
       <div class="flex column partnership-text-container">
-        <div class="first-text">
+        <div class="first-text-partnership">
           Want to try some tasty wines sourced directly from producers?
         </div>
         <div class="second-text">

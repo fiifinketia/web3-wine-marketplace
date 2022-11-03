@@ -59,6 +59,12 @@
       </div>
     </div>
   </div>
+  <!-- <footer class="footer">
+    <div class="q-pl-sm q-pt-md">
+      <q-img src="../../../assets/wiv-logo.png" width="80px" />
+    </div>
+    <div class=""></div>
+  </footer> -->
 </template>
 
 <script lang="ts">
