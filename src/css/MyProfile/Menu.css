@@ -56,3 +56,12 @@
     display: flex;
   }
 }
+
+@media screen and (max-width: 400px) {
+  .offer-mobile-text {
+    font-size: 15px;
+  }
+  .mobile-nft-number {
+    font-size: 15px;
+  }
+}

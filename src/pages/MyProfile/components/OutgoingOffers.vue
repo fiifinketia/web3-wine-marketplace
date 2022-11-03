@@ -110,16 +110,12 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price1">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
               </div>
             </td>
             <td data-label="Age" class="item2">
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">
-                  <label class="slash">/</label> $ 10.00
-                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
@@ -159,16 +155,12 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price1">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
               </div>
             </td>
             <td data-label="Age" class="item2">
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">
-                  <label class="slash">/</label>$ 10.00
-                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
@@ -229,7 +221,6 @@
             <div class="row items-center q-pt-sm">
               <q-img src="../../../assets/ethereum.png" width="25px" />
               <div class="highest-offer-price1">00.00</div>
-              <div class="highest-offer-price2 q-pl-sm">/ $ 00.00</div>
             </div>
           </div>
           <div class="column q-pt-md">
@@ -245,7 +236,6 @@
             <div class="row items-center q-pt-sm">
               <q-img src="../../../assets/ethereum.png" width="25px" />
               <div class="modal-total-price1">00.00</div>
-              <div class="modal-total-price2 q-pl-sm">/ $ 00.00</div>
             </div>
           </div>
           <div class="flex row items-center q-pt-lg">

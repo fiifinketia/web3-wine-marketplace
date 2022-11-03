@@ -86,7 +86,7 @@
     <div class="flex justify-center items-center container-table">
       <table class="table">
         <thead>
-          <tr>
+          <tr class="tr-border">
             <th class="flex items-start">NFT</th>
             <th class="floor-price">Floor Price</th>
             <th>Offered</th>
@@ -110,7 +110,6 @@
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="flex row price-mobile-container">
                   <div class="price1">10.00</div>
-                  <div class="price2 q-pl-sm">/ $ 10.00</div>
                 </div>
               </div>
             </td>
@@ -118,9 +117,6 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">
-                  <label class="slash">/</label>$ 10.00
-                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
@@ -145,16 +141,12 @@
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price1">10.00</div>
-                <div class="price2 q-pl-sm">/ $ 10.00</div>
               </div>
             </td>
             <td data-label="Age" class="item2">
               <div class="flex row justify-center">
                 <q-img src="../../../assets/usdc.png" class="ethereum" />
                 <div class="price3">10.00</div>
-                <div class="price2 q-pl-sm">
-                  <label class="slash">/</label> $ 10.00
-                </div>
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
@@ -181,7 +173,7 @@
         </button>
       </div>
       <div>
-        <button class="accept-offer-button" @click="buyNFT()">
+        <button class="accept-offer-button" @click="this.buy = !buy">
           <div class="accept-text">Accept</div>
         </button>
       </div>
@@ -214,13 +206,13 @@ export default defineComponent({
     };
   },
   methods: {
-    buyNFT() {
-      this.buy = true;
-      setInterval(() => {
-        this.buy = false;
-        this.accept = false;
-      }, 3500);
-    },
+    // buyNFT() {
+    //   this.buy = true;
+    //   setInterval(() => {
+    //     this.buy = false;
+    //     this.accept = false;
+    //   }, 3500);
+    // },
   },
 });
 </script>

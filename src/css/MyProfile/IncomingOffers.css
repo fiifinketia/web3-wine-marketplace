@@ -161,16 +161,16 @@
   color: #212131;
 }
 
-.nft-table {
+/* .nft-table {
   width: 90%;
   border: 1px solid rgba(94, 151, 236, 0.27);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
   border-radius: 14px;
-}
+} */
 
 .nft-titles-container {
   width: 98%;
-  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+  /* border-bottom: 1px solid rgba(94, 151, 236, 0.27); */
 }
 
 .nft-cards-container {
@@ -293,6 +293,7 @@
 
 table {
   width: 95.5%;
+  border-collapse: collapse;
 }
 
 .table td,
@@ -302,7 +303,7 @@ table {
   font-size: 16px;
 }
 
-.table th {
+.tr-border {
   border-bottom: 1px solid rgba(94, 151, 236, 0.27);
 }
 
@@ -312,6 +313,7 @@ table {
 
 .table tbody tr:nth-child(even) {
   background-color: rgba(217, 232, 255, 0.3);
+  border-radius: 8px;
 }
 
 .button-image {
@@ -394,11 +396,14 @@ table {
   }
   .search_wrap .search_box {
     position: relative;
-    width: 95%;
+    width: 300px;
     height: 45px;
   }
+  .search_wrap_2 {
+    width: 300px;
+  }
   .button-wrapper {
-    padding-left: 0px;
+    padding-right: 0px;
   }
 
   .nft-item {
@@ -424,6 +429,20 @@ table {
   .price-mobile-container {
     display: flex;
     flex-direction: column;
+  }
+  .search_wrap .search_box {
+    position: relative;
+    width: 220px;
+    height: 45px;
+  }
+  .search_wrap_2 {
+    width: 220px;
+  }
+  .button-wrapper {
+    padding-right: 0px;
+  }
+  .price3 {
+    font-size: 18px;
   }
 }
 
