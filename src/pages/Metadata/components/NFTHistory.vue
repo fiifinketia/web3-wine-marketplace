@@ -370,4 +370,10 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+@media screen and (min-width: 1800px) {
+  .apexcharts-xaxis-label {
+    font-size: 12px;
+  }
+}
+</style>

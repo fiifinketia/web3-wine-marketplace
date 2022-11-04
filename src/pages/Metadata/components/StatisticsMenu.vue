@@ -1,9 +1,15 @@
 <template>
   <div class="flex justify-center">
     <q-tabs no-caps align="justify" class="tabs-menu">
-      <q-tab name="history" label="History" />
-      <q-tab class="tab-text-not-clicked" name="about" label="About" />
-      <q-tab
+      <q-route-tab to="/metadata" name="history" label="History" />
+      <q-route-tab
+        to="/metadata/about"
+        class="tab-text-not-clicked"
+        name="about"
+        label="About"
+      />
+      <q-route-tab
+        to="/metadata/winemaker"
         name="wine-maker"
         class="tab-text-not-clicked"
         label="Wine-maker"
