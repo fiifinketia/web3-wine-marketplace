@@ -6,15 +6,15 @@
     <div class="brand-name">The brand name</div>
     <div class="wine-name">The full name of the wine is here</div>
     <div class="flex r q-pt-lg test-class">
-      <div class="flex justify-center">
+      <div class="flex items-center justify-center">
         <q-img src="../../../assets/Nft-metadata.png" class="picture" />
       </div>
       <div class="flex column info">
         <div class="flex row">
-          <div class="q-pl-lg">
-            <q-img src="../../../assets/user.png" width="40px" height="40px" />
+          <div class="q-pl-lg user-image-wrapper">
+            <q-img src="../../../assets/user.png" class="user-image" />
           </div>
-          <div class="flex column q-pl-sm">
+          <div class="flex column q-pl-sm user">
             <div class="owned-by">Owned by</div>
             <div class="user-id">Useridhere</div>
           </div>
@@ -38,7 +38,6 @@
                 <q-img src="../../../assets/ethereum.png" width="20px" />
               </div>
               <div class="price1">00.00</div>
-              <div class="price2">/ $ 00.00</div>
             </div>
           </div>
           <div class="bid-container flex column">
@@ -48,23 +47,21 @@
                 <q-img src="../../../assets/ethereum.png" width="20px" />
               </div>
               <div class="bid-price1">00.00</div>
-              <div class="bid-price2">/ $ 00.00</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="q-pt-lg flex row modal-container"
-      :style="openModal === true ? '' : ''"
-    >
+    <div class="q-pt-lg flex row modal-container">
       <div class="q-pr-sm whole-modal">
-        <button
-          @click="openModal = !openModal"
-          class="buy-now-button flex items-center justify-center cursor-pointer"
-        >
-          <div class="buy-now-text">Buy now</div>
-        </button>
+        <div class="buy-now-button-wrapper">
+          <button
+            @click="openModal = !openModal"
+            class="buy-now-button flex items-center justify-center cursor-pointer"
+          >
+            <div class="buy-now-text">Buy now</div>
+          </button>
+        </div>
         <div v-if="openModal == true" class="wine-container absolute">
           <div class="flex row items-center">
             <div class="buy-now-modal q-pl-lg q-pr-sm">Buy now</div>
@@ -87,7 +84,7 @@
               </div>
             </div>
           </div>
-          <div class="flex row" :class="openModal === true ? '' : ''">
+          <div class="flex row">
             <div class="image-container q-pb-lg q-pl-lg">
               <q-img
                 src="../../../assets/Nft-metadata.png"
@@ -138,7 +135,7 @@
           </div>
         </div>
       </div>
-      <div class="q-pl-sm">
+      <div class="q-pl-sm make-offer-button-wrapper">
         <button
           class="make-offer-button flex items-center justify-center cursor-pointer"
         >
@@ -156,7 +153,6 @@
 </template>
 
 <script lang="ts">
-import { filter } from 'compression';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
 export default defineComponent({
