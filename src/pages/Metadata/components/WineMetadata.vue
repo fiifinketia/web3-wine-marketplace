@@ -21,9 +21,9 @@
         </div>
         <div class="metadata">
           <div class="flex row">
-            <div class="metadata-text border">Sparkling wine</div>
-            <div class="metadata-text border">00 yrs</div>
-            <div class="metadata-text border">Italy</div>
+            <div class="metadata-text border-between">Sparkling wine</div>
+            <div class="metadata-text border-between">00 yrs</div>
+            <div class="metadata-text border-between">Italy</div>
             <div class="metadata-text q-pl-sm">The region name</div>
           </div>
           <div class="wine-description">
