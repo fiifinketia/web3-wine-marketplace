@@ -1,0 +1,108 @@
+.stats-container {
+  width: 73%;
+}
+
+.market-overview {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 50px;
+  text-align: center;
+  letter-spacing: 0.03em;
+  color: #212131;
+  padding-bottom: 30px;
+}
+
+.market-overview-desc-text {
+  font-family: 'ProximaNova-Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 27px;
+  color: #212131;
+  text-align: left;
+}
+
+.price-history {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 20px;
+  line-height: 31px;
+  display: flex;
+  align-items: center;
+
+  color: #212131;
+}
+
+.pie-chart-width {
+  width: 35%;
+}
+
+.wine-region-return {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 20px;
+  line-height: 31px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.top-five {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 20px;
+  line-height: 31px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.last-five-days {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  color: #3586ff;
+}
+
+.top-five-container {
+  background: #ffffff;
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
+  border-radius: 20px;
+}
+
+.wine-name-container {
+  width: 60%;
+  /* padding-left: 20px; */
+  padding-top: 10px;
+}
+
+.region-price-container {
+  width: 40%;
+  /* padding-left: 20px; */
+  padding-top: 10px;
+}
+
+.top-five-wrapper {
+  width: 97%;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-five-header {
+  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+}
+
+.top-five-wine-container:nth-child(even) {
+  background: rgba(217, 232, 255, 0.3);
+  border-radius: 8px;
+}

@@ -21,6 +21,16 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/stats',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/Stats/Stats.vue'),
+      },
+    ],
+  },
 
   // Always leave this as last one,
   // but you can also remove it
