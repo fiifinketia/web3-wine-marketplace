@@ -263,9 +263,7 @@ export default defineComponent({
       // this.showConnectWallet = true;
       // // this.showMyWallet = true;
       // document.body.classList.add('no-scroll');
-      this.userStore.web3.eth.getAccounts().then((accounts) => {
-        this.userStore.walletAddress = accounts[0];
-      });
+      this.userStore.provider.listAccounts().then(accounts => this.userStore.walletAddress = accounts[0]);
     },
     async openWallet() {
       // this.showMyWallet = true;

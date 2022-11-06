@@ -11,6 +11,7 @@
         :ripple="false"
         no-caps
         class="btn--no-hover"
+				@click="selectCard(token.tokenID)"
       >
         <q-card
           class="q-pa-xs main-marketplace-nft-card"
@@ -49,31 +50,59 @@
         </q-card>
       </q-btn>
     </div>
+		<q-dialog v-model="card">
+      <q-card class="my-card">
+
+        <q-card-actions align="right">
+          <q-btn flat color="primary" label="Create Order" @click="CreateListingForERC1155" />
+          <!-- <q-btn v-close-popup flat color="primary" round icon="event" /> -->
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page-container>
 </template>
 
 <script lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+
+import { useUserStore } from 'src/stores/user-store';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import { RetrieveAllNFTs } from '../services/RetrieveTokens';
 import '../../../css/Marketplace/NFT-Selections.css';
+import { CreateOrderERC1155 } from '../services/Orders';
 
 export default defineComponent({
   data() {
+		const userStore = useUserStore();
     return {
       allNFTs: new Array<ListingWithPricingAndImage>(),
+			card: ref(false),
+			stars: ref(3),
+			selected: ref(),
+			userStore
     }
   },
 
   async mounted() {
     this.allNFTs = await RetrieveAllNFTs();
     console.log(this.allNFTs)
+  },
+
+  methods: {
+		selectCard(tokenID: string) {
+			this.card = true;
+			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0]
+			console.log('🚀 ~ file: NFT-Selections.vue ~ line 125 ~ selectCard ~ this.selected', this.selected.tokenID)
+		},
+
+		async CreateListingForERC1155() {
+      const smartContractAddressStatic = '0x1458DAb28F3e94F8e4Ae3fCb03De803e53Dd443D';
+      const amountStatic = '1';
+      const address: string = this.userStore.walletAddress;
+      CreateOrderERC1155(this.selected.tokenID, smartContractAddressStatic, this.selected.brand, address, amountStatic);
+    },
   }
-
-  // methods: {
-
-  // }
 })
 </script>
 
