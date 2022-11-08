@@ -24,7 +24,7 @@
 }
 
 .starting-from {
-  font-family: 'Proxima Nova';
+  font-family: 'ProximaNova-Regular';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -36,7 +36,7 @@
 }
 
 .wine-name {
-  font-family: 'Obviously';
+  font-family: 'Obviously-Bold';
   font-style: normal;
   font-weight: 460;
   font-size: 18px;
@@ -47,7 +47,7 @@
   order: 1;
   align-self: stretch;
   flex-grow: 0;
-  width: 70%;
+  width: 90%;
 }
 
 .cards-container {
@@ -56,7 +56,28 @@
   width: 100%;
 }
 
-.cards {
-  width: 250px;
-  padding-top: 10px;
+.card-individual {
+  width: 274px;
+}
+
+.card-img {
+  background-color: #e0e4eb;
+  width: 274px;
+  height: 296px;
+}
+
+.price-container {
+  border: 1px solid rgba(94, 151, 236, 0.27) !important;
+  border-radius: 6px !important;
+}
+
+.price {
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #212131;
 }

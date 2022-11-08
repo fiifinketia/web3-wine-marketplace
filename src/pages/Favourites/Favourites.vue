@@ -1,37 +1,33 @@
 <template>
-  <div class="flex column">
-    <div class="flex row q-pt-lg q-pl-lg">
+  <div class="column">
+    <div class="row q-pt-lg q-pl-lg">
       <div class="favorites-title">NFT</div>
       <div class="favorites-number q-pl-sm">283</div>
     </div>
-    <div class="flex row">
-      <div class="q-gutter-lg q-pl-lg q-pt-lg cards-container">
-        <q-card
-          class="no-shadow description-container"
-          v-for="item in items"
-          :key="item.name"
-        >
-          <q-img src="../../assets/nft2.png" width="250px" height="250px" />
-          <div class="flex column">
-            <div class="wine-name q-pt-md">
-              The full name of the wine is here and here and here
-            </div>
+    <div class="row justify-center cards-container q-ma-sm">
+      <q-card
+        class="no-shadow q-ma-md card-individual"
+        v-for="item in items"
+        :key="item.name"
+      >
+        <div class="card-img"></div>
+        <div class="wine-name q-py-md">
+          The full name of the wine is here and here and here
+        </div>
+        <div class="price-container column q-pa-sm">
+          <div class="row justify-between q-pb-md">
+            <div class="starting-from">Price</div>
+            <q-img src="../../assets/heart.svg" width="20px" height="20px" />
           </div>
-          <div class="flex column">
-            <div class="flex row justify-between cards">
-              <div class="starting-from">Starting from</div>
-              <div>
-                <q-img
-                  src="../../assets/heart.png"
-                  width="20px"
-                  height="20px"
-                />
-              </div>
+          <div class="row justify-between">
+            <div class="price">
+              <q-img src="../../assets/USDT.svg" width="20px" />
+              &nbsp;00.00
             </div>
-            <div></div>
+            <q-img src="../../assets/mini-button.svg" width="20px" />
           </div>
-        </q-card>
-      </div>
+        </div>
+      </q-card>
     </div>
   </div>
 </template>
@@ -44,6 +40,22 @@ export default defineComponent({
   data() {
     return {
       items: [
+        {
+          name: 'Vranac',
+          price: 1111,
+        },
+        {
+          name: 'Sauvignon',
+          price: 2222,
+        },
+        {
+          name: 'Moje Vino',
+          price: 3333,
+        },
+        {
+          name: 'Vranac Pro Corde',
+          price: 4444,
+        },
         {
           name: 'Vranac',
           price: 1111,
