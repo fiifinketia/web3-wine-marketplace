@@ -103,7 +103,7 @@
     </div>
   </div>
   <div :class="edit === true ? 'content' : ''">
-    <div class="flex justify-center items-center container-table">
+    <div class="flex justify-center items-center">
       <table class="table">
         <thead>
           <tr>
@@ -188,11 +188,7 @@
               <div class="flex row justify-center action">
                 <div class="q-pr-md">
                   <button class="delete-button">
-                    <q-img
-                      src="../../../assets/trash1.png"
-                      width="20px"
-                      height="20px"
-                    />
+                    <q-img src="../../../assets/trash5.png" width="40px" />
                   </button>
                 </div>
                 <button

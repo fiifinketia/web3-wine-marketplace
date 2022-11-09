@@ -1,0 +1,197 @@
+.plus-button {
+  border: none;
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 4px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.listing-wrapper {
+  width: 95%;
+  background: #ffffff;
+  /* Primary/Light blue */
+
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
+  height: 470px;
+}
+
+/* .listing-container {
+  width: 100%;
+  background-color: red;
+} */
+
+.listing-items {
+  width: 97%;
+}
+
+.nft-listing-title {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
+
+.section-two-container {
+  width: 70%;
+}
+
+.treshold {
+  width: 20%;
+}
+
+.nft-listing-wrapper {
+  width: 30%;
+}
+
+.treshold-number {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #9d9d9d;
+}
+
+.price-number {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.highest-offer-number {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #3586ff;
+}
+
+.expires-on-number {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 29px;
+  color: #3586ff;
+}
+
+.listing-cards:nth-child(even) {
+  background: rgba(217, 232, 255, 0.3);
+  border-radius: 8px;
+}
+
+.listing-options {
+  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+  padding-bottom: 5px;
+}
+
+.wine-listing-name {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 15px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
+
+.plus-button-wrapper {
+  padding-right: 3px;
+}
+
+@media screen and (max-width: 992px) {
+  .treshold-title {
+    display: none;
+  }
+  .treshold-property {
+    display: none;
+  }
+  .treshold {
+    width: 25%;
+  }
+  .section-two-container {
+    width: 60%;
+  }
+  .nft-listing-title {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 786px) {
+  .highest-offer-container {
+    display: none;
+  }
+  .highest-offer-title {
+    display: none;
+  }
+  .treshold {
+    width: 25%;
+  }
+  .section-two-container {
+    width: 50%;
+  }
+  .listing-wine-image {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 578px) {
+  .listing-wrapper {
+    width: 100%;
+    background: #ffffff;
+    border: none;
+    box-shadow: none;
+    border-radius: 14px;
+    height: auto;
+  }
+  .wine-listing-name {
+    width: 150px;
+    padding-left: 5px;
+  }
+  /* .treshold {
+    width: 70px;
+  } */
+  .treshold {
+    width: 33%;
+  }
+  /* .listing-cards {
+    width: 100%;
+  } */
+  .section-two-container {
+    width: 59%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .exp {
+    display: none;
+  }
+  .section-two-container {
+    width: 45%;
+  }
+  .treshold {
+    width: 50%;
+  }
+}
