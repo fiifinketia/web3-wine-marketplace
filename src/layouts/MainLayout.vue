@@ -177,6 +177,7 @@
                         dense
                         flat
                         disable
+                        padding="0"
                         label="help"
                       >
                         <div class="q-btn-menu-div">

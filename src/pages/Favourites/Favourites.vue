@@ -1,14 +1,41 @@
 <template>
-  <div class="column">
-    <div class="row q-pt-lg q-pl-lg">
-      <div class="favorites-title">NFT</div>
-      <div class="favorites-number q-pl-sm">283</div>
+  <FAVsRemove />
+  <div class="column q-pa-md">
+    <div class="row justify-between q-pt-sm">
+      <div class="row">
+        <div class="favorites-title">NFTs</div>
+        <div class="favorites-number q-pl-sm">{{ items.length }}</div>
+      </div>
+      <div class="row">
+        <q-input
+          dense
+          outlined
+          color="blue-6"
+          v-model="text"
+          placeholder="Search"
+          class="search-bar"
+        >
+          <template v-slot:prepend>
+            <q-icon
+              name="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExLjIxMDkgMTIuNUwxNC45Mjc0IDE3LjM4NTEiIHN0cm9rZT0iI0EwOUE5NyIvPgo8Y2lyY2xlIGN4PSI4LjUiIGN5PSI4IiByPSI1IiBzdHJva2U9IiNBMDlBOTciLz4KPC9zdmc+Cg=="
+            />
+          </template>
+        </q-input>
+        <q-btn flat class="search-btn q-ml-sm">GO</q-btn>
+      </div>
     </div>
-    <div class="row justify-center cards-container q-ma-sm">
+    <div
+      class="no-nfts-container column justify-center items-center"
+      v-if="!items.length"
+    >
+      <q-img src="../../assets/images/NoNFTs.svg" width="180px" />
+      <div>You do not have any favorites yet.</div>
+    </div>
+    <div class="row justify-around cards-container">
       <q-card
         class="no-shadow q-ma-md card-individual"
         v-for="item in items"
-        :key="item.name"
+        :key="item.id"
       >
         <div class="card-img"></div>
         <div class="wine-name q-py-md">
@@ -17,14 +44,19 @@
         <div class="price-container column q-pa-sm">
           <div class="row justify-between q-pb-md">
             <div class="starting-from">Price</div>
-            <q-img src="../../assets/heart.svg" width="20px" height="20px" />
+            <q-img
+              @click="removeNFT(item.id)"
+              src="../../assets/images/heart.svg"
+              width="20px"
+              height="20px"
+            />
           </div>
           <div class="row justify-between">
             <div class="price">
-              <q-img src="../../assets/USDT.svg" width="20px" />
+              <q-img src="../../assets/images/USDT.svg" width="20px" />
               &nbsp;00.00
             </div>
-            <q-img src="../../assets/mini-button.svg" width="20px" />
+            <q-img src="../../assets/images/mini-button.svg" width="20px" />
           </div>
         </div>
       </q-card>
@@ -32,48 +64,86 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../css/Favorites/Favorites.css';
+
+import FAVsRemove from './FAVsRemove.vue';
 export default defineComponent({
   name: 'FavouritesPage',
+  components: {
+    FAVsRemove,
+  },
   data() {
     return {
       items: [
         {
+          id: 1,
           name: 'Vranac',
           price: 1111,
         },
         {
+          id: 2,
           name: 'Sauvignon',
           price: 2222,
         },
         {
+          id: 3,
           name: 'Moje Vino',
           price: 3333,
         },
         {
+          id: 4,
           name: 'Vranac Pro Corde',
           price: 4444,
         },
         {
+          id: 5,
           name: 'Vranac',
           price: 1111,
         },
         {
+          id: 6,
           name: 'Sauvignon',
           price: 2222,
         },
         {
+          id: 7,
           name: 'Moje Vino',
           price: 3333,
         },
         {
+          id: 8,
           name: 'Vranac Pro Corde',
           price: 4444,
         },
       ],
     };
+  },
+  methods: {
+    animation(opacity: string, transform: string, zIndex: string) {
+      const removeNFTBackground = document.querySelector(
+        '.fr-background'
+      ) as HTMLElement;
+      const removeNFTContainer = document.querySelector(
+        '.fr-container'
+      ) as HTMLElement;
+
+      removeNFTBackground.style.zIndex = zIndex;
+      removeNFTBackground.style.opacity = opacity;
+      removeNFTContainer.style.transform = transform;
+    },
+    removeNFT(id: number) {
+      this.items = this.items.filter((item) => {
+        return item.id !== id;
+      });
+
+      this.animation('1', 'scale(1)', '200');
+
+      setTimeout(() => {
+        this.animation('0', 'scale(0.5)', '-200');
+      }, 1500);
+    },
   },
 });
 </script>

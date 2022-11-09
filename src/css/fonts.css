@@ -32,3 +32,8 @@
   font-family: Obviously-Bold;
   src: url(../assets/fonts/Obviously-Bold.otf);
 }
+
+@font-face {
+  font-family: ProximaNova-All;
+  src: url(../assets/fonts/Proxima-Nova-Font.otf);
+}

@@ -1,5 +1,5 @@
 .favorites-title {
-  font-family: 'ProximaNova';
+  font-family: 'ProximaNova-Regular';
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -23,8 +23,57 @@
   color: #212131;
 }
 
+.search-bar .q-field__control {
+  border-radius: 6px;
+}
+
+.search-bar .q-icon {
+  width: 20px;
+}
+
+.search-bar .q-field__native {
+  font-family: 'ProximaNova-All';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.01em;
+  color: #9d9d9d;
+}
+
+.search-btn {
+  padding: 8px 12px;
+  background: #3586ff;
+  border-radius: 6px;
+
+  font-family: 'ProximaNova-All';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+
+  text-align: center;
+
+  color: #ffffff;
+  transition: background 0.3s ease;
+}
+
+.search-btn:hover {
+  background: #8cbaff;
+}
+
+.no-nfts-container {
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  color: #3586ff;
+}
+
 .starting-from {
-  font-family: 'ProximaNova-Regular';
+  font-family: 'ProximaNova-All';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
