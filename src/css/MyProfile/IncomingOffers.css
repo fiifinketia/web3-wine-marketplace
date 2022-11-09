@@ -2,6 +2,10 @@
   width: 95%;
 }
 
+/* .incoming-offer-table {
+  width: 100%;
+} */
+
 .offers {
   font-family: 'ProximaNova';
   font-style: normal;
@@ -28,7 +32,7 @@
   color: #212131;
 }
 
-.border {
+.offer-border {
   border-bottom: 2px solid rgba(94, 151, 236, 0.27);
   transform: rotate(-90deg);
   width: 16px;

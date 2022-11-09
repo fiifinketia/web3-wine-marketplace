@@ -7,7 +7,7 @@
           <div class="offers">Offers</div>
           <div class="nft-number q-pl-sm">283</div>
           <div class="q-pl-sm">
-            <div class="border"></div>
+            <div class="offer-border"></div>
           </div>
           <div
             class="flex row items-center q-pl-sm"
@@ -83,7 +83,7 @@
     </div>
   </div>
   <div :class="accept === true ? 'content' : ''">
-    <div class="flex justify-center items-center container-table">
+    <div class="flex justify-center items-center">
       <table class="table">
         <thead>
           <tr class="tr-border">
@@ -91,11 +91,12 @@
             <th class="floor-price">Floor Price</th>
             <th>Offered</th>
             <th class="from">From</th>
+            <th>Exp on</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr class="incoming-offer-table">
             <td class="justify-start row item">
               <q-img
                 src="../../../assets/nft.png"
@@ -120,6 +121,7 @@
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
+            <td>00/00/00</td>
             <td data-label="Staus" class="item4">
               <button class="accept-button">
                 <div class="button-accept-text">Accept</div>
@@ -150,6 +152,7 @@
               </div>
             </td>
             <td data-label="from" class="from">0x554safdw5</td>
+            <td>00/00/00</td>
             <td data-label="Staus" class="item4">
               <button class="accept-button" @click="accept = !accept">
                 <div class="button-accept-text">Accept</div>

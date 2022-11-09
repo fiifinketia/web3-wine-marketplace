@@ -7,7 +7,7 @@
           <div class="offers">Offers</div>
           <div class="nft-number q-pl-sm">283</div>
           <div class="q-pl-sm">
-            <div class="border"></div>
+            <div class="offer-border"></div>
           </div>
           <div
             class="flex row items-center q-pl-sm cursor-pointer"
@@ -47,6 +47,26 @@
               "
             >
               Old first
+            </div>
+          </div>
+          <div
+            class="flex row items-center cursor-pointer q-pl-lg"
+            @click="expiring = !expiring"
+          >
+            <div
+              :class="
+                expiring === true ? 'radio-button-clicked' : 'radio-button'
+              "
+            ></div>
+            <div
+              class="radio-button-text q-pl-sm"
+              :class="
+                expiring === true
+                  ? 'radio-button-text-clicked'
+                  : 'radio-button-text'
+              "
+            >
+              Expiring first
             </div>
           </div>
         </div>
@@ -91,7 +111,7 @@
             <th class="your-price">Your offer</th>
             <th class="yours">Yours</th>
             <th class="highest-price">Highest Offer</th>
-            <th class="from">From</th>
+            <th class="from">Exp on</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -118,7 +138,7 @@
                 <div class="price3">10.00</div>
               </div>
             </td>
-            <td data-label="from" class="from">0x554safdw5</td>
+            <td data-label="from" class="from">00/00/00</td>
 
             <td>
               <div class="flex row justify-center action">
@@ -163,7 +183,7 @@
                 <div class="price3">10.00</div>
               </div>
             </td>
-            <td data-label="from" class="from">0x554safdw5</td>
+            <td data-label="from" class="from">00/00/00</td>
             <td data-label="Accept">
               <div class="flex row justify-center action">
                 <div class="q-pr-md">
@@ -277,6 +297,7 @@ export default defineComponent({
       edit: false,
       clicked: false,
       clickedNew: false,
+      expiring: false,
     };
   },
 });
