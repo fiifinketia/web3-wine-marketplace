@@ -85,6 +85,19 @@
           />
         </div>
       </div>
+      <div class="flex column q-pt-lg full-width">
+        <div class="price-history">Price History</div>
+        <div class="nft-history-container column items-center q-pa-md">
+          <q-card
+            v-for="item in priceHistory"
+            :key="item.name"
+            class="flex row justify-between q-card-width q-pa-md shadow-0"
+          >
+            <div class="action-done">{{ item.name }}</div>
+            <div class="action-done-date">{{ item.date }}</div>
+          </q-card>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -118,6 +131,37 @@ export default defineComponent({
       one_year: Number(),
       five_years: Number(),
       selectedDate: Number(),
+
+      priceHistory: [
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+        {
+          name: 'action done from Useridhere to Useridhere',
+          date: '00/00/00',
+        },
+      ],
       series: [
         {
           data: [
