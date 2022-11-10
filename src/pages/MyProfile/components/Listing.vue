@@ -171,9 +171,104 @@
                 <div class="nft-listing-title treshold expires-on-number exp">
                   {{ item.exp }}
                 </div>
-                <div class="nft-listing-title treshold q-pl-sm">Action</div>
+                <div class="nft-listing-title treshold">Action</div>
               </div>
             </q-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute-center">
+      <div class="listing-modal-container">
+        <div class="flex column">
+          <div class="q-pt-lg q-pl-lg flex row items-center">
+            <div class="list-title">List</div>
+            <div class="listing-modal-wine-name q-pl-lg">
+              The full name of the wine is here and here and here
+            </div>
+          </div>
+          <div class="flex row">
+            <div class="q-pl-lg q-pt-lg">
+              <q-img
+                src="../../../assets/circle.png"
+                width="360px"
+                height="360px"
+              />
+            </div>
+            <div
+              class="flex column q-pl-lg q-pt-lg modal-second-part-container"
+            >
+              <div class="flex row">
+                <div class="flex column">
+                  <div class="grey-modal-text">Your price</div>
+                  <input class="input-width" id="price" required />
+                </div>
+                <div class="flex column q-pl-sm">
+                  <div class="grey-modal-text">Treshold</div>
+                  <input class="input-width" id="tres" required />
+                </div>
+              </div>
+              <div class="expiration-date-wrapper flex column q-pt-md">
+                <div class="grey-modal-text q-pb-sm">Expiration date</div>
+                <div class="date-input flex row items-center">
+                  <input type="date" class="input-date" id="date" required />
+                </div>
+              </div>
+              <div class="flex column q-pt-lg">
+                <div class="grey-modal-text">Fee</div>
+                <div class="fee-text">00.00 %</div>
+              </div>
+              <div class="line-container q-pt-sm">
+                <div class="flex justify-center">
+                  <div class="line"></div>
+                </div>
+              </div>
+              <div class="flex column q-pt-sm">
+                <div class="total-price">Total price</div>
+                <div class="flex row items-center">
+                  <q-img
+                    src="../../../assets/usdc.png"
+                    width="25px"
+                    height="25px"
+                  />
+                  <div class="total-price-numbers q-pl-sm">00.00</div>
+                </div>
+              </div>
+              <div class="flex row items-center q-pt-lg">
+                <q-img
+                  src="../../../assets/grape.svg"
+                  width="20px"
+                  height="20px"
+                />
+                <div class="expiration-text q-pl-sm">
+                  After the expiration, the NFT will be moved to the Digital
+                  Wine Cellar. You can edit the NFT listing details anytime.
+                </div>
+              </div>
+              <div class="flex row q-pt-sm">
+                <input type="checkbox" />
+                <div class="agreement-text q-pl-sm">
+                  I agree with
+                  <label class="agreement-text-blue"
+                    >Terms and conditions</label
+                  >
+                </div>
+              </div>
+              <div
+                class="modal-buttons flex row items-center justify-between q-pt-lg"
+              >
+                <div>
+                  <button class="reset-button" @click="reset()">
+                    <div class="reset-text">Reset</div>
+                  </button>
+                </div>
+                <div>
+                  <button class="update-background">
+                    <div class="update-text">Update</div>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -238,6 +333,19 @@ export default defineComponent({
         },
       ],
     };
+  },
+  methods: {
+    reset() {
+      var price = document.getElementById('price');
+      var tres = document.getElementById('tres');
+      var date = document.getElementById('date');
+
+      if (price.value != '' || tres.value != '' || date.value != '') {
+        price.value = '';
+        tres.value = '';
+        date.value = '';
+      }
+    },
   },
 });
 </script>
