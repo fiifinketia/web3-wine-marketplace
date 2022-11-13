@@ -178,7 +178,7 @@
         </div>
       </div>
     </div>
-    <div class="absolute-center">
+    <div class="absolute-center absolute-container">
       <div class="listing-modal-container">
         <div class="flex column">
           <div class="q-pt-lg q-pl-lg flex row items-center">

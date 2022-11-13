@@ -2,10 +2,6 @@
   width: 95%;
 }
 
-/* .incoming-offer-table {
-  width: 100%;
-} */
-
 .offers {
   font-family: 'ProximaNova';
   font-style: normal;
@@ -98,7 +94,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   border-radius: 8px;
   font-size: 18px;
 }
@@ -233,12 +229,8 @@
 }
 .accept {
   width: 10%;
-  /* margin-left: 15px; */
   display: flex;
   justify-content: center;
-}
-
-@media screen and (max-width: 800px) {
 }
 
 .price1 {
@@ -251,16 +243,6 @@
   align-items: center;
   color: #212131;
   padding-left: 2px;
-}
-.price2 {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  color: #9d9d9d;
 }
 
 .price3 {
@@ -295,13 +277,17 @@
   color: #ffffff;
 }
 
-table {
-  width: 95.5%;
+.table {
+  width: 100%;
   border-collapse: collapse;
 }
 
-.table td,
-.table th {
+/* .incoming-offer-table:nth-child(even) {
+  background-color: red;
+} */
+
+table td,
+table th {
   padding: 12px 15px;
   text-align: center;
   font-size: 16px;
@@ -311,13 +297,32 @@ table {
   border-bottom: 1px solid rgba(94, 151, 236, 0.27);
 }
 
-.table th {
+table th {
   color: black;
 }
 
-.table tbody tr:nth-child(even) {
+tr:nth-child(even) {
   background-color: rgba(217, 232, 255, 0.3);
   border-radius: 8px;
+}
+
+td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.container1 {
+  width: 95.5%;
+  background: #ffffff;
+  /* Primary/Light blue */
+
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
 }
 
 .button-image {
@@ -328,126 +333,6 @@ table {
   width: 40%;
   text-align: start;
   padding-left: 6px;
-}
-
-@media screen and (max-width: 1120px) {
-  .item2 {
-    width: 20%;
-  }
-  .item3 {
-    width: 20%;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .nft-image {
-    display: none;
-  }
-  .nft-item {
-    width: 100px;
-  }
-}
-
-@media screen and (max-width: 880px) {
-  .from {
-    display: none;
-  }
-  .item2 {
-    width: 50%;
-  }
-  .item3 {
-    width: 50%;
-  }
-  .nft-item {
-    width: 100px;
-    padding-left: 0;
-    font-size: 15px;
-  }
-
-  .price2 {
-    display: none;
-  }
-
-  .accept-button {
-    width: 40px;
-  }
-  .button-accept-text {
-    font-size: 15px;
-  }
-  .button-accept-text {
-    display: none;
-  }
-  .button-image {
-    display: flex;
-    justify-content: center;
-    width: 25px;
-    height: 20px;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .floor-price {
-    display: none;
-  }
-  .accept-button {
-    width: 40px;
-  }
-  .offer-container {
-    display: none;
-  }
-  .pagination {
-    display: none;
-  }
-  .search_wrap .search_box {
-    position: relative;
-    width: 300px;
-    height: 45px;
-  }
-  .search_wrap_2 {
-    width: 300px;
-  }
-  .button-wrapper {
-    padding-right: 0px;
-  }
-
-  .nft-item {
-    width: 100px;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .nft-item {
-    width: 70px;
-    font-size: 14px;
-  }
-  .item2 {
-    width: 100px;
-  }
-  .price2 {
-    display: flex;
-    font-size: 18px;
-  }
-  .slash {
-    display: none;
-  }
-  .price-mobile-container {
-    display: flex;
-    flex-direction: column;
-  }
-  .search_wrap .search_box {
-    position: relative;
-    width: 220px;
-    height: 45px;
-  }
-  .search_wrap_2 {
-    width: 220px;
-  }
-  .button-wrapper {
-    padding-right: 0px;
-  }
-  .price3 {
-    font-size: 18px;
-  }
 }
 
 .ethereum {
@@ -556,4 +441,253 @@ table {
   width: 50px;
   cursor: pointer;
   border: none;
+}
+
+.tooltip-container {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #d1e0f7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 200px;
+}
+
+.tooltip-title {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  color: #212131;
+}
+
+.tooltip-from {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
+
+.tooltip-price {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+  padding-left: 4px;
+}
+
+.search-item-hidden {
+  display: none;
+}
+/*
+.triangle {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  transform: rotate(45deg);
+  right: 10px;
+} */
+
+/*Resposniveness */
+
+@media screen and (max-width: 1120px) {
+  .item2 {
+    width: 20%;
+  }
+  .item3 {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .from {
+    display: none;
+  }
+  .nft-image {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .nft-item {
+    width: 180px;
+  }
+  .floor-price {
+    display: none;
+  }
+  .offer-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .offer-container-first-part {
+    display: flex;
+    justify-content: flex-start;
+    width: 95%;
+  }
+  /* .item4 {
+    display: flex;
+  } */
+  .item6 {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+  }
+  .search_wrap {
+    margin: 10px auto;
+  }
+  .search-item {
+    margin-bottom: -5px;
+    display: flex;
+  }
+  .pagination {
+    display: flex;
+    padding-left: 320px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .nft-item {
+    width: 170px;
+    padding-left: 0;
+    font-size: 15px;
+  }
+
+  .accept-button {
+    width: 40px;
+  }
+  .button-accept-text {
+    font-size: 15px;
+  }
+  .button-accept-text {
+    display: none;
+  }
+  .button-image {
+    display: flex;
+    justify-content: center;
+    width: 25px;
+    height: 20px;
+  }
+  .item2 {
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
+  .search-item-hidden {
+    display: flex;
+    flex-direction: row;
+  }
+  .search-item {
+    display: none;
+  }
+  .offer-container-first-part {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .accept-button {
+    width: 40px;
+  }
+  .offer-container {
+    display: none;
+  }
+  .pagination {
+    display: none;
+  }
+  .search_wrap .search_box {
+    position: relative;
+    width: 300px;
+    height: 45px;
+  }
+  .search_wrap_2 {
+    width: 300px;
+  }
+  .button-wrapper {
+    padding-right: 0px;
+  }
+
+  .nft-item {
+    width: 75px;
+  }
+
+  .exp-on {
+    width: auto;
+  }
+
+  .item2 {
+    width: 40%;
+  }
+  .price3 {
+    font-size: 18px;
+  }
+  .ethereum {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .nft-item {
+    width: auto;
+    font-size: 14px;
+  }
+  .item2 {
+    width: 35%;
+  }
+
+  .slash {
+    display: none;
+  }
+  .price-mobile-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .search_wrap .search_box {
+    position: relative;
+    width: 220px;
+    height: 45px;
+  }
+  .search_wrap_2 {
+    width: 220px;
+  }
+  .button-wrapper {
+    padding-right: 0px;
+  }
+  .price3 {
+    font-size: 18px;
+  }
+
+  .container1 {
+    width: 100%;
+    background: transparent;
+    /* Primary/Light blue */
+
+    border: none;
+    box-shadow: none;
+    border-radius: none;
+  }
+
+  .exp-on {
+    display: none;
+  }
+  .tr-border {
+    border-top: 1px solid rgba(94, 151, 236, 0.27);
+  }
 }
