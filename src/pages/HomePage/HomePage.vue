@@ -1,9 +1,9 @@
 <template>
   <HeadlineComponent />
   <ExclusiveOffers />
-  <TrendingWines class="trending" />
-  <PartnershipWines class="partnership" />
-  <FAQ class="faq" />
+  <TrendingWines class="q-mb-xl" />
+  <PartnershipWines class="q-mt-xl" />
+  <FAQ class="q-mt-xl" />
   <LandingPageFooter />
 </template>
 
@@ -33,8 +33,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.trending {
-  margin-top: 270px;
-}
-</style>
+<style></style>

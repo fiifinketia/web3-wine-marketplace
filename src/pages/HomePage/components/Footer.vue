@@ -4,7 +4,7 @@
       <q-img src="../../../assets/wiv-logo.png" width="80px" />
     </div>
     <div class="flex row justify-between text-left">
-      <div class="first">
+      <div class="first flex row justify-between">
         <div class="flex column q-pl-sm q-pt-md">
           <a class="footer-bold-text q-py-sm">NFTs</a>
           <a class="footer-normal-text q-py-sm">New Releases</a>
@@ -19,7 +19,7 @@
           <a class="footer-normal-text q-py-sm">Recommended</a>
         </div>
       </div>
-      <div class="second">
+      <div class="second flex row justify-between">
         <div class="flex column q-pt-md">
           <a class="footer-bold-text q-py-sm">Profile</a>
           <a class="footer-normal-text q-py-sm">Digital Wine Cellar</a>
@@ -36,7 +36,7 @@
           <a class="footer-normal-text q-py-sm">Terms & Conditions</a>
         </div>
       </div>
-      <div class="third">
+      <div class="third flex row justify-between">
         <div class="flex column q-pt-md">
           <div class="footer-bold-text q-py-sm">Contact info:</div>
           <div class="footer-normal-text q-py-sm">email@email.com</div>

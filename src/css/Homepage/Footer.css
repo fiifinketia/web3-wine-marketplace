@@ -25,22 +25,13 @@
 }
 
 .first {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 450px;
 }
 
 .second {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 450px;
 }
 .third {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 25%;
 }
 
