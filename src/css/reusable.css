@@ -1,0 +1,61 @@
+.wine-name {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 460;
+  font-size: 18px;
+  line-height: 27px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
+
+.starting-from {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  color: #9d9d9d;
+}
+
+.tabs-title {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 1px;
+  color: #9d9d9d;
+}
+
+.clicked-tabs-title {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 1px;
+  color: #3586ff;
+}
+
+.usdc-value {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #212131;
+}
+
+.euro-value {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 14px;
+  color: #9d9d9d;
+}

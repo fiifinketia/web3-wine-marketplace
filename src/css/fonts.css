@@ -27,3 +27,13 @@
   font-family: Inter;
   src: url(../assets/fonts/Inter-Regular.ttf);
 }
+
+@font-face {
+  font-family: Obviously-Bold;
+  src: url(../assets/fonts/Obviously-Bold.otf);
+}
+
+@font-face {
+  font-family: ProximaNova-All;
+  src: url(../assets/fonts/Proxima-Nova-Font.otf);
+}
