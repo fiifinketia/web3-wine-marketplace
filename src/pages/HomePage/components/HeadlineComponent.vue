@@ -1,11 +1,17 @@
 <template>
   <div class="headline-container full-width column justify-center items-center">
-    <q-img class="grape-img-left" src="../../../assets/images/Grape-left.svg" />
+    <q-img
+      class="grape-img-left"
+      src="../../../../public/images/Grape-left.svg"
+    />
     <q-img
       class="grape-img-right"
-      src="../../../assets/images/Grape-right.svg"
+      src="../../../../public/images/Grape-right.svg"
     />
-    <q-img class="grape-mobile" src="../../../assets/images/Grape-mobile.svg" />
+    <q-img
+      class="grape-mobile"
+      src="../../../../public/images/Grape-mobile.svg"
+    />
     <h1 class="headline-title">WiV Marketplace</h1>
     <p class="headline-paragraph">We offer the best fine wine NFT in web3</p>
     <div class="headline-buttons-container row">

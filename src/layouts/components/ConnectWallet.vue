@@ -7,7 +7,7 @@
       @click.stop
       class="connect-wallet-container column justify-center items-center"
     >
-      <img src="../../assets/images/wallet.svg" alt="wallet-icon" />
+      <img src="../../../public/images/wallet.svg" alt="wallet-icon" />
       <div class="connect-wallet-title">
         Connect your Web3 Wallet to signup.
       </div>

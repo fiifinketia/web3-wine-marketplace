@@ -1,12 +1,12 @@
 <template>
-  <ConnectWallet @clicked="onCloseModals($event)" v-if="showConnectWallet" />
-  <MyWallet @clicked="onCloseModals($event)" v-if="showMyWallet" />
+  <ConnectWallet @clicked="onCloseModals($event)" />
+  <MyWallet @clicked="onCloseModals($event)" />
   <BurgerMenu v-if="showBurgerMenu" />
 
   <q-layout view="lHh Lpr lFf">
     <q-header
       class="nav-bar q-py-xs"
-      :style="(showConnectWallet || showMyWallet) && { 'z-index': '-1' }"
+      :style="showModals && { 'z-index': '-1' }"
     >
       <q-toolbar class="row justify-between items-center">
         <div
@@ -17,17 +17,14 @@
           class="nav-bar-container-left"
         >
           <q-img
-            @click="
-              {
-              }
-            "
+            @click="redirectin('home')"
             class="logo"
-            src="../assets/images/WiV-logo.svg"
+            src="../../public/images/WiV-logo.svg"
           />
         </div>
         <div class="nav-bar-container-center row items-center">
           <q-btn-dropdown
-            class="btn-dropdown-menu"
+            class="btn-dropdown-menu dropdown-center"
             dense
             flat
             label="Marketplace"
@@ -92,14 +89,11 @@
             Storefront
           </div>
         </div>
-        <div class="nav-bar-container-right row">
+        <div class="nav-bar-container-right row items-center">
           <img
-            @click="
-              {
-              }
-            "
+            @click="redirectin('favorites')"
             class="icons"
-            src="../assets/images/favs-icon.svg"
+            src="../../public/images/favs-icon.svg"
           />
           <img
             @click="
@@ -107,133 +101,132 @@
               }
             "
             class="icons"
-            src="../assets/images/bell-icon.svg"
+            src="../../public/images/bell-icon.svg"
           />
           <q-btn-dropdown
             class="btn-dropdown-menu profile-dropdown"
             dense
             flat
-            icon="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzOCAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiByeD0iNiIgZmlsbD0iI0Q5RThGRiIgZmlsbC1vcGFjaXR5PSIwLjMiLz4KPGNpcmNsZSBjeD0iMTkuNSIgY3k9IjEyLjUiIHI9IjUiIHN0cm9rZT0iIzIxMjEzMSIvPgo8cGF0aCBkPSJNMjkuNSAyNUMyOS41IDI2LjM4ODEgMjguNDYxNiAyNy43NTQ5IDI2LjUzODcgMjguODAzN0MyNC42MzQ4IDI5Ljg0MjIgMjEuOTcwNCAzMC41IDE5IDMwLjVDMTYuMDI5NiAzMC41IDEzLjM2NTIgMjkuODQyMiAxMS40NjEzIDI4LjgwMzdDOS41Mzg0MSAyNy43NTQ5IDguNSAyNi4zODgxIDguNSAyNUM4LjUgMjMuNjExOSA5LjUzODQxIDIyLjI0NTEgMTEuNDYxMyAyMS4xOTYzQzEzLjM2NTIgMjAuMTU3OCAxNi4wMjk2IDE5LjUgMTkgMTkuNUMyMS45NzA0IDE5LjUgMjQuNjM0OCAyMC4xNTc4IDI2LjUzODcgMjEuMTk2M0MyOC40NjE2IDIyLjI0NTEgMjkuNSAyMy42MTE5IDI5LjUgMjVaIiBzdHJva2U9IiMyMTIxMzEiLz4KPC9zdmc+Cg=="
+            split
+            icon="img:./images/profile-icon.svg"
           >
-            <q-list>
-              <q-item
-                v-if="!user"
-                clickable
-                v-close-popup
-                @click="onOpenModals('connectWallet')"
-              >
-                <q-item-section>
-                  <q-item-label>sign up</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item
-                v-if="user"
-                clickable
-                v-close-popup
-                @click="onOpenModals('myWallet')"
-              >
-                <q-item-section>
-                  <q-item-label>my wallet</q-item-label>
-                </q-item-section>
-              </q-item>
+            <div class="q-btn-menu-div">
+              <q-list>
+                <q-item
+                  v-if="!user"
+                  clickable
+                  v-close-popup
+                  @click="onOpenModals('connectWallet')"
+                >
+                  <q-item-section>
+                    <q-item-label>sign up</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  v-if="user"
+                  clickable
+                  v-close-popup
+                  @click="onOpenModals('myWallet')"
+                >
+                  <q-item-section>
+                    <q-item-label>my wallet</q-item-label>
+                  </q-item-section>
+                </q-item>
 
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>digital wine cellar</q-item-label>
-                </q-item-section>
-              </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label>digital wine cellar</q-item-label>
+                  </q-item-section>
+                </q-item>
 
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>settings</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label
-                    ><q-btn-dropdown
-                      class="btn-dropdown-help"
-                      dense
-                      flat
-                      disable
-                      label="help"
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label>settings</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  @click="
+                    {
+                    }
+                  "
+                >
+                  <q-item-section>
+                    <q-item-label
+                      ><q-btn-dropdown
+                        class="btn-dropdown-help"
+                        dense
+                        flat
+                        disable
+                        padding="0"
+                        label="help"
+                      >
+                        <div class="q-btn-menu-div">
+                          <q-list>
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="
+                                {
+                                }
+                              "
+                            >
+                              <q-item-section>
+                                <q-item-label>conctact us</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="
+                                {
+                                }
+                              "
+                            >
+                              <q-item-section>
+                                <q-item-label>Faqs</q-item-label>
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </div>
+                      </q-btn-dropdown></q-item-label
                     >
-                      <q-list>
-                        <q-item
-                          clickable
-                          v-close-popup
-                          @click="
-                            {
-                            }
-                          "
-                        >
-                          <q-item-section>
-                            <q-item-label>conctact us</q-item-label>
-                          </q-item-section>
-                        </q-item>
-
-                        <q-item
-                          clickable
-                          v-close-popup
-                          @click="
-                            {
-                            }
-                          "
-                        >
-                          <q-item-section>
-                            <q-item-label>Faqs</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </q-list>
-                    </q-btn-dropdown></q-item-label
-                  >
-                </q-item-section>
-              </q-item>
-              <q-item
-                clickable
-                v-close-popup
-                @click="
-                  {
-                  }
-                "
-              >
-                <q-item-section>
-                  <q-item-label>log out</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="user = false">
+                  <q-item-section>
+                    <q-item-label>log out</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-btn-dropdown>
         </div>
         <img
           v-if="!showBurgerMenu"
           class="burger-menu-icon"
-          src="../assets/images/burger-icon.svg"
+          src="../../public/images/burger-icon.svg"
           alt="burger-menu"
           @click="onOpenModals('burgerMenu')"
         />
         <img
           v-if="showBurgerMenu"
           class="burger-menu-exit-icon"
-          src="../assets/images/x-burger-icon.svg"
+          src="../../public/images/x-burger-icon.svg"
           alt="burger-menu"
           @click="onCloseModals(true)"
         />
@@ -258,9 +251,8 @@ export default defineComponent({
   data() {
     return {
       user: true,
-      showConnectWallet: false,
+      showModals: false,
       showBurgerMenu: false,
-      showMyWallet: false,
     };
   },
   components: {
@@ -268,14 +260,61 @@ export default defineComponent({
     BurgerMenu,
     MyWallet,
   },
+
   methods: {
+    redirectin(page: string) {
+      switch (page) {
+        case 'favorites':
+          window.location.href = 'http://localhost:8080/#/favorites';
+          break;
+
+        case 'home':
+          window.location.href = 'http://localhost:8080/#/';
+
+          break;
+      }
+    },
+    animation(
+      modal: string,
+      opacity: string,
+      transform: string,
+      zIndex: string
+    ) {
+      const connectBackground = document.querySelector(
+        '.connect-wallet-background'
+      ) as HTMLElement;
+      const connectContainer = document.querySelector(
+        '.connect-wallet-container'
+      ) as HTMLElement;
+      const walletBackground = document.querySelector(
+        '.my-wallet-background'
+      ) as HTMLElement;
+      const walletContainer = document.querySelector(
+        '.my-wallet-container'
+      ) as HTMLElement;
+      switch (modal) {
+        case 'connectWallet':
+          connectBackground.style.zIndex = zIndex;
+          connectBackground.style.opacity = opacity;
+          connectContainer.style.transform = transform;
+          break;
+        case 'myWallet':
+          walletBackground.style.opacity = opacity;
+          walletBackground.style.zIndex = zIndex;
+          walletContainer.style.transform = transform;
+      }
+    },
+
     onOpenModals(modal: string) {
       switch (modal) {
         case 'connectWallet':
-          this.showConnectWallet = true;
+          this.showModals = true;
+          this.animation('connectWallet', '1', 'scale(1)', '200');
           break;
         case 'myWallet':
-          this.showMyWallet = true;
+          this.showModals = true;
+          this.animation('myWallet', '1', 'translateX(0%)', '200');
+
           break;
         case 'burgerMenu':
           this.showBurgerMenu = true;
@@ -286,9 +325,10 @@ export default defineComponent({
 
     onCloseModals(title: boolean) {
       if (title === true) {
-        this.showConnectWallet = false;
-        this.showMyWallet = false;
+        this.showModals = false;
         this.showBurgerMenu = false;
+        this.animation('connectWallet', '0', 'scale(0.5)', '-200');
+        this.animation('myWallet', '0', 'translateX(100%)', '-200');
         document.body.classList.remove('no-scroll');
       }
     },
