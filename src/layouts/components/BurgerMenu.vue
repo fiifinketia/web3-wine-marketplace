@@ -8,17 +8,17 @@
     <div class="burger-icons row justify-between">
       <img
         class="icons"
-        src="../../assets/images/favs-icon.svg"
+        src="../../../public/images/favs-icon.svg"
         alt="favorite-icon"
       />
       <img
         class="icons"
-        src="../../assets/images/bell-icon.svg"
+        src="../../../public/images/bell-icon.svg"
         alt="bell-icon"
       />
       <img
         class="icons"
-        src="../../assets/images/profile-icon.svg"
+        src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
       />
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="fr-background row justify-center items-center">
     <div class="fr-container column justify-center items-center">
-      <img src="../../assets/images/RemoveNFT.svg" alt="wallet-icon" />
+      <img src="../../../public/images/RemoveNFT.svg" alt="wallet-icon" />
       <div class="fr-title">NFT has been removed from the list</div>
     </div>
   </div>

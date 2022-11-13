@@ -6,12 +6,12 @@
     >
       <div class="my-wallet-header row">
         <div>MY WALLET</div>
-        <img src="../../assets/images/metamask-icon.svg" alt="" />
+        <img src="../../../public/images/metamask-icon.svg" alt="" />
         <div class="wallet-id">walletID</div>
         <img
           @click="onClickBackground"
           class="x-icon"
-          src="../../assets/images/x-icon.svg"
+          src="../../../public/images/x-icon.svg"
           alt=""
         />
         <div class="id-mobile">walletID</div>
@@ -19,7 +19,7 @@
       <div
         class="my-wallet-ballance-container column justify-center items-center"
       >
-        <img src="../../assets/images/wallet.svg" alt="wallet-icon" />
+        <img src="../../../public/images/wallet.svg" alt="wallet-icon" />
         <div class="ballance-wrapper column">
           <div class="my-wallet-title q-pb-sm">Your balance is</div>
           <div class="my-wallet-balance">$00.00</div>

@@ -116,6 +116,8 @@ body {
 .icons {
   width: 38px;
   height: 38px;
+  border-radius: 6px;
+
   transition: background 0.3s ease;
 }
 
@@ -127,6 +129,8 @@ body {
 
 .profile-dropdown .q-icon {
   font-size: 38px !important;
+  border-radius: 6px;
+
   transition: background 0.3s ease;
 }
 .profile-dropdown .q-icon:hover {

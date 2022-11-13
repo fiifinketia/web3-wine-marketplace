@@ -16,9 +16,7 @@
           class="search-bar"
         >
           <template v-slot:prepend>
-            <q-icon
-              name="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExLjIxMDkgMTIuNUwxNC45Mjc0IDE3LjM4NTEiIHN0cm9rZT0iI0EwOUE5NyIvPgo8Y2lyY2xlIGN4PSI4LjUiIGN5PSI4IiByPSI1IiBzdHJva2U9IiNBMDlBOTciLz4KPC9zdmc+Cg=="
-            />
+            <q-icon name="img:./images/search.svg" />
           </template>
         </q-input>
         <q-btn flat class="search-btn q-ml-sm">GO</q-btn>
@@ -28,7 +26,7 @@
       class="no-nfts-container column justify-center items-center"
       v-if="!items.length"
     >
-      <q-img src="../../assets/images/NoNFTs.svg" width="180px" />
+      <q-img src="../../../public/images/NoNFTs.svg" width="180px" />
       <div>You do not have any favorites yet.</div>
     </div>
     <div class="row justify-around cards-container">
@@ -46,17 +44,17 @@
             <div class="starting-from">Price</div>
             <q-img
               @click="removeNFT(item.id)"
-              src="../../assets/images/heart.svg"
+              src="../../../public/images/heart.svg"
               width="20px"
               height="20px"
             />
           </div>
           <div class="row justify-between">
             <div class="price">
-              <q-img src="../../assets/images/USDT.svg" width="20px" />
+              <q-img src="../../../public/images/USDT.svg" width="20px" />
               &nbsp;00.00
             </div>
-            <q-img src="../../assets/images/mini-button.svg" width="20px" />
+            <q-img src="../../../public/images/mini-button.svg" width="20px" />
           </div>
         </div>
       </q-card>

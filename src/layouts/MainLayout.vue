@@ -17,12 +17,9 @@
           class="nav-bar-container-left"
         >
           <q-img
-            @click="
-              {
-              }
-            "
+            @click="redirectin('home')"
             class="logo"
-            src="../assets/images/WiV-logo.svg"
+            src="../../public/images/WiV-logo.svg"
           />
         </div>
         <div class="nav-bar-container-center row items-center">
@@ -94,12 +91,9 @@
         </div>
         <div class="nav-bar-container-right row items-center">
           <img
-            @click="
-              {
-              }
-            "
+            @click="redirectin('favorites')"
             class="icons"
-            src="../assets/images/favs-icon.svg"
+            src="../../public/images/favs-icon.svg"
           />
           <img
             @click="
@@ -107,14 +101,14 @@
               }
             "
             class="icons"
-            src="../assets/images/bell-icon.svg"
+            src="../../public/images/bell-icon.svg"
           />
           <q-btn-dropdown
             class="btn-dropdown-menu profile-dropdown"
             dense
             flat
             split
-            icon="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzOCAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiByeD0iNiIgZmlsbD0iI0Q5RThGRiIgZmlsbC1vcGFjaXR5PSIwLjMiLz4KPGNpcmNsZSBjeD0iMTkuNSIgY3k9IjEyLjUiIHI9IjUiIHN0cm9rZT0iIzIxMjEzMSIvPgo8cGF0aCBkPSJNMjkuNSAyNUMyOS41IDI2LjM4ODEgMjguNDYxNiAyNy43NTQ5IDI2LjUzODcgMjguODAzN0MyNC42MzQ4IDI5Ljg0MjIgMjEuOTcwNCAzMC41IDE5IDMwLjVDMTYuMDI5NiAzMC41IDEzLjM2NTIgMjkuODQyMiAxMS40NjEzIDI4LjgwMzdDOS41Mzg0MSAyNy43NTQ5IDguNSAyNi4zODgxIDguNSAyNUM4LjUgMjMuNjExOSA5LjUzODQxIDIyLjI0NTEgMTEuNDYxMyAyMS4xOTYzQzEzLjM2NTIgMjAuMTU3OCAxNi4wMjk2IDE5LjUgMTkgMTkuNUMyMS45NzA0IDE5LjUgMjQuNjM0OCAyMC4xNTc4IDI2LjUzODcgMjEuMTk2M0MyOC40NjE2IDIyLjI0NTEgMjkuNSAyMy42MTE5IDI5LjUgMjVaIiBzdHJva2U9IiMyMTIxMzEiLz4KPC9zdmc+Cg=="
+            icon="img:./images/profile-icon.svg"
           >
             <div class="q-btn-menu-div">
               <q-list>
@@ -225,14 +219,14 @@
         <img
           v-if="!showBurgerMenu"
           class="burger-menu-icon"
-          src="../assets/images/burger-icon.svg"
+          src="../../public/images/burger-icon.svg"
           alt="burger-menu"
           @click="onOpenModals('burgerMenu')"
         />
         <img
           v-if="showBurgerMenu"
           class="burger-menu-exit-icon"
-          src="../assets/images/x-burger-icon.svg"
+          src="../../public/images/x-burger-icon.svg"
           alt="burger-menu"
           @click="onCloseModals(true)"
         />
@@ -268,6 +262,18 @@ export default defineComponent({
   },
 
   methods: {
+    redirectin(page: string) {
+      switch (page) {
+        case 'favorites':
+          window.location.href = 'http://localhost:8080/#/favorites';
+          break;
+
+        case 'home':
+          window.location.href = 'http://localhost:8080/#/';
+
+          break;
+      }
+    },
     animation(
       modal: string,
       opacity: string,
