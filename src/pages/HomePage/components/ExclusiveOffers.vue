@@ -6,9 +6,9 @@
     <div class="cards">
       <div class="q-gutter-lg items-center justify-center row q-pt-lg">
         <q-card
-          class="flex column card-container no-shadow"
           v-for="item in arrayOfObjects"
           :key="item.name"
+          class="flex column card-container no-shadow"
           :class="item.class"
         >
           <q-img src="../../../assets/circle.png" class="circle" />

@@ -1,6 +1,6 @@
 <template>
-	<ConnectWallet v-if="showConnectWallet" @clicked="onOpenModals($event)" />
-	<MyWallet v-if="showMyWallet" @clicked="onOpenModals($event)" />
+	<ConnectWallet @clicked="onOpenModals($event)" />
+	<MyWallet @clicked="onOpenModals($event)" />
 	<BurgerMenu v-if="showBurgerMenu" />
 
 	<q-layout view="lHh Lpr lFf">
@@ -268,8 +268,6 @@ export default defineComponent({
 			user: true,
 			showModals: false,
 			showBurgerMenu: false,
-			showMyWallet: false,
-			showConnectWallet: false,
 			userStore,
 			walletAddress: '',
 		};
@@ -329,12 +327,10 @@ export default defineComponent({
 			switch (modal) {
 				case 'connectWallet':
 					this.showModals = true;
-					this.showConnectWallet = true;
 					this.animation('connectWallet', '1', 'scale(1)', '200');
 					break;
 				case 'myWallet':
 					this.showModals = true;
-					this.showMyWallet = true;
 					this.animation('myWallet', '1', 'translateX(0%)', '200');
 					break;
 				case 'burgerMenu':
@@ -347,7 +343,6 @@ export default defineComponent({
 		onCloseModals(title: boolean) {
 			if (title === true) {
 				this.showModals = false;
-				this.showBurgerMenu = false;
 				this.animation('connectWallet', '0', 'scale(0.5)', '-200');
 				this.animation('myWallet', '0', 'translateX(100%)', '-200');
 				document.body.classList.remove('no-scroll');

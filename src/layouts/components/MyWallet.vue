@@ -1,24 +1,24 @@
 <template>
-	<div @click="onClickBackground" class="my-wallet-background row justify-end">
+	<div class="my-wallet-background row justify-end" @click="onClickBackground">
 		<div
-			@click.stop
 			class="my-wallet-container column justify-between items-center"
+			@click.stop
 		>
 			<div class="my-wallet-header row">
 				<div>MY WALLET</div>
-        <img src="../../../public/images/metamask-icon.svg" alt="" />
+				<img src="../../../public/images/metamask-icon.svg" alt="" />
 				<div>walletID</div>
 				<img
-					@click="onClickBackground"
 					class="x-icon"
-          src="../../../public/images/x-icon.svg"
+					src="../../../public/images/x-icon.svg"
 					alt=""
+					@click="onClickBackground"
 				/>
 			</div>
 			<div
 				class="my-wallet-ballance-container column justify-center items-center"
 			>
-			<img src="../../../public/images/wallet.svg" alt="wallet-icon" />
+				<img src="../../../public/images/wallet.svg" alt="wallet-icon" />
 				<div class="ballance-wrapper column">
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
 					<div class="my-wallet-balance">${{ balance }}</div>
@@ -67,7 +67,7 @@ export default defineComponent({
 				email: this.userStore.user?.email, // Your customer's email address
 				redirectURL: 'http://localhost:8081', // Redirect URL of your app
 			});
-			this.onClickBackground()
+			this.onClickBackground();
 			transak.init();
 
 			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
