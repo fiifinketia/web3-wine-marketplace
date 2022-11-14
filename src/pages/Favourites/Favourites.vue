@@ -29,32 +29,38 @@
       <q-img src="../../../public/images/NoNFTs.svg" width="180px" />
       <div>You do not have any favorites yet.</div>
     </div>
-    <div class="row justify-around cards-container">
+    <div class="row justify-around favs-cards-container">
       <q-card
-        class="no-shadow q-ma-md card-individual"
+        class="no-shadow q-ma-md vafs-card-individual"
         v-for="item in items"
         :key="item.id"
       >
-        <div class="card-img"></div>
-        <div class="wine-name q-py-md">
+        <div class="favs-card-img"></div>
+        <div class="favs-wine-name q-py-md">
           The full name of the wine is here and here and here
         </div>
-        <div class="price-container column q-pa-sm">
+        <div class="favs-price-container column q-pa-sm">
           <div class="row justify-between q-pb-md">
             <div class="starting-from">Price</div>
-            <q-img
+            <q-btn
               @click="removeNFT(item.id)"
-              src="../../../public/images/heart.svg"
-              width="20px"
-              height="20px"
+              class="un-favour-btn"
+              icon="img:./images/heart.svg"
+              flat
+              dense
+              padding="0"
             />
           </div>
           <div class="row justify-between">
-            <div class="price">
+            <div class="favs-price">
               <q-img src="../../../public/images/USDT.svg" width="20px" />
               &nbsp;00.00
             </div>
-            <q-img src="../../../public/images/mini-button.svg" width="20px" />
+            <q-img
+              src="../../../public/images/mini-button.svg"
+              width="24px"
+              height="24px"
+            />
           </div>
         </div>
       </q-card>

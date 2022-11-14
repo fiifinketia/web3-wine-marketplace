@@ -84,7 +84,7 @@
   color: #9d9d9d;
 }
 
-.wine-name {
+.favs-wine-name {
   font-family: 'Obviously-Bold';
   font-style: normal;
   font-weight: 460;
@@ -99,28 +99,28 @@
   width: 90%;
 }
 
-.cards-container {
+.favs-cards-container {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
 
-.card-individual {
+.favs-card-individual {
   width: 274px;
 }
 
-.card-img {
+.favs-card-img {
   background-color: #e0e4eb;
   width: 274px;
   height: 296px;
 }
 
-.price-container {
+.favs-price-container {
   border: 1px solid rgba(94, 151, 236, 0.27) !important;
   border-radius: 6px !important;
 }
 
-.price {
+.favs-price {
   font-family: 'ProximaNova-Bold';
   font-style: normal;
   font-weight: 700;
@@ -129,4 +129,13 @@
   display: flex;
   align-items: center;
   color: #212131;
+}
+
+.un-favour-btn .q-focus-helper {
+  display: none;
+}
+
+.un-favour-btn .q-icon {
+  width: 20px;
+  padding-right: 2px;
 }
