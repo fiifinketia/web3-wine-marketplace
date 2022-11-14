@@ -1,6 +1,6 @@
 <template>
-  <ConnectWallet @clicked="onConnectWallet($event)" @wallet-connected="showConnectWallet = false" v-if="showConnectWallet" />
-  <MyWallet @clicked="onConnectWallet($event)" v-if="showMyWallet" />
+  <ConnectWallet v-if="showConnectWallet" @clicked="onConnectWallet($event)" />
+  <MyWallet v-if="showMyWallet" @clicked="onConnectWallet($event)" />
 
   <q-layout view="lHh Lpr lFf">
     <q-header
@@ -9,11 +9,11 @@
     >
       <q-toolbar class="row justify-between items-center">
         <div
+          class="nav-bar-container-left"
           @click="
             {
             }
           "
-          class="nav-bar-container-left"
         >
           <q-img class="logo" src="../assets/images/WiV-logo.svg" />
         </div>
@@ -26,8 +26,8 @@
           >
             <q-list>
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -39,8 +39,8 @@
               </q-item>
 
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -52,8 +52,8 @@
               </q-item>
 
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -84,20 +84,20 @@
         </div>
         <div class="nav-bar-container-right row">
           <img
-            @click="
-              {
-              }
-            "
             class="icons"
             src="../assets/images/favs-icon.svg"
-          />
-          <img
             @click="
               {
               }
             "
+          />
+          <img
             class="icons"
             src="../assets/images/bell-icon.svg"
+            @click="
+              {
+              }
+            "
           />
           <q-btn-dropdown
             class="btn-dropdown-menu"
@@ -106,20 +106,20 @@
             icon="img:data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIuNSIgY3k9IjUuNSIgcj0iNSIgc3Ryb2tlPSIjMjEyMTMxIi8+CjxwYXRoIGQ9Ik0yMi41IDE4QzIyLjUgMTkuMzg4MSAyMS40NjE2IDIwLjc1NDkgMTkuNTM4NyAyMS44MDM3QzE3LjYzNDggMjIuODQyMiAxNC45NzA0IDIzLjUgMTIgMjMuNUM5LjAyOTYxIDIzLjUgNi4zNjUxOSAyMi44NDIyIDQuNDYxMjUgMjEuODAzN0MyLjUzODQxIDIwLjc1NDkgMS41IDE5LjM4ODEgMS41IDE4QzEuNSAxNi42MTE5IDIuNTM4NDEgMTUuMjQ1MSA0LjQ2MTI1IDE0LjE5NjNDNi4zNjUxOSAxMy4xNTc4IDkuMDI5NjEgMTIuNSAxMiAxMi41QzE0Ljk3MDQgMTIuNSAxNy42MzQ4IDEzLjE1NzggMTkuNTM4NyAxNC4xOTYzQzIxLjQ2MTYgMTUuMjQ1MSAyMi41IDE2LjYxMTkgMjIuNSAxOFoiIHN0cm9rZT0iIzIxMjEzMSIvPgo8L3N2Zz4K"
           >
             <q-list>
-              <q-item v-if="!!userStore.walletAddress" clickable v-close-popup @click="openWallet">
+              <q-item v-if="!!userStore.walletAddress" v-close-popup clickable @click="openWallet">
                 <q-item-section>
                   <q-item-label>My wallet</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item v-else clickable v-close-popup @click="connectWallet">
+              <q-item v-else v-close-popup clickable @click="connectWallet">
                 <q-item-section>
                   <q-item-label>Sign Up</q-item-label>
                 </q-item-section>
               </q-item>
 
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -131,8 +131,8 @@
               </q-item>
 
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -143,8 +143,8 @@
                 </q-item-section>
               </q-item>
               <q-item
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   {
                   }
@@ -161,8 +161,8 @@
                     >
                       <q-list>
                         <q-item
-                          clickable
                           v-close-popup
+                          clickable
                           @click="
                             {
                             }
@@ -174,8 +174,8 @@
                         </q-item>
 
                         <q-item
-                          clickable
                           v-close-popup
+                          clickable
                           @click="
                             {
                             }
@@ -192,8 +192,8 @@
               </q-item>
               <q-item
                 v-if="!!userStore.walletAddress"
-                clickable
                 v-close-popup
+                clickable
                 @click="
                   logout
                 "
@@ -209,12 +209,12 @@
           class="menu-icon"
           flat
           dense
+          icon="menu"
+          aria-label="Menu"
           @click="
             {
             }
           "
-          icon="menu"
-          aria-label="Menu"
         ></q-btn>
       </q-toolbar>
     </q-header>
@@ -227,6 +227,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import MetaMaskOnboarding from '@metamask/onboarding';
+
 import '../css/MainLayout/MainLayout.scss';
 
 import { useUserStore } from 'src/stores/user-store';
@@ -236,6 +238,11 @@ import MyWallet from './components/MyWallet.vue';
 
 export default defineComponent({
   name: 'MainLayout',
+  components: {
+    ConnectWallet,
+    BurgerMenu,
+    MyWallet,
+  },
   data() {
 
     const userStore = useUserStore();
@@ -249,26 +256,22 @@ export default defineComponent({
       walletAddress: '',
     };
   },
-  components: {
-    ConnectWallet,
-    BurgerMenu,
-    MyWallet,
+  async mounted() {
+    const userStore = useUserStore();
+		const { ethereum } = window;
+
+		this.walletAddress = userStore.walletAddress;
   },
-  // async beforeMount() {
-  //   // this.walletAddress = await this.userStore.walletAddress();
-  //   console.log("🚀 ~ file: MainLayout.vue ~ line 259 ~ beforeMount ~ this.walletAddress", this.walletAddress)
-  // },
   methods: {
     async connectWallet() {
-      // this.showConnectWallet = true;
+      this.showConnectWallet = true;
       // // this.showMyWallet = true;
       // document.body.classList.add('no-scroll');
-      this.userStore.provider.listAccounts().then(accounts => this.userStore.walletAddress = accounts[0]);
     },
     async openWallet() {
-      // this.showMyWallet = true;
+      this.showMyWallet = true;
+
       // document.body.classList.add('no-scroll');
-      this.userStore.magic.connect.showWallet();
     },
     onConnectWallet(title: boolean) {
       if (title === true) {
@@ -278,9 +281,25 @@ export default defineComponent({
       document.body.classList.remove('no-scroll');
     },
     async logout() {
-      console.log('logout');
-      await this.userStore.magic.connect.disconnect()
       this.userStore.walletAddress = ''
+    },
+		installMetaMask () {
+      this.$q.dialog({
+        dark: false,
+        title: 'Confirm',
+        message: 'You need a metamask wallet to make transactions, do you want to install MetaMask now?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        const onboarding = new MetaMaskOnboarding({ forwarderOrigin: 'http://localhost:8081' })
+				onboarding.startOnboarding()
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
     }
   },
 });

@@ -1,70 +1,31 @@
 import { defineStore } from 'pinia';
-import {
-  Magic,
-  SDKError,
-  RPCError,
-  ExtensionError,
-  MagicUserMetadata,
-  LoginWithMagicLinkConfiguration,
-} from 'magic-sdk';
-import { ConnectExtension } from '@magic-ext/connect';
 import { ref } from 'vue';
-import { ethers } from 'ethers';
+import axios from 'axios';
 
 export const useUserStore = defineStore(
 	'userStore',
 	() => {
-		const magic = new Magic(process.env.MAGIC_API_KEY || '', {
-			network: {
-				rpcUrl: process.env.POLYGON_RPC_URL || '',
-				chainId: 80001,
-			},
-			extensions: [new ConnectExtension()],
-		});
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const provider = new ethers.providers.Web3Provider(<any>magic.rpcProvider);
-
 		const walletAddress = ref('');
 
-		// const user = ref<{ publicAddress: string | null }>({
-		//   publicAddress: null,
-		// });
+		const connectWallet = async () => {
+			// this.showConnectWallet = true;
+			// // this.showMyWallet = true;
+			// document.body.classList.add('no-scroll');
+			const accounts = await window.ethereum.request({
+				method: 'eth_requestAccounts',
+			});
+			walletAddress.value = accounts[0];
 
-		// const walletBalance = ref<number>(0);
-
-		// const isConnected = () => {
-		//   return !!provider.listAccounts().then((accounts) => accounts[0]);
-		// };
-
-		// const connect = async () => {
-		//   try {
-		//     await magic.connect.getWalletInfo();
-		//
-		//     getWalletBalance();
-		//   } catch (error) {
-		//     if (error instanceof SDKError) {
-		//       console.log(error);
-		//     }
-		//     if (error instanceof RPCError) {
-		//       console.log(error);
-		//     }
-		//     if (error instanceof ExtensionError) {
-		//       console.log(error);
-		//     }
-		//   }
-		// };
-		// const logout = async () => {
-		//   await magic.connect.disconnect();
-		//   user.value = {
-		//     publicAddress: null,
-		//   };
-		// };
+			await axios.post(process.env.MKT_API_URL + 'market/users', {
+				walletAddress: walletAddress.value,
+			});
+		};
 
 		return {
-			magic,
-			provider,
 			// provider,
 			walletAddress,
+			connectWallet,
 			// getWalletBalance,
 			// isConnected,
 			// walletBalance,
