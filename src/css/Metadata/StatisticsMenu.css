@@ -1,0 +1,55 @@
+.tab-text-clicked {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 18px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+
+  color: #3586ff;
+}
+
+.tab-text-not-clicked {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 18px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+
+  color: #9d9d9d;
+}
+
+.q-tab__indicator {
+  color: #3586ff;
+}
+
+.q-tab__label {
+  font-family: 'Obviously';
+  font-style: normal;
+  font-weight: 450;
+  font-size: 18px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+
+  color: #9d9d9d;
+}
+
+.q-tab--active .q-tab__label {
+  color: #3586ff;
+}
+.tabs-menu {
+  width: 80%;
+}
+
+@media screen and (max-width: 400px) {
+  .tabs-menu {
+    width: 95%;
+  }
+}

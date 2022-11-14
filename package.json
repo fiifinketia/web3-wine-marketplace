@@ -12,17 +12,26 @@
     "dev": "cross-env QENV=development quasar dev"
   },
   "dependencies": {
+    "@magic-ext/connect": "^3.1.0",
+    "@opensea/seaport-js": "^1.0.8",
     "@quasar/extras": "^1.0.0",
+    "apexcharts": "^3.36.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
+    "ethers": "^5.7.2",
+    "magic-sdk": "^10.0.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "opensea-js": "^4.0.12",
     "pinia": "^2.0.11",
+    "pinia-plugin-persistedstate": "^2.3.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vue3-apexcharts": "^1.4.1",
+    "web3": "^1.8.0"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.0.0",

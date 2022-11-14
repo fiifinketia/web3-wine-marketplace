@@ -1,6 +1,6 @@
 <template>
-  <ConnectWallet @clicked="onCloseModals($event)" />
-  <MyWallet @clicked="onCloseModals($event)" />
+  <ConnectWallet v-if="showConnectWallet" @clicked="onOpenModals($event)" />
+  <MyWallet v-if="showMyWallet" @clicked="onOpenModals($event)" />
   <BurgerMenu v-if="showBurgerMenu" />
 
   <q-layout view="lHh Lpr lFf">
@@ -10,16 +10,16 @@
     >
       <q-toolbar class="row justify-between items-center">
         <div
+          class="nav-bar-container-left"
           @click="
             {
             }
           "
-          class="nav-bar-container-left"
         >
           <q-img
-            @click="redirectin('home')"
             class="logo"
             src="../../public/images/WiV-logo.svg"
+            @click="redirectin('home')"
           />
         </div>
         <div class="nav-bar-container-center row items-center">
@@ -32,8 +32,8 @@
             <div class="q-btn-menu-div">
               <q-list>
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     {
                     }
@@ -45,8 +45,8 @@
                 </q-item>
 
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     {
                     }
@@ -58,8 +58,8 @@
                 </q-item>
 
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     {
                     }
@@ -91,17 +91,17 @@
         </div>
         <div class="nav-bar-container-right row items-center">
           <img
-            @click="redirectin('favorites')"
             class="icons"
             src="../../public/images/favs-icon.svg"
+            @click="redirectin('favorites')"
           />
           <img
+            class="icons"
+            src="../../public/images/bell-icon.svg"
             @click="
               {
               }
             "
-            class="icons"
-            src="../../public/images/bell-icon.svg"
           />
           <q-btn-dropdown
             class="btn-dropdown-menu profile-dropdown"
@@ -113,9 +113,9 @@
             <div class="q-btn-menu-div">
               <q-list>
                 <q-item
-                  v-if="!user"
-                  clickable
+									v-if="!!userStore.walletAddress"
                   v-close-popup
+                  clickable
                   @click="onOpenModals('connectWallet')"
                 >
                   <q-item-section>
@@ -123,9 +123,9 @@
                   </q-item-section>
                 </q-item>
                 <q-item
-                  v-if="user"
-                  clickable
+                  v-else
                   v-close-popup
+                  clickable
                   @click="onOpenModals('myWallet')"
                 >
                   <q-item-section>
@@ -134,8 +134,8 @@
                 </q-item>
 
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     {
                     }
@@ -147,8 +147,8 @@
                 </q-item>
 
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     {
                     }
@@ -177,8 +177,8 @@
                         <div class="q-btn-menu-div">
                           <q-list>
                             <q-item
-                              clickable
                               v-close-popup
+                              clickable
                               @click="
                                 {
                                 }
@@ -190,8 +190,8 @@
                             </q-item>
 
                             <q-item
-                              clickable
                               v-close-popup
+                              clickable
                               @click="
                                 {
                                 }
@@ -207,7 +207,13 @@
                     >
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="user = false">
+                <q-item
+								v-if="!!userStore.walletAddress"
+                v-close-popup
+                clickable
+                @click="
+                  logout
+                ">
                   <q-item-section>
                     <q-item-label>log out</q-item-label>
                   </q-item-section>
@@ -242,23 +248,32 @@
 import { defineComponent } from 'vue';
 import '../css/MainLayout/MainLayout.scss';
 
+import { useUserStore } from 'src/stores/user-store';
 import ConnectWallet from './components/ConnectWallet.vue';
 import BurgerMenu from './components/BurgerMenu.vue';
 import MyWallet from './components/MyWallet.vue';
 
 export default defineComponent({
   name: 'MainLayout',
-  data() {
-    return {
-      user: true,
-      showModals: false,
-      showBurgerMenu: false,
-    };
-  },
   components: {
     ConnectWallet,
     BurgerMenu,
     MyWallet,
+  },
+  data() {
+
+    const userStore = useUserStore();
+
+
+    return {
+      user: true,
+      showModals: false,
+      showBurgerMenu: false,
+      showMyWallet: false,
+      showConnectWallet: false,
+      userStore,
+      walletAddress: '',
+    };
   },
 
   methods: {
@@ -309,12 +324,14 @@ export default defineComponent({
       switch (modal) {
         case 'connectWallet':
           this.showModals = true;
+          this.showConnectWallet = true;
           this.animation('connectWallet', '1', 'scale(1)', '200');
+					this.userStore.provider.listAccounts().then(accounts => this.userStore.walletAddress = accounts[0]);
           break;
         case 'myWallet':
           this.showModals = true;
+          this.showMyWallet = true;
           this.animation('myWallet', '1', 'translateX(0%)', '200');
-
           break;
         case 'burgerMenu':
           this.showBurgerMenu = true;
@@ -332,6 +349,10 @@ export default defineComponent({
         document.body.classList.remove('no-scroll');
       }
     },
+    async logout() {
+      console.log('logout');
+      this.userStore.walletAddress = '';
+    }
   },
 });
 </script>
