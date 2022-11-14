@@ -19,7 +19,7 @@
 					<q-img
 						class="logo"
 						src="../../public/images/WiV-logo.svg"
-						@click="redirectin('home')"
+						@click="$router.push('/home')"
 					/>
 				</div>
 				<div class="nav-bar-container-center row items-center">
@@ -93,7 +93,7 @@
 					<img
 						class="icons"
 						src="../../public/images/favs-icon.svg"
-						@click="redirectin('favorites')"
+						@click="$router.push('/favourites')"
 					/>
 					<img
 						class="icons"
@@ -129,7 +129,7 @@
 									@click="onOpenModals('connectWallet')"
 								>
 									<q-item-section>
-										<q-item-label>sign up</q-item-label>
+										<q-item-label>my wallet</q-item-label>
 									</q-item-section>
 								</q-item>
 
@@ -282,18 +282,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		redirectin(page: string) {
-			switch (page) {
-				case 'favorites':
-					window.location.href = 'http://localhost:8080/#/favorites';
-					break;
-
-				case 'home':
-					window.location.href = 'http://localhost:8080/#/';
-
-					break;
-			}
-		},
 		animation(
 			modal: string,
 			opacity: string,
