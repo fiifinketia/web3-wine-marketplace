@@ -13,6 +13,7 @@ import { RetrieveListingResponse } from '../models/Response.models/Seaport.Respo
 import axios from 'axios';
 import { OrderComponents } from '@opensea/seaport-js/lib/types';
 import { useUserStore } from 'src/stores/user-store';
+import Web3 from 'web3';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -270,18 +271,7 @@ export async function FulfillBasicOrder(
 }
 
 export async function GetWeb3(): Promise<SeaportInstance> {
-	const userStore = useUserStore();
-	const web3 = new ethers.providers.Web3Provider(
-		<any>userStore.magic.rpcProvider
-		// window.ethereum
-	);
-	const JsonRpcProvider = new ethers.providers.JsonRpcProvider(
-		process.env.POLYGON_RPC_URL,
-		{
-			name: 'mumbai',
-			chainId: 80001,
-		}
-	);
+	const web3 = new ethers.providers.Web3Provider(window.ethereum);
 	const signer = web3.getSigner();
 	const chainId = (await web3.getNetwork()).chainId;
 	let network = '';
