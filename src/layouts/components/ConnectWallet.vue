@@ -56,10 +56,6 @@ export default defineComponent({
 
 		setupWallet() {
 			this.isMetaMaskInstalled = ethereum && ethereum.isMetaMask;
-			console.log(
-				'🚀 ~ file: ConnectWallet.vue ~ line 54 ~ setupWallet ~ isMetaMaskInstalled',
-				isMetaMaskInstalled
-			);
 			if (!isMetaMaskInstalled) {
 				//If it isn't installed we ask the user to click to install it
 				const onboarding = new MetaMaskOnboarding({

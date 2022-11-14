@@ -23,7 +23,7 @@
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
 					<div class="my-wallet-balance">${{ balance }}</div>
 				</div>
-				<q-btn class="my-wallet-btn" @click="fundWallet">Fund wallet</q-btn>
+				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet">Fund wallet</q-btn>
 			</div>
 			<div class="my-wallet-logout">LOG OUT</div>
 		</div>
