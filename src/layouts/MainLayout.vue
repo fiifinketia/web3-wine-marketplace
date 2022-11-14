@@ -116,20 +116,20 @@
 									v-if="!!userStore.walletAddress"
 									v-close-popup
 									clickable
-									@click="onOpenModals('connectWallet')"
+									@click="onOpenModals('myWallet')"
 								>
 									<q-item-section>
-										<q-item-label>sign up</q-item-label>
+										<q-item-label>my wallet</q-item-label>
 									</q-item-section>
 								</q-item>
 								<q-item
 									v-else
 									v-close-popup
 									clickable
-									@click="onOpenModals('myWallet')"
+									@click="onOpenModals('connectWallet')"
 								>
 									<q-item-section>
-										<q-item-label>my wallet</q-item-label>
+										<q-item-label>sign up</q-item-label>
 									</q-item-section>
 								</q-item>
 
