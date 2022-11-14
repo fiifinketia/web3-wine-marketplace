@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { FilterOptionsResponse } from 'src/pages/Marketplace-Main/models/Response.models/FilterOptions.response';
 
 export const useWineFilters = defineStore('wineFilters', {
 	state: () => ({
@@ -14,32 +15,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		type: [''],
-		typeOptions: [
-			{
-				label: 'Red',
-				value: 'Red',
-			},
-			{
-				label: 'White',
-				value: 'White',
-			},
-			{
-				label: 'Rose',
-				value: 'Rose',
-			},
-			{
-				label: 'Sparkling',
-				value: 'Sparkling',
-			},
-			{
-				label: 'Dessert',
-				value: 'Dessert',
-			},
-			{
-				label: 'Fortified',
-				value: 'Fortified',
-			},
-		],
+		typeOptions: [] as {label: string, value: string}[],
 
 		sortedAtoZ: '',
 		sortedAtoZOptions: [
@@ -53,43 +29,17 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		brand: [''],
-		brandOptions: [
-			{ label: 'Here’s brand number 1', value: 'Here’s brand number 1' },
-			{ label: 'An other brans', value: 'An other brans' },
-		],
+		brandOptions: [] as {label: string, value: string}[],
 		origin: [''],
-		originOptions: [
-			{ label: 'Here’s origin number 1', value: '1' },
-			{ label: 'An other origin', value: '2' },
-			{ label: 'One more origin', value: '3' },
-			{ label: 'Wine origin', value: '4' },
-			{ label: 'Origin name', value: '5' },
-			{ label: 'Origin label', value: '6' },
-		],
+		originOptions: [] as {label: string, value: string}[],
 		producer: [''],
-		producerOptions: [
-			{ label: 'Here’s producer number 1', value: '1' },
-			{ label: 'An other producer', value: '2' },
-			{ label: 'One more producer', value: '3' },
-		],
+		producerOptions: [] as {label: string, value: string}[],
 		country: [''],
-		countryOptions: [
-			{ label: 'Here’s country number 1', value: '1' },
-			{ label: 'An other country', value: '2' },
-			{ label: 'One more country', value: '3' },
-		],
+		countryOptions: [] as {label: string, value: string}[],
 		region: [''],
-		regionOptions: [
-			{ label: 'Here’s region number 1', value: '1' },
-			{ label: 'An other region', value: '2' },
-			{ label: 'One more region', value: '3' },
-		],
-		appelation: [''],
-		appelationOptions: [
-			{ label: 'Here’s appelation number 1', value: '1' },
-			{ label: 'An other appelation', value: '2' },
-			{ label: 'One more appelation', value: '3' },
-		],
+		regionOptions: [] as {label: string, value: string}[],
+		appellation: [''],
+		appellationOptions: [] as {label: string, value: string}[],
 		price: {
 			min: 0,
 			max: 1000000,
@@ -99,34 +49,15 @@ export const useWineFilters = defineStore('wineFilters', {
 			max: 100,
 		},
 		wineCase: [''],
-		wineCaseOptions: [
-			{ label: 'Here’s case number 1', value: '1' },
-			{ label: 'An other case', value: '2' },
-			{ label: 'One more case', value: '3' },
-		],
+		wineCaseOptions: [] as {label: string, value: string}[],
 		heritage: [''],
-		heritageOptions: [
-			{ label: 'Here’s heritage number 1', value: '1' },
-			{ label: 'An other heritage', value: '2' },
-			{ label: 'One more heritage', value: '3' },
-		],
+		heritageOptions: [] as {label: string, value: string}[],
 		format: [''],
-		formatOptions: [
-			{ label: 'Here’s format number 1', value: '1' },
-			{ label: 'An other format', value: '2' },
-			{ label: 'One more format', value: '3' },
-		],
+		formatOptions: [] as {label: string, value: string}[],
 		investmentGrade: [''],
-		investmentGradeOptions: [
-			{ label: 'Here’s investment grade number 1', value: '1' },
-			{ label: 'An other investment grade', value: '2' },
-		],
+		investmentGradeOptions: [] as {label: string, value: string}[],
 		LWIN: [''],
-		LWINOptions: [
-			{ label: 'Here’s LWIN number 1', value: '1' },
-			{ label: 'An other LWIN', value: '2' },
-			{ label: 'One more LWIN', value: '3' },
-		],
+		LWINOptions: [] as {label: string, value: string}[],
 		searchQuery: '',
 	}),
 	getters: {
@@ -138,7 +69,7 @@ export const useWineFilters = defineStore('wineFilters', {
 		getProducer: (state) => state.producer,
 		getCountry: (state) => state.country,
 		getRegion: (state) => state.region,
-		getAppelation: (state) => state.appelation,
+		getAppelation: (state) => state.appellation,
 		getPrice: (state) => state.price,
 		getSearchQuery: (state) => state.searchQuery,
 		getFiltersQueryParams: (state) => {
@@ -152,7 +83,7 @@ export const useWineFilters = defineStore('wineFilters', {
 				'country[]=' + state.country.filter((i: string) => i !== '').join(','),
 				'region[]=' + state.region.filter((i: string) => i !== '').join(','),
 				'appellation[]=' +
-					state.appelation.filter((i: string) => i !== '').join(','),
+					state.appellation.filter((i: string) => i !== '').join(','),
 				'price[]=' + state.price.min + ',' + state.price.max,
 				'q=' + state.searchQuery,
 			];
@@ -168,7 +99,7 @@ export const useWineFilters = defineStore('wineFilters', {
 				...state.producer,
 				...state.country,
 				...state.region,
-				...state.appelation,
+				...state.appellation,
 				state.sortedAtoZ,
 				...state.LWIN,
 				...state.wineCase,
@@ -203,7 +134,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.region = region;
 		},
 		setAppelation(appellation: string[]) {
-			this.appelation = appellation;
+			this.appellation = appellation;
 		},
 		setPrice(price: { min: number; max: number }) {
 			this.price = price;
@@ -222,7 +153,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.producer = this.producer.filter((i) => i !== value);
 			this.country = this.country.filter((i) => i !== value);
 			this.region = this.region.filter((i) => i !== value);
-			this.appelation = this.appelation.filter((i) => i !== value);
+			this.appellation = this.appellation.filter((i) => i !== value);
 			this.LWIN = this.LWIN.filter((i) => i !== value);
 			this.wineCase = this.wineCase.filter((i) => i !== value);
 			this.heritage = this.heritage.filter((i) => i !== value);
@@ -233,5 +164,73 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
 		},
+		setAllFilters(options: FilterOptionsResponse) {
+			for (const key in options) {
+				const value = options[key];
+				switch (key) {
+					case 'appellation': 
+						value.forEach(f => {
+							this.appellationOptions.push({label: f, value: f})
+						});
+						break;
+					case 'brand':
+						value.forEach(f => {
+							this.brandOptions.push({label: f, value: f})
+						})
+						break;
+					case 'case':
+						value.forEach(f => {
+							this.wineCaseOptions.push({label: f, value: f})
+						})
+						break;
+					case 'country':
+						value.forEach(f => {
+							this.countryOptions.push({label: f, value: f})
+						})
+						break;
+					case 'format':
+						value.forEach(f => {
+							this.formatOptions.push({label: f, value: f})
+						})
+						break;
+					case 'heritage':
+						value.forEach(f => {
+							this.heritageOptions.push({label: f, value: f})
+						})
+						break;
+					case 'investmentGrade':
+						value.forEach(f => {
+							this.investmentGradeOptions.push({label: f, value: f})
+						})
+						break;
+					case 'lwin':
+						value.forEach(f => {
+							this.LWINOptions.push({label: f, value: f})
+						})
+						break;
+					case 'origin':
+						value.forEach(f => {
+							this.originOptions.push({label: f, value: f})
+						})
+						break;
+					case 'producer':
+						value.forEach(f => {
+							this.producerOptions.push({label: f, value: f})
+						})
+						break;
+					case 'region':
+						value.forEach(f => {
+							this.regionOptions.push({label: f, value: f})
+						})
+						break;
+					case 'type':
+						value.forEach(f => {
+							this.typeOptions.push({label: f, value: f})
+						})
+						break;
+				}
+			}
+
+		}
 	},
 });
