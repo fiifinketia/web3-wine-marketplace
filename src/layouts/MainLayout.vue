@@ -1,6 +1,6 @@
 <template>
-	<ConnectWallet @clicked="onOpenModals($event)" />
-	<MyWallet @clicked="onOpenModals($event)" />
+	<ConnectWallet @clicked="onCloseModals($event)" />
+	<MyWallet @clicked="onCloseModals($event)" />
 	<BurgerMenu v-if="showBurgerMenu" />
 
 	<q-layout view="lHh Lpr lFf">
@@ -19,7 +19,7 @@
 					<q-img
 						class="logo"
 						src="../../public/images/WiV-logo.svg"
-						@click="$router.push('/home')"
+						@click="$router.push('/')"
 					/>
 				</div>
 				<div class="nav-bar-container-center row items-center">
@@ -93,7 +93,7 @@
 					<img
 						class="icons"
 						src="../../public/images/favs-icon.svg"
-						@click="$router.push('/favourites')"
+						@click="$router.push('/favorites')"
 					/>
 					<img
 						class="icons"
