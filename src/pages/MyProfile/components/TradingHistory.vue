@@ -9,15 +9,6 @@
             <div class="nft-number q-pl-sm">283</div>
           </div>
           <div class="flex row items-center search-container">
-            <div class="plus-button-wrapper">
-              <button class="flex justify-center plus-button">
-                <q-img
-                  src="../../../assets/plus.png"
-                  width="30px"
-                  height="30px"
-                />
-              </button>
-            </div>
             <div class="search_wrap search_wrap_2">
               <div class="search_box">
                 <div class="btn btn_common">
@@ -164,17 +155,19 @@
           <div
             class="flex row justify-between items-center full-width q-pt-md listing-options"
           >
-            <div class="nft-listing-title nft-listing-wrapper q-pl-sm">NFT</div>
-            <div class="flex row justify-between section-two-container">
-              <div class="nft-listing-title treshold treshold-title">
-                Treshold
+            <div
+              class="nft-listing-title nft-listing-wrapper q-pl-sm trading-history-nft-title"
+            >
+              NFT
+            </div>
+            <div
+              class="flex row justify-between section-two-container trading-history-section-two-container"
+            >
+              <div class="nft-listing-title trading-history">Price</div>
+              <div class="nft-listing-title trading-history from-to">
+                From/to
               </div>
-              <div class="nft-listing-title treshold">Price</div>
-              <div class="nft-listing-title treshold highest-offer-title">
-                Highest offer
-              </div>
-              <div class="nft-listing-title treshold exp">Exp on</div>
-              <div class="nft-listing-title treshold">Action</div>
+              <div class="nft-listing-title trading-history date-title">Date</div>
             </div>
           </div>
           <div class="q-pt-md">
@@ -183,27 +176,32 @@
               v-for="item in items"
               :key="item.name"
             >
-              <div class="nft-listing-name flex row items-center q-pl-sm">
+              <div
+                class="nft-listing-name flex row items-center q-pl-sm trading-history-nft-title"
+              >
+                <div
+                  :class="
+                    item.history === 'Buy' ? 'buy q-pr-lg' : 'sell q-pr-lg'
+                  "
+                >
+                  {{ item.history }}
+                </div>
                 <q-img
                   src="../../../assets/circle.png"
                   width="50px"
                   height="50px"
                   class="listing-wine-image"
                 />
-                <div class="q-pl-md wine-listing-name">{{ item.name }}</div>
-              </div>
-              <div class="flex row justify-between section-two-container">
                 <div
-                  class="nft-listing-title flex row items-center treshold treshold-property"
+                  class="q-pl-md wine-listing-name trading-history-wine-name"
                 >
-                  <q-img
-                    src="../../../assets/usdc.png"
-                    width="20px"
-                    height="20px"
-                  />
-                  <div class="q-pl-sm treshold-number">{{ item.treshold }}</div>
+                  {{ item.name }}
                 </div>
-                <div class="nft-listing-title flex row items-center treshold">
+              </div>
+              <div
+                class="flex row justify-between section-two-container trading-history-section-two-container"
+              >
+                <div class="flex row items-center trading-history">
                   <q-img
                     src="../../../assets/usdc.png"
                     width="20px"
@@ -213,25 +211,14 @@
                 </div>
 
                 <div
-                  class="nft-listing-title flex row items-center treshold highest-offer-container"
+                  class="flex row items-center trading-history from-wallet-text from-to"
                 >
-                  <q-img
-                    src="../../../assets/usdc.png"
-                    width="20px"
-                    height="20px"
-                  />
-                  <div class="q-pl-sm highest-offer-number">
-                    {{ item.offer }}
-                  </div>
+                  0x0000000000
                 </div>
-                <div class="nft-listing-title treshold expires-on-number exp">
-                  {{ item.exp }}
-                </div>
-                <div class="nft-listing-title treshold flex row">
-                  <q-img src="../../../assets/trash.png" class="trash-btn" />
-                  <div class="q-pl-sm" @click="openModal = !openModal">
-                    <q-img src="../../../assets/edit.png" class="trash-btn" />
-                  </div>
+                <div class="trading-history time flex row items-center">
+                  <div class="trading-history-date">00/00/00</div>
+                  <div class="offer-border"></div>
+                  <div class="trading-history-hour">10:30 PM</div>
                 </div>
               </div>
             </q-card>
@@ -338,6 +325,7 @@
 </template>
 
 <script>
+import '../../../css/MyProfile/TradingHistory.css';
 import { defineComponent } from 'vue-demi';
 import '../../../css/MyProfile/IncomingOffers.css';
 import '../../../css/MyProfile/OutgoingOffers.css';
@@ -358,6 +346,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Buy',
         },
         {
           name: 'The full wine name is here',
@@ -365,6 +354,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Buy',
         },
         {
           name: 'The full wine name is here',
@@ -372,6 +362,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Sell',
         },
         {
           name: 'The full wine name is here',
@@ -379,6 +370,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Buy',
         },
         {
           name: 'The full wine name is here',
@@ -386,6 +378,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Sell',
         },
         {
           name: 'The full wine name is here',
@@ -393,6 +386,7 @@ export default defineComponent({
           price: 1111,
           offer: 1111,
           exp: '00/00/00',
+          history: 'Buy',
         },
       ],
     };

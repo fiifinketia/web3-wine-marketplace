@@ -488,6 +488,16 @@ td:last-child {
 .search-item-hidden {
   display: none;
 }
+
+.from-wallet {
+  font-family: 'Proxima Nova';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.02em;
+  color: #212131;
+}
 /*
 .triangle {
   background-color: red;
@@ -505,6 +515,15 @@ td:last-child {
 
 .search-container {
   display: none;
+}
+
+.first-part-container {
+  width: 15%;
+}
+.from-width {
+  width: 20%;
+  display: flex;
+  justify-content: center;
 }
 
 @media screen and (max-width: 1200px) {
@@ -532,6 +551,15 @@ td:last-child {
   .nft-image {
     display: none;
   }
+  .from-text.treshold {
+    display: none;
+  }
+  .from-wallet {
+    display: none;
+  }
+  .treshold {
+    width: 25%;
+  }
 }
 
 @media screen and (max-width: 1120px) {
@@ -549,15 +577,6 @@ td:last-child {
   }
   .floor-price {
     display: none;
-  }
-  /* .offer-container {
-    display: flex;
-    flex-direction: column;
-  } */
-  .offer-container-first-part {
-    display: flex;
-    justify-content: flex-start;
-    width: 95%;
   }
 
   .search_wrap {

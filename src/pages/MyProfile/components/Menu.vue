@@ -12,7 +12,11 @@
         name="Outgoing offers"
         label="Outgoing offers"
       />
-      <q-route-tab name="Trading History" label="Trading History" />
+      <q-route-tab
+        name="Trading History"
+        label="Trading History"
+        to="/my-profile/trading-history"
+      />
     </q-tabs>
   </div>
   <div class="flex row justify-between items-center mobile-tabs">
