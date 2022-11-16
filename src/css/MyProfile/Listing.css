@@ -123,6 +123,14 @@
 .plus-button-wrapper {
   padding-right: 5px;
 }
+.order {
+  display: flex;
+  flex-direction: row;
+}
+.offer-container {
+  display: flex;
+  flex-direction: row;
+}
 
 @media screen and (max-width: 992px) {
   .treshold-title {
@@ -140,23 +148,28 @@
   .nft-listing-title {
     width: 20%;
   }
-}
-
-@media screen and (max-width: 786px) {
-  .highest-offer-container {
-    display: none;
-  }
   .highest-offer-title {
     display: none;
   }
+  .highest-offer-container {
+    display: none;
+  }
+
+  .listing-wine-image {
+    display: none;
+  }
+
+  .clicked-new-radio-button {
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 786px) {
   .treshold {
-    width: 25%;
+    width: 33%;
   }
   .section-two-container {
     width: 50%;
-  }
-  .listing-wine-image {
-    display: none;
   }
 }
 
@@ -170,20 +183,16 @@
     height: auto;
   }
   .wine-listing-name {
-    width: 150px;
+    width: 130px;
     padding-left: 5px;
   }
-  /* .treshold {
-    width: 70px;
-  } */
+
   .treshold {
     width: 33%;
   }
-  /* .listing-cards {
-    width: 100%;
-  } */
+
   .section-two-container {
-    width: 59%;
+    width: 63%;
   }
 }
 
@@ -192,7 +201,7 @@
     display: none;
   }
   .section-two-container {
-    width: 45%;
+    width: 55%;
   }
   .treshold {
     width: 50%;
@@ -208,7 +217,6 @@
   border-radius: 20px;
   width: 800px;
   height: 580px;
-  /* z-index: 2; */
 }
 
 .list-title {
@@ -415,4 +423,73 @@ input[type='date'] {
   .listing-modal-container {
     width: 90%;
   }
+}
+@media screen and (max-width: 768px) {
+  .search-container {
+    display: flex;
+  }
+  .search_wrap .search_box {
+    position: relative;
+    width: 250px;
+    height: 45px;
+  }
+  .search_wrap .search_box .input {
+    left: 0%;
+  }
+  .search_wrap.search_wrap_2 .search_box .btn {
+    left: 0%;
+  }
+  .search_wrap .search_box .input {
+    width: 100%;
+  }
+
+  .search_wrap {
+    width: 250px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .search_wrap .search_box {
+    position: relative;
+    width: 210px;
+    height: 45px;
+  }
+  .search_wrap {
+    width: 210px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .offers {
+    display: none;
+  }
+  .nft-number {
+    display: none;
+  }
+  .plus-button-wrapper {
+    display: none;
+  }
+  .search_wrap .search_box {
+    width: 100%;
+  }
+  .search_wrap {
+    width: 80%;
+  }
+  .pagination2 {
+    display: none;
+  }
+  .offers-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .order {
+    display: none;
+  }
+  .search-container {
+    width: 100%;
+  }
+}
+.trash-btn {
+  width: 35px;
+  cursor: pointer;
 }

@@ -3,93 +3,149 @@
   <div class="flex justify-center items-center">
     <div class="flex row justify-between items-center container">
       <div class="flex row items-center offer-container">
-        <div class="offers">Offers</div>
-        <div class="nft-number q-pl-sm">283</div>
+        <div class="flex row justify-between offers-container">
+          <div class="flex row">
+            <div class="offers">Offers</div>
+            <div class="nft-number q-pl-sm">283</div>
+          </div>
+          <div class="flex row items-center search-container">
+            <div class="plus-button-wrapper">
+              <button class="flex justify-center plus-button">
+                <q-img
+                  src="../../../assets/plus.png"
+                  width="30px"
+                  height="30px"
+                />
+              </button>
+            </div>
+            <div class="search_wrap search_wrap_2">
+              <div class="search_box">
+                <div class="btn btn_common">
+                  <q-img
+                    src="../../../assets/search.png"
+                    width="25px"
+                    height="25px"
+                    class="search"
+                  />
+                </div>
+                <input type="text" class="input" placeholder="Search..." />
+              </div>
+            </div>
+            <div class="button-wrapper">
+              <button class="go-button">
+                <div class="go-text">GO</div>
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="q-pl-sm">
           <div class="offer-border"></div>
         </div>
-        <div
-          class="flex row items-center q-pl-sm cursor-pointer"
-          @click="clickedNew = !clickedNew"
-        >
-          <div
-            :class="
-              clickedNew === true ? 'radio-button-clicked' : 'radio-button'
-            "
-          ></div>
-          <div
-            class="radio-button-text q-pl-sm"
-            :class="
-              clickedNew === true
-                ? 'radio-button-text-clicked'
-                : 'radio-button-text'
-            "
-          >
-            New first
+        <div class="order flex row justify-between">
+          <div class="flex row">
+            <div
+              class="flex row items-center q-pl-sm cursor-pointer clicked-new-radio-button"
+              @click="clickedNew = !clickedNew"
+            >
+              <div
+                :class="
+                  clickedNew === true ? 'radio-button-clicked' : 'radio-button'
+                "
+              ></div>
+              <div
+                class="radio-button-text q-pl-sm"
+                :class="
+                  clickedNew === true
+                    ? 'radio-button-text-clicked'
+                    : 'radio-button-text'
+                "
+              >
+                New first
+              </div>
+            </div>
+            <div
+              class="flex row items-center cursor-pointer q-pl-md"
+              @click="clicked = !clicked"
+            >
+              <div
+                :class="
+                  clicked === true ? 'radio-button-clicked' : 'radio-button'
+                "
+              ></div>
+              <div
+                class="radio-button-text q-pl-sm"
+                :class="
+                  clicked === true
+                    ? 'radio-button-text-clicked'
+                    : 'radio-button-text'
+                "
+              >
+                Old first
+              </div>
+            </div>
+            <div
+              class="flex row items-center cursor-pointer q-pl-md"
+              @click="expiring = !expiring"
+            >
+              <div
+                :class="
+                  expiring === true ? 'radio-button-clicked' : 'radio-button'
+                "
+              ></div>
+              <div
+                class="radio-button-text q-pl-sm"
+                :class="
+                  expiring === true
+                    ? 'radio-button-text-clicked'
+                    : 'radio-button-text'
+                "
+              >
+                Expiring first
+              </div>
+            </div>
           </div>
-        </div>
-        <div
-          class="flex row items-center cursor-pointer q-pl-lg"
-          @click="clicked = !clicked"
-        >
-          <div
-            :class="clicked === true ? 'radio-button-clicked' : 'radio-button'"
-          ></div>
-          <div
-            class="radio-button-text q-pl-sm"
-            :class="
-              clicked === true
-                ? 'radio-button-text-clicked'
-                : 'radio-button-text'
-            "
-          >
-            Old first
-          </div>
-        </div>
-        <div
-          class="flex row items-center cursor-pointer q-pl-lg"
-          @click="expiring = !expiring"
-        >
-          <div
-            :class="expiring === true ? 'radio-button-clicked' : 'radio-button'"
-          ></div>
-          <div
-            class="radio-button-text q-pl-sm"
-            :class="
-              expiring === true
-                ? 'radio-button-text-clicked'
-                : 'radio-button-text'
-            "
-          >
-            Expiring first
+          <div class="q-pl-sm flex row pagination2">
+            <div class="number">1-6</div>
+            <div class="q-pl-sm cursor-pointer">
+              <q-img src="../../../assets/back.png" width="15px" />
+            </div>
+            <div class="q-pl-md cursor-pointer">
+              <q-img src="../../../assets/next.png" width="15px" />
+            </div>
           </div>
         </div>
       </div>
       <div class="flex row items-center item4">
-        <div class="plus-button-wrapper">
-          <button class="flex justify-center plus-button">
-            <q-img src="../../../assets/plus.png" width="30px" height="30px" />
-          </button>
-        </div>
-        <div class="search_wrap search_wrap_2">
-          <div class="search_box">
-            <div class="btn btn_common">
+        <div class="flex row items-center search-wrap">
+          <div class="plus-button-wrapper">
+            <button class="flex justify-center plus-button">
               <q-img
-                src="../../../assets/search.png"
-                width="25px"
-                height="25px"
-                class="search"
+                src="../../../assets/plus.png"
+                width="30px"
+                height="30px"
               />
+            </button>
+          </div>
+          <div class="search_wrap search_wrap_2">
+            <div class="search_box">
+              <div class="btn btn_common">
+                <q-img
+                  src="../../../assets/search.png"
+                  width="25px"
+                  height="25px"
+                  class="search"
+                />
+              </div>
+              <input type="text" class="input" placeholder="Search..." />
             </div>
-            <input type="text" class="input" placeholder="Search..." />
+          </div>
+          <div class="button-wrapper">
+            <button class="go-button">
+              <div class="go-text">GO</div>
+            </button>
           </div>
         </div>
-        <div class="button-wrapper">
-          <button class="go-button">
-            <div class="go-text">GO</div>
-          </button>
-        </div>
-        <div class="q-pl-lg flex row pagination">
+        <div class="q-pl-sm flex row pagination">
           <div class="number">1-6</div>
           <div class="q-pl-sm cursor-pointer">
             <q-img src="../../../assets/back.png" width="15px" />
@@ -171,14 +227,19 @@
                 <div class="nft-listing-title treshold expires-on-number exp">
                   {{ item.exp }}
                 </div>
-                <div class="nft-listing-title treshold">Action</div>
+                <div class="nft-listing-title treshold flex row">
+                  <q-img src="../../../assets/trash.png" class="trash-btn" />
+                  <div class="q-pl-sm" @click="openModal = !openModal">
+                    <q-img src="../../../assets/edit.png" class="trash-btn" />
+                  </div>
+                </div>
               </div>
             </q-card>
           </div>
         </div>
       </div>
     </div>
-    <div class="absolute-center absolute-container">
+    <div class="absolute-center absolute-container" v-if="openModal === true">
       <div class="listing-modal-container">
         <div class="flex column">
           <div class="q-pt-lg q-pl-lg flex row items-center">
@@ -288,6 +349,7 @@ export default defineComponent({
       clickedNew: false,
       clicked: false,
       expiring: false,
+      openModal: false,
       items: [
         {
           name: 'The full wine name is here',

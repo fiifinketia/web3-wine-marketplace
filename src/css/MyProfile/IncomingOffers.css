@@ -499,21 +499,47 @@ td:last-child {
 
 /*Resposniveness */
 
+.pagination2 {
+  display: none;
+}
+
+.search-container {
+  display: none;
+}
+
+@media screen and (max-width: 1200px) {
+  .search_wrap .search_box {
+    position: relative;
+    width: 250px;
+    height: 45px;
+  }
+  .search_wrap .search_box .input {
+    left: 0%;
+  }
+  .search_wrap.search_wrap_2 .search_box .btn {
+    left: 0%;
+  }
+  .search_wrap .search_box .input {
+    width: 100%;
+  }
+
+  .search_wrap {
+    width: 250px;
+  }
+  .from {
+    display: none;
+  }
+  .nft-image {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 1120px) {
   .item2 {
     width: 20%;
   }
   .item3 {
     width: 20%;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .from {
-    display: none;
-  }
-  .nft-image {
-    display: none;
   }
 }
 
@@ -524,33 +550,48 @@ td:last-child {
   .floor-price {
     display: none;
   }
-  .offer-container {
+  /* .offer-container {
     display: flex;
     flex-direction: column;
-  }
+  } */
   .offer-container-first-part {
     display: flex;
     justify-content: flex-start;
     width: 95%;
   }
-  /* .item4 {
-    display: flex;
-  } */
-  .item6 {
-    display: flex;
-    flex-direction: column;
-    height: 120px;
-  }
+
   .search_wrap {
     margin: 10px auto;
   }
-  .search-item {
-    margin-bottom: -5px;
+
+  .offer-container {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .pagination {
+  .offer-border {
+    display: none;
+  }
+  .item4 {
     display: flex;
-    padding-left: 320px;
+    flex-direction: column;
+  }
+
+  .pagination {
+    padding-left: 270px;
+    padding-bottom: 20px;
+  }
+  .order {
+    padding-top: 20px;
+    width: 100%;
+  }
+  .search-item-hidden {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .offer-container {
+    width: 50%;
   }
 }
 
@@ -599,18 +640,38 @@ td:last-child {
     align-items: center;
     justify-content: space-between;
   }
+  .search-wrap {
+    display: none;
+  }
+
+  .offers-container {
+    width: 100%;
+  }
+  .offer-container {
+    width: auto;
+  }
+  .pagination {
+    display: none;
+  }
+  .pagination2 {
+    display: flex;
+  }
+  .order {
+    padding-top: 0px;
+    padding-bottom: 15px;
+  }
 }
 
 @media screen and (max-width: 600px) {
   .accept-button {
     width: 40px;
   }
-  .offer-container {
+  /* .offer-container {
     display: none;
   }
   .pagination {
     display: none;
-  }
+  } */
   .search_wrap .search_box {
     position: relative;
     width: 300px;
@@ -641,9 +702,12 @@ td:last-child {
     width: 15px;
     height: 15px;
   }
+  .pagination {
+    display: none;
+  }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
   .nft-item {
     width: auto;
     font-size: 14px;
@@ -673,12 +737,12 @@ td:last-child {
   .price3 {
     font-size: 18px;
   }
-
+  .offer-container {
+    width: 100%;
+  }
   .container1 {
     width: 100%;
     background: transparent;
-    /* Primary/Light blue */
-
     border: none;
     box-shadow: none;
     border-radius: none;

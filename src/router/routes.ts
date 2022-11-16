@@ -31,6 +31,49 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/my-profile/listing',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/MyProfile/components/Listing.vue'),
+      },
+    ],
+  },
+  {
+    path: '/my-profile/incoming-offers',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () =>
+          import('pages/MyProfile/components/IncomingOffers.vue'),
+      },
+    ],
+  },
+  {
+    path: '/my-profile/outgoing-offers',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () =>
+          import('pages/MyProfile/components/OutgoingOffers.vue'),
+      },
+    ],
+  },
+  // {
+  //   path: '/my-profile/trading-history',
+  //   component: () => import('layouts/MainLayout.vue'),
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: () =>
+  //         import('pages/MyProfile/components/TradingHistory.vue'),
+  //     },
+  //   ],
+  // },
 
   // Always leave this as last one,
   // but you can also remove it

@@ -1,7 +1,7 @@
 <template>
-  <IncomingOffers />
+  <!-- <IncomingOffers /> -->
   <!-- <OutgoingOffers /> -->
-  <!-- <ListingVue /> -->
+  <ListingVue />
 </template>
 
 <script>
@@ -11,9 +11,9 @@ import OutgoingOffers from './components/OutgoingOffers.vue';
 import ListingVue from './components/Listing.vue';
 export default defineComponent({
   name: 'MyProfile',
-  components: { IncomingOffers },
+  // components: { IncomingOffers },
   // components: { OutgoingOffers },
-  // components: { ListingVue },
+  components: { ListingVue },
 });
 </script>
 

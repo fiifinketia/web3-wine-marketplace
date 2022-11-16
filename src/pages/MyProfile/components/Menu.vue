@@ -1,10 +1,18 @@
 <template>
   <div class="flex justify-center desktop-tabs">
     <q-tabs no-caps class="text-black tabs">
-      <q-tab name="Listing" label="Listing" />
-      <q-tab name="Incoming Offers" label="Incoming Offers" />
-      <q-tab name="Outgoing offers" label="Outgoing offers" />
-      <q-tab name="Trading History" label="Trading History" />
+      <q-route-tab to="/my-profile" name="Listing" label="Listing" />
+      <q-route-tab
+        to="/my-profile/incoming-offers"
+        name="Incoming Offers"
+        label="Incoming Offers"
+      />
+      <q-route-tab
+        to="/my-profile/outgoing-offers"
+        name="Outgoing offers"
+        label="Outgoing offers"
+      />
+      <q-route-tab name="Trading History" label="Trading History" />
     </q-tabs>
   </div>
   <div class="flex row justify-between items-center mobile-tabs">
