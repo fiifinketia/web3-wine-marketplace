@@ -112,7 +112,7 @@
 .search_wrap .search_box .btn.btn_common .search {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 40%;
   transform: translate(-50%, -50%);
   color: #fff;
   font-size: 30px;
@@ -125,7 +125,7 @@
 }
 
 .search_wrap.search_wrap_2 .search_box .input {
-  padding-left: 55px;
+  padding-left: 50px;
 }
 
 .go-button {
