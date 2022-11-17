@@ -108,7 +108,7 @@
 						dense
 						flat
 						split
-						icon="img:./images/profile-icon.svg"
+						icon="app:profile"
 					>
 						<div class="q-btn-menu-div">
 							<q-list>
@@ -129,7 +129,7 @@
 									@click="onOpenModals('connectWallet')"
 								>
 									<q-item-section>
-										<q-item-label>my wallet</q-item-label>
+										<q-item-label>sing up</q-item-label>
 									</q-item-section>
 								</q-item>
 
@@ -229,7 +229,7 @@
 					@click="onOpenModals('burgerMenu')"
 				/>
 				<img
-					v-if="showBurgerMenu"
+					v-else
 					class="burger-menu-exit-icon"
 					src="../../public/images/x-burger-icon.svg"
 					alt="burger-menu"
@@ -331,6 +331,7 @@ export default defineComponent({
 		onCloseModals(title: boolean) {
 			if (title === true) {
 				this.showModals = false;
+				this.showBurgerMenu = false;
 				this.animation('connectWallet', '0', 'scale(0.5)', '-200');
 				this.animation('myWallet', '0', 'translateX(100%)', '-200');
 				document.body.classList.remove('no-scroll');

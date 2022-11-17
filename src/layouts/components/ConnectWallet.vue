@@ -12,9 +12,9 @@
 				Connect your Web3 Wallet to signup.
 			</div>
 			<div>
-				<q-btn class="connect-wallet-btns connect-btn" @click="connectWallet"
-					>Connect wallet</q-btn
-				>
+				<q-btn class="connect-wallet-btns connect-btn" @click="connectWallet">
+					Connect wallet
+				</q-btn>
 				<q-btn
 					class="connect-wallet-btns no-wallet-btn"
 					:disabled="!isMetaMaskInstalled"
@@ -46,6 +46,7 @@ export default defineComponent({
 	},
 	methods: {
 		onClickBackground() {
+			// eslint-disable-next-line vue/require-explicit-emits
 			this.$emit('clicked', true);
 		},
 

@@ -16,7 +16,7 @@
 					class="search-bar"
 				>
 					<template #prepend>
-						<q-icon name="img:./images/search.svg" />
+						<q-icon name="app:search" />
 					</template>
 				</q-input>
 				<q-btn flat class="search-btn q-ml-sm">GO</q-btn>
@@ -44,7 +44,7 @@
 						<div class="starting-from">Price</div>
 						<q-btn
 							class="un-favour-btn"
-							icon="img:./images/heart.svg"
+							icon="app:heart"
 							flat
 							dense
 							padding="0"
