@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-container">
+	<!-- <div class="footer-container">
     <div class="q-pl-sm q-pt-md">
       <q-img src="../../../assets/wiv-logo.png" width="80px" />
     </div>
@@ -58,8 +58,67 @@
         </div>
       </div>
     </div>
-  </div>
-  <!-- <footer class="footer">
+  </div> -->
+	<div class="footer-clean">
+		<footer>
+			<div class="footer-container">
+				<div class="column justify-center">
+					<div class="col-md-2 item">
+						<h3>NFTs</h3>
+						<ul>
+							<li><a href="#">New Releases</a></li>
+							<li><a href="#">Recommended</a></li>
+							<li><a href="#">Favourites</a></li>
+							<li><a href="#">Stats</a></li>
+							<li><a href="#">Wine Statistics</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-md-2 item">
+						<h3>Storefront</h3>
+						<ul>
+							<li><a href="#">New commings</a></li>
+							<li><a href="#">Recommended</a></li>
+						</ul>
+					</div>
+
+					<div class="col-sm-4 col-md-2 item">
+						<h3>Profile</h3>
+						<ul>
+							<li><a href="#">Digital Wine Cellar</a></li>
+							<li><a href="#">Offers</a></li>
+							<li><a href="#">Trading History</a></li>
+							<li><a href="#">Notifications</a></li>
+							<li><a href="#">Settings</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-md-2 item">
+						<h3>help</h3>
+						<ul>
+							<li><a href="#">Contact us</a></li>
+							<li><a href="#">FAQs</a></li>
+							<li><a href="#">Privacy policy</a></li>
+							<li><a href="#">Terms and Conditions</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-md-2 item">
+						<h3>Contact info</h3>
+						<ul>
+							<li><a href="#">Email@email.com</a></li>
+							<li><a href="#">+0 000 000 0000</a></li>
+							<li><a href="#">Benefits</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4 col-md-2 item">
+						<h3>Integrations</h3>
+						<ul>
+							<li><a href="#">Job openings aaaaa</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- <footer class="footer">
     <div class="q-pl-sm q-pt-md">
       <q-img src="../../../assets/wiv-logo.png" width="80px" />
     </div>
@@ -71,7 +130,7 @@
 import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/Footer.css';
 export default defineComponent({
-  name: 'LandingPageFooter',
+	name: 'LandingPageFooter',
 });
 </script>
 
