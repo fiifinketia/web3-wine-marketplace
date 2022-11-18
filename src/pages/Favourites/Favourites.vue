@@ -4,7 +4,7 @@
 		<div class="row justify-between q-pt-sm">
 			<div class="row">
 				<div class="favorites-title">NFTs</div>
-				<div class="favorites-number q-pl-sm">{{ items.length }}</div>
+				<div class="favorites-number q-pl-sm">{{ favsNFTs.length }}</div>
 			</div>
 			<div class="row">
 				<q-input
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div
-			v-if="!items.length"
+			v-if="!favsNFTs.length"
 			class="no-nfts-container column justify-center items-center"
 		>
 			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
@@ -31,8 +31,8 @@
 		</div>
 		<div class="row justify-around favs-cards-container">
 			<q-card
-				v-for="item in items"
-				:key="item.id"
+				v-for="item in favsNFTs"
+				:key="item.tokenID"
 				class="no-shadow q-ma-md favs-card-individual"
 			>
 				<div class="favs-card-img"></div>
@@ -48,7 +48,14 @@
 							flat
 							dense
 							padding="0"
-							@click="removeNFT(item.id)"
+							@click="
+								removeNFT(
+									item.walletAddress,
+									item.tokenID,
+									item.contractAddress,
+									item.network
+								)
+							"
 						/>
 					</div>
 					<div class="row justify-between">
@@ -71,8 +78,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../css/Favorites/Favorites.css';
+import axios from 'axios';
 
 import FAVsRemove from './FAVsRemove.vue';
+import { FavoritesModel } from './models/Response';
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
@@ -80,51 +89,22 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			items: [
-				{
-					id: 1,
-					name: 'Vranac',
-					price: 1111,
-				},
-				{
-					id: 2,
-					name: 'Sauvignon',
-					price: 2222,
-				},
-				{
-					id: 3,
-					name: 'Moje Vino',
-					price: 3333,
-				},
-				{
-					id: 4,
-					name: 'Vranac Pro Corde',
-					price: 4444,
-				},
-				{
-					id: 5,
-					name: 'Vranac',
-					price: 1111,
-				},
-				{
-					id: 6,
-					name: 'Sauvignon',
-					price: 2222,
-				},
-				{
-					id: 7,
-					name: 'Moje Vino',
-					price: 3333,
-				},
-				{
-					id: 8,
-					name: 'Vranac Pro Corde',
-					price: 4444,
-				},
-			],
+			favsNFTs: Array<FavoritesModel>(),
 		};
 	},
+	mounted() {
+		this.getAllFavorites();
+	},
 	methods: {
+		async getAllFavorites() {
+			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+			const result = await axios.get(
+				`http://localhost:3100/favorites/getAllFavorites?walletAddress=${walletAddress}`
+			);
+
+			this.favsNFTs = result.data;
+			console.log(this.favsNFTs);
+		},
 		animation(opacity: string, transform: string, zIndex: string) {
 			const removeNFTBackground = document.querySelector(
 				'.fr-background'
@@ -137,10 +117,21 @@ export default defineComponent({
 			removeNFTBackground.style.opacity = opacity;
 			removeNFTContainer.style.transform = transform;
 		},
-		removeNFT(id: number) {
-			this.items = this.items.filter((item) => {
-				return item.id !== id;
+		async removeNFT(
+			wAddress: string,
+			tokedID: string,
+			cAddress: string,
+			network: string
+		) {
+			await axios.post('http://localhost:3100/favorites/deleteFavorite', {
+				data: {
+					walletAddress: wAddress,
+					tokenID: tokedID,
+					contractAddress: cAddress,
+					network: network,
+				},
 			});
+			this.getAllFavorites();
 
 			this.animation('1', 'scale(1)', '200');
 
