@@ -7,17 +7,28 @@ const GETParams = {
   }
 }
 
-async function RetrieveAllNFTs() : Promise<ListingWithPricingAndImage[]> {
-  let response: ListingWithPricingAndImage[] = [];
-  const url = <string> process.env.MARKETPLACE_GET_ALL_NFTS;
+async function RetrieveAllNFTs(): Promise<ListingWithPricingAndImage[]> {
+	let response: ListingWithPricingAndImage[] = [];
+	const url = <string>process.env.MARKETPLACE_GET_ALL_NFTS;
 
-  await axios.get(url, GETParams).then((data) => {
-    response = data.data.collection.filter(
-			(x: any) => x.tokenID === '1533853723'
-		);
-  })
+	await axios.get(url, GETParams).then((data) => {
+		response = data.data.collection;
+	});
 
-  return response;
+	return response;
 }
 
-export { RetrieveAllNFTs }
+async function RetrieveFilteredNFTs(
+	queryParams: string
+): Promise<ListingWithPricingAndImage[]> {
+	let response: ListingWithPricingAndImage[] = [];
+	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
+
+	await axios.get(url + queryParams).then((res) => {
+		response = res.data.result;
+	});
+
+	return response;
+}
+
+export { RetrieveAllNFTs, RetrieveFilteredNFTs };
