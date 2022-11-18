@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
+import { ethers } from 'ethers';
 
 export const useUserStore = defineStore(
 	'userStore',
@@ -22,11 +23,24 @@ export const useUserStore = defineStore(
 			});
 		};
 
+		const getWalletBalance = async () => {
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const balance = await provider.getBalance(walletAddress.value);
+			const balanceInETH = ethers.utils.formatEther(balance);
+
+			// Convert Matic to USDC
+			const maticToUsdc = await axios.get(
+				'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd'
+			);
+			const maticToUsdcRate = maticToUsdc.data['matic-network'].usd;
+			return Number(balanceInETH) * maticToUsdcRate;
+		};
+
 		return {
 			// provider,
 			walletAddress,
 			connectWallet,
-			// getWalletBalance,
+			getWalletBalance,
 			// isConnected,
 			// walletBalance,
 			// connect,
