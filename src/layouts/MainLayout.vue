@@ -3,6 +3,68 @@
 	<MyWallet @clicked="onCloseModals($event)" />
 	<BurgerMenu v-if="showBurgerMenu" />
 
+	<q-dialog v-model="fullHeight" class="suggested-wines-background">
+		<q-card class="suggested-wines column items-center">
+			<q-card-section>
+				<div class="">We're happy to see you join WiV wine world!</div>
+			</q-card-section>
+			<q-card-section>
+				<div class="">Trending today</div>
+			</q-card-section>
+
+			<q-card-section class="">
+				<p>
+					Check our special offers for you to start with most trending at this
+					moment!
+				</p>
+			</q-card-section>
+			<q-card-section class="wines-section row justify-between">
+				<q-card
+					v-for="item in items"
+					:key="item.id"
+					class="no-shadow q-ma-sm suggest-card-individual"
+				>
+					<div class="suggest-card-img"></div>
+					<div class="suggest-wine-name q-py-md">
+						The full name of the wine is here and here and here
+					</div>
+					<div class="suggest-price-container column q-pa-sm">
+						<div class="row justify-between q-pb-md">
+							<div class="suggest-starting-from">Price</div>
+							<q-btn
+								class="un-favour-btn"
+								icon="app:heart"
+								flat
+								dense
+								padding="0"
+								@click="
+									{
+									}
+								"
+							/>
+						</div>
+						<div class="row justify-between">
+							<div class="suggest-price">
+								<q-img src="../../public/images/USDT.svg" width="20px" />
+								&nbsp;00.00
+							</div>
+							<q-img
+								src="../../public/images/mini-button.svg"
+								width="24px"
+								height="24px"
+							/>
+						</div>
+					</div>
+				</q-card>
+			</q-card-section>
+
+			<q-card-actions class="bg-white text-teal">
+				<q-btn v-close-popup flat label="OK" />
+				<q-btn v-close-popup flat label="OK" />
+			</q-card-actions>
+		</q-card>
+	</q-dialog>
+
 	<q-layout view="lHh Lpr lFf">
 		<q-header
 			class="nav-bar q-py-xs"
@@ -268,8 +330,31 @@ export default defineComponent({
 			user: true,
 			showModals: false,
 			showBurgerMenu: false,
+			fullHeight: true,
 			userStore,
 			walletAddress: '',
+			items: [
+				{
+					id: 1,
+					name: 'Vranac',
+					price: 1111,
+				},
+				{
+					id: 2,
+					name: 'Sauvignon',
+					price: 2222,
+				},
+				{
+					id: 3,
+					name: 'Moje Vino',
+					price: 3333,
+				},
+				{
+					id: 4,
+					name: 'Vranac Pro Corde',
+					price: 4444,
+				},
+			],
 		};
 	},
 	async mounted() {
