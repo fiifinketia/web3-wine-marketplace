@@ -6,19 +6,23 @@
 	<q-dialog v-model="fullHeight" class="suggested-wines-background">
 		<q-card class="suggested-wines column items-center">
 			<q-card-section>
-				<div class="">We're happy to see you join WiV wine world!</div>
+				<div class="join-wiv-world">
+					We're happy to see you join WiV wine world!
+				</div>
 			</q-card-section>
-			<q-card-section>
-				<div class="">Trending today</div>
+			<q-card-section
+				class="suggest-trending-today row justify-center items-center"
+			>
+				<q-img src="../../public/images/trending.svg" width="22px" />
+
+				<div>&nbsp;&nbsp;Trending today</div>
 			</q-card-section>
 
-			<q-card-section class="">
-				<p>
-					Check our special offers for you to start with most trending at this
-					moment!
-				</p>
+			<q-card-section class="suggested-paragraph">
+				<div>Check our special offers for you to start with -</div>
+				<div>most trending at this moment!</div>
 			</q-card-section>
-			<q-card-section class="wines-section row justify-between">
+			<q-card-section class="suggested-wines-section row justify-between">
 				<q-card
 					v-for="item in items"
 					:key="item.id"
@@ -58,10 +62,20 @@
 				</q-card>
 			</q-card-section>
 
-			<q-card-actions class="bg-white text-teal">
-				<q-btn v-close-popup flat label="OK" />
-				<q-btn v-close-popup flat label="OK" />
-			</q-card-actions>
+			<q-card-section class="suggested-buttons-container row">
+				<button
+					class="suggested-buttons suggested-skip-btn"
+					@click="fullHeight = false"
+				>
+					Skip
+				</button>
+				<button
+					class="suggested-buttons suggested-show-btn"
+					@click="fullHeight = false"
+				>
+					Show more
+				</button>
+			</q-card-section>
 		</q-card>
 	</q-dialog>
 

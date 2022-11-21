@@ -190,11 +190,68 @@ body {
 .suggested-wines-background .suggested-wines {
 	border-radius: 20px;
 	box-shadow: none;
-	width: fit-content;
+	padding: 0.5rem 1.5rem;
 }
 .suggested-wines-background .q-dialog__inner--minimized > div {
-	max-width: fit-content;
-	max-height: fit-content;
+	min-width: fit-content;
+	min-height: fit-content;
+}
+
+.suggested-wines-background .q-card__section {
+	padding: 1rem;
+}
+
+.join-wiv-world {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.02em;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+}
+
+.suggest-trending-today {
+	width: 100%;
+	background-color: #3586ff;
+	color: white;
+
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	display: flex;
+	align-items: flex-end;
+	text-align: center;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.suggested-paragraph {
+	padding-bottom: 0 !important;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 27px;
+	/* or 150% */
+
+	text-align: center;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+
+	opacity: 0.6;
+}
+
+.suggested-wines-section {
+	flex-wrap: nowrap;
+	padding-bottom: 0 !important;
 }
 
 .suggest-wine-name {
@@ -250,6 +307,36 @@ body {
 	color: #9d9d9d;
 }
 
-.wines-section {
-	flex-wrap: nowrap;
+.suggested-buttons-container {
+	gap: 1rem;
+}
+
+.suggested-buttons {
+	width: 205px;
+	border-radius: 6px;
+	padding: 0.9rem 0;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	cursor: pointer;
+	letter-spacing: 0.07rem;
+}
+
+.suggested-show-btn {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	color: white;
+	border: none;
+}
+
+.suggested-skip-btn {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	color: transparent;
+	outline: 1px solid #3586ff;
+	border: none;
 }
