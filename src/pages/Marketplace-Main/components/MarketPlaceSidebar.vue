@@ -1,7 +1,7 @@
 <template>
 	<!-- Main box -->
 	<q-card flat bordered class="main-filter-box dark-blue-border q-px-md">
-		<q-card-section class="hidden-a-1023">
+		<q-card-section class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs">
 			<q-input
 				v-model="searchQuery"
 				outlined
@@ -9,20 +9,21 @@
 				placeholder="Search"
 				type="search"
 				color="primary"
+				class="col-9"
+				dense
 			>
 				<template #prepend>
 					<q-icon name="search" />
 				</template>
 			</q-input>
-			<div class="row justify-end">
-				<q-btn
-					class="q-ma-sm"
+			<q-btn
+					class="col-2"
 					color="primary"
 					outlined
 					label="GO"
+					dense
 					@click="wineFiltersStore.searchQuery = searchQuery"
 				/>
-			</div>
 		</q-card-section>
 		<q-list class=" rounded-borders">
 			<!-- Listed Only filter -->
@@ -97,6 +98,7 @@
 						v-model="wineFiltersStore.brand"
 						:options="brandOptions"
 						type="checkbox"
+						style="{ maxHeight: '200px', overflowY: 'scroll' }"
 					/>
 				</q-list>
 			</q-expansion-item>
@@ -111,7 +113,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.origin"
-						:options="originOptions"
+						:options="wineFiltersStore.originOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -127,7 +129,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.producer"
-						:options="producerOptions"
+						:options="wineFiltersStore.producerOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -143,7 +145,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.country"
-						:options="countryOptions"
+						:options="wineFiltersStore.countryOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -159,7 +161,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.region"
-						:options="regionOptions"
+						:options="wineFiltersStore.regionOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -174,8 +176,8 @@
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
-						v-model="wineFiltersStore.appelation"
-						:options="appelationOptions"
+						v-model="wineFiltersStore.appellation"
+						:options="wineFiltersStore.appellationOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -283,7 +285,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.wineCase"
-						:options="wineCaseOptions"
+						:options="wineFiltersStore.wineCaseOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -299,7 +301,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.format"
-						:options="formatOptions"
+						:options="wineFiltersStore.formatOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -315,7 +317,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.investmentGrade"
-						:options="investmentGradeOptions"
+						:options="wineFiltersStore.investmentGradeOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -331,7 +333,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.LWIN"
-						:options="LWINOptions"
+						:options="wineFiltersStore.LWINOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -347,7 +349,7 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.heritage"
-						:options="heritageOptions"
+						:options="wineFiltersStore.heritageOptions"
 						type="checkbox"
 					/>
 				</q-list>
@@ -359,6 +361,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useWineFilters } from '../../../stores/wine-filters';
+import { RetrieveFilterDetails } from '../services/FilterOptions';
 
 export default defineComponent({
 	setup() {
@@ -369,29 +372,25 @@ export default defineComponent({
 			searchQuery: ref(''),
 			brandQuery: ref(''),
 			brandOptions: wineFiltersStore.brandOptions,
-			originOptions: wineFiltersStore.originOptions,
-			producerOptions: wineFiltersStore.producerOptions,
-			countryOptions: wineFiltersStore.countryOptions,
-			regionOptions: wineFiltersStore.regionOptions,
-			appelationOptions: wineFiltersStore.appelationOptions,
-			wineCaseOptions: wineFiltersStore.wineCaseOptions,
-			heritageOptions: wineFiltersStore.wineCaseOptions,
-			formatOptions: wineFiltersStore.formatOptions,
-			investmentGradeOptions: wineFiltersStore.investmentGradeOptions,
-			LWINOptions: wineFiltersStore.LWINOptions,
 			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
 	},
 
+
 	watch: {
 		brandQuery: {
 			handler: function (val) {
 				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
-					b.value.includes(val)
+					b.value.toLowerCase().includes(val.toLowerCase())
 				);
 			},
 		},
+	},
+
+	async mounted() {
+		const filterOptions = await RetrieveFilterDetails();
+		this.wineFiltersStore.setAllFilters(filterOptions);
 	},
 
 	methods: {

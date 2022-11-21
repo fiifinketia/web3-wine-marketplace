@@ -21,7 +21,7 @@
 				<img src="../../../public/images/wallet.svg" alt="wallet-icon" />
 				<div class="ballance-wrapper column">
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
-					<div class="my-wallet-balance">${{ balance }}</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(2) }}</div>
 				</div>
 				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
 					>Fund wallet</q-btn
@@ -47,9 +47,9 @@ export default defineComponent({
 			userStore,
 		};
 	},
-	// async beforeMount() {
-	//   this.balance = await this.userStore.getWalletBalance();
-	// },
+	async beforeMount() {
+	  this.balance = await this.userStore.getWalletBalance();
+	},
 	methods: {
 		onClickBackground() {
 			// eslint-disable-next-line vue/require-explicit-emits
@@ -74,7 +74,7 @@ export default defineComponent({
 			transak.init();
 
 			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
-				console.log(orderData);
+				// console.log(orderData);
 				transak.close();
 			});
 		},
