@@ -75,11 +75,41 @@ export default defineComponent({
 	},
 
 	data() {
-		const queryT = this.$router.currentRoute.value.query.tab;
+		const queryT = this.$router.currentRoute.value.query.tab as string;
 		return {
 			tab: ref(queryT || 'nfts'),
 			tabLabel: ref('All NFTs'),
 		};
+	},
+
+	watch: {
+		$route: {
+			handler: function (to, from) {
+				if (from && to.query.tab) {
+					const tabTo = to.query.tab;
+					if (
+						tabTo !== from.query.tab &&
+						(tabTo === 'nfts' ||
+							tabTo === 'releases' ||
+							tabTo === 'recommended')
+					) {
+						this.tab = tabTo;
+						switch (tabTo) {
+							case 'nfts':
+								this.tabLabel = 'All NFTs';
+								break;
+							case 'releases':
+								this.tabLabel = 'Releases';
+								break;
+							case 'recommended':
+								this.tabLabel = 'Recommended';
+								break;
+						}
+					}
+				}
+			},
+			immediate: true,
+		},
 	},
 });
 </script>

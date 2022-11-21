@@ -1,6 +1,6 @@
 <template>
 	<q-page-container
-		class="row justify-between q-pt-none q-px-none q-gutter-y-md"
+		class="row justify-between q-pt-none q-px-sm q-gutter-y-md"
 	>
 		<div
 			v-for="token in allNFTs"
@@ -73,7 +73,6 @@ import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
-	RetrieveAllNFTs,
 	RetrieveFilteredNFTs,
 } from '../services/RetrieveTokens';
 import '../../../css/Marketplace/NFT-Selections.css';
@@ -106,6 +105,7 @@ export default defineComponent({
 	methods: {
 		selectCard(tokenID: string) {
 			this.card = true;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 
@@ -123,19 +123,9 @@ export default defineComponent({
 			);
 		},
 
-		async updateNFTs() {
-      const { result: nfts, counts } = await RetrieveFilteredNFTs(this.wineFiltersStore.getFiltersQueryParams);
-			this.allNFTs = nfts
-		},
-
 		async RetrieveTokens() {
-			if(this.wineFiltersStore.getAllFiltersArray.length > 0) {
-				console.log("🚀 ~ file: NFT-Selections.vue ~ line 105 ~ mounted ~ this.wineFiltersStore.getAllFiltersArray.length", this.wineFiltersStore.getAllFiltersArray.length)
-				await this.updateNFTs();
-			} else {
-        const { result: nfts, counts } = await RetrieveAllNFTs(); 
-        this.allNFTs = nfts
-		  }
+			const { result: nfts } = await RetrieveFilteredNFTs(this.wineFiltersStore.getFiltersQueryParams);
+			this.allNFTs = nfts
     }
   }
 });

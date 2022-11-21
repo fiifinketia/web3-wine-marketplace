@@ -1,7 +1,7 @@
 <template>
 	<!-- Main box -->
 	<q-card flat bordered class="main-filter-box dark-blue-border q-px-md">
-		<q-card-section class="hidden-a-1023">
+		<q-card-section class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs">
 			<q-input
 				v-model="searchQuery"
 				outlined
@@ -9,20 +9,21 @@
 				placeholder="Search"
 				type="search"
 				color="primary"
+				class="col-9"
+				dense
 			>
 				<template #prepend>
 					<q-icon name="search" />
 				</template>
 			</q-input>
-			<div class="row justify-end">
-				<q-btn
-					class="q-ma-sm"
+			<q-btn
+					class="col-2"
 					color="primary"
 					outlined
 					label="GO"
+					dense
 					@click="wineFiltersStore.searchQuery = searchQuery"
 				/>
-			</div>
 		</q-card-section>
 		<q-list class=" rounded-borders">
 			<!-- Listed Only filter -->
@@ -95,8 +96,9 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.brand"
-						:options="wineFiltersStore.brandOptions"
+						:options="brandOptions"
 						type="checkbox"
+						style="{ maxHeight: '200px', overflowY: 'scroll' }"
 					/>
 				</q-list>
 			</q-expansion-item>
@@ -369,6 +371,7 @@ export default defineComponent({
 			wineFiltersStore,
 			searchQuery: ref(''),
 			brandQuery: ref(''),
+			brandOptions: wineFiltersStore.brandOptions,
 			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
@@ -376,13 +379,13 @@ export default defineComponent({
 
 
 	watch: {
-		// brandQuery: {
-		// 	handler: function (val) {
-		// 		this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
-		// 			b.value.includes(val)
-		// 		);
-		// 	},
-		// },
+		brandQuery: {
+			handler: function (val) {
+				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
 	},
 
 	async mounted() {

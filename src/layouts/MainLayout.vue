@@ -266,7 +266,6 @@ export default defineComponent({
 	},
 	async mounted() {
 		const userStore = useUserStore();
-		const { ethereum } = window;
 
 		this.walletAddress = userStore.walletAddress;
 	},

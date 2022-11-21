@@ -7,38 +7,24 @@ const GETParams = {
   }
 }
 
-async function RetrieveAllNFTs(): Promise<ResultAndCountResponse> {
-	let nfts: ListingWithPricingAndImage[] = [];
-  let counts: DynamicKeyWithCount = {}
-	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
-
-	await axios.get(url).then((data: AxiosResponse<ResultAndCountResponse>) => {
-		nfts = data.data.result;
-    counts = data.data.counts;
-	});
-
-	return {
-    result: nfts,
-    counts: counts
-  };
-}
-
 async function RetrieveFilteredNFTs(
-	queryParams: string
+	queryParams?: string
 ): Promise<ResultAndCountResponse> {
 	let nfts: ListingWithPricingAndImage[] = [];
-  let counts: DynamicKeyWithCount = {};
+	let counts: DynamicKeyWithCount = {};
 	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
-	await axios.get(url + queryParams).then((res: AxiosResponse<ResultAndCountResponse>) => {
-		nfts = res.data.result;
-    counts = res.data.counts
-	});
+	await axios
+		.get(url + queryParams)
+		.then((res: AxiosResponse<ResultAndCountResponse>) => {
+			nfts = res.data.result;
+			counts = res.data.counts;
+		});
 
 	return {
-    result: nfts,
-    counts: counts
-  };
+		result: nfts,
+		counts: counts,
+	};
 }
 
-export { RetrieveAllNFTs, RetrieveFilteredNFTs };
+export { RetrieveFilteredNFTs };
