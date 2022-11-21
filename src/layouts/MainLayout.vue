@@ -3,7 +3,7 @@
 	<MyWallet @clicked="onCloseModals($event)" />
 	<BurgerMenu v-if="showBurgerMenu" />
 
-	<q-dialog v-model="fullHeight" class="suggested-wines-background">
+	<q-dialog v-model="suggestedWines" class="suggested-wines-background">
 		<q-card class="suggested-wines column items-center">
 			<q-card-section>
 				<div class="join-wiv-world">
@@ -65,13 +65,13 @@
 			<q-card-section class="suggested-buttons-container row">
 				<button
 					class="suggested-buttons suggested-skip-btn"
-					@click="fullHeight = false"
+					@click="suggestedWines = false"
 				>
 					Skip
 				</button>
 				<button
 					class="suggested-buttons suggested-show-btn"
-					@click="fullHeight = false"
+					@click="suggestedWines = false"
 				>
 					Show more
 				</button>
@@ -344,7 +344,7 @@ export default defineComponent({
 			user: true,
 			showModals: false,
 			showBurgerMenu: false,
-			fullHeight: true,
+			suggestedWines: true,
 			userStore,
 			walletAddress: '',
 			items: [
