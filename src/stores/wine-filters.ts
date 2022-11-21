@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { FilterOptionsResponse } from 'src/pages/Marketplace-Main/models/Response.models/FilterOptions.response';
 
 export const useWineFilters = defineStore('wineFilters', {
 	state: () => ({
@@ -14,32 +15,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		type: [''],
-		typeOptions: [
-			{
-				label: 'Red',
-				value: 'Red',
-			},
-			{
-				label: 'White',
-				value: 'White',
-			},
-			{
-				label: 'Rose',
-				value: 'Rose',
-			},
-			{
-				label: 'Sparkling',
-				value: 'Sparkling',
-			},
-			{
-				label: 'Dessert',
-				value: 'Dessert',
-			},
-			{
-				label: 'Fortified',
-				value: 'Fortified',
-			},
-		],
+		typeOptions: [] as {label: string, value: string}[],
 
 		sortedAtoZ: '',
 		sortedAtoZOptions: [
@@ -53,43 +29,17 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		brand: [''],
-		brandOptions: [
-			{ label: 'Here’s brand number 1', value: 'Here’s brand number 1' },
-			{ label: 'An other brans', value: 'An other brans' },
-		],
+		brandOptions: [] as {label: string, value: string}[],
 		origin: [''],
-		originOptions: [
-			{ label: 'Here’s origin number 1', value: '1' },
-			{ label: 'An other origin', value: '2' },
-			{ label: 'One more origin', value: '3' },
-			{ label: 'Wine origin', value: '4' },
-			{ label: 'Origin name', value: '5' },
-			{ label: 'Origin label', value: '6' },
-		],
+		originOptions: [] as {label: string, value: string}[],
 		producer: [''],
-		producerOptions: [
-			{ label: 'Here’s producer number 1', value: '1' },
-			{ label: 'An other producer', value: '2' },
-			{ label: 'One more producer', value: '3' },
-		],
+		producerOptions: [] as {label: string, value: string}[],
 		country: [''],
-		countryOptions: [
-			{ label: 'Here’s country number 1', value: '1' },
-			{ label: 'An other country', value: '2' },
-			{ label: 'One more country', value: '3' },
-		],
+		countryOptions: [] as {label: string, value: string}[],
 		region: [''],
-		regionOptions: [
-			{ label: 'Here’s region number 1', value: '1' },
-			{ label: 'An other region', value: '2' },
-			{ label: 'One more region', value: '3' },
-		],
-		appelation: [''],
-		appelationOptions: [
-			{ label: 'Here’s appelation number 1', value: '1' },
-			{ label: 'An other appelation', value: '2' },
-			{ label: 'One more appelation', value: '3' },
-		],
+		regionOptions: [] as {label: string, value: string}[],
+		appellation: [''],
+		appellationOptions: [] as {label: string, value: string}[],
 		price: {
 			min: 0,
 			max: 1000000,
@@ -99,34 +49,15 @@ export const useWineFilters = defineStore('wineFilters', {
 			max: 100,
 		},
 		wineCase: [''],
-		wineCaseOptions: [
-			{ label: 'Here’s case number 1', value: '1' },
-			{ label: 'An other case', value: '2' },
-			{ label: 'One more case', value: '3' },
-		],
+		wineCaseOptions: [] as {label: string, value: string}[],
 		heritage: [''],
-		heritageOptions: [
-			{ label: 'Here’s heritage number 1', value: '1' },
-			{ label: 'An other heritage', value: '2' },
-			{ label: 'One more heritage', value: '3' },
-		],
+		heritageOptions: [] as {label: string, value: string}[],
 		format: [''],
-		formatOptions: [
-			{ label: 'Here’s format number 1', value: '1' },
-			{ label: 'An other format', value: '2' },
-			{ label: 'One more format', value: '3' },
-		],
+		formatOptions: [] as {label: string, value: string}[],
 		investmentGrade: [''],
-		investmentGradeOptions: [
-			{ label: 'Here’s investment grade number 1', value: '1' },
-			{ label: 'An other investment grade', value: '2' },
-		],
+		investmentGradeOptions: [] as {label: string, value: string}[],
 		LWIN: [''],
-		LWINOptions: [
-			{ label: 'Here’s LWIN number 1', value: '1' },
-			{ label: 'An other LWIN', value: '2' },
-			{ label: 'One more LWIN', value: '3' },
-		],
+		LWINOptions: [] as {label: string, value: string}[],
 		searchQuery: '',
 	}),
 	getters: {
@@ -138,27 +69,149 @@ export const useWineFilters = defineStore('wineFilters', {
 		getProducer: (state) => state.producer,
 		getCountry: (state) => state.country,
 		getRegion: (state) => state.region,
-		getAppelation: (state) => state.appelation,
+		getAppelation: (state) => state.appellation,
 		getPrice: (state) => state.price,
 		getSearchQuery: (state) => state.searchQuery,
 		getFiltersQueryParams: (state) => {
-			const filters = [
-				'type[]=' + state.type.filter((i: string) => i !== '').join(','),
-				'sortedAtoZ=' + state.sortedAtoZ,
-				'brand[]=' + state.brand.filter((i: string) => i !== '').join(','),
-				'origin[]=' + state.origin.filter((i: string) => i !== '').join(','),
-				'producer[]=' +
-					state.producer.filter((i: string) => i !== '').join(','),
-				'country[]=' + state.country.filter((i: string) => i !== '').join(','),
-				'region[]=' + state.region.filter((i: string) => i !== '').join(','),
-				'appellation[]=' +
-					state.appelation.filter((i: string) => i !== '').join(','),
-				'price[]=' + state.price.min + ',' + state.price.max,
-				'q=' + state.searchQuery,
-			];
-
-			const q = filters.join('&');
-			return q;
+			const filters = [];
+			const keys = Object.keys(state);
+			keys.forEach((key) => {
+				switch (key) {
+					case 'type':
+						if (state.type.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'type[]=' +
+									state.type.filter((i: string) => i !== '').join('&type[]=')
+							);
+						}
+						break;
+					case 'sortedAtoZ':
+						if (state.sortedAtoZ !== '') {
+							filters.push('sortType=' + state.sortedAtoZ);
+						}
+						break;
+					case 'brand':
+						if (state.brand.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'brand[]=' +
+									state.brand.filter((i: string) => i !== '').join('&brand[]=')
+							);
+						}
+						break;
+					case 'origin':
+						if (state.origin.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'origin[]=' +
+									state.origin
+										.filter((i: string) => i !== '')
+										.join('&origin[]=')
+							);
+						}
+						break;
+					case 'producer':
+						if (state.producer.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'producer[]=' +
+									state.producer
+										.filter((i: string) => i !== '')
+										.join('&producer[]=')
+							);
+						}
+						break;
+					case 'country':
+						if (state.country.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'country[]=' +
+									state.country
+										.filter((i: string) => i !== '')
+										.join('&country[]=')
+							);
+						}
+						break;
+					case 'region':
+						if (state.region.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'region[]=' +
+									state.region
+										.filter((i: string) => i !== '')
+										.join('&region[]=')
+							);
+						}
+						break;
+					case 'appellation':
+						if (state.appellation.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'appellation[]=' +
+									state.appellation
+										.filter((i: string) => i !== '')
+										.join('&appellation[]=')
+							);
+						}
+						break;
+					case 'price':
+						if (state.price.min !== 0 || state.price.max !== 1000000) {
+							filters.push('priceMin=' + state.price.min);
+							filters.push('priceMax=' + state.price.max);
+						}
+						break;
+					case 'maturity':
+						if (state.maturity.min !== 0 || state.maturity.max !== 100) {
+							filters.push('maturityMin=' + state.maturity.min);
+							filters.push('maturityMax=' + state.maturity.max);
+						}
+						break;
+					case 'wineCase':
+						if (state.wineCase.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'wineCase[]=' +
+									state.wineCase
+										.filter((i: string) => i !== '')
+										.join('&wineCase[]=')
+							);
+						}
+						break;
+					case 'heritage':
+						if (state.heritage.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'heritage[]=' +
+									state.heritage
+										.filter((i: string) => i !== '')
+										.join('&heritage[]=')
+							);
+						}
+						break;
+					case 'format':
+						if (state.format.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'format[]=' +
+									state.format
+										.filter((i: string) => i !== '')
+										.join('&format[]=')
+							);
+						}
+						break;
+					case 'investmentGrade':
+						if (state.investmentGrade.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'investmentGrade[]=' +
+									state.investmentGrade
+										.filter((i: string) => i !== '')
+										.join('&investmentGrade[]=')
+							);
+						}
+						break;
+					case 'LWIN':
+						if (state.LWIN.filter((x) => x !== '').length > 0) {
+							filters.push(
+								'LWIN[]=' +
+									state.LWIN.filter((i: string) => i !== '').join('&LWIN[]=')
+							);
+						}
+						break;
+				}
+			});
+			if (state.searchQuery) filters.push('q=' + state.searchQuery);
+			return filters.join('&');
 		},
 		getAllFiltersArray: (state) => {
 			const filters = [
@@ -168,7 +221,7 @@ export const useWineFilters = defineStore('wineFilters', {
 				...state.producer,
 				...state.country,
 				...state.region,
-				...state.appelation,
+				...state.appellation,
 				state.sortedAtoZ,
 				...state.LWIN,
 				...state.wineCase,
@@ -203,7 +256,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.region = region;
 		},
 		setAppelation(appellation: string[]) {
-			this.appelation = appellation;
+			this.appellation = appellation;
 		},
 		setPrice(price: { min: number; max: number }) {
 			this.price = price;
@@ -212,17 +265,13 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.searchQuery = searchQuery;
 		},
 		removeFilter(value: string) {
-			console.log(
-				'🚀 ~ file: wine-filters.ts ~ line 215 ~ removeFilter ~ value',
-				value
-			);
 			this.type = this.type.filter((i) => i !== value);
 			this.brand = this.brand.filter((i) => i !== value);
 			this.origin = this.origin.filter((i) => i !== value);
 			this.producer = this.producer.filter((i) => i !== value);
 			this.country = this.country.filter((i) => i !== value);
 			this.region = this.region.filter((i) => i !== value);
-			this.appelation = this.appelation.filter((i) => i !== value);
+			this.appellation = this.appellation.filter((i) => i !== value);
 			this.LWIN = this.LWIN.filter((i) => i !== value);
 			this.wineCase = this.wineCase.filter((i) => i !== value);
 			this.heritage = this.heritage.filter((i) => i !== value);
@@ -233,5 +282,85 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
 		},
+		setAllFilters(options: FilterOptionsResponse) {
+			for (const key in options) {
+				const value = options[key];
+				switch (key) {
+					case 'appellation':
+						value.forEach((f) => {
+							if (!this.appellationOptions.find((a) => a.value === f))
+								this.appellationOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'brand':
+						value.forEach((f) => {
+							if (!this.brandOptions.find((a) => a.value === f))
+								this.brandOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'case':
+						value.forEach((f) => {
+							if (!this.wineCaseOptions.find((a) => a.value === f))
+								this.wineCaseOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'country':
+						value.forEach((f) => {
+							if (!this.countryOptions.find((a) => a.value === f))
+								this.countryOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'format':
+						value.forEach((f) => {
+							if (!this.formatOptions.find((a) => a.value === f))
+								this.formatOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'heritage':
+						value.forEach((f) => {
+							if (!this.heritageOptions.find((a) => a.value === f))
+								this.heritageOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'investmentGrade':
+						value.forEach((f) => {
+							if (!this.investmentGradeOptions.find((a) => a.value === f))
+								this.investmentGradeOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'lwin':
+						value.forEach((f) => {
+							if (!this.LWINOptions.find((a) => a.value === f))
+								this.LWINOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'origin':
+						value.forEach((f) => {
+							if (!this.originOptions.find((a) => a.value === f))
+								this.originOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'producer':
+						value.forEach((f) => {
+							if (!this.producerOptions.find((a) => a.value === f))
+								this.producerOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'region':
+						value.forEach((f) => {
+							if (!this.regionOptions.find((a) => a.value === f))
+								this.regionOptions.push({ label: f, value: f });
+						});
+						break;
+					case 'type':
+						value.forEach((f) => {
+							if (!this.typeOptions.find((a) => a.value === f))
+								this.typeOptions.push({ label: f, value: f });
+						});
+						break;
+				}
+			}
+
+		}
 	},
 });

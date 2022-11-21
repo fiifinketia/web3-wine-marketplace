@@ -75,8 +75,9 @@ export default defineComponent({
 	},
 
 	data() {
+		const queryT = this.$router.currentRoute.value.query.tab;
 		return {
-			tab: ref('nfts'),
+			tab: ref(queryT || 'nfts'),
 			tabLabel: ref('All NFTs'),
 		};
 	},

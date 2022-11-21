@@ -34,10 +34,7 @@
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									@click="$router.push('/marketplace?tab=nfts')"
 								>
 									<q-item-section>
 										<q-item-label>All NFTs</q-item-label>
@@ -47,10 +44,7 @@
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									@click="$router.push('/marketplace?tab=releases')"
 								>
 									<q-item-section>
 										<q-item-label>New Releases</q-item-label>
@@ -60,10 +54,7 @@
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									@click="$router.push('/marketplace?tab=recommended')"
 								>
 									<q-item-section>
 										<q-item-label>Recomended</q-item-label>
@@ -129,7 +120,8 @@
 									@click="onOpenModals('connectWallet')"
 								>
 									<q-item-section>
-										<q-item-label>sing up</q-item-label>
+										<q-item-label>sign up</q-item-label>
+
 									</q-item-section>
 								</q-item>
 

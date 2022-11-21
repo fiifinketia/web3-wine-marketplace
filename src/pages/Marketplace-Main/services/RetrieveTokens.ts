@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { ListingWithPricingAndImage } from '../models/Response.models';
+import axios, { AxiosResponse } from 'axios';
+import { DynamicKeyWithCount, ListingWithPricingAndImage, ResultAndCountResponse } from '../models/Response.models';
 
 const GETParams = {
   params: {
@@ -7,17 +7,38 @@ const GETParams = {
   }
 }
 
-async function RetrieveAllNFTs() : Promise<ListingWithPricingAndImage[]> {
-  let response: ListingWithPricingAndImage[] = [];
-  const url = <string> process.env.MARKETPLACE_GET_ALL_NFTS;
+async function RetrieveAllNFTs(): Promise<ResultAndCountResponse> {
+	let nfts: ListingWithPricingAndImage[] = [];
+  let counts: DynamicKeyWithCount = {}
+	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
-  await axios.get(url, GETParams).then((data) => {
-    response = data.data.collection.filter(
-			(x: any) => x.tokenID === '1533853723'
-		);
-  })
+	await axios.get(url).then((data: AxiosResponse<ResultAndCountResponse>) => {
+		nfts = data.data.result;
+    counts = data.data.counts;
+	});
 
-  return response;
+	return {
+    result: nfts,
+    counts: counts
+  };
 }
 
-export { RetrieveAllNFTs }
+async function RetrieveFilteredNFTs(
+	queryParams: string
+): Promise<ResultAndCountResponse> {
+	let nfts: ListingWithPricingAndImage[] = [];
+  let counts: DynamicKeyWithCount = {};
+	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
+
+	await axios.get(url + queryParams).then((res: AxiosResponse<ResultAndCountResponse>) => {
+		nfts = res.data.result;
+    counts = res.data.counts
+	});
+
+	return {
+    result: nfts,
+    counts: counts
+  };
+}
+
+export { RetrieveAllNFTs, RetrieveFilteredNFTs };
