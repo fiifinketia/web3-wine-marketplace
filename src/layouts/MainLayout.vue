@@ -344,7 +344,7 @@ export default defineComponent({
 			user: true,
 			showModals: false,
 			showBurgerMenu: false,
-			suggestedWines: true,
+			suggestedWines: false,
 			userStore,
 			walletAddress: '',
 			items: [
