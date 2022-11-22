@@ -29,7 +29,6 @@ export async function CreateOrder(
 	brand: string,
 	address: string
 ) {
-	console.log(brand);
 	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
 	const askAmount = utils.parseEther('100').toString();
@@ -244,7 +243,6 @@ export async function FulfillBasicOrder(
 				contractAddress: data.contractAddress,
 			};
 		});
-	console.log(order);
 	const { executeAllActions: executeAllFulfillActions } =
 		await seaport.fulfillOrder({
 			order: {
