@@ -136,10 +136,10 @@ export default defineComponent({
 				tokenID,
 				smartContract
 			);
-			if (result.data == 'Duplicate') {
+			if (result.data === 'Duplicate') {
 				this.status = 'The wine is already in the database';
 				this.showTable = false;
-			} else if (result.data == 'Not owner') {
+			} else if (result.data === 'Not owner') {
 				this.status = 'You dont own this wine';
 				this.showTable = false;
 			} else {
