@@ -39,9 +39,7 @@
 						class="lwin-search"
 					/>
 				</div>
-				<div>
-					<input v-model="price" placeholder="Price" class="lwin-search" />
-				</div>
+
 				<div>
 					<button
 						class="submit-button"
@@ -120,7 +118,6 @@ export default defineComponent({
 				this.packSize = item.packSize;
 				this.tokenID = item.tokenID;
 				this.smartContract = item.smartContract;
-				this.price = item.price;
 			});
 		},
 		async sendWine(
