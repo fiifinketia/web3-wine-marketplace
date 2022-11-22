@@ -15,7 +15,7 @@ async function RetrieveFilteredNFTs(
 	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
 	await axios
-		.get(url + queryParams)
+		.get(`${url}?${queryParams}`)
 		.then((res: AxiosResponse<ResultAndCountResponse>) => {
 			nfts = res.data.result;
 			counts = res.data.counts;
