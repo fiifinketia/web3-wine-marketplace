@@ -1,141 +1,137 @@
 .favorites-title {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 1px;
-  color: #212131;
-  opacity: 0.6;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 1px;
+	color: #212131;
+	opacity: 0.6;
 }
 .favorites-number {
-  font-family: 'ProximaNova-Bold';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  text-align: right;
-  letter-spacing: 1px;
-  color: #212131;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	letter-spacing: 1px;
+	color: #212131;
 }
 
 .search-bar .q-field__control {
-  border-radius: 6px;
+	border-radius: 6px;
 }
 
 .search-bar .q-icon {
-  width: 20px;
+	width: 20px;
 }
 
 .search-bar .q-field__native {
-  font-family: 'ProximaNova-All';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  letter-spacing: 0.01em;
-  color: #9d9d9d;
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	letter-spacing: 0.01em;
+	color: #9d9d9d;
 }
 
 .search-btn {
-  padding: 8px 12px;
-  background: #3586ff;
-  border-radius: 6px;
+	padding: 8px 12px;
+	background: #3586ff;
+	border-radius: 6px;
 
-  font-family: 'ProximaNova-All';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
 
-  text-align: center;
+	text-align: center;
 
-  color: #ffffff;
-  transition: background 0.3s ease;
+	color: #ffffff;
+	transition: background 0.3s ease;
 }
 
 .search-btn:hover {
-  background: #8cbaff;
+	background: #8cbaff;
 }
 
 .no-nfts-container {
-  font-family: 'ProximaNova-Bold';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: 0.02em;
-  color: #3586ff;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	letter-spacing: 0.02em;
+	color: #3586ff;
 }
 
 .starting-from {
-  font-family: 'ProximaNova-All';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.5px;
-  color: #9d9d9d;
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
 }
 
 .favs-wine-name {
-  font-family: 'Obviously-Bold';
-  font-style: normal;
-  font-weight: 460;
-  font-size: 18px;
-  line-height: 27px;
-  letter-spacing: 0.02em;
-  color: #212131;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-  width: 90%;
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	letter-spacing: 0.02em;
+	color: #212131;
+	flex: none;
+	order: 1;
+	align-self: stretch;
+	flex-grow: 0;
+	width: 90%;
 }
 
 .favs-cards-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
 }
 
 .favs-card-individual {
-  width: 274px;
 }
 
 .favs-card-img {
-  background-color: #e0e4eb;
-  width: 274px;
-  height: 296px;
+	background-color: #e0e4eb;
+	width: 100%;
+	height: 296px;
 }
 
 .favs-price-container {
-  border: 1px solid rgba(94, 151, 236, 0.27) !important;
-  border-radius: 6px !important;
+	border: 1px solid rgba(94, 151, 236, 0.27) !important;
+	border-radius: 6px !important;
 }
 
 .favs-price {
-  font-family: 'ProximaNova-Bold';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #212131;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
 }
 
 .un-favour-btn .q-focus-helper {
-  display: none;
+	display: none;
 }
 
 .un-favour-btn .q-icon {
-  width: 20px;
-  padding-right: 2px;
+	width: 20px;
+	padding-right: 2px;
 }

@@ -8,15 +8,13 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
-
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 
 const { configure } = require('quasar/wrappers');
 const envparser = require('./envparser');
 
 module.exports = configure(function (ctx) {
-  return {
+	return {
 		// https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
 		supportTS: {
 			tsCheckerConfig: {
@@ -88,7 +86,7 @@ module.exports = configure(function (ctx) {
 			server: {
 				type: 'http',
 			},
-			port: 8080,
+			port: 8081,
 			open: true, // opens browser window automatically
 		},
 

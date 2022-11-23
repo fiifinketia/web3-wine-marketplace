@@ -29,16 +29,14 @@
 			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
 			<div>You do not have any favorites yet.</div>
 		</div>
-		<div class="row justify-around favs-cards-container">
+		<div class="row favs-cards-container">
 			<q-card
 				v-for="item in favsNFTs"
 				:key="item.tokenID"
-				class="no-shadow q-ma-md favs-card-individual"
+				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6 favs-card-individual"
 			>
-				<div class="favs-card-img"></div>
-				<div class="favs-wine-name q-py-md">
-					The full name of the wine is here and here and here
-				</div>
+				<img class="main-marketplace-card-image" :src="item.nftDetails.image" />
+				<div class="favs-wine-name q-py-md">TokenID: {{ item.tokenID }}</div>
 				<div class="favs-price-container column q-pa-sm">
 					<div class="row justify-between q-pb-md">
 						<div class="starting-from">Price</div>
@@ -103,7 +101,6 @@ export default defineComponent({
 			);
 
 			this.favsNFTs = result.data;
-			console.log(this.favsNFTs);
 		},
 		animation(opacity: string, transform: string, zIndex: string) {
 			const removeNFTBackground = document.querySelector(
@@ -119,17 +116,17 @@ export default defineComponent({
 		},
 		async removeNFT(
 			wAddress: string,
-			tokedID: string,
+			tokenID: string,
 			cAddress: string,
 			network: string
 		) {
+			console.log(tokenID);
+
 			await axios.post('http://localhost:3100/favorites/deleteFavorite', {
-				data: {
-					walletAddress: wAddress,
-					tokenID: tokedID,
-					contractAddress: cAddress,
-					network: network,
-				},
+				walletAddress: wAddress,
+				tokenID: tokenID,
+				contractAddress: cAddress,
+				network: network,
 			});
 			this.getAllFavorites();
 

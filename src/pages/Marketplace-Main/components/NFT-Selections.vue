@@ -30,9 +30,40 @@
 					<q-card-section
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
-						<span class="main-marketplace-price-header q-pb-xs">
-							Starting from
-						</span>
+						<div class="row justify-between" style="width: 100%">
+							<span class="main-marketplace-price-header q-pb-xs">
+								Starting from
+							</span>
+							<q-img
+								v-if="token.favorited === true"
+								src="../../../../public/images/heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									removeFavorites(
+										token.tokenID,
+										token.smartContractAddress,
+										token.network
+									)
+								"
+							/>
+							<q-img
+								v-else
+								src="../../../../public/images/empty-heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									addFavorites(
+										token.favorited,
+										token.smartContractAddress,
+										token.tokenID,
+										token.network
+									)
+								"
+							/>
+						</div>
 						<div v-if="!!token.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
@@ -69,12 +100,15 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
+import axios from 'axios';
+
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
 	RetrieveAllNFTs,
 	RetrieveFilteredNFTs,
+	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { CreateOrderERC1155 } from '../services/Orders';
@@ -95,7 +129,7 @@ export default defineComponent({
 			stars: ref(3),
 			selected: ref(),
 			userStore,
-			wineFiltersStore
+			wineFiltersStore,
 		};
 	},
 
@@ -104,6 +138,36 @@ export default defineComponent({
 	},
 
 	methods: {
+		async addFavorites(
+			favorited: null | boolean | undefined,
+			smartContractAddress: string,
+			tokenID: string,
+			network: string
+		) {
+			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+			await axios.post('http://localhost:3100/favorites/addFavorite', {
+				walletAddress: walletAddress,
+				contractAddress: smartContractAddress,
+				tokenID: tokenID,
+				network: network,
+			});
+
+			this.RetrieveTokens();
+
+			console.log(favorited, smartContractAddress, tokenID, network);
+		},
+		async removeFavorites(tokenID: string, cAddress: string, network: string) {
+			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+
+			await axios.post('http://localhost:3100/favorites/deleteFavorite', {
+				walletAddress: walletAddress,
+				tokenID: tokenID,
+				contractAddress: cAddress,
+				network: network,
+			});
+			this.RetrieveTokens();
+		},
+
 		selectCard(tokenID: string) {
 			this.card = true;
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
@@ -124,20 +188,27 @@ export default defineComponent({
 		},
 
 		async updateNFTs() {
-      const { result: nfts, counts } = await RetrieveFilteredNFTs(this.wineFiltersStore.getFiltersQueryParams);
-			this.allNFTs = nfts
+			const { result: nfts, counts } = await RetrieveFilteredNFTs(
+				this.wineFiltersStore.getFiltersQueryParams
+			);
+			this.allNFTs = nfts;
 		},
 
 		async RetrieveTokens() {
-			if(this.wineFiltersStore.getAllFiltersArray.length > 0) {
-				console.log("🚀 ~ file: NFT-Selections.vue ~ line 105 ~ mounted ~ this.wineFiltersStore.getAllFiltersArray.length", this.wineFiltersStore.getAllFiltersArray.length)
-				await this.updateNFTs();
-			} else {
-        const { result: nfts, counts } = await RetrieveAllNFTs(); 
-        this.allNFTs = nfts
-		  }
-    }
-  }
+			// if (this.wineFiltersStore.getAllFiltersArray.length > 0) {
+			// 	console.log(
+			// 		'🚀 ~ file: NFT-Selections.vue ~ line 105 ~ mounted ~ this.wineFiltersStore.getAllFiltersArray.length',
+			// 		this.wineFiltersStore.getAllFiltersArray.length
+			// 	);
+			// 	await this.updateNFTs();
+			// } else {
+			// 	const { result: nfts, counts } = await RetrieveAllNFTs();
+			// 	this.allNFTs = nfts;
+			// }
+			const { result: nfts, counts } = await RetrieveFavoredNFTs();
+			this.allNFTs = nfts;
+		},
+	},
 });
 </script>
 
