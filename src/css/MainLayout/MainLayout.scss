@@ -185,12 +185,24 @@ body {
 .suggested-wines-background .q-dialog__inner--minimized {
 	padding: 1.2rem 5rem 4rem;
 	backdrop-filter: blur(5px);
+	@media screen and (max-width: 1250px) {
+		padding: 1.2rem 2rem 1rem;
+	}
+	@media screen and (max-width: 780px) {
+		padding: 0;
+		background-color: white;
+		align-items: flex-start;
+	}
 }
 
 .suggested-wines-background .suggested-wines {
 	border-radius: 20px;
 	box-shadow: none;
 	padding: 0.5rem 1.5rem;
+	@media screen and (max-width: 780px) {
+		height: 100%;
+		justify-content: space-around;
+	}
 }
 .suggested-wines-background .q-dialog__inner--minimized > div {
 	min-width: fit-content;
@@ -199,6 +211,9 @@ body {
 
 .suggested-wines-background .q-card__section {
 	padding: 1rem;
+	@media screen and (max-width: 700px) {
+		padding: 1rem 0;
+	}
 }
 
 .join-wiv-world {
@@ -208,6 +223,7 @@ body {
 	font-size: 18px;
 	line-height: 28px;
 	letter-spacing: 0.02em;
+	text-align: center;
 
 	/* Secondary/dark blue */
 
@@ -271,12 +287,15 @@ body {
 
 .suggest-card-individual {
 	width: 224px;
+	@media screen and (max-width: 1250px) {
+		width: fit-content;
+	}
 }
 
 .suggest-card-img {
 	background-color: #e0e4eb;
 	width: 100%;
-	height: 198px;
+	height: 230px;
 }
 
 .suggest-price-container {
@@ -309,6 +328,10 @@ body {
 
 .suggested-buttons-container {
 	gap: 1rem;
+	@media screen and (max-width: 600px) {
+		flex-direction: column;
+		width: 100%;
+	}
 }
 
 .suggested-buttons {
@@ -323,6 +346,9 @@ body {
 	text-align: center;
 	cursor: pointer;
 	letter-spacing: 0.07rem;
+	@media screen and (max-width: 600px) {
+		width: 100%;
+	}
 }
 
 .suggested-show-btn {
@@ -339,4 +365,30 @@ body {
 	color: transparent;
 	outline: 1px solid #3586ff;
 	border: none;
+}
+
+@media screen and (max-width: 1000px) {
+	.suggested-forth {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.suggested-third {
+		display: none;
+	}
+}
+.uross {
+	display: none;
+}
+@media screen and (max-width: 460px) {
+	.suggested-second {
+		display: none;
+	}
+	.uros {
+		display: none;
+	}
+	.uross {
+		display: block;
+	}
 }

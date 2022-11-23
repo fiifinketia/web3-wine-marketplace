@@ -5,10 +5,8 @@
 
 	<q-dialog v-model="suggestedWines" class="suggested-wines-background">
 		<q-card class="suggested-wines column items-center">
-			<q-card-section>
-				<div class="join-wiv-world">
-					We're happy to see you join WiV wine world!
-				</div>
+			<q-card-section class="join-wiv-world">
+				<div>We're happy to see you join WiV wine world!</div>
 			</q-card-section>
 			<q-card-section
 				class="suggest-trending-today row justify-center items-center"
@@ -19,14 +17,19 @@
 			</q-card-section>
 
 			<q-card-section class="suggested-paragraph">
-				<div>Check our special offers for you to start with -</div>
-				<div>most trending at this moment!</div>
+				<div class="uros">Check our special offers for you to start with -</div>
+				<div class="uros">most trending at this moment!</div>
+				<div class="uross">
+					Check our special offers for you to start with most trending at this
+					moment!
+				</div>
 			</q-card-section>
 			<q-card-section class="suggested-wines-section row justify-between">
 				<q-card
 					v-for="item in items"
 					:key="item.id"
-					class="no-shadow q-ma-sm suggest-card-individual"
+					:class="item.class"
+					class="no-shadow q-pa-sm suggest-card-individual"
 				>
 					<div class="suggest-card-img"></div>
 					<div class="suggest-wine-name q-py-md">
@@ -197,7 +200,6 @@
 								>
 									<q-item-section>
 										<q-item-label>sign up</q-item-label>
-
 									</q-item-section>
 								</q-item>
 
@@ -336,7 +338,7 @@ export default defineComponent({
 			user: true,
 			showModals: false,
 			showBurgerMenu: false,
-			suggestedWines: false,
+			suggestedWines: true,
 			userStore,
 			walletAddress: '',
 			items: [
@@ -344,21 +346,25 @@ export default defineComponent({
 					id: 1,
 					name: 'Vranac',
 					price: 1111,
+					class: 'suggested-first',
 				},
 				{
 					id: 2,
 					name: 'Sauvignon',
 					price: 2222,
+					class: 'suggested-second',
 				},
 				{
 					id: 3,
 					name: 'Moje Vino',
 					price: 3333,
+					class: 'suggested-third',
 				},
 				{
 					id: 4,
 					name: 'Vranac Pro Corde',
 					price: 4444,
+					class: 'suggested-forth',
 				},
 			],
 		};
