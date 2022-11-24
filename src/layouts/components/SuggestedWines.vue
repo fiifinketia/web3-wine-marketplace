@@ -34,7 +34,7 @@
 						The full name of the wine is here and here and here
 					</div>
 					<div class="suggest-price-container column q-pa-sm">
-						<div class="row justify-between q-pb-md">
+						<div class="row justify-between q-pb-sm">
 							<div class="suggest-starting-from">Price</div>
 							<q-btn
 								class="un-favour-btn"
@@ -89,7 +89,7 @@ export default defineComponent({
 	name: 'SuggestedWines',
 	data() {
 		return {
-			suggestedWines: false,
+			suggestedWines: true,
 			items: [
 				{
 					id: 1,

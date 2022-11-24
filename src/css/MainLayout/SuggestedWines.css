@@ -220,3 +220,48 @@
 		display: block;
 	}
 }
+
+@media screen and (max-height: 770px) {
+	.suggested-wines-background .q-dialog__inner--minimized {
+		padding: 0 2rem !important;
+	}
+
+	.suggest-card-img {
+		height: 180px;
+	}
+
+	.suggested-wines-background .q-card__section {
+		padding: 0.5rem;
+	}
+}
+
+@media screen and (max-height: 670px) {
+	.suggested-wines-background .suggested-wines {
+		padding: 0.25rem 1rem;
+	}
+
+	.suggested-wines-background .q-card__section {
+		padding: 0.25rem;
+	}
+
+	.suggest-trending-today {
+		padding: 0.5rem !important;
+	}
+
+	.suggested-p {
+		display: none;
+	}
+	.suggested-p-mobile {
+		display: block;
+	}
+
+	.suggest-card-individual {
+		padding-top: 0;
+	}
+}
+
+@media screen and (max-height: 600px) {
+	.suggest-card-img {
+		height: 150px;
+	}
+}
