@@ -89,7 +89,7 @@ export default defineComponent({
 	name: 'SuggestedWines',
 	data() {
 		return {
-			suggestedWines: true,
+			suggestedWines: false,
 			items: [
 				{
 					id: 1,
