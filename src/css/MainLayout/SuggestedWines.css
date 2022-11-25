@@ -1,0 +1,267 @@
+.suggested-wines-background .q-dialog__inner--minimized {
+	padding: 1.2rem 5rem 4rem;
+	backdrop-filter: blur(5px);
+}
+
+.suggested-wines-background .suggested-wines {
+	border-radius: 20px;
+	box-shadow: none;
+	padding: 0.5rem 1.5rem;
+}
+.suggested-wines-background .q-dialog__inner--minimized > div {
+	min-width: fit-content;
+	min-height: fit-content;
+}
+
+.suggested-wines-background .q-card__section {
+	padding: 1rem;
+}
+
+.join-wiv-world {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.02em;
+	text-align: center;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+}
+
+.suggest-trending-today {
+	width: 100%;
+	background-color: #3586ff;
+	color: white;
+
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	display: flex;
+	align-items: flex-end;
+	text-align: center;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.suggested-paragraph {
+	padding-bottom: 0 !important;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 27px;
+	/* or 150% */
+
+	text-align: center;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+
+	opacity: 0.6;
+}
+
+.suggested-p-mobile {
+	display: none;
+}
+
+.suggested-wines-section {
+	flex-wrap: nowrap;
+	padding-bottom: 0 !important;
+}
+
+.suggest-wine-name {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	letter-spacing: 0.02em;
+	color: #212131;
+	flex: none;
+	order: 1;
+	align-self: stretch;
+	flex-grow: 0;
+	width: 90%;
+}
+
+.suggest-card-individual {
+	width: 224px;
+}
+
+.suggest-card-img {
+	background-color: #e0e4eb;
+	width: 100%;
+	height: 230px;
+}
+
+.suggest-price-container {
+	border: 1px solid rgba(94, 151, 236, 0.27) !important;
+	border-radius: 6px !important;
+}
+
+.suggest-price {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.suggest-starting-from {
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
+}
+
+.suggested-buttons-container {
+	gap: 1rem;
+}
+
+.suggested-buttons {
+	width: 205px;
+	border-radius: 6px;
+	padding: 0.9rem 0;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	cursor: pointer;
+	letter-spacing: 0.07rem;
+}
+
+.suggested-show-btn {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	color: white;
+	border: none;
+}
+
+.suggested-skip-btn {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	color: transparent;
+	outline: 1px solid #3586ff;
+	border: none;
+}
+
+@media screen and (max-width: 1250px) {
+	.suggested-wines-background .q-dialog__inner--minimized {
+		padding: 1.2rem 2rem 1rem;
+	}
+	.suggest-card-individual {
+		width: fit-content;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.suggested-forth {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 780px) {
+	.suggested-wines-background .q-dialog__inner--minimized {
+		padding: 0;
+		background-color: white;
+		align-items: flex-start;
+	}
+	.suggested-wines-background .suggested-wines {
+		height: 100%;
+		justify-content: space-around;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.suggested-wines-background .q-card__section {
+		padding: 1rem 0;
+	}
+	.suggested-third {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.suggested-buttons {
+		width: 100%;
+	}
+
+	.suggested-buttons-container {
+		flex-direction: column;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 460px) {
+	.suggested-second {
+		display: none;
+	}
+	.suggested-p {
+		display: none;
+	}
+	.suggested-p-mobile {
+		display: block;
+	}
+}
+
+@media screen and (max-height: 770px) {
+	.suggested-wines-background .q-dialog__inner--minimized {
+		padding: 0 2rem !important;
+	}
+
+	.suggest-card-img {
+		height: 180px;
+	}
+
+	.suggested-wines-background .q-card__section {
+		padding: 0.5rem;
+	}
+}
+
+@media screen and (max-height: 670px) {
+	.suggested-wines-background .suggested-wines {
+		padding: 0.25rem 1rem;
+	}
+
+	.suggested-wines-background .q-card__section {
+		padding: 0.25rem;
+	}
+
+	.suggest-trending-today {
+		padding: 0.5rem !important;
+	}
+
+	.suggested-p {
+		display: none;
+	}
+	.suggested-p-mobile {
+		display: block;
+	}
+
+	.suggest-card-individual {
+		padding-top: 0;
+	}
+}
+
+@media screen and (max-height: 600px) {
+	.suggest-card-img {
+		height: 150px;
+	}
+}

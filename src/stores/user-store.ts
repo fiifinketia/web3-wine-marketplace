@@ -18,12 +18,13 @@ export const useUserStore = defineStore(
 			});
 			walletAddress.value = accounts[0];
 
-			await axios.post(process.env.MKT_API_URL + 'market/users', {
+			await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
 				walletAddress: walletAddress.value,
 			});
 		};
 
 		const getWalletBalance = async () => {
+			if (!window.ethereum) return 0;
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const balance = await provider.getBalance(walletAddress.value);
 			const balanceInETH = ethers.utils.formatEther(balance);

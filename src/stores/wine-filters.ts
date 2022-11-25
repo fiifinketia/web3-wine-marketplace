@@ -87,7 +87,11 @@ export const useWineFilters = defineStore('wineFilters', {
 						break;
 					case 'sortedAtoZ':
 						if (state.sortedAtoZ !== '') {
-							filters.push('sortType=' + state.sortedAtoZ);
+							if (state.sortedAtoZ === 'Ascending') {
+								filters.push('sortType=asc');
+							} else {
+								filters.push('sortType=desc');
+							}
 						}
 						break;
 					case 'brand':

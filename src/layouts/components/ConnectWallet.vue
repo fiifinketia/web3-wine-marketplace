@@ -12,12 +12,12 @@
 				Connect your Web3 Wallet to signup.
 			</div>
 			<div>
-				<q-btn class="connect-wallet-btns connect-btn" @click="connectWallet">
+				<q-btn class="connect-wallet-btns connect-btn" :disable="!isMetaMaskInstalled" @click="connectWallet">
 					Connect wallet
 				</q-btn>
 				<q-btn
 					class="connect-wallet-btns no-wallet-btn"
-					:disabled="!isMetaMaskInstalled"
+					:disabled="!!isMetaMaskInstalled"
 					@click="setupWallet"
 				>
 					I don't have a wallet
@@ -37,11 +37,10 @@ export default defineComponent({
 	name: 'ConnectWallet',
 	data() {
 		const userStore = useUserStore();
-		const isMetaMaskInstalled = ethereum && ethereum.isMetaMask;
-		const email = ref('kelvinnketiaachiampong@gmail.com');
+		const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 		return {
-			email,
 			userStore,
+			isMetaMaskInstalled
 		};
 	},
 	methods: {
@@ -56,8 +55,8 @@ export default defineComponent({
 		},
 
 		setupWallet() {
-			this.isMetaMaskInstalled = ethereum && ethereum.isMetaMask;
-			if (!isMetaMaskInstalled) {
+			this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
+			if (!this.isMetaMaskInstalled) {
 				//If it isn't installed we ask the user to click to install it
 				const onboarding = new MetaMaskOnboarding({
 					forwarderOrigin: 'http://localhost:8081',

@@ -28,7 +28,7 @@ async function RetrieveAllNFTs(): Promise<ResultAndCountResponse> {
 }
 
 async function RetrieveFilteredNFTs(
-	queryParams: string
+	queryParams?: string
 ): Promise<ResultAndCountResponse> {
 	let nfts: ListingWithPricingAndImage[] = [];
 	let counts: DynamicKeyWithCount = {};
@@ -68,3 +68,4 @@ async function RetrieveFavoredNFTs(
 }
 
 export { RetrieveAllNFTs, RetrieveFilteredNFTs, RetrieveFavoredNFTs };
+
