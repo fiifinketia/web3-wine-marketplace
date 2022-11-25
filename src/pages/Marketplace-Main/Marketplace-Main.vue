@@ -54,7 +54,7 @@
 						<AllNFTsTab />
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="releases">
-						<NewlyReleasedTab />
+						<AllNFTsTab />
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="recommended">
 						<AllNFTsTab />
@@ -68,12 +68,10 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import AllNFTsTab from './components/AllNFTsTab.vue';
-import NewReleasedTab from './components/NewReleasedTab.vue';
 
 export default defineComponent({
 	components: {
 		AllNFTsTab: AllNFTsTab,
-		NewlyReleasedTab: NewReleasedTab
 	},
 
 	data() {
