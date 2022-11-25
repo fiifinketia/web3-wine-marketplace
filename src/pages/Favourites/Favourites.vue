@@ -4,7 +4,7 @@
 		<div class="row justify-between q-pt-sm">
 			<div class="row">
 				<div class="favorites-title">NFTs</div>
-				<div class="favorites-number q-pl-sm">{{ favsNFTs.length }}</div>
+				<div class="favorites-number q-pl-sm">{{ favNFTs.length }}</div>
 			</div>
 			<div class="row">
 				<q-input
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div
-			v-if="!favsNFTs.length"
+			v-if="!favNFTs.length"
 			class="no-nfts-container column justify-center items-center"
 		>
 			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
@@ -31,7 +31,7 @@
 		</div>
 		<div class="row favs-cards-container">
 			<q-card
-				v-for="item in favsNFTs"
+				v-for="item in favNFTs"
 				:key="item.tokenID"
 				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6 favs-card-individual"
 			>
@@ -47,12 +47,7 @@
 							dense
 							padding="0"
 							@click="
-								removeNFT(
-									item.walletAddress,
-									item.tokenID,
-									item.contractAddress,
-									item.network
-								)
+								removeNFT(item.tokenID, item.contractAddress, item.network)
 							"
 						/>
 					</div>
@@ -76,10 +71,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../css/Favorites/Favorites.css';
-import axios from 'axios';
 
 import FAVsRemove from './FAVsRemove.vue';
 import { FavoritesModel } from './models/Response';
+import {
+	RemoveFavorites,
+	GetAllFavorites,
+} from '../Marketplace-Main/services/FavoritesFunctions';
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
@@ -87,7 +85,8 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			favsNFTs: Array<FavoritesModel>(),
+			favNFTs: Array<FavoritesModel>(),
+			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 	mounted() {
@@ -95,12 +94,10 @@ export default defineComponent({
 	},
 	methods: {
 		async getAllFavorites() {
-			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-			const result = await axios.get(
-				`http://localhost:3100/favorites/getAllFavorites?walletAddress=${walletAddress}`
+			const { result: nfts } = await GetAllFavorites(
+				`?walletAddress=${this.walletAddressTemporary}`
 			);
-
-			this.favsNFTs = result.data;
+			this.favNFTs = nfts;
 		},
 		animation(opacity: string, transform: string, zIndex: string) {
 			const removeNFTBackground = document.querySelector(
@@ -114,16 +111,9 @@ export default defineComponent({
 			removeNFTBackground.style.opacity = opacity;
 			removeNFTContainer.style.transform = transform;
 		},
-		async removeNFT(
-			wAddress: string,
-			tokenID: string,
-			cAddress: string,
-			network: string
-		) {
-			console.log(tokenID);
-
-			await axios.post('http://localhost:3100/favorites/deleteFavorite', {
-				walletAddress: wAddress,
+		async removeNFT(tokenID: string, cAddress: string, network: string) {
+			await RemoveFavorites({
+				walletAddress: this.walletAddressTemporary,
 				tokenID: tokenID,
 				contractAddress: cAddress,
 				network: network,

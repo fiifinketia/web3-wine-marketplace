@@ -1,4 +1,4 @@
-export interface FavoritesModel {
+interface FavoritesModel {
 	contractAddress: string;
 	network: string;
 	tokenID: string;
@@ -14,3 +14,5 @@ export interface FavoritesModel {
 		};
 	};
 }
+
+export { FavoritesModel };

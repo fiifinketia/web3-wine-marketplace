@@ -47,15 +47,15 @@ async function RetrieveFilteredNFTs(
 	};
 }
 
-async function RetrieveFavoredNFTs(): Promise<ResultAndCountResponse> {
+async function RetrieveFavoredNFTs(
+	queryParams: string
+): Promise<ResultAndCountResponse> {
 	let nfts: ListingWithPricingAndImage[] = [];
 	let counts: DynamicKeyWithCount = {};
-	// const url = <string>process.env.RETRIEVE_FAVORED_NFTS_URL;
+	const url = 'http://localhost:3400/wivmkt-nft-service/retrieveFilteredNFTs';
 
 	await axios
-		.get(
-			'http://localhost:3400/wivmkt-nft-service/retrieveFilteredNFTs/?walletAddress=0xA3873a019aC68824907A3aD99D3e3542376573D0'
-		)
+		.get(url + queryParams)
 		.then((res: AxiosResponse<ResultAndCountResponse>) => {
 			nfts = res.data.result;
 			counts = res.data.counts;

@@ -41,10 +41,11 @@
 								height="20px"
 								@click.stop
 								@click="
-									removeFavorites(
+									addRemoveFavorites(
 										token.tokenID,
 										token.smartContractAddress,
-										token.network
+										token.network,
+										'remove'
 									)
 								"
 							/>
@@ -55,11 +56,11 @@
 								height="20px"
 								@click.stop
 								@click="
-									addFavorites(
-										token.favorited,
-										token.smartContractAddress,
+									addRemoveFavorites(
 										token.tokenID,
-										token.network
+										token.smartContractAddress,
+										token.network,
+										'add'
 									)
 								"
 							/>
@@ -100,8 +101,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
-import axios from 'axios';
-
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
@@ -110,6 +109,7 @@ import {
 	RetrieveFilteredNFTs,
 	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
+import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { CreateOrderERC1155 } from '../services/Orders';
 
@@ -130,6 +130,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
+			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -138,33 +139,31 @@ export default defineComponent({
 	},
 
 	methods: {
-		async addFavorites(
-			favorited: null | boolean | undefined,
-			smartContractAddress: string,
+		async addRemoveFavorites(
 			tokenID: string,
-			network: string
+			cAddress: string,
+			network: string,
+			objective: string
 		) {
-			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-			await axios.post('http://localhost:3100/favorites/addFavorite', {
-				walletAddress: walletAddress,
-				contractAddress: smartContractAddress,
-				tokenID: tokenID,
-				network: network,
-			});
+			switch (objective) {
+				case 'add':
+					await AddFavorites({
+						walletAddress: this.walletAddressTemporary,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
 
-			this.RetrieveTokens();
-
-			console.log(favorited, smartContractAddress, tokenID, network);
-		},
-		async removeFavorites(tokenID: string, cAddress: string, network: string) {
-			const walletAddress = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-
-			await axios.post('http://localhost:3100/favorites/deleteFavorite', {
-				walletAddress: walletAddress,
-				tokenID: tokenID,
-				contractAddress: cAddress,
-				network: network,
-			});
+				case 'remove':
+					await RemoveFavorites({
+						walletAddress: this.walletAddressTemporary,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
+			}
 			this.RetrieveTokens();
 		},
 
@@ -205,7 +204,9 @@ export default defineComponent({
 			// 	const { result: nfts, counts } = await RetrieveAllNFTs();
 			// 	this.allNFTs = nfts;
 			// }
-			const { result: nfts, counts } = await RetrieveFavoredNFTs();
+			const { result: nfts, counts } = await RetrieveFavoredNFTs(
+				`?walletAddress=${this.walletAddressTemporary}`
+			);
 			this.allNFTs = nfts;
 		},
 	},
