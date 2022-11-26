@@ -1,7 +1,7 @@
 <template>
 	<!-- Main box -->
 	<q-card flat bordered class="main-filter-box dark-blue-border q-px-md">
-		<q-card-section class="hidden-a-1023">
+		<q-card-section class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs">
 			<q-input
 				v-model="searchQuery"
 				outlined
@@ -9,20 +9,21 @@
 				placeholder="Search"
 				type="search"
 				color="primary"
+				class="col-9"
+				dense
 			>
 				<template #prepend>
 					<q-icon name="search" />
 				</template>
 			</q-input>
-			<div class="row justify-end">
-				<q-btn
-					class="q-ma-sm"
+			<q-btn
+					class="col-2"
 					color="primary"
 					outlined
 					label="GO"
+					dense
 					@click="wineFiltersStore.searchQuery = searchQuery"
 				/>
-			</div>
 		</q-card-section>
 		<q-list class=" rounded-borders">
 			<!-- Listed Only filter -->
@@ -95,8 +96,9 @@
 				>
 					<q-option-group
 						v-model="wineFiltersStore.brand"
-						:options="wineFiltersStore.brandOptions"
+						:options="brandOptions"
 						type="checkbox"
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
 					/>
 				</q-list>
 			</q-expansion-item>
@@ -106,13 +108,26 @@
 				label="Origin"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="originQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.origin"
-						:options="wineFiltersStore.originOptions"
+						:options="originOptions"
 						type="checkbox"
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
 					/>
 				</q-list>
 			</q-expansion-item>
@@ -122,14 +137,27 @@
 				label="Producer"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="producerQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.producer"
-						:options="wineFiltersStore.producerOptions"
+						:options="producerOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -138,14 +166,27 @@
 				label="Country"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="countryQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.country"
-						:options="wineFiltersStore.countryOptions"
+						:options="countryOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -154,14 +195,27 @@
 				label="Region"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="regionQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.region"
-						:options="wineFiltersStore.regionOptions"
+						:options="regionOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -170,14 +224,27 @@
 				label="Appelation"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="appellationQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.appellation"
-						:options="wineFiltersStore.appellationOptions"
+						:options="appellationOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -278,14 +345,27 @@
 				label="Case"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="caseQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.wineCase"
-						:options="wineFiltersStore.wineCaseOptions"
+						:options="caseOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -294,14 +374,27 @@
 				label="Format"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="formatQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.format"
-						:options="wineFiltersStore.formatOptions"
+						:options="formatOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -310,14 +403,27 @@
 				label="Investment Grade"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="investmentGradeQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.investmentGrade"
-						:options="wineFiltersStore.investmentGradeOptions"
+						:options="investmentGradeOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -326,14 +432,27 @@
 				label="LWIN"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="lwinQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.LWIN"
-						:options="wineFiltersStore.LWINOptions"
+						:options="LWINOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 
@@ -342,14 +461,27 @@
 				label="Heritage"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
+				<q-input
+					v-model="heritageQuery"
+					outlined
+					dense
+					round
+					placeholder="Search"
+					type="search"
+				>
+					<template #prepend>
+						<q-icon name="search" />
+					</template>
+				</q-input>
 				<q-list
 					class="dark-blue-border rounded-borders q-my-sm"
 				>
 					<q-option-group
 						v-model="wineFiltersStore.heritage"
-						:options="wineFiltersStore.heritageOptions"
+						:options="heritageOptions"
 						type="checkbox"
-					/>
+						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+						/>
 				</q-list>
 			</q-expansion-item>
 		</q-list>
@@ -369,6 +501,28 @@ export default defineComponent({
 			wineFiltersStore,
 			searchQuery: ref(''),
 			brandQuery: ref(''),
+			regionQuery: ref(''),
+			producerQuery: ref(''),
+			vintageQuery: ref(''),
+			formatQuery: ref(''),
+			investmentGradeQuery: ref(''),
+			appellationQuery: ref(''),
+			lwinQuery: ref(''),
+			heritageQuery: ref(''),
+			caseQuery: ref(''),
+			originQuery: ref(''),
+			countryQuery: ref(''),
+			brandOptions: wineFiltersStore.brandOptions,
+			regionOptions: wineFiltersStore.regionOptions,
+			producerOptions: wineFiltersStore.producerOptions,
+			formatOptions: wineFiltersStore.formatOptions,
+			investmentGradeOptions: wineFiltersStore.investmentGradeOptions,
+			appellationOptions: wineFiltersStore.appellationOptions,
+			LWINOptions: wineFiltersStore.LWINOptions,
+			heritageOptions: wineFiltersStore.heritageOptions,
+			caseOptions: wineFiltersStore.wineCaseOptions,
+			originOptions: wineFiltersStore.originOptions,
+			countryOptions: wineFiltersStore.countryOptions,
 			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
@@ -376,13 +530,83 @@ export default defineComponent({
 
 
 	watch: {
-		// brandQuery: {
-		// 	handler: function (val) {
-		// 		this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
-		// 			b.value.includes(val)
-		// 		);
-		// 	},
-		// },
+		brandQuery: {
+			handler: function (val) {
+				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		regionQuery: {
+			handler: function (val) {
+				this.regionOptions = this.wineFiltersStore.regionOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		producerQuery: {
+			handler: function (val) {
+				this.producerOptions = this.wineFiltersStore.producerOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		originQuery: {
+			handler: function (val) {
+				this.originOptions = this.wineFiltersStore.originOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		appellationQuery: {
+			handler: function (val) {
+				this.appellationOptions = this.wineFiltersStore.appellationOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		countryQuery: {
+			handler: function (val) {
+				this.countryOptions = this.wineFiltersStore.countryOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		formatQuery: {
+			handler: function (val) {
+				this.formatOptions = this.wineFiltersStore.formatOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		investmentGradeQuery: {
+			handler: function (val) {
+				this.investmentGradeOptions = this.wineFiltersStore.investmentGradeOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		lwinQuery: {
+			handler: function (val) {
+				this.LWINOptions = this.wineFiltersStore.LWINOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		heritageQuery: {
+			handler: function (val) {
+				this.heritageOptions = this.wineFiltersStore.heritageOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
+		caseQuery: {
+			handler: function (val) {
+				this.caseOptions = this.wineFiltersStore.wineCaseOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		}
 	},
 
 	async mounted() {

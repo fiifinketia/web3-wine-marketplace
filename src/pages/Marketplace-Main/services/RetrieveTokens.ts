@@ -12,7 +12,7 @@ const GETParams = {
 };
 
 async function RetrieveFilteredNFTs(
-	queryParams: string
+	queryParams?: string
 ): Promise<ResultAndCountResponse> {
 	let nfts: ListingWithPricingAndImage[] = [];
 	let counts: DynamicKeyWithCount = {};

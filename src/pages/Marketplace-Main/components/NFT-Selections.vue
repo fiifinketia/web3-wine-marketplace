@@ -1,6 +1,6 @@
 <template>
 	<q-page-container
-		class="row justify-between q-pt-none q-px-none q-gutter-y-md"
+		class="row justify-between q-pt-none q-px-sm q-gutter-y-md"
 	>
 		<div
 			v-for="token in allNFTs"
@@ -105,7 +105,6 @@ import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
-	RetrieveAllNFTs,
 	RetrieveFilteredNFTs,
 	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
@@ -169,6 +168,7 @@ export default defineComponent({
 
 		selectCard(tokenID: string) {
 			this.card = true;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 

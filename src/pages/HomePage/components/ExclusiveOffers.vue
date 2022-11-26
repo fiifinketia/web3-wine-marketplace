@@ -36,7 +36,7 @@
     </div>
     <div class="q-pt-lg go-to-marketplace-wrapper">
       <button class="go-to-marketplace">
-        <div class="go-to-marketplace-text">Go to Marketplace</div>
+        <div class="go-to-marketplace-text" @click="$router.push('marketplace?tab=nfts')">Go to Marketplace</div>
       </button>
     </div>
   </div>

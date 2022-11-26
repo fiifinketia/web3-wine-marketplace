@@ -6,10 +6,10 @@
     <div class="flex row justify-between text-left">
       <div class="first">
         <div class="flex column q-pl-sm q-pt-md">
-          <a class="footer-bold-text q-py-sm">NFTs</a>
-          <a class="footer-normal-text q-py-sm">New Releases</a>
-          <a class="footer-normal-text q-py-sm">Recommended</a>
-          <a class="footer-bold-text q-py-sm">Favourites</a>
+          <a class="footer-bold-text q-py-sm " :href="nftsUrl">NFTs</a>
+          <a class="footer-normal-text q-py-sm " :href="newReleasesUrl">New Releases</a>
+          <a class="footer-normal-text q-py-sm " :href="recommendedUrl">Recommended</a>
+          <a class="footer-bold-text q-py-sm " :href="favouritesUrl">Favourites</a>
           <a class="footer-bold-text q-py-sm">Stats</a>
           <a class="footer-normal-text q-py-sm">Wine Statistics</a>
         </div>
@@ -72,6 +72,15 @@ import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/Footer.css';
 export default defineComponent({
   name: 'LandingPageFooter',
+
+	data() {
+		return {
+			nftsUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=nfts',
+			newReleasesUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=releases',
+			recommendedUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=recommended',
+			favouritesUrl: process.env.CLIENT_BASE_URL + '#/favorites',
+		}
+	},
 });
 </script>
 

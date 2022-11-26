@@ -2,6 +2,7 @@
 	<ConnectWallet @clicked="onCloseModals($event)" />
 	<MyWallet @clicked="onCloseModals($event)" />
 	<BurgerMenu v-if="showBurgerMenu" />
+	<SuggestedWines />
 
 	<q-layout view="lHh Lpr lFf">
 		<q-header
@@ -121,7 +122,6 @@
 								>
 									<q-item-section>
 										<q-item-label>sign up</q-item-label>
-
 									</q-item-section>
 								</q-item>
 
@@ -245,6 +245,7 @@ import { useUserStore } from 'src/stores/user-store';
 import ConnectWallet from './components/ConnectWallet.vue';
 import BurgerMenu from './components/BurgerMenu.vue';
 import MyWallet from './components/MyWallet.vue';
+import SuggestedWines from './components/SuggestedWines.vue';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -252,6 +253,7 @@ export default defineComponent({
 		ConnectWallet,
 		BurgerMenu,
 		MyWallet,
+		SuggestedWines,
 	},
 	data() {
 		const userStore = useUserStore();
@@ -266,7 +268,6 @@ export default defineComponent({
 	},
 	async mounted() {
 		const userStore = useUserStore();
-		const { ethereum } = window;
 
 		this.walletAddress = userStore.walletAddress;
 	},
