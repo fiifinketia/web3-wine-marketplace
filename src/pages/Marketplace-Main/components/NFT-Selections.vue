@@ -186,24 +186,7 @@ export default defineComponent({
 			);
 		},
 
-		async updateNFTs() {
-			const { result: nfts, counts } = await RetrieveFilteredNFTs(
-				this.wineFiltersStore.getFiltersQueryParams
-			);
-			this.allNFTs = nfts;
-		},
-
 		async RetrieveTokens() {
-			// if (this.wineFiltersStore.getAllFiltersArray.length > 0) {
-			// 	console.log(
-			// 		'🚀 ~ file: NFT-Selections.vue ~ line 105 ~ mounted ~ this.wineFiltersStore.getAllFiltersArray.length',
-			// 		this.wineFiltersStore.getAllFiltersArray.length
-			// 	);
-			// 	await this.updateNFTs();
-			// } else {
-			// 	const { result: nfts, counts } = await RetrieveAllNFTs();
-			// 	this.allNFTs = nfts;
-			// }
 			const { result: nfts, counts } = await RetrieveFavoredNFTs(
 				`?walletAddress=${this.walletAddressTemporary}`
 			);
