@@ -30,9 +30,41 @@
 					<q-card-section
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
-						<span class="main-marketplace-price-header q-pb-xs">
-							Starting from
-						</span>
+						<div class="row justify-between" style="width: 100%">
+							<span class="main-marketplace-price-header q-pb-xs">
+								Starting from
+							</span>
+							<q-img
+								v-if="token.favorited === true"
+								src="../../../../public/images/heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									addRemoveFavorites(
+										token.tokenID,
+										token.smartContractAddress,
+										token.network,
+										'remove'
+									)
+								"
+							/>
+							<q-img
+								v-else
+								src="../../../../public/images/empty-heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									addRemoveFavorites(
+										token.tokenID,
+										token.smartContractAddress,
+										token.network,
+										'add'
+									)
+								"
+							/>
+						</div>
 						<div v-if="!!token.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
@@ -74,7 +106,9 @@ import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
 	RetrieveFilteredNFTs,
+	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
+import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { CreateOrderERC1155 } from '../services/Orders';
 
@@ -94,7 +128,8 @@ export default defineComponent({
 			stars: ref(3),
 			selected: ref(),
 			userStore,
-			wineFiltersStore
+			wineFiltersStore,
+			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -103,6 +138,34 @@ export default defineComponent({
 	},
 
 	methods: {
+		async addRemoveFavorites(
+			tokenID: string,
+			cAddress: string,
+			network: string,
+			objective: string
+		) {
+			switch (objective) {
+				case 'add':
+					await AddFavorites({
+						walletAddress: this.walletAddressTemporary,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
+
+				case 'remove':
+					await RemoveFavorites({
+						walletAddress: this.walletAddressTemporary,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
+			}
+			this.RetrieveTokens();
+		},
+
 		selectCard(tokenID: string) {
 			this.card = true;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,10 +187,12 @@ export default defineComponent({
 		},
 
 		async RetrieveTokens() {
-			const { result: nfts } = await RetrieveFilteredNFTs(this.wineFiltersStore.getFiltersQueryParams);
-			this.allNFTs = nfts
-    }
-  }
+			const { result: nfts, counts } = await RetrieveFavoredNFTs(
+				`?walletAddress=${this.walletAddressTemporary}`
+			);
+			this.allNFTs = nfts;
+		},
+	},
 });
 </script>
 
