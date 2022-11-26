@@ -43,6 +43,16 @@ const routes: RouteRecordRaw[] = [
 		],
 	},
 	{
+		path: '/orders',
+		component: () => import ('layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('pages/Profiles/ProfileOrders.vue'),
+			},
+		]
+	},
+	{
 		path: '/protected',
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
