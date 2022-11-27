@@ -92,8 +92,8 @@ export default defineComponent({
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
     return {
-      tab: ref(queryT || 'nfts'),
-      tabLabel: ref('All NFTs'),
+      tab: ref(queryT || 'listings'),
+      tabLabel: ref('Listings'),
     };
   },
 
