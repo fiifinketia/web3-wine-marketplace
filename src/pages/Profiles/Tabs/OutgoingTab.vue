@@ -34,19 +34,22 @@
   </div>
   <div class="profile-main-container column">
     <div class="row q-pa-lg profile-column-name">
-      <span style="width: 30%">
+      <span class="outgoing-column-nft">
         NFT
       </span>
-      <span style="width: 25%">
+      <span class="outgoing-column-own-offer">
         Your offer
       </span>
-      <span style="width: 25%">
+      <span class="outgoing-column-highest-offer">
         Highest Offer
       </span>
-      <span style="width: 12%">
+      <span 
+        v-if="$q.screen.width > 1265"
+        class="outgoing-column-expire"
+      >
         Exp On
       </span>
-      <span style="width: 8%">
+      <span class="outgoing-column-action">
         Action
       </span>
     </div>
@@ -57,22 +60,41 @@
       :key="offer.orderHash"
       class="q-px-lg q-py-md row items-center"
     >
-      <div style="width: 30%" class="row items-center">
+      <div class="row items-center outgoing-column-nft">
         <img :src="offer.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ offer.brand }}</span>
       </div>
-      <div style="width: 25%" class="row items-center">
+      <div class="row items-center outgoing-column-own-offer">
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ offer.offer }} </span>
+        <q-tooltip 
+          v-if="$q.screen.width <= 1265"
+          anchor="top start" 
+          self="center start"
+          class="outgoing-tooltip-container"
+          :offset="[70, 30]"
+        >
+          <div class="column">
+            <div class="row items-center justify-between">
+              <span class="outgoing-tooltip-label">
+                Expiration On
+              </span>
+              <span class="outgoing-tooltip-expire q-pl-xs"> {{ offer.endTime }} </span>
+            </div>
+          </div>
+        </q-tooltip>
       </div>
-      <div style="width: 25%" class="row items-center">
+      <div class="row items-center outgoing-column-highest-offer">
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ !!offer.highestOffer ? offer.highestOffer : '0.00' }} </span>
       </div>
-      <div style="width: 12%" class="row items-center">
+      <div
+        v-if="$q.screen.width > 1265"
+        class="row items-center outgoing-column-expire"
+      >
         <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
       </div>
-      <div style="width: 8%; margin-left: -5px;" class="row items-center">
+      <div style="margin-left: -5px;" class="row items-center outgoing-column-action">
         <q-btn
           flat
           unelevated
@@ -97,6 +119,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ordersStore } from 'src/stores/orders-store';
+import 'src/css/Profile/Component/outgoing.css';
 
 export default defineComponent({
   data() {

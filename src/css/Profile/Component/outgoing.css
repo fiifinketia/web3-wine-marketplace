@@ -1,0 +1,65 @@
+.outgoing-column-nft {
+  width: 30%;
+}
+
+.outgoing-column-own-offer {
+  width: 24%;
+}
+
+.outgoing-column-highest-offer {
+  width: 24%;
+}
+
+.outgoing-column-expire {
+  width: 12%;
+}
+
+.outgoing-column-action {
+  width: 10%;
+}
+
+.outgoing-tooltip-container {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #D1E0F7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 218px;
+}
+
+.outgoing-tooltip-label {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  color: #212131;
+  margin-top: 3px;
+}
+
+.outgoing-tooltip-expire {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  color: #3586FF;
+  margin-top: 4px;
+}
+
+@media screen and (max-width: 1265px) {
+  .outgoing-column-nft {
+    width: 40%;
+  }
+  .outgoing-column-action {
+    width: 12%;
+  }
+}
+
+/* @media screen and (max-width: 1020px) {
+  .outgoing-column-nft {
+    width: 40%;
+  }
+  .outgoing-column-price {
+    width: 23%;
+  }
+  .outgoing-column-expire {
+    width: 23%;
+  }
+  .outgoing-column-action {
+    width: 14%;
+  }
+} */

@@ -148,7 +148,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
-import 'src/css/Profile/Listings/listings.css';
+import 'src/css/Profile/Component/listings.css';
 import { setCssVar } from 'quasar';
 import { ordersStore } from 'src/stores/orders-store';
 
