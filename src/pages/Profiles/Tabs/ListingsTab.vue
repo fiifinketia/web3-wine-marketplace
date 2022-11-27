@@ -35,22 +35,28 @@
   </div>
   <div class="profile-main-container column">
     <div class="row q-pa-lg profile-column-name">
-      <span style="width: 28%">
+      <span class="listings-column-nft">
         NFT
       </span>
-      <span style="width: 16%">
+      <span 
+        v-if="$q.screen.width > 1265"
+        class="listings-column-threshold"
+      >
         Threshold
       </span>
-      <span style="width: 16%">
+      <span class="listings-column-price">
         Price
       </span>
-      <span style="width: 16%">
+      <span 
+        v-if="$q.screen.width > 1020"
+        class="listings-column-highestOffer"
+      >
         Highest Offer
       </span>
-      <span style="width: 16%">
+      <span class="listings-column-expire">
         Exp On
       </span>
-      <span style="width: 8%">
+      <span class="listings-column-action">
         Action
       </span>
     </div>
@@ -61,26 +67,63 @@
       :key="listing.orderHash"
       class="q-px-lg q-py-md row items-center"
     >
-      <div style="width: 28%" class="row items-center">
+      <div class="row items-center listings-column-nft">
         <img :src="listing.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ listing.brand }}</span>
       </div>
-      <div style="width: 16%" class="row items-center">
+      <div
+        v-if="$q.screen.width > 1265"
+        class="row items-center listings-column-threshold"
+      >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> 0.00 </span>
       </div>
-      <div style="width: 16%" class="row items-center">
+      <div class="row items-center listings-column-price">
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
+        <q-tooltip 
+          v-if="$q.screen.width <= 1265"
+          anchor="top start" 
+          self="center start"
+          class="listing-tooltip-container" 
+          :offset="$q.screen.width > 1020 ? [70, 30] : [70, 40]"
+        >
+          <div class="column">
+            <div 
+              v-if="$q.screen.width <= 1020"
+              class="row items-center justify-between"
+            >
+              <span class="listing-tooltip-label">
+                Highest Offer
+              </span>
+              <div class="row items-center">
+                <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+                <span class="listing-tooltip-price-highest q-pl-xs"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
+              </div>
+            </div>
+            <div class="row items-center justify-between">
+              <span class="listing-tooltip-label">
+                Threshold
+              </span>
+              <div class="row items-center">
+                <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+                <span class="listing-tooltip-price-threshold q-pl-xs"> {{ '0.00' }} </span>
+              </div>
+            </div>
+          </div>
+        </q-tooltip>
       </div>
-      <div style="width: 16%" class="row items-center">
+      <div 
+        v-if="$q.screen.width > 1020"
+        class="row items-center listings-column-highestOffer"
+      >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number-highlight"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
       </div>
-      <div style="width: 16%">
+      <div class="listings-column-expire">
         <span class="profile-nft-number-highlight"> {{ listing.endTime }} </span>
       </div>
-      <div style="width: 8%; margin-left: -5px;" class="row items-center">
+      <div style="margin-left: -5px;" class="row items-center listings-column-action">
         <q-btn
           flat
           unelevated
@@ -105,6 +148,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
+import 'src/css/Profile/Listings/listings.css';
 import { setCssVar } from 'quasar';
 import { ordersStore } from 'src/stores/orders-store';
 
