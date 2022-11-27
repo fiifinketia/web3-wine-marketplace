@@ -99,22 +99,25 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
-import { IncomingOffersResponse } from '../models/response.models';
-import { ReturnOffers } from '../orders.requests';
+import { ordersStore } from 'src/stores/orders-store';
 
 export default defineComponent({
   data() {
+    const store = ordersStore();
     return {
-      incomingOffers: new Array<IncomingOffersResponse> (),
+      store,
+      incomingOffers: store.incomingOffers,
       incomingFilter: ''
     }
   },
 
   async mounted() {
-    const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-    const { incoming, outgoing } = await ReturnOffers(address);
-    this.incomingOffers = incoming;
-    console.log(this.incomingOffers)
+    const offersRequestStatus = this.store.getOffersRequestStatus;
+    if (offersRequestStatus == false) {
+      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+      await this.store.setOffers(address);
+      this.incomingOffers = this.store.getIncomingOffers;
+    }
   },
 
   methods: {

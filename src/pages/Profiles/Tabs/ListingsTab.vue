@@ -106,23 +106,27 @@
 import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
 import { setCssVar } from 'quasar';
-import { ListingsResponse } from '../models/response.models';
-import { ReturnListings } from '../orders.requests';
+import { ordersStore } from 'src/stores/orders-store';
 
 setCssVar('custom', '#5e97ec45');
 
 export default defineComponent({
   data() {
+    const store = ordersStore();
     return {
-      listings: new Array<ListingsResponse> (),
+      store,
+      listings: store.listings,
       listingFilter: ''
     }
   },
 
   async mounted() {
-    const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-    this.listings = await ReturnListings(address);
-    console.log(this.listings);
+    const listingsRequestStatus = this.store.getListingRequestStatus;
+    if (listingsRequestStatus == false) {
+      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+      await this.store.setListings(address);
+      this.listings = this.store.getListings;
+    }
   },
 
   methods: {
