@@ -21,7 +21,7 @@ async function ReturnListings(walletAddress: string) : Promise<ListingsResponse[
   return listingResponse;
 }
 
-async function ReturnIncomingOffers(walletAddress: string) : Promise<OrdersResponse> {
+async function ReturnOffers(walletAddress: string) : Promise<OrdersResponse> {
   const offers: OrdersResponse = {
     incoming: [],
     outgoing: []
@@ -37,5 +37,5 @@ async function ReturnIncomingOffers(walletAddress: string) : Promise<OrdersRespo
 
 export {
   ReturnListings,
-  ReturnIncomingOffers
+  ReturnOffers
 }

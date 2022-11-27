@@ -10,7 +10,6 @@
       <q-radio v-model="incomingFilter" dense val="expire" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
     </div>
     <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-      <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
       <q-input 
         v-model="text"
         color="grey"
@@ -101,7 +100,7 @@
 import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
 import { IncomingOffersResponse } from '../models/response.models';
-import { ReturnIncomingOffers } from '../orders.requests';
+import { ReturnOffers } from '../orders.requests';
 
 export default defineComponent({
   data() {
@@ -113,7 +112,7 @@ export default defineComponent({
 
   async mounted() {
     const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-    const { incoming, outgoing } = await ReturnIncomingOffers(address);
+    const { incoming, outgoing } = await ReturnOffers(address);
     this.incomingOffers = incoming;
     console.log(this.incomingOffers)
   },
