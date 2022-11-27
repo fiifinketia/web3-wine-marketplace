@@ -1,7 +1,23 @@
+interface OrdersResponse {
+  incoming: IncomingOffersResponse[];
+  outgoing: OutgoingOffersResponse[];
+}
+
 interface ListingsResponse extends ListingModel, HighestOfferModel {}
+
+interface IncomingOffersResponse extends OfferModel, LowestOfferModel {
+  offerer: string;
+}
+
+interface OutgoingOffersResponse extends OfferModel, HighestOfferModel {}
 
 interface ListingModel extends BaseOrderModel {
   listingPrice: string;
+}
+
+interface OfferModel extends BaseOrderModel {
+  offer: string;
+  offerer: string;
 }
 
 interface BaseOrderModel {
@@ -13,10 +29,18 @@ interface BaseOrderModel {
 }
 
 interface HighestOfferModel {
-  highestOffer: string | null;
-  highestOfferCurrency: string | null;
+  highestOffer?: string | null;
+  highestOfferCurrency?: string | null;
+}
+
+interface LowestOfferModel {
+  lowestOffer?: string | null;
+  lowestOfferCurrency?: string | null;
 }
 
 export {
-  ListingsResponse
+  ListingsResponse,
+  IncomingOffersResponse,
+  OutgoingOffersResponse,
+  OrdersResponse
 }

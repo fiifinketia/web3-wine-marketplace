@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { ListingsResponse } from './models/response.models';
+import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse } from './models/response.models';
 
-async function ReturnListings(walletAddress: string) {
+async function ReturnListings(walletAddress: string) : Promise<ListingsResponse[]> {
   let listingResponse: ListingsResponse[] = [];
   const query = `?walletAddress=${walletAddress}`;
   const url = <string> process.env.RETRIEVE_LISTINGS_URL;
@@ -21,6 +21,21 @@ async function ReturnListings(walletAddress: string) {
   return listingResponse;
 }
 
+async function ReturnIncomingOffers(walletAddress: string) : Promise<OrdersResponse> {
+  const offers: OrdersResponse = {
+    incoming: [],
+    outgoing: []
+  }
+  const query = `?walletAddress=${walletAddress}`;
+  const url = <string> process.env.RETRIEVE_INCOMING_OFFERS_URL;
+  await axios.get(url + query).then((f: AxiosResponse<OrdersResponse>) => {
+    offers.incoming = f.data.incoming;
+    offers.outgoing = f.data.outgoing;
+  })
+  return offers;
+}
+
 export {
-  ReturnListings
+  ReturnListings,
+  ReturnIncomingOffers
 }

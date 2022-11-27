@@ -74,3 +74,12 @@
   width: 45px;
   height: 38px;
 }
+
+.profile-accept-btn {
+  font-family: 'ProximaNova-Bold' !important;
+  font-size: 18px;
+  background: #3586FF;
+  color: white;
+  width: 90px;
+  height: 40px;
+}
