@@ -128,10 +128,7 @@
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									href="https://dwc.wiv-tech.com/#/"
 								>
 									<q-item-section>
 										<q-item-label>digital wine cellar</q-item-label>
