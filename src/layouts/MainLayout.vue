@@ -266,6 +266,7 @@ export default defineComponent({
 			walletAddress: '',
 		};
 	},
+
 	async mounted() {
 		const userStore = useUserStore();
 

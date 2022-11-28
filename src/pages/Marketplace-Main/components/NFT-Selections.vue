@@ -15,7 +15,7 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="selectCard(token.tokenID)"
+				@click="$router.push({ name: 'nfts', params: { id: token.tokenID, contractAddress: token.smartContractAddress, network: token.network } })"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -103,11 +103,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		selectCard(tokenID: string) {
-			this.card = true;
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
-		},
 
 		async CreateListingForERC1155() {
 			const smartContractAddressStatic =

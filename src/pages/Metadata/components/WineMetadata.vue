@@ -1,149 +1,110 @@
 <template>
 	<div
-		class="flex column justify-center items-center"
+		class="flex column justify-center items-center q-mt-xl"
 		@click="openModal === true ? 'modal' : 'content'"
 	>
-		<div class="brand-name">The brand name</div>
-		<div class="wine-name">The full name of the wine is here</div>
+		<div class="brand-name">{{ nft.brand }}</div>
+		<div class="wine-name">{{ nft.name }}</div>
 		<div class="flex r q-pt-lg test-class">
 			<div class="flex justify-center">
-				<q-img src="../../../assets/Nft-metadata.png" class="picture" />
+				<q-img :src="nft.image" class="picture" />
 			</div>
-			<div class="flex column info">
+			<div class="flex column info q-pa-md">
 				<div class="flex row">
 					<div class="q-pl-lg">
 						<q-img src="../../../assets/user.png" width="40px" height="40px" />
 					</div>
 					<div class="flex column q-pl-sm">
 						<div class="owned-by">Owned by</div>
-						<div class="user-id">Useridhere</div>
+						<div class="user-id">WiV</div>
 					</div>
 				</div>
-				<div class="metadata">
-					<div class="flex row">
-						<div class="metadata-text border">Sparkling wine</div>
-						<div class="metadata-text border">00 yrs</div>
-						<div class="metadata-text border">Italy</div>
-						<div class="metadata-text q-pl-sm">The region name</div>
+				<div class="metadata q-pa-md">
+					<div class="row q-pb-sm">
+						<div class="metadata-text">{{ nft.type }} wine</div>
+						<q-separator spaced="md" size="2px" vertical color="accent" />
+						<div class="metadata-text">{{ nft.maturity }} yrs</div>
+						<q-separator spaced="md" size="2px" vertical color="accent" />
+						<div class="metadata-text">{{ nft.productionCountry }}</div>
+						<q-separator spaced="md" size="2px" vertical color="accent" />
+						<div class="metadata-text q-pl-sm">{{ nft.region }}</div>
 					</div>
 					<div class="wine-description">
-						Shiraz from old dry grown wineyards is blended with Viognier,
-						complementing the strenths and complexities of these individual
-						parcels of fruit...
+						{{ nft.description || 'No description' }}
 					</div>
-					<div class="flex column price-container">
-						<div class="starting-from">Starting from</div>
-						<div class="flex row items-center">
-							<div>
-								<q-img src="../../../assets/ethereum.png" width="20px" />
+					<div class="q-pt-lg q-px-xl">
+						<div class="flex column">
+							<div class="starting-from">Price</div>
+							<div class="flex row items-center">
+								<div>
+									<q-img v-if="nft.orderDetails?.listingPrice" src="../../../assets/ethereum.png" width="20px" />
+								</div>
+								<div class="price1">{{ nft.orderDetails?.listingPrice || 'Not Available' }}</div>
 							</div>
-							<div class="price1">00.00</div>
-							<div class="price2">/ $ 00.00</div>
 						</div>
-					</div>
-					<div class="bid-container flex column">
-						<div class="bid-text">Highest bid from</div>
-						<div class="flex row items-center q-pt-sm">
-							<div>
-								<q-img src="../../../assets/ethereum.png" width="20px" />
+						<div v-if="nft.orderDetails?.listingPrice" class="flex column">
+							<div class="bid-text">Highest bid from</div>
+							<div class="flex row items-center q-pt-sm">
+								<div>
+									<q-img src="../../../assets/ethereum.png" width="20px" />
+								</div>
+								<div class="bid-price1">{{ biddingPrice || '--.--' }}</div>
 							</div>
-							<div class="bid-price1">00.00</div>
-							<div class="bid-price2">/ $ 00.00</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div
-			class="q-pt-lg flex row modal-container"
-			:style="openModal === true ? '' : ''"
-		>
-			<div class="q-pr-sm whole-modal">
-				<button
-					class="buy-now-button flex items-center justify-center cursor-pointer"
-					@click="openModal = !openModal"
-				>
-					<div class="buy-now-text">Buy now</div>
-				</button>
-				<div v-if="openModal == true" class="wine-container absolute">
-					<div class="flex row items-center">
-						<div class="buy-now-modal q-pl-lg q-pr-sm">Buy now</div>
-						<div class="border-container">
-							<div class="border-modal"></div>
-						</div>
-						<div
-							class="flex row justify-between items-center close-container q-pl-sm"
-						>
-							<div class="wine-name-modal">
-								The full name of the wine is here and here and here
-							</div>
-							<div class="close-button-wrapper" @click="openModal = !openModal">
-								<q-img
-									src="../../../assets/closeButton.png"
-									width="20px"
-									height="20px"
-									class="close-button cursor-pointer"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="flex row" :class="openModal === true ? '' : ''">
-						<div class="image-container q-pb-lg q-pl-lg">
-							<q-img
-								src="../../../assets/Nft-metadata.png"
-								class="modal-picture"
-								width="380px"
-							/>
-						</div>
-						<div class="process-container flex column">
-							<div class="q-pt-md timer">04:59</div>
-							<div class="modal-price flex column q-pl-lg">
-								<div class="modal-price">Price</div>
-								<div class="flex row justify-start items-center q-pt-sm">
-									<div class="">
-										<q-img src="../../../assets/ethereum.png" width="20px" />
-									</div>
-									<div class="modal-price1">00.00</div>
-									<div class="modal-price2 q-pl-sm">/ $ 00.00</div>
-								</div>
-								<div class="q-pt-lg q-pl-sm flex column">
-									<div>Fee</div>
-									<div class="modal-price1 q-pt-sm">00.00 %</div>
-								</div>
-							</div>
-							<div class="modal-border q-pt-lg">
-								<div class="border-modal"></div>
-							</div>
-							<div class="flex column q-pt-lg">
-								<div class="total q-pl-lg">Total</div>
-								<div class="flex row q-pl-lg items-center q-pt-sm">
-									<div>
-										<q-img src="../../../assets/ethereum.png" width="25px" />
-									</div>
-									<div class="modal-total-price1">00.00</div>
-									<div class="modal-total-price2 q-pl-sm">/ $ 00.00</div>
-								</div>
-								<div class="q-pl-lg flex row q-pt-lg">
-									<input type="checkbox" />
-									<div class="q-pl-sm">
-										I agree with
-										<label class="terms">Terms and Conditions</label>
-									</div>
-								</div>
-							</div>
-							<div class="flex payment">
-								<div class="payment-text">Process payment</div>
-							</div>
-						</div>
-					</div>
+		<div v-if="userStore.walletAddress" class="q-pt-lg row modal-container">
+			<div v-if="nft.isOwner" class="q-pt-lg flex row modal-container">
+				<div v-if="!nft.orderDetails?.listingPrice" class="q-pr-sm whole-modal">
+					<q-btn
+						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+						no-caps
+						flat
+						@click="openCreateListingModal = !openCreateListingModal"
+					>
+						List For Sale
+					</q-btn>
+				</div>
+				<div v-else class="q-pr-sm whole-modal">
+					<q-btn
+						class="buy-now-button_outline flex items-center justify-center cursor-pointer buy-now-text_outline"
+						no-caps
+						outline
+						flat
+						@click="cancelOrder"
+					>
+						Unlist
+					</q-btn>
 				</div>
 			</div>
-			<div class="q-pl-sm">
-				<button
-					class="make-offer-button flex items-center justify-center cursor-pointer"
-				>
-					<div class="buy-now-text">Make an offer</div>
-				</button>
+			<div v-else-if="nft.orderDetails?.listingPrice" class="row">
+				<div class="q-pr-sm whole-modal row">
+					<q-btn
+						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+						no-caps
+						flat
+						@click="openModal = !openModal"
+					>
+						Buy now
+					</q-btn>
+				</div>
+				<div class="q-pl-sm">
+					<q-btn
+						no-caps
+						flat
+						class="make-offer-button flex items-center justify-center cursor-pointer buy-now-text"
+						@click="openMakeOfferModal = !openMakeOfferModal"
+					>
+						Make an offer
+					</q-btn>
+				</div>
+			</div>
+		</div>
+		<div v-else class="q-pt-lg row modal-container">
+			<div class="q-pr-sm whole-modal text-warning text-bold">
+				Please Connect Wallet to view actions.
 			</div>
 		</div>
 		<div class="q-pt-md update-metadata-text flex row items-center">
@@ -152,22 +113,146 @@
 			</div>
 			<div class="update-metadata-text">Update metadata</div>
 		</div>
+
+		<q-dialog
+			v-model="openCreateListingModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+		>
+			<q-card
+				class="q-pa-md"
+				style="width: 400px; max-width: 100%; background-color: #f5f5f5; border-radius: 10px;"
+			>
+				<q-card-section>
+					<div class="text-h6">List For Sale</div>
+				</q-card-section>
+				<q-card-section>
+					<q-input
+						v-model="listingPrice"
+						label="Listing Price"
+						stack-label
+						outlined
+						type="number"
+						debounce="500"
+					/>
+				</q-card-section>
+				<q-card-section>
+					<q-btn
+						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+						no-caps
+						flat
+						@click="createListing"
+					>
+						List
+					</q-btn>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+
+		<q-dialog
+			v-model="openMakeOfferModal"
+			transition-show="scale"
+			transition-hide="scale"
+		>
+			<q-card
+				class="q-pa-md"
+				style="width: 400px; border-radius: 15px; background-color: #f5f5f5"
+			>
+				<div class="text-h6">Make an offer</div>
+				<div class="q-pt-md">
+					<q-input
+						v-model="offerPrice"
+						label="Price"
+						stack-label
+						outlined
+						type="number"
+						debounce="500"
+					/>
+				</div>
+				<div class="q-pt-md flex row justify-end">
+					<q-btn
+						class="cancel-button flex items-center justify-center cursor-pointer"
+						no-caps
+						flat
+						@click="openMakeOfferModal = !openMakeOfferModal"
+					>
+						Cancel
+					</q-btn>
+					<q-btn
+						class="send-button flex items-center justify-center cursor-pointer"
+						no-caps
+						flat
+						@click="sendOffer"
+					>
+						Send
+					</q-btn>
+				</div>
+			</q-card>
+		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
-import { filter } from 'compression';
+import { QImg, QSeparator, QBtn, QDialog, QCard, QCardSection, QInput } from 'quasar';
+import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
+import { TOKENTYPE } from '../models/Metadata';
+import { CancelSelectOrders, CreateERC1155Listing, CreateERC721Listing } from '../services/Orders';
 export default defineComponent({
 	name: 'WineMetadata',
+	props: {
+		nft: {
+			type: Object,
+			required: true,
+		},
+	},
+	emits: ['refresh'],
 	data() {
+		const userStore = useUserStore();
 		return {
 			openModal: false,
 			right: ref(false),
+			biddingPrice: ref(0),
+			offerPrice: ref(0),
+			openMakeOfferModal: false,
+			openCreateListingModal: false,
+			listingPrice: ref(0),
+			userStore
 		};
 	},
-	methods: {},
+	methods: {
+		sendOffer() {
+			this.openMakeOfferModal = false;
+		},
+		async createListing() {
+			if (this.nft.tokenType === TOKENTYPE.ERC721) {
+				await CreateERC721Listing(
+					this.nft.tokenID,
+					this.nft.smartContractAddress,
+					this.nft.brand,
+					this.userStore.walletAddress,
+					this.listingPrice.toString()
+				);
+			} else {
+				await CreateERC1155Listing(
+					this.nft.tokenID,
+					this.nft.smartContractAddress,
+					this.nft.brand,
+					this.userStore.walletAddress,
+					this.listingPrice.toString(),
+					'1'
+				);
+			}
+
+			this.openCreateListingModal = false;
+			this.$emit('refresh');
+		},
+		async cancelOrder() {
+			await CancelSelectOrders([this.nft.orderDetails?.orderHash])
+			this.$emit('refresh')
+		}
+	},
 });
 </script>
 
