@@ -1,11 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
-import { DynamicKeyWithCount, ListingWithPricingAndImage, ResultAndCountResponse } from '../models/Response.models';
+import {
+	DynamicKeyWithCount,
+	ListingWithPricingAndImage,
+	ResultAndCountResponse,
+} from '../models/Response.models';
 
 const GETParams = {
-  params: {
-    t: new Date().getTime()
-  }
-}
+	params: {
+		t: new Date().getTime(),
+	},
+};
 
 async function RetrieveFilteredNFTs(
 	queryParams?: string
@@ -27,4 +31,24 @@ async function RetrieveFilteredNFTs(
 	};
 }
 
-export { RetrieveFilteredNFTs };
+async function RetrieveFavoredNFTs(
+	queryParams: string
+): Promise<ResultAndCountResponse> {
+	let nfts: ListingWithPricingAndImage[] = [];
+	let counts: DynamicKeyWithCount = {};
+	const url = 'http://localhost:3400/wivmkt-nft-service/retrieveFilteredNFTs';
+
+	await axios
+		.get(url + queryParams)
+		.then((res: AxiosResponse<ResultAndCountResponse>) => {
+			nfts = res.data.result;
+			counts = res.data.counts;
+		});
+
+	return {
+		result: nfts,
+		counts: counts,
+	};
+}
+
+export { RetrieveFilteredNFTs, RetrieveFavoredNFTs };
