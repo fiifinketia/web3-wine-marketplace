@@ -22,7 +22,7 @@ async function FetchOwnedNFTs (walletAddress: string) {
     })
   }
   ownedTokens = [...Array.from(FinalERC721Map.values()), ...Array.from(FinalERC1155Map.values())];
-  console.log(ownedTokens)
+  return ownedTokens;
 }
 
 async function GetAllNFTsForAddressStandard(walletAddress: string) : Promise<{ERC1155Map: Map<string, TokenIdentifier>, ERC721Map: Map<string, TokenIdentifier>}> {

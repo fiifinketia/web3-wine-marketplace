@@ -168,6 +168,7 @@ import IncomingHeaderLg from '../Headers/IncomingHeaderLg.vue';
 import IncomingHeaderSm from '../Headers/IncomingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import Empty from '../EmptyOrders.vue';
+import { useNFTStore } from 'src/stores/nft-store';
 
 export default defineComponent({
   components: {
@@ -179,8 +180,10 @@ export default defineComponent({
 
   data() {
     const store = ordersStore();
+    const nftStore = useNFTStore();
     return {
       store,
+      nftStore,
       incomingOffers: store.incomingOffers,
       incomingFilter: '',
       loadingRequest: false,
@@ -189,6 +192,8 @@ export default defineComponent({
   },
 
   async mounted() {
+    const nftStore = useNFTStore();
+    console.log('NFT-Store working', nftStore.ownedNFTs);
     const offersRequestStatus = this.store.getOffersRequestStatus;
     if (offersRequestStatus == false) {
       const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
