@@ -1,37 +1,13 @@
 <template>
 <q-page class="column items-center">
-  <div class="row justify-between items-center q-pb-md" style="width: 95%">
-    <div class="row q-gutter-x-lg">
-      <span class="profile-header-offer q-pr-xs"> Offers </span>
-      <span class="profile-nft-number"> {{ incomingOffers.length }} </span>
-      <q-separator style="background-color: #5e97ec45 !important" vertical inset />
-      <q-radio v-model="incomingFilter" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedFilter('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-      <q-radio v-model="incomingFilter" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedFilter('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-      <q-radio v-model="incomingFilter" dense val="expire" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-    </div>
-    <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-      <q-input 
-        v-model="text"
-        color="grey"
-        outlined 
-        dense
-        label="Search"
-        class="profile-searchbox"
-      >
-        <template #prepend>
-          <q-icon name="search" color="grey"></q-icon>
-        </template>
-      </q-input>
-      <q-btn
-        flat
-        unelevated
-        dense
-        class="profile-primary-btn"
-      >
-        GO
-      </q-btn>
-    </div>
-  </div>
+  <IncomingHeaderLg
+    v-if="$q.screen.width > 1020"
+    :incomingAmount="incomingOffers.length"
+  />
+  <IncomingHeaderSm
+    v-else
+    :incomingAmount="incomingOffers.length"
+  />
   <div class="profile-main-container column">
     <div class="row q-pa-lg profile-column-name">
       <span class="incoming-column-nft">
@@ -52,7 +28,10 @@
       >
         From
       </span>
-      <span class="incoming-column-expire">
+      <span 
+        v-if="$q.screen.width > 600"
+        class="incoming-column-expire"
+      >
         Exp On
       </span>
       <span class="incoming-column-action">
@@ -67,7 +46,7 @@
       class="q-px-lg q-py-md row items-center"
     >
       <div class="row items-center incoming-column-nft">
-        <img :src="offer.image" class="profile-nft-image q-mr-md"/>
+        <img v-if="$q.screen.width > 1265" :src="offer.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ offer.brand }}</span>
       </div>
       <div 
@@ -77,11 +56,17 @@
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ !!offer.lowestOffer ? offer.lowestOffer : '0.00' }}  </span>
       </div>
-      <div class="row items-center incoming-column-price-offered">
+      <div 
+        v-if="$q.screen.width > 600"
+        class="row items-center incoming-column-price-offered"
+      >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ offer.offer }} </span>
         <q-tooltip
-          v-if="$q.screen.width <= 1265"
+          v-if="
+            $q.screen.width <= 1265
+            && $q.screen.width > 600
+          "
           anchor="top start" 
           self="center start"
           class="listing-tooltip-container" 
@@ -112,12 +97,25 @@
         </q-tooltip>
       </div>
       <div 
+        v-if="$q.screen.width <= 600"
+        class="incoming-column-price-offered column"
+      >
+        <div class="row q-pb-xs">
+          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <span class="profile-nft-number"> {{ offer.offer }} </span>
+        </div>
+        <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
+      </div>
+      <div 
         v-if="$q.screen.width > 1265"
         class="row items-center incoming-column-from"
       >
         <span class="profile-nft-number"> {{ ReduceAddress(offer.offerer) }} </span>
       </div>
-      <div class="incoming-column-expire">
+      <div 
+        v-if="$q.screen.width > 600"
+        class="incoming-column-expire"
+      >
         <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
       </div>
       <div style="margin-left: -5px;" class="row items-center incoming-column-action">
@@ -154,8 +152,15 @@ import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/incoming.css';
 import { ordersStore } from 'src/stores/orders-store';
+import IncomingHeaderLg from '../Headers/IncomingHeaderLg.vue';
+import IncomingHeaderSm from '../Headers/IncomingHeaderSm.vue';
 
 export default defineComponent({
+  components: {
+    IncomingHeaderLg: IncomingHeaderLg,
+    IncomingHeaderSm: IncomingHeaderSm
+  },
+
   data() {
     const store = ordersStore();
     return {

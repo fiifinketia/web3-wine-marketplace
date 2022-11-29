@@ -73,3 +73,15 @@
     width: 23%;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .incoming-column-nft {
+    width: 50%;
+  }
+  .incoming-column-price-offered {
+    width: 30%;
+  }
+  .incoming-column-action {
+    width: 20%;
+  }
+}
