@@ -193,11 +193,9 @@ export default defineComponent({
 
   async mounted() {
     const nftStore = useNFTStore();
-    console.log('NFT-Store working', nftStore.ownedNFTs);
-    const offersRequestStatus = this.store.getOffersRequestStatus;
-    if (offersRequestStatus == false) {
-      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-      await this.store.setOffers(address);
+    const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
+    if (incomingOffersRequestStatus == false) {
+      await this.store.setIncomingOffers(nftStore.ownedNFTs);
       this.incomingOffers = this.store.getIncomingOffers;
     }
     if (this.incomingOffers.length == 0) {

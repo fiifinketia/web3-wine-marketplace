@@ -154,10 +154,10 @@ export default defineComponent({
   },
 
   async mounted() {
-    const offersRequestStatus = this.store.getOffersRequestStatus;
-    if (offersRequestStatus == false) {
+    const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
+    if (outgoingOffersRequestStatus == false) {
       const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
-      await this.store.setOffers(address);
+      await this.store.setOutgoingOffers(address);
       this.outgoingOffers = this.store.getOutgoingOffers;
     }
     if (this.outgoingOffers.length == 0) {

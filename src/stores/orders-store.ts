@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia';
 import { IncomingOffersResponse, ListingsResponse, OutgoingOffersResponse } from 'src/pages/Profiles/models/response.models';
-import { ReturnListings, ReturnOffers } from 'src/pages/Profiles/orders.requests';
+import { ReturnListings, ReturnIncomingOffers, ReturnOutgoingOffers } from 'src/pages/Profiles/orders.requests';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export const ordersStore = defineStore('ordersStore', {
 	state: () => ({
 		listings: [] as ListingsResponse[],
 		outgoingOffers: [] as OutgoingOffersResponse[],
 		incomingOffers: [] as IncomingOffersResponse[],
-    fetchedOffers: false,
+    fetchedOutgoingOffers: false,
+    fetchedIncomingOffers: false,
     fetchedListings: false
 	}),
 	getters: {
@@ -15,7 +17,8 @@ export const ordersStore = defineStore('ordersStore', {
 		getOutgoingOffers: (state) => state.outgoingOffers,
 		getIncomingOffers: (state) => state.incomingOffers,
     getListingRequestStatus: (state) => state.fetchedListings,
-    getOffersRequestStatus: (state) => state.fetchedOffers
+    getOutgoingOffersRequestStatus: (state) => state.fetchedOutgoingOffers,
+    getIncomingOffersRequestStatus: (state) => state.fetchedIncomingOffers
 	},
 	actions: {
 		async setListings(walletAddress: string) {
@@ -23,13 +26,15 @@ export const ordersStore = defineStore('ordersStore', {
       this.fetchedListings = true;
       console.log('listings', this.listings)
 		},
-    async setOffers(walletAddress: string) {
-      const { incoming, outgoing } = await ReturnOffers(walletAddress);
-      this.outgoingOffers = outgoing;
-      this.incomingOffers = incoming;
-      this.fetchedOffers = true;
-      console.log('incoming', incoming)
-      console.log('outgoing', outgoing)
+    async setOutgoingOffers(walletAddress: string) {
+      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress);
+      this.fetchedOutgoingOffers = true;
+      console.log('outgoing offers', this.outgoingOffers)
+    },
+    async setIncomingOffers(ownedNFTs: TokenIdentifier[]) {
+      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs);
+      this.fetchedIncomingOffers = true;
+      console.log('incoming offers', this.incomingOffers)
     }
   }
 });
