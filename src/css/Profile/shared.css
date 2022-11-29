@@ -84,6 +84,24 @@
   height: 40px;
 }
 
+.profile-loading-gif {
+  width: 15vw;
+}
+
+.profile-loading-text {
+  font-size: clamp(1.25rem, 0.6667rem + 1.8667vw, 3rem);
+  font-family: 'ProximaNova-Bold';
+  color: #3486FF;
+  text-align: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  .profile-loading-gif {
+    width: 20vw;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .profile-searchbox {
     flex-grow: 1;
