@@ -49,6 +49,30 @@
   }
 }
 
+@media screen and (max-width: 1020px) {
+  .outgoing-column-own-offer {
+    width: 20%;
+  }
+  .outgoing-column-highest-offer {
+    width: 22%;
+  }
+  .outgoing-column-action {
+    width: 18%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .outgoing-column-nft {
+    width: 50%;
+  }
+  .outgoing-column-own-offer {
+    width: 25%;
+  }
+  .outgoing-column-action {
+    width: 25%;
+  }
+}
+
 /* @media screen and (max-width: 1020px) {
   .outgoing-column-nft {
     width: 40%;
