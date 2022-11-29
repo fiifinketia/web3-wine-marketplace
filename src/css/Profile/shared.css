@@ -88,6 +88,10 @@
   width: 15vw;
 }
 
+.profile-empty {
+  width: 20vw;
+}
+
 .profile-loading-text {
   font-size: clamp(1.25rem, 0.6667rem + 1.8667vw, 3rem);
   font-family: 'ProximaNova-Bold';
@@ -99,6 +103,9 @@
 @media screen and (max-width: 800px) {
   .profile-loading-gif {
     width: 20vw;
+  }
+  .profile-empty {
+    width: 30vw;
   }
 }
 
