@@ -83,3 +83,30 @@
     width: 14%;
   }
 }
+
+@media screen and (max-width: 750px) {
+  .listings-column-nft {
+    width: 40%;
+  }
+  .listings-column-price {
+    width: 21%;
+  }
+  .listings-column-expire {
+    width: 21%;
+  }
+  .listings-column-action {
+    width: 18%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .listings-column-nft {
+    width: 50%;
+  }
+  .listings-column-yours {
+    width: 25%;
+  }
+  .listings-column-action {
+    width: 25%;
+  }
+}

@@ -1,38 +1,13 @@
 <template>
 <q-page class="column items-center">
-  <div class="row justify-between items-center q-pb-md" style="width: 95%">
-    <div class="row q-gutter-x-lg">
-      <span class="profile-header-offer q-pr-xs"> Listings </span>
-      <span class="profile-nft-number"> {{ listings.length }} </span>
-      <q-separator style="background-color: #5e97ec45 !important" vertical inset />
-      <q-radio v-model="listingFilter" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedFilter('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-      <q-radio v-model="listingFilter" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedFilter('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-      <q-radio v-model="listingFilter" dense val="expire" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-    </div>
-    <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-      <img src="../../../assets/sell.svg" style="cursor: pointer;" @click="test()"/>
-      <q-input 
-        v-model="text"
-        color="grey"
-        outlined 
-        dense
-        label="Search"
-        class="profile-searchbox"
-      >
-        <template #prepend>
-          <q-icon name="search" color="grey"></q-icon>
-        </template>
-      </q-input>
-      <q-btn
-        flat
-        unelevated
-        dense
-        class="profile-primary-btn"
-      >
-        GO
-      </q-btn>
-    </div>
-  </div>
+  <ListingHeaderLg
+    v-if="$q.screen.width > 1020"
+    :listingsAmount="listings.length"
+  />
+  <ListingHeaderSm
+    v-else
+    :listingsAmount="listings.length"
+  />
   <div class="profile-main-container column">
     <div class="row q-pa-lg profile-column-name">
       <span class="listings-column-nft">
@@ -44,8 +19,17 @@
       >
         Threshold
       </span>
-      <span class="listings-column-price">
+      <span 
+        v-if="$q.screen.width > 600"
+        class="listings-column-price"
+      >
         Price
+      </span>
+      <span 
+        v-if="$q.screen.width <= 600"
+        class="listings-column-yours"
+      >
+        Yours
       </span>
       <span 
         v-if="$q.screen.width > 1020"
@@ -53,7 +37,10 @@
       >
         Highest Offer
       </span>
-      <span class="listings-column-expire">
+      <span
+        v-if="$q.screen.width > 600"
+        class="listings-column-expire"
+      >
         Exp On
       </span>
       <span class="listings-column-action">
@@ -68,7 +55,7 @@
       class="q-px-lg q-py-md row items-center"
     >
       <div class="row items-center listings-column-nft">
-        <img :src="listing.image" class="profile-nft-image q-mr-md"/>
+        <img v-if="$q.screen.width > 1265" :src="listing.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ listing.brand }}</span>
       </div>
       <div
@@ -78,11 +65,17 @@
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> 0.00 </span>
       </div>
-      <div class="row items-center listings-column-price">
+      <div 
+        v-if="$q.screen.width > 600"
+        class="row items-center listings-column-price"
+      >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
         <q-tooltip 
-          v-if="$q.screen.width <= 1265"
+          v-if="
+            $q.screen.width <= 1265 
+            && $q.screen.width > 600
+          "
           anchor="top start" 
           self="center start"
           class="listing-tooltip-container" 
@@ -120,7 +113,20 @@
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number-highlight"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
       </div>
-      <div class="listings-column-expire">
+      <div 
+        v-if="$q.screen.width > 600"
+        class="listings-column-expire"
+      >
+        <span class="profile-nft-number-highlight"> {{ listing.endTime }} </span>
+      </div>
+      <div 
+        v-if="$q.screen.width <= 600"
+        class="listings-column-yours column"
+      >
+        <div class="row q-pb-xs">
+          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
+        </div>
         <span class="profile-nft-number-highlight"> {{ listing.endTime }} </span>
       </div>
       <div style="margin-left: -5px;" class="row items-center listings-column-action">
@@ -151,10 +157,17 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { setCssVar } from 'quasar';
 import { ordersStore } from 'src/stores/orders-store';
+import ListingHeaderLg from '../Headers/ListingHeaderLg.vue';
+import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 
 setCssVar('custom', '#5e97ec45');
 
 export default defineComponent({
+  components: {
+    ListingHeaderLg: ListingHeaderLg,
+    ListingHeaderSm: ListingHeaderSm
+  },
+
   data() {
     const store = ordersStore();
     return {
