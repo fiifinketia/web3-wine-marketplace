@@ -31,9 +31,9 @@
     </div>
     <div class="row justify-between">
       <div class="row q-gutter-x-lg">
-        <q-radio v-model="incomingFilter" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedFilter('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-        <q-radio v-model="incomingFilter" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedFilter('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-        <q-radio v-model="incomingFilter" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="incomingSortKey" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedSortKey('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="incomingSortKey" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedSortKey('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="incomingSortKey" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedSortKey('expireFirst') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    selectedIncomingFilter: {
+    selectedIncomingSortKey: {
       type: String,
       required: true
     }
@@ -81,24 +81,24 @@ export default defineComponent({
     const store = ordersStore();
     return {
       store,
-      incomingFilter: ''
-    }
-  },
-  mounted() {
-    if (!!this.selectedIncomingFilter) {
-      this.incomingFilter = this.selectedIncomingFilter
+      incomingSortKey: ''
     }
   },
   watch: {
-    incomingFilter: {
+    incomingSortKey: {
       handler: function (val) {
-        this.$emit('incomingFilterSelected', val)
+        this.$emit('incomingSortKeySelected', val)
       }
     }
   },
+  mounted() {
+    if (!!this.selectedIncomingSortKey) {
+      this.incomingSortKey = this.selectedIncomingSortKey
+    }
+  },
   methods: {
-    IsSelectedFilter(filter: string) : boolean {
-      return !!(this.incomingFilter === filter)
+    IsSelectedSortKey(sortKey: string) : boolean {
+      return !!(this.incomingSortKey === sortKey)
     }
   }
 })

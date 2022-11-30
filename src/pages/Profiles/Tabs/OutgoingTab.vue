@@ -10,14 +10,14 @@
       <OutgoingHeaderLg
         v-if="$q.screen.width > 1020"
         :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingFilter="outgoingFilter"
-        @outgoingFilterSelected="(val) => outgoingFilter = val"
+        :selectedOutgoingSortKey="outgoingSortKey"
+        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
       />
       <OutgoingHeaderSm
         v-else
         :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingFilter="outgoingFilter"
-        @outgoingFilterSelected="(val) => outgoingFilter = val"
+        :selectedOutgoingSortKey="outgoingSortKey"
+        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -151,12 +151,20 @@ export default defineComponent({
     return {
       store,
       outgoingOffers: store.outgoingOffers,
-      outgoingFilter: '',
+      outgoingSortKey: store.getOutgoingSortKey,
       loadingRequest: false,
       emptyRequest: false
     }
   },
-
+  watch: {
+    outgoingSortKey: {
+      handler: async function (sortKey) {
+        this.store.setOutgoingSortKey(sortKey);
+        await this.FetchOutgoingOffers(sortKey);
+        this.loadingRequest = true
+      }
+    }
+  },
   async mounted() {
     const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
@@ -164,25 +172,12 @@ export default defineComponent({
     }
     this.loadingRequest = true;
   },
-
-  watch: {
-    outgoingFilter: {
-      handler: async function (filter) {
-        await this.FetchOutgoingOffers(filter);
-        this.loadingRequest = true
-      }
-    }
-  },
-
   methods: {
-    IsSelectedFilter(filter: string) : boolean {
-      return !!(this.outgoingFilter === filter)
-    },
-    async FetchOutgoingOffers(filter: string) {
+    async FetchOutgoingOffers(sortKey: string) {
       this.loadingRequest = false;
       // JMG/TODO: Add dynamic address herein
       const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
-      await this.store.setOutgoingOffers(address, filter);
+      await this.store.setOutgoingOffers(address, sortKey);
       this.outgoingOffers = this.store.getOutgoingOffers;
       if (this.outgoingOffers.length == 0) {
         this.emptyRequest = true 

@@ -31,9 +31,9 @@
     </div>
     <div class="row justify-between">
       <div class="row q-gutter-x-lg">
-        <q-radio v-model="listingFilter" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedFilter('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-        <q-radio v-model="listingFilter" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedFilter('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-        <q-radio v-model="listingFilter" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="listingSortKey" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedSortKey('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="listingSortKey" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedSortKey('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+        <q-radio v-model="listingSortKey" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedSortKey('expireFirst') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    selectedListingFilter: {
+    selectedListingSortKey: {
       type: String,
       required: true
     }
@@ -81,24 +81,24 @@ export default defineComponent({
     const store = ordersStore();
     return {
       store,
-      listingFilter: ''
-    }
-  },
-  mounted() {
-    if (!!this.selectedListingFilter) {
-      this.listingFilter = this.selectedListingFilter
+      listingSortKey: ''
     }
   },
   watch: {
-    listingFilter: {
+    listingSortKey: {
       handler: function (val) {
-        this.$emit('listingFilterSelected', val)
+        this.$emit('listingSortKeySelected', val)
       }
     }
   },
+  mounted() {
+    if (!!this.selectedListingSortKey) {
+      this.listingSortKey = this.selectedListingSortKey
+    }
+  },
   methods: {
-    IsSelectedFilter(filter: string) : boolean {
-      return !!(this.listingFilter === filter)
+    IsSelectedSortKey(sortKey: string) : boolean {
+      return !!(this.listingSortKey === sortKey)
     }
   }
 })

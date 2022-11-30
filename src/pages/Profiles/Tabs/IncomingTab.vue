@@ -10,14 +10,14 @@
       <IncomingHeaderLg
         v-if="$q.screen.width > 1020"
         :incomingAmount="incomingOffers.length"
-        :selectedIncomingFilter="incomingFilter"
-        @incomingFilterSelected="(val) => incomingFilter = val"
+        :selectedIncomingSortKey="incomingSortKey"
+        @incomingSortKeySelected="(val) => incomingSortKey = val"
       />
       <IncomingHeaderSm
         v-else
         :incomingAmount="incomingOffers.length"
-        :selectedIncomingFilter="incomingFilter"
-        @incomingFilterSelected="(val) => incomingFilter = val"
+        :selectedIncomingSortKey="incomingSortKey"
+        @incomingSortKeySelected="(val) => incomingSortKey = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -191,9 +191,19 @@ export default defineComponent({
       store,
       nftStore,
       incomingOffers: store.incomingOffers,
-      incomingFilter: '',
+      incomingSortKey: store.getIncomingSortKey,
       loadingRequest: false,
       emptyRequest: false
+    }
+  },
+
+  watch: {
+    incomingSortKey: {
+      handler: async function (sortKey) {
+        this.store.setIncomingSortKey(sortKey);
+        await this.FetchIncomingOffers(sortKey);
+        this.loadingRequest = true
+      }
     }
   },
 
@@ -205,28 +215,16 @@ export default defineComponent({
     this.loadingRequest = true;
   },
 
-  watch: {
-    incomingFilter: {
-      handler: async function (filter) {
-        await this.FetchIncomingOffers(filter);
-        this.loadingRequest = true
-      }
-    }
-  },
-
   methods: {
-    IsSelectedFilter(filter: string) : boolean {
-      return !!(this.incomingFilter === filter)
-    },
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`
     },
     AcceptOffer(orderHash: string) {
       console.log(orderHash)
     },
-    async FetchIncomingOffers(filter: string) {
+    async FetchIncomingOffers(sortKey: string) {
       this.loadingRequest = false;
-      await this.store.setIncomingOffers(nftStore.ownedNFTs, filter);
+      await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey);
       this.incomingOffers = this.store.getIncomingOffers;
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 

@@ -10,7 +10,10 @@ export const ordersStore = defineStore('ordersStore', {
 		incomingOffers: [] as IncomingOffersResponse[],
     fetchedOutgoingOffers: false,
     fetchedIncomingOffers: false,
-    fetchedListings: false
+    fetchedListings: false,
+    selectedListingSortKey: '',
+    selectedOutgoingSortKey: '',
+    selectedIncomingSortKey: ''
 	}),
 	getters: {
 		getListings: (state) => state.listings,
@@ -18,20 +21,32 @@ export const ordersStore = defineStore('ordersStore', {
 		getIncomingOffers: (state) => state.incomingOffers,
     getListingRequestStatus: (state) => state.fetchedListings,
     getOutgoingOffersRequestStatus: (state) => state.fetchedOutgoingOffers,
-    getIncomingOffersRequestStatus: (state) => state.fetchedIncomingOffers
+    getIncomingOffersRequestStatus: (state) => state.fetchedIncomingOffers,
+    getListingSortKey: (state) => state.selectedListingSortKey,
+    getOutgoingSortKey: (state) => state.selectedOutgoingSortKey,
+    getIncomingSortKey: (state) => state.selectedIncomingSortKey
 	},
 	actions: {
-		async setListings(walletAddress: string, filter: string) {
-      this.listings = await ReturnListings(walletAddress, filter);
+		async setListings(walletAddress: string, sortKey: string) {
+      this.listings = await ReturnListings(walletAddress, sortKey);
       this.fetchedListings = true;
 		},
-    async setOutgoingOffers(walletAddress: string, filter: string) {
-      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress, filter);
+    async setOutgoingOffers(walletAddress: string, sortKey: string) {
+      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress, sortKey);
       this.fetchedOutgoingOffers = true;
     },
-    async setIncomingOffers(ownedNFTs: TokenIdentifier[], filter: string) {
-      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, filter);
+    async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string) {
+      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey);
       this.fetchedIncomingOffers = true;
+    },
+    setListingSortKey(sortKey: string) {
+      this.selectedListingSortKey = sortKey;
+    },
+    setOutgoingSortKey(sortKey: string) {
+      this.selectedOutgoingSortKey = sortKey;
+    },
+    setIncomingSortKey(sortKey: string) {
+      this.selectedIncomingSortKey = sortKey;
     }
   }
 });

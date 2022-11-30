@@ -10,14 +10,14 @@
       <ListingHeaderLg
         v-if="$q.screen.width > 1020"
         :listingsAmount="listings.length"
-        :selectedListingFilter="listingFilter"
-        @listingFilterSelected="(val) => listingFilter = val"
+        :selectedListingSortKey="listingSortKey"
+        @listingSortKeySelected="(val) => listingSortKey = val"
       />
       <ListingHeaderSm
         v-else
         :listingsAmount="listings.length"
-        :selectedListingFilter="listingFilter"
-        @listingFilterSelected="(val) => listingFilter = val"
+        :selectedListingSortKey="listingSortKey"
+        @listingSortKeySelected="(val) => listingSortKey = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -193,9 +193,19 @@ export default defineComponent({
     return {
       store,
       listings: store.listings,
-      listingFilter: '',
+      listingSortKey: store.getListingSortKey,
       loadingRequest: false,
       emptyRequest: false
+    }
+  },
+
+  watch: {
+    listingSortKey: {
+      handler: async function (sortKey) {
+        this.store.setListingSortKey(sortKey);
+        await this.FetchListings(sortKey);
+        this.loadingRequest = true
+      }
     }
   },
 
@@ -207,24 +217,12 @@ export default defineComponent({
     this.loadingRequest = true
   },
 
-  watch: {
-    listingFilter: {
-      handler: async function (filter) {
-        await this.FetchListings(filter);
-        this.loadingRequest = true
-      }
-    }
-  },
-
   methods: {
-    IsSelectedFilter(filter: string) : boolean {
-      return !!(this.listingFilter === filter)
-    },
-    async FetchListings(filter: string) {
+    async FetchListings(sortKey: string) {
       this.loadingRequest = false;
       // JMG/TODO: Add dynamic address herein
       const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-      await this.store.setListings(address, filter);
+      await this.store.setListings(address, sortKey);
       this.listings = this.store.getListings;
       if (this.listings.length == 0) {
         this.emptyRequest = true 
