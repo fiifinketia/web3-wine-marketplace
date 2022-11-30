@@ -1,0 +1,420 @@
+.grape-img-left {
+	width: 25%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -5;
+}
+
+.grape-img-right {
+	width: 30%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: -5;
+}
+
+.welcome-to-calculator {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 470;
+	font-size: 32px;
+	line-height: 48px;
+	text-align: center;
+	letter-spacing: 0.03em;
+	color: #212131;
+}
+
+.welcome-to-calculator-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	width: 40%;
+}
+
+.calculator {
+	width: 80%;
+	height: 650px;
+	background: #ffffff;
+	/* Primary/Light blue */
+
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(20px);
+	border-radius: 8px;
+}
+
+.calculator-first-part {
+	width: 60%;
+	background: rgba(217, 232, 255, 0.3);
+	height: 100%;
+}
+
+.plant-section {
+	width: 60%;
+}
+
+.help-section {
+	padding-top: 120px;
+	padding-right: 30px;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 20px;
+	text-decoration-line: underline;
+	color: #3586ff;
+	cursor: pointer;
+}
+.current-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	width: 90%;
+}
+
+.step-number {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.next-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 85%;
+}
+
+.next-step-second-version {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 90%;
+}
+
+.next-step-number {
+	font-family: 'Proxima Nova';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+}
+
+.portfolio-calculation-title {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+	text-transform: uppercase;
+}
+
+.calculator-second-part {
+	width: 40%;
+}
+
+.calculator-second-part-wrapper {
+	width: 90%;
+}
+
+.starting-investment-text {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #262626;
+}
+
+.starting-investment-number {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 470;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	color: #3586ff;
+}
+
+input[type='range' i] {
+	appearance: initial;
+	background: rgba(217, 232, 255, 0.3);
+	/* Primary/Light blue */
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 6px;
+	width: 100%;
+	height: 30px;
+}
+
+input[type='range'] {
+	-webkit-appearance: none;
+	margin: 18px 0;
+	width: 100%;
+	outline: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+	height: 20px;
+	width: 20px;
+	background: rgba(255, 255, 255, 0.45);
+	border-radius: 2px;
+	cursor: pointer;
+	-webkit-appearance: none;
+	background-image: url('../../assets/drag.png');
+	/* margin-top: -14px; */
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+	width: 1px;
+	/* height: 8.4px; */
+	cursor: pointer;
+	/* Primary/light blue 30% */
+
+	background: rgba(217, 232, 255, 0.3);
+	border-radius: 1.3px;
+}
+
+.risk-container {
+	background: linear-gradient(
+		109.05deg,
+		rgba(255, 255, 255, 0.13) 15.61%,
+		rgba(255, 255, 255, 0.04) 98.78%
+	);
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 6px;
+	width: 100%;
+	height: 100px;
+}
+
+.low-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #05a30b;
+}
+.medium-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #3586ff;
+}
+.high-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #c11b1b;
+}
+
+.unselected-border {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1.6px solid #9d9d9d;
+	cursor: pointer;
+}
+
+.unselected-border-wrapper {
+	padding-left: 10px;
+}
+
+.risk-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 16px;
+	line-height: 25px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.6px;
+	color: #212131;
+}
+
+.risk-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	width: 95%;
+}
+
+.selected-risk {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 5px solid #3586ff;
+	cursor: pointer;
+}
+
+.risk-level-title {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: left;
+	letter-spacing: 0.02em;
+	color: #262626;
+	padding-bottom: 10px;
+}
+
+.calculating {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	padding-bottom: 30px;
+}
+
+.take-time {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	padding-top: 20px;
+}
+
+.continue-button {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	height: 50px;
+	cursor: pointer;
+}
+
+.continue-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 29px;
+	letter-spacing: 0.02em;
+	color: #ffffff;
+}
+
+.continue-button-wrapper {
+	padding-top: 100px;
+}
+
+.calculate-button-wrapper {
+	padding-top: 270px;
+}
+
+.back-button {
+	font-family: 'Proxima Nova';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	color: #9d9d9d;
+	cursor: pointer;
+}
+
+.back-button-wrapper {
+	padding-right: 390px;
+}
+
+.starting-investment-text-bold {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 16px;
+	line-height: 25px;
+	text-align: right;
+	letter-spacing: 0.04em;
+	color: #262626;
+}
+
+.timing-container {
+	padding-top: 100px;
+}
+
+.end-amount {
+	font-family: 'Obviously-Regular';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-price {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 32px;
+	line-height: 50px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #3586ff;
+}
+
+.end-amount-percentage-title {
+	font-family: 'Obviously-Regular';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-percentage {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 28px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	color: #212131;
+}
