@@ -10,10 +10,14 @@
       <ListingHeaderLg
         v-if="$q.screen.width > 1020"
         :listingsAmount="listings.length"
+        :selectedListingFilter="listingFilter"
+        @listingFilterSelected="(val) => listingFilter = val"
       />
       <ListingHeaderSm
         v-else
         :listingsAmount="listings.length"
+        :selectedListingFilter="listingFilter"
+        @listingFilterSelected="(val) => listingFilter = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -198,19 +202,33 @@ export default defineComponent({
   async mounted() {
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
-      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-      await this.store.setListings(address);
-      this.listings = this.store.getListings;
-    }
-    if (this.listings.length == 0) {
-      this.emptyRequest = true
+      await this.FetchListings('');
     }
     this.loadingRequest = true
+  },
+
+  watch: {
+    listingFilter: {
+      handler: async function (filter) {
+        await this.FetchListings(filter);
+        this.loadingRequest = true
+      }
+    }
   },
 
   methods: {
     IsSelectedFilter(filter: string) : boolean {
       return !!(this.listingFilter === filter)
+    },
+    async FetchListings(filter: string) {
+      this.loadingRequest = false;
+      // JMG/TODO: Add dynamic address herein
+      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+      await this.store.setListings(address, filter);
+      this.listings = this.store.getListings;
+      if (this.listings.length == 0) {
+        this.emptyRequest = true 
+      }
     }
   }
 });

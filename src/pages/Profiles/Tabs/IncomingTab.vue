@@ -10,10 +10,14 @@
       <IncomingHeaderLg
         v-if="$q.screen.width > 1020"
         :incomingAmount="incomingOffers.length"
+        :selectedIncomingFilter="incomingFilter"
+        @incomingFilterSelected="(val) => incomingFilter = val"
       />
       <IncomingHeaderSm
         v-else
         :incomingAmount="incomingOffers.length"
+        :selectedIncomingFilter="incomingFilter"
+        @incomingFilterSelected="(val) => incomingFilter = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -170,6 +174,8 @@ import OrderLoading from '../OrderLoading.vue';
 import Empty from '../EmptyOrders.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 
+const nftStore = useNFTStore();
+
 export default defineComponent({
   components: {
     IncomingHeaderLg: IncomingHeaderLg,
@@ -192,16 +198,20 @@ export default defineComponent({
   },
 
   async mounted() {
-    const nftStore = useNFTStore();
     const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
     if (incomingOffersRequestStatus == false) {
-      await this.store.setIncomingOffers(nftStore.ownedNFTs);
-      this.incomingOffers = this.store.getIncomingOffers;
-    }
-    if (this.incomingOffers.length == 0) {
-      this.emptyRequest = true 
+      await this.FetchIncomingOffers('');
     }
     this.loadingRequest = true;
+  },
+
+  watch: {
+    incomingFilter: {
+      handler: async function (filter) {
+        await this.FetchIncomingOffers(filter);
+        this.loadingRequest = true
+      }
+    }
   },
 
   methods: {
@@ -213,6 +223,14 @@ export default defineComponent({
     },
     AcceptOffer(orderHash: string) {
       console.log(orderHash)
+    },
+    async FetchIncomingOffers(filter: string) {
+      this.loadingRequest = false;
+      await this.store.setIncomingOffers(nftStore.ownedNFTs, filter);
+      this.incomingOffers = this.store.getIncomingOffers;
+      if (this.incomingOffers.length == 0) {
+        this.emptyRequest = true 
+      }
     }
   }
 });

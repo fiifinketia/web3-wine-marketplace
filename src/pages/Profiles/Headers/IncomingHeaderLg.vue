@@ -6,7 +6,7 @@
       <q-separator style="background-color: #5e97ec45 !important" vertical inset />
       <q-radio v-model="incomingFilter" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedFilter('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       <q-radio v-model="incomingFilter" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedFilter('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
-      <q-radio v-model="incomingFilter" dense val="expire" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
+      <q-radio v-model="incomingFilter" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedFilter('expire') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
     </div>
     <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
       <img src="../../../assets/sell.svg" style="cursor: pointer;" @click="test()"/>
@@ -44,6 +44,10 @@ export default defineComponent({
     incomingAmount: {
       type: String,
       required: true
+    },
+    selectedIncomingFilter: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -53,7 +57,18 @@ export default defineComponent({
       incomingFilter: ''
     }
   },
-
+  mounted() {
+    if (!!this.selectedIncomingFilter) {
+      this.incomingFilter = this.selectedIncomingFilter
+    }
+  },
+  watch: {
+    incomingFilter: {
+      handler: function (val) {
+        this.$emit('incomingFilterSelected', val)
+      }
+    }
+  },
   methods: {
     IsSelectedFilter(filter: string) : boolean {
       return !!(this.incomingFilter === filter)

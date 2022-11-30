@@ -21,20 +21,17 @@ export const ordersStore = defineStore('ordersStore', {
     getIncomingOffersRequestStatus: (state) => state.fetchedIncomingOffers
 	},
 	actions: {
-		async setListings(walletAddress: string) {
-      this.listings = await ReturnListings(walletAddress);
+		async setListings(walletAddress: string, filter: string) {
+      this.listings = await ReturnListings(walletAddress, filter);
       this.fetchedListings = true;
-      console.log('listings', this.listings)
 		},
-    async setOutgoingOffers(walletAddress: string) {
-      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress);
+    async setOutgoingOffers(walletAddress: string, filter: string) {
+      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress, filter);
       this.fetchedOutgoingOffers = true;
-      console.log('outgoing offers', this.outgoingOffers)
     },
-    async setIncomingOffers(ownedNFTs: TokenIdentifier[]) {
-      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs);
+    async setIncomingOffers(ownedNFTs: TokenIdentifier[], filter: string) {
+      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, filter);
       this.fetchedIncomingOffers = true;
-      console.log('incoming offers', this.incomingOffers)
     }
   }
 });

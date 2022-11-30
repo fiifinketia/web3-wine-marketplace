@@ -10,10 +10,14 @@
       <OutgoingHeaderLg
         v-if="$q.screen.width > 1020"
         :outgoingAmount="outgoingOffers.length"
+        :selectedOutgoingFilter="outgoingFilter"
+        @outgoingFilterSelected="(val) => outgoingFilter = val"
       />
       <OutgoingHeaderSm
         v-else
         :outgoingAmount="outgoingOffers.length"
+        :selectedOutgoingFilter="outgoingFilter"
+        @outgoingFilterSelected="(val) => outgoingFilter = val"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -156,19 +160,33 @@ export default defineComponent({
   async mounted() {
     const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
-      const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
-      await this.store.setOutgoingOffers(address);
-      this.outgoingOffers = this.store.getOutgoingOffers;
-    }
-    if (this.outgoingOffers.length == 0) {
-      this.emptyRequest = true
+      await this.FetchOutgoingOffers('');
     }
     this.loadingRequest = true;
+  },
+
+  watch: {
+    outgoingFilter: {
+      handler: async function (filter) {
+        await this.FetchOutgoingOffers(filter);
+        this.loadingRequest = true
+      }
+    }
   },
 
   methods: {
     IsSelectedFilter(filter: string) : boolean {
       return !!(this.outgoingFilter === filter)
+    },
+    async FetchOutgoingOffers(filter: string) {
+      this.loadingRequest = false;
+      // JMG/TODO: Add dynamic address herein
+      const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
+      await this.store.setOutgoingOffers(address, filter);
+      this.outgoingOffers = this.store.getOutgoingOffers;
+      if (this.outgoingOffers.length == 0) {
+        this.emptyRequest = true 
+      }
     }
   }
 
