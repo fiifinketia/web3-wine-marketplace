@@ -36,7 +36,7 @@ async function RetrieveFavoredNFTs(
 ): Promise<ResultAndCountResponse> {
 	let nfts: ListingWithPricingAndImage[] = [];
 	let counts: DynamicKeyWithCount = {};
-	const url = 'http://localhost:3400/wivmkt-nft-service/retrieveFilteredNFTs';
+	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
 	await axios
 		.get(url + queryParams)

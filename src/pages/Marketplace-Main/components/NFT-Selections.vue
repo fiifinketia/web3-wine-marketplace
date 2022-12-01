@@ -65,7 +65,7 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.listingPrice">
+						<div v-if="!!token.orderDetails?.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -82,19 +82,6 @@
 				</q-card>
 			</q-btn>
 		</div>
-		<q-dialog v-model="card">
-			<q-card class="my-card">
-				<q-card-actions align="right">
-					<q-btn
-						flat
-						color="primary"
-						label="Create Order"
-						@click="CreateListingForERC1155"
-					/>
-					<!-- <q-btn v-close-popup flat color="primary" round icon="event" /> -->
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</q-page-container>
 </template>
 
@@ -110,7 +97,6 @@ import {
 } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
-import { CreateOrderERC1155 } from '../services/Orders';
 
 export default defineComponent({
 	data() {
@@ -170,19 +156,6 @@ export default defineComponent({
 			this.card = true;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
-		},
-		async CreateListingForERC1155() {
-			const smartContractAddressStatic =
-				'0x1458DAb28F3e94F8e4Ae3fCb03De803e53Dd443D';
-			const amountStatic = '1';
-			const address: string = this.userStore.walletAddress;
-			CreateOrderERC1155(
-				this.selected.tokenID,
-				smartContractAddressStatic,
-				this.selected.brand,
-				address,
-				amountStatic
-			);
 		},
 
 		async RetrieveTokens() {

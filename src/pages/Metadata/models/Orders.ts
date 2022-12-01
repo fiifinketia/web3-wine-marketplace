@@ -7,6 +7,8 @@ export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
 	network: string;
 	from: string;
 	brand: string;
+	image: string;
+	highestBid?: string;
 }
 
 export interface OrderRequest {

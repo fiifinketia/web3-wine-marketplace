@@ -38,7 +38,7 @@ export default defineComponent({
 
 	methods: {
 		async refresh() {
-			await this.getMetadata()
+			this.$router.go();
 		},
 
 		async getMetadata() {

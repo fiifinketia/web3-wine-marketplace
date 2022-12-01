@@ -24,6 +24,7 @@ export async function CreateERC721Listing(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
+	image: string,
 	address: string,
 	listingPrice: string
 ) {
@@ -76,6 +77,7 @@ export async function CreateERC721Listing(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -91,6 +93,7 @@ export async function CreateERC1155Listing(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
+	image: string,
 	address: string,
 	listingPrice: string,
 	amount: string
@@ -145,6 +148,7 @@ export async function CreateERC1155Listing(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -156,15 +160,17 @@ export async function CreateERC1155Listing(
 	);
 }
 
-export async function CreateOffer(
+export async function CreateERC721Offer(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
-	address: string
+	image: string,
+	address: string,
+	offerPrice: string
 ) {
 	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther('100').toString();
+	const askAmount = utils.parseEther(offerPrice).toString();
 	const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 
 	const { seaport, network } = await GetWeb3();
@@ -173,8 +179,8 @@ export async function CreateOffer(
 			offer: [
 				// buyer's offer
 				{
-					token: wivaContract,
 					amount: askAmount,
+					token: wivaContract,
 				},
 			],
 			consideration: [
@@ -197,7 +203,8 @@ export async function CreateOffer(
 		address
 	);
 	const order = await executeAllActions();
-	seaport.validate([order]);
+	const { transact } = seaport.validate([order]);
+	await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -208,6 +215,8 @@ export async function CreateOffer(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
+		highestBid: offerPrice,
 	};
 	const OrderRequest = {
 		order: db_Order,
