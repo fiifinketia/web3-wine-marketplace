@@ -93,7 +93,7 @@
           </div>
           <div v-if="$q.screen.width > 600" class="transaction-column-date row items-center">
             <span class="transaction-date-text"> {{ txn.date }} </span>
-            <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-sm" />
+            <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-sm" vertical/>
             <span class="transaction-time-text"> {{ txn.time }} </span>
           </div>
           <div v-if="$q.screen.width <= 600" class="transaction-column-date column">
