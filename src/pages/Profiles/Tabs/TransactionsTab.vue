@@ -91,9 +91,13 @@
           >
             <span class="transaction-number-text"> {{ ReduceAddress(txn.source) }} </span>
           </div>
-          <div class="transaction-column-date row items-center">
+          <div v-if="$q.screen.width > 600" class="transaction-column-date row items-center">
             <span class="transaction-date-text"> {{ txn.date }} </span>
             <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-sm" />
+            <span class="transaction-time-text"> {{ txn.time }} </span>
+          </div>
+          <div v-if="$q.screen.width <= 600" class="transaction-column-date column">
+            <span class="transaction-date-text"> {{ txn.date }} </span>
             <span class="transaction-time-text"> {{ txn.time }} </span>
           </div>
         </div>

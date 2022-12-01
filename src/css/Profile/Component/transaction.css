@@ -48,14 +48,13 @@
   font-family: 'ProximaNova-Regular';
   font-size: 18px;
   color: #212131;
-  line-height: 0;
 }
 
 .transaction-time-text {
   font-family: 'ProximaNova-Regular';
   font-size: 18px;
   color: #9D9D9D;
-  line-height: 0;
+  
 }
 
 @media screen and (max-width: 1020px) {
