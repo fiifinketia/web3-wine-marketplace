@@ -1,0 +1,83 @@
+.transaction-column-nft {
+  width: 33%;
+}
+
+.transaction-column-price {
+  width: 22%;
+}
+
+.transaction-column-source {
+  width: 22%;
+}
+
+.transaction-column-date {
+  width: 22%;
+}
+
+.transaction-tooltip-container {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #D1E0F7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 218px;
+}
+
+.transaction-tooltip-label {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  color: #212131;
+  margin-top: 3px;
+}
+
+.transaction-tooltip-text {
+  font-family: 'ProximaNova-Bold';
+  font-size: 14px;
+  color: #212131;
+  margin-top: 3px;
+}
+
+.transaction-number-text {
+  font-size: 20px;
+  font-family: 'ProximaNova-Bold';
+  line-height: 1;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+.transaction-date-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+  line-height: 0;
+}
+
+.transaction-time-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #9D9D9D;
+  line-height: 0;
+}
+
+@media screen and (max-width: 1020px) {
+  .transaction-column-nft {
+    width: 40%;
+  }
+  .transaction-column-price {
+    width: 25%;
+  }
+  .transaction-column-date {
+    width: 35%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .transaction-column-nft {
+    width: 56%;
+  }
+  .transaction-column-price {
+    width: 22%;
+  }
+  .transaction-column-date {
+    width: 22%;
+  }
+}

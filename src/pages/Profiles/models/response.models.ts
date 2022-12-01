@@ -38,9 +38,27 @@ interface LowestOfferModel {
   lowestOfferCurrency?: string | null;
 }
 
+interface TransactionResponse {
+  event: string;
+
+  image: string;
+  brand: string;
+
+  price: string;
+  currency: string;
+
+  source: string;
+  
+  date: string;
+  time: string;
+
+  txnHash: string;
+}
+
 export {
   ListingsResponse,
   IncomingOffersResponse,
   OutgoingOffersResponse,
-  OrdersResponse
+  OrdersResponse,
+  TransactionResponse
 }

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse } from './models/response.models';
+import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse, TransactionResponse } from './models/response.models';
 
 async function ReturnListings(walletAddress: string, sortKey: string, brandFilter: string) : Promise<ListingsResponse[]> {
   let listingResponse: ListingsResponse[] = [];
@@ -41,8 +41,16 @@ async function ReturnOutgoingOffers(walletAddress: string, sortKey: string, bran
   return outgoingOffers;
 }
 
+async function ReturnTransactions(walletAddress: string, sortKey: string, brandFilter: string) {
+  let transactions: TransactionResponse[] = [];
+  const url = <string> process.env.RETRIEVE_TRANSACTIONS_URL;
+  await axios.get(`${url}?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`).then((f: AxiosResponse<TransactionResponse[]>) => transactions = f.data);
+  return transactions;
+}
+
 export {
   ReturnListings,
   ReturnIncomingOffers,
-  ReturnOutgoingOffers
+  ReturnOutgoingOffers,
+  ReturnTransactions
 }
