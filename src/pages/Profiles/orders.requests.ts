@@ -22,12 +22,13 @@ async function ReturnListings(walletAddress: string, sortKey: string, brandFilte
   return listingResponse;
 }
 
-async function ReturnIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string) {
+async function ReturnIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string, brandFilter: string) {
   let incomingOffers: IncomingOffersResponse[] = [];
   const url = <string> process.env.RETRIEVE_INCOMING_OFFERS_URL;
   const body = {
     sortKey: sortKey,
-    ownedNFTs: ownedNFTs
+    ownedNFTs: ownedNFTs,
+    brandFilter: brandFilter
   }
   await axios.post(url, body).then((f: AxiosResponse<IncomingOffersResponse[]>) => incomingOffers = f.data);
   return incomingOffers;

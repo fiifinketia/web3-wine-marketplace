@@ -11,13 +11,19 @@
         v-if="$q.screen.width > 1020"
         :incomingAmount="incomingOffers.length"
         :selectedIncomingSortKey="incomingSortKey"
+        :updatedIncomingBrandFilter="incomingBrandFilter"
+        @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
         @incomingSortKeySelected="(val) => incomingSortKey = val"
+        @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
       />
       <IncomingHeaderSm
         v-else
         :incomingAmount="incomingOffers.length"
         :selectedIncomingSortKey="incomingSortKey"
+        :updatedIncomingBrandFilter="incomingBrandFilter"
+        @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
         @incomingSortKeySelected="(val) => incomingSortKey = val"
+        @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -192,6 +198,9 @@ export default defineComponent({
       nftStore,
       incomingOffers: store.incomingOffers,
       incomingSortKey: store.getIncomingSortKey,
+
+      incomingBrandFilter: store.getIncomingBrandFilter,
+
       loadingRequest: false,
       emptyRequest: false
     }
@@ -201,8 +210,18 @@ export default defineComponent({
     incomingSortKey: {
       handler: async function (sortKey) {
         this.store.setIncomingSortKey(sortKey);
-        await this.FetchIncomingOffers(sortKey);
+        if (!this.store.getIncomingBrandFilterStatus) {
+          await this.FetchIncomingOffers(sortKey, '');
+        } else {
+          await this.FetchIncomingOffers(sortKey, this.incomingBrandFilter);
+        }
         this.loadingRequest = true
+      }
+    },
+    incomingBrandFilter: {
+      handler: function (brandFilter) {
+        this.store.setIncomingBrandFilter(brandFilter);
+        this.store.setIncomingBrandFilterStatus(false);
       }
     }
   },
@@ -210,7 +229,7 @@ export default defineComponent({
   async mounted() {
     const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
     if (incomingOffersRequestStatus == false) {
-      await this.FetchIncomingOffers('');
+      await this.FetchIncomingOffers('', '');
     }
     this.loadingRequest = true;
   },
@@ -222,13 +241,14 @@ export default defineComponent({
     AcceptOffer(orderHash: string) {
       console.log(orderHash)
     },
-    async FetchIncomingOffers(sortKey: string) {
+    async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey);
+      await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.store.getIncomingOffers;
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true;
     }
   }
 });

@@ -8,7 +8,7 @@
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
         <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
-          v-model="text"
+          v-model="incomingBrandFilter"
           color="grey"
           outlined 
           dense
@@ -24,6 +24,7 @@
           unelevated
           dense
           class="profile-primary-btn"
+          @click="FetchIncomingWithBrandFilter(incomingSortKey, incomingBrandFilter)"
         >
           GO
         </q-btn>
@@ -39,7 +40,7 @@
   </div>
   <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 95%">
     <q-input 
-      v-model="text"
+      v-model="incomingBrandFilter"
       color="grey"
       outlined 
       dense
@@ -55,6 +56,7 @@
       unelevated
       dense
       class="profile-primary-btn"
+      @click="FetchIncomingWithBrandFilter(incomingSortKey, incomingBrandFilter)"
     >
       GO
     </q-btn>
@@ -75,13 +77,18 @@ export default defineComponent({
     selectedIncomingSortKey: {
       type: String,
       required: true
+    },
+    updatedIncomingBrandFilter: {
+      type: String,
+      required: true
     }
   },
   data() {
     const store = ordersStore();
     return {
       store,
-      incomingSortKey: ''
+      incomingSortKey: '',
+      incomingBrandFilter: ''
     }
   },
   watch: {
@@ -89,16 +96,28 @@ export default defineComponent({
       handler: function (val) {
         this.$emit('incomingSortKeySelected', val)
       }
+    },
+    incomingBrandFilter: {
+      handler: function (val) {
+        this.$emit('incomingBrandFilterUpdated', val)
+      }
     }
   },
   mounted() {
     if (!!this.selectedIncomingSortKey) {
       this.incomingSortKey = this.selectedIncomingSortKey
     }
+    if (!!this.updatedIncomingBrandFilter) {
+      this.incomingBrandFilter = this.updatedIncomingBrandFilter
+    }
   },
   methods: {
     IsSelectedSortKey(sortKey: string) : boolean {
       return !!(this.incomingSortKey === sortKey)
+    },
+    FetchIncomingWithBrandFilter(sortKey: string, brandFilter: string) {
+      this.store.setIncomingBrandFilterStatus(true);
+      this.$emit('fetchIncomingWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
     }
   }
 })

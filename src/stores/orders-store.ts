@@ -54,8 +54,8 @@ export const ordersStore = defineStore('ordersStore', {
       this.outgoingOffers = await ReturnOutgoingOffers(walletAddress, sortKey, brandFilter);
       this.fetchedOutgoingOffers = true;
     },
-    async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string) {
-      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey);
+    async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string, brandFilter: string) {
+      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
       this.fetchedIncomingOffers = true;
     },
 
