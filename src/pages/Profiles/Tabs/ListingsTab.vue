@@ -11,13 +11,19 @@
         v-if="$q.screen.width > 1020"
         :listingsAmount="listings.length"
         :selectedListingSortKey="listingSortKey"
+        :updatedListingBrandFilter="listingBrandFilter"
+        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
         @listingSortKeySelected="(val) => listingSortKey = val"
+        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
       />
       <ListingHeaderSm
         v-else
         :listingsAmount="listings.length"
         :selectedListingSortKey="listingSortKey"
+        :updatedListingBrandFilter="listingBrandFilter"
+        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
         @listingSortKeySelected="(val) => listingSortKey = val"
+        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -194,6 +200,10 @@ export default defineComponent({
       store,
       listings: store.listings,
       listingSortKey: store.getListingSortKey,
+
+      listingBrandFilter: store.getListingBrandFilter,
+      listingBrandFilterStatus: store.getListingBrandFilterStatus,
+
       loadingRequest: false,
       emptyRequest: false
     }
@@ -203,8 +213,18 @@ export default defineComponent({
     listingSortKey: {
       handler: async function (sortKey) {
         this.store.setListingSortKey(sortKey);
-        await this.FetchListings(sortKey);
+        if (!this.listingBrandFilterStatus) {
+          await this.FetchListings(sortKey, '');  
+        } else {
+          await this.FetchListings(sortKey, this.listingBrandFilter);
+        }
         this.loadingRequest = true
+      }
+    },
+    listingBrandFilter: {
+      handler: async function (brandFilter) {
+        this.store.setListingBrandFilter(brandFilter);
+        this.store.setListingBrandFilterStatus(false);
       }
     }
   },
@@ -212,21 +232,22 @@ export default defineComponent({
   async mounted() {
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
-      await this.FetchListings('');
+      await this.FetchListings('', '');
     }
     this.loadingRequest = true
   },
 
   methods: {
-    async FetchListings(sortKey: string) {
+    async FetchListings(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       // JMG/TODO: Add dynamic address herein
       const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
-      await this.store.setListings(address, sortKey);
+      await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
       if (this.listings.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true
     }
   }
 });

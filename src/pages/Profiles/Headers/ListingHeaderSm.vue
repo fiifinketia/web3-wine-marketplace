@@ -8,7 +8,7 @@
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
         <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
-          v-model="text"
+          v-model="listingBrandFilter"
           color="grey"
           outlined 
           dense
@@ -24,6 +24,7 @@
           unelevated
           dense
           class="profile-primary-btn"
+          @click="FetchListingsWithBrandFilter(listingSortKey, listingBrandFilter)"
         >
           GO
         </q-btn>
@@ -39,7 +40,7 @@
   </div>
   <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 95%">
     <q-input 
-      v-model="text"
+      v-model="listingBrandFilter"
       color="grey"
       outlined 
       dense
@@ -55,6 +56,7 @@
       unelevated
       dense
       class="profile-primary-btn"
+      @click="FetchListingsWithBrandFilter(listingSortKey, listingBrandFilter)"
     >
       GO
     </q-btn>
@@ -75,13 +77,18 @@ export default defineComponent({
     selectedListingSortKey: {
       type: String,
       required: true
+    },
+    updatedListingBrandFilter: {
+      type: String,
+      required: true
     }
   },
   data() {
     const store = ordersStore();
     return {
       store,
-      listingSortKey: ''
+      listingSortKey: '',
+      listingBrandFilter: ''
     }
   },
   watch: {
@@ -89,16 +96,28 @@ export default defineComponent({
       handler: function (val) {
         this.$emit('listingSortKeySelected', val)
       }
+    },
+    listingBrandFilter: {
+      handler: function (val) {
+        this.$emit('listingBrandFilterUpdated', val)
+      }
     }
   },
   mounted() {
     if (!!this.selectedListingSortKey) {
       this.listingSortKey = this.selectedListingSortKey
     }
+    if (!!this.updatedListingBrandFilter) {
+      this.listingBrandFilter = this.updatedListingBrandFilter
+    }
   },
   methods: {
     IsSelectedSortKey(sortKey: string) : boolean {
       return !!(this.listingSortKey === sortKey)
+    },
+    FetchListingsWithBrandFilter(sortKey: string, brandFilter: string) {
+      this.store.setListingBrandFilterStatus(true);
+      this.$emit('fetchListingsWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
     }
   }
 })

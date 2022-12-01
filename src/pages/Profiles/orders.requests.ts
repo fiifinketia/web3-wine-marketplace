@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse } from './models/response.models';
 
-async function ReturnListings(walletAddress: string, sortKey: string) : Promise<ListingsResponse[]> {
+async function ReturnListings(walletAddress: string, sortKey: string, brandFilter: string) : Promise<ListingsResponse[]> {
   let listingResponse: ListingsResponse[] = [];
-  const query = `?walletAddress=${walletAddress}&sortKey=${sortKey}`;
+  const query = `?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`;
   const url = <string> process.env.RETRIEVE_LISTINGS_URL;
   await axios.get(url + query).then((f: AxiosResponse<ListingsResponse[]>) => listingResponse = f.data);
   // listingResponse.push(listingResponse[0])

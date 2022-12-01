@@ -11,24 +11,43 @@ export const ordersStore = defineStore('ordersStore', {
     fetchedOutgoingOffers: false,
     fetchedIncomingOffers: false,
     fetchedListings: false,
+
     selectedListingSortKey: '',
     selectedOutgoingSortKey: '',
-    selectedIncomingSortKey: ''
+    selectedIncomingSortKey: '',
+
+    listingBrandFilter: '',
+    outgoingBrandFilter: '',
+    incomingBrandFilter: '',
+
+    listingBrandFilterStatus: false,
+    outgoingBrandFilterStatus: false,
+    incomingBrandFilterStatus: false
 	}),
 	getters: {
 		getListings: (state) => state.listings,
 		getOutgoingOffers: (state) => state.outgoingOffers,
 		getIncomingOffers: (state) => state.incomingOffers,
+
     getListingRequestStatus: (state) => state.fetchedListings,
     getOutgoingOffersRequestStatus: (state) => state.fetchedOutgoingOffers,
     getIncomingOffersRequestStatus: (state) => state.fetchedIncomingOffers,
+
     getListingSortKey: (state) => state.selectedListingSortKey,
     getOutgoingSortKey: (state) => state.selectedOutgoingSortKey,
-    getIncomingSortKey: (state) => state.selectedIncomingSortKey
+    getIncomingSortKey: (state) => state.selectedIncomingSortKey,
+
+    getListingBrandFilter: (state) => state.listingBrandFilter,
+    getOutgoingBrandFilter: (state) => state.outgoingBrandFilter,
+    getIncomingBrandFilter: (state) => state.incomingBrandFilter,
+
+    getListingBrandFilterStatus: (state) => state.listingBrandFilterStatus,
+    getOutgoingBrandFilterStatus: (state) => state.outgoingBrandFilterStatus,
+    getIncomingBrandFilterStatus: (state) => state.incomingBrandFilterStatus
 	},
 	actions: {
-		async setListings(walletAddress: string, sortKey: string) {
-      this.listings = await ReturnListings(walletAddress, sortKey);
+		async setListings(walletAddress: string, sortKey: string, brandFilter: string) {
+      this.listings = await ReturnListings(walletAddress, sortKey, brandFilter);
       this.fetchedListings = true;
 		},
     async setOutgoingOffers(walletAddress: string, sortKey: string) {
@@ -39,6 +58,7 @@ export const ordersStore = defineStore('ordersStore', {
       this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey);
       this.fetchedIncomingOffers = true;
     },
+
     setListingSortKey(sortKey: string) {
       this.selectedListingSortKey = sortKey;
     },
@@ -47,6 +67,26 @@ export const ordersStore = defineStore('ordersStore', {
     },
     setIncomingSortKey(sortKey: string) {
       this.selectedIncomingSortKey = sortKey;
-    }
+    },
+
+    setListingBrandFilter(brandFilter: string) {
+      this.listingBrandFilter = brandFilter;
+    },
+    setOutgoingBrandFilter(brandFilter: string) {
+      this.outgoingBrandFilter = brandFilter;
+    },
+    setIncomingBrandFilter(brandFilter: string) {
+      this.incomingBrandFilter = brandFilter
+    },
+
+    setListingBrandFilterStatus(status: boolean) {
+      this.listingBrandFilterStatus = status;
+    },
+    setOutgoingBrandFilterStatus(status: boolean) {
+      this.outgoingBrandFilterStatus = status;
+    },
+    setIncomingBrandFilterStatus(status: boolean) {
+      this.incomingBrandFilterStatus = status;
+    },
   }
 });
