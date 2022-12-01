@@ -202,7 +202,6 @@ export default defineComponent({
       listingSortKey: store.getListingSortKey,
 
       listingBrandFilter: store.getListingBrandFilter,
-      listingBrandFilterStatus: store.getListingBrandFilterStatus,
 
       loadingRequest: false,
       emptyRequest: false
@@ -213,7 +212,7 @@ export default defineComponent({
     listingSortKey: {
       handler: async function (sortKey) {
         this.store.setListingSortKey(sortKey);
-        if (!this.listingBrandFilterStatus) {
+        if (!this.store.listingBrandFilterStatus) {
           await this.FetchListings(sortKey, '');  
         } else {
           await this.FetchListings(sortKey, this.listingBrandFilter);

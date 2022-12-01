@@ -11,13 +11,19 @@
         v-if="$q.screen.width > 1020"
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
+        :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
+        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
       />
       <OutgoingHeaderSm
         v-else
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
+        :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
+        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -152,6 +158,9 @@ export default defineComponent({
       store,
       outgoingOffers: store.outgoingOffers,
       outgoingSortKey: store.getOutgoingSortKey,
+
+      outgoingBrandFilter: store.getOutgoingBrandFilter,
+
       loadingRequest: false,
       emptyRequest: false
     }
@@ -160,28 +169,39 @@ export default defineComponent({
     outgoingSortKey: {
       handler: async function (sortKey) {
         this.store.setOutgoingSortKey(sortKey);
-        await this.FetchOutgoingOffers(sortKey);
+        if (!this.store.getOutgoingBrandFilterStatus) {
+          await this.FetchOutgoingOffers(sortKey, '');
+        } else {
+          await this.FetchOutgoingOffers(sortKey, this.outgoingBrandFilter);
+        }
         this.loadingRequest = true
+      }
+    },
+    outgoingBrandFilter: {
+      handler: function (brandFilter) {
+        this.store.setOutgoingBrandFilter(brandFilter);
+        this.store.setOutgoingBrandFilterStatus(false);
       }
     }
   },
   async mounted() {
     const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
-      await this.FetchOutgoingOffers('');
+      await this.FetchOutgoingOffers('', '');
     }
     this.loadingRequest = true;
   },
   methods: {
-    async FetchOutgoingOffers(sortKey: string) {
+    async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       // JMG/TODO: Add dynamic address herein
       const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
-      await this.store.setOutgoingOffers(address, sortKey);
+      await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
       if (this.outgoingOffers.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true
     }
   }
 

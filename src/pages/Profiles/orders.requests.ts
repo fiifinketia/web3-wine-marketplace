@@ -33,10 +33,10 @@ async function ReturnIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: strin
   return incomingOffers;
 }
 
-async function ReturnOutgoingOffers(walletAddress: string, sortKey: string) {
+async function ReturnOutgoingOffers(walletAddress: string, sortKey: string, brandFilter: string) {
   let outgoingOffers: OutgoingOffersResponse[] = [];
   const url = <string> process.env.RETRIEVE_OUTGOING_OFFERS_URL;
-  await axios.get(`${url}?walletAddress=${walletAddress}&sortKey=${sortKey}`).then((f: AxiosResponse<OutgoingOffersResponse[]>) => outgoingOffers = f.data);
+  await axios.get(`${url}?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`).then((f: AxiosResponse<OutgoingOffersResponse[]>) => outgoingOffers = f.data);
   return outgoingOffers;
 }
 
