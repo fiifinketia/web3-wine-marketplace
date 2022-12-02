@@ -37,9 +37,15 @@
 							<div class="starting-from">Price</div>
 							<div class="flex row items-center">
 								<div>
-									<q-img v-if="nft.orderDetails?.listingPrice" src="../../../assets/ethereum.png" width="20px" />
+									<q-img
+										v-if="nft.orderDetails?.listingPrice"
+										src="../../../assets/ethereum.png"
+										width="20px"
+									/>
 								</div>
-								<div class="price1">{{ nft.orderDetails?.listingPrice || 'Not Available' }}</div>
+								<div class="price1">
+									{{ nft.orderDetails?.listingPrice || 'Not Available' }}
+								</div>
 							</div>
 						</div>
 						<div v-if="nft.orderDetails?.listingPrice" class="flex column">
@@ -48,7 +54,9 @@
 								<div>
 									<q-img src="../../../assets/ethereum.png" width="20px" />
 								</div>
-								<div class="bid-price1">{{ nft.orderDetails?.highestBid || '--.--' }}</div>
+								<div class="bid-price1">
+									{{ nft.orderDetails?.highestBid || '--.--' }}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -108,7 +116,11 @@
 				Please Connect Wallet to view actions.
 			</div>
 		</div>
-		<q-btn class="q-pt-md update-metadata-text flex row items-center" flat @click="$emit('refresh')">
+		<q-btn
+			class="q-pt-md update-metadata-text flex row items-center"
+			flat
+			@click="$emit('refresh')"
+		>
 			<div class="q-pr-sm cursor-pointer">
 				<q-img src="../../../assets/refresh.png" width="24px" />
 			</div>
@@ -119,33 +131,116 @@
 			v-model="openCreateListingModal"
 			transition-show="slide-up"
 			transition-hide="slide-down"
+			class="modal-bg"
 		>
 			<q-card
-				class="q-pa-md"
-				style="width: 400px; max-width: 100%; background-color: #f5f5f5; border-radius: 10px;"
+				class="q-pa-none"
+				style="
+					min-width: 80%;
+					background-color: #ffffff;
+					border-radius: 10px;
+					max-width: 100%;
+				"
 			>
-				<q-card-section>
-					<div class="text-h6">List For Sale</div>
+				<q-card-section class="row items-center q-pb-none">
+					<div class="text-subtitle1 text-bold">LIST</div>
+					<q-separator spaced="md" size="2px" inset vertical color="accent" />
+					<div class="text-subtitle1 text-bold">{{ nft.name }}</div>
+					<q-space />
+					<q-btn v-close-popup icon="close" flat round dense />
 				</q-card-section>
-				<q-card-section>
-					<q-input
-						v-model="listingPrice"
-						label="Listing Price"
-						stack-label
-						outlined
-						type="number"
-						debounce="500"
-					/>
+				<q-card-section class="row justify-between">
+					<div class="col">
+						<q-img :src="nft.image" width="100%" />
+					</div>
+					<div class="col q-pa-none">
+						<div class="row col-8">
+							<div class="row">
+								<div class="col-6 q-pa-sm">
+									<span class="text-weight-thin">Your price</span>
+									<q-input
+										v-model="listingPrice"
+										outlined
+										dense
+										type="number"
+										debounce="500"
+										class="col-6"
+									/>
+								</div>
+								<!-- // TODO: Threshold -->
+								<!-- <div class="col-6 q-pa-sm">
+									<span class="text-weight-thin">Your price</span>
+									<q-input
+										v-model="listingPrice"
+										outlined
+										dense
+										type="number"
+										debounce="500"
+										class="col-6"
+									/>
+								</div> -->
+							</div>
+						</div>
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Expiration date</p>
+							<div class="row">
+								<q-input
+									v-model="listingExpirationDate"
+									outlined
+									:error="!!listingExpirationDateErrorMessage"
+									:error-message="listingExpirationDateErrorMessage"
+									dense
+									type="date"
+									debounce="500"
+								/>
+							</div>
+						</div>
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Fee</p>
+							<p class="text-h6">%{{ wivFee }}</p>
+						</div>
+						<q-separator size="2px" color="accent" />
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Total</p>
+							<p class="text-h6">{{ totalPrice }}</p>
+						</div>
+						<q-checkbox
+							v-model="listTokenTOCAccepted"
+							label="I agree with Terms and Conditions"
+						/>
+					</div>
 				</q-card-section>
-				<q-card-section>
+				<q-card-actions align="right">
 					<q-btn
 						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 						no-caps
 						flat
+						:disable="
+							!listTokenTOCAccepted ||
+							listingExpirationDate === '' ||
+							listingPrice <= 0 ||
+							listingLoading
+						"
 						@click="createListing"
 					>
-						List
+						List the NFT
 					</q-btn>
+				</q-card-actions>
+			</q-card>
+		</q-dialog>
+
+		<q-dialog
+			v-model="openListingCompletedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
+			>
+				<q-card-section class="row items-center q-pb-none">
+					<div>Done</div>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -156,18 +251,125 @@
 			transition-hide="scale"
 		>
 			<q-card
-				class="q-pa-md"
-				style="width: 400px; max-width: 100%; background-color: #f5f5f5; border-radius: 10px;"
+				class="q-pa-none"
+				style="
+					min-width: 80%;
+					background-color: #ffffff;
+					border-radius: 10px;
+					max-width: 100%;
+				"
 			>
-				<q-card-section>
-					<q-btn
-						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
-						no-caps
-						flat
-						@click="buyNow"
+				<q-card-section class="row items-center q-pb-none">
+					<div class="text-subtitle1 text-bold">Buy Now</div>
+					<q-separator spaced="md" size="2px" inset vertical color="accent" />
+					<div class="text-subtitle1 text-bold">{{ nft.name }}</div>
+					<q-space />
+					<q-btn v-close-popup icon="close" flat round dense />
+				</q-card-section>
+				<div
+					v-if="insufficientFundsToBuy"
+					class="row items-center justify-center q-pa-none q-ma-none"
+				>
+					<span>Insufficient funds </span
+					><q-btn flat @click="openWalletSideBar">
+						Click here to fund wallet</q-btn
 					>
-						Buy Now
-					</q-btn>
+				</div>
+				<q-card-section class="row justify-between">
+					<div class="col">
+						<q-img :src="nft.image" width="100%" />
+					</div>
+					<div class="col q-pa-none">
+						<div class="row col-8">
+							<div class="row col-12 justify-between">
+								<div class="col-6 q-pa-sm">
+									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
+									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+								</div>
+								<!-- // TODO: Threshold -->
+								<div class="col-6 q-pa-sm">
+									<!-- // Count down display -->
+									<p class="col-12 q-mb-xs text-primary text-right q-pr-md">
+										{{ new Date().toLocaleTimeString() }}
+									</p>
+									<q-card class="row">
+										<div class="q-pa-sm q-ma-none co-3" align="left">
+											<div class="text-weight-thin q-pa-sm">Ends In</div>
+										</div>
+										<div
+											class="row justify-around q-pa-sm q-ma-none col-8"
+											align="right"
+										>
+											<div class="column days">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.days }}
+												</div>
+												<div class="text-weight-thin">Dd</div>
+											</div>
+											<div class="column hours">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.hours }}
+												</div>
+												<div class="text-weight-thin">HH</div>
+											</div>
+											<div class="column minutes">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.minutes }}
+												</div>
+												<div class="text-weight-thin">MM</div>
+											</div>
+											<div class="column seconds">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.seconds }}
+												</div>
+												<div class="text-weight-thin">SS</div>
+											</div>
+										</div>
+									</q-card>
+								</div>
+							</div>
+						</div>
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Fee</p>
+							<p class="text-h6">%{{ wivFee }}</p>
+						</div>
+						<q-separator size="2px" color="accent" />
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Total</p>
+							<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+						</div>
+						<q-checkbox
+							v-model="buyTokenTOCAccepted"
+							label="I agree with Terms and Conditions"
+						/>
+						<q-card-actions align="right" class="q-mt-xl">
+							<q-btn
+								class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+								no-caps
+								flat
+								:disable="!buyTokenTOCAccepted"
+								@click="buyNow"
+							>
+								Process Payment
+							</q-btn>
+						</q-card-actions>
+					</div>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+
+		<q-dialog
+			v-model="openBuyNowCompletedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
+			>
+				<q-card-section class="row items-center q-pb-none">
+					<div>Done</div>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -218,12 +420,31 @@
 </template>
 
 <script lang="ts">
-import { QImg, QSeparator, QBtn, QDialog, QCard, QCardSection, QInput } from 'quasar';
+import { clearInterval } from 'timers';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
-import { CancelSelectOrders, CreateERC1155Listing, CreateERC721Listing, CreateERC721Offer, FulfillBasicOrder } from '../services/Orders';
+import {
+	CancelSelectOrders,
+	CreateERC1155Listing,
+	CreateERC721Listing,
+	CreateERC721Offer,
+	FulfillBasicOrder,
+} from '../services/Orders';
+import {
+	QImg,
+	QSeparator,
+	QBtn,
+	QDialog,
+	QCard,
+	QCardSection,
+	QSpace,
+	QInput,
+	QCheckbox,
+	QCardActions,
+} from 'quasar';
+import CountdownTimer from '../services/CouterDown';
 export default defineComponent({
 	name: 'WineMetadata',
 	props: {
@@ -232,49 +453,128 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	emits: ['refresh'],
-	data() {
+	emits: ['refresh', 'openWallet'],
+	setup() {
 		const userStore = useUserStore();
+		const wivFee = Number(process.env.WIV_FEE) * 0.01;
+
+		// timer.startTimer();
 		return {
-			openModal: false,
+			openModal: ref(false),
 			right: ref(false),
 			offerPrice: ref(0),
-			highestBid: ref(Number(this.nft.orderDetails?.highestBid) || 0),
-			openMakeOfferModal: false,
-			openCreateListingModal: false,
-			openBuyNowModal: false,
+			openMakeOfferModal: ref(false),
+			openCreateListingModal: ref(false),
+			openBuyNowModal: ref(false),
 			listingPrice: ref(0),
-			offerValidation: false,
+			listingExpirationDate: ref(''),
+			offerValidation: ref(false),
+			listTokenTOCAccepted: ref(false),
+			buyTokenTOCAccepted: ref(false),
+			listingLoading: ref(false),
+			buyNowLoading: ref(false),
 			validationMessage: '',
-			userStore
+			listingExpirationDateErrorMessage: '',
+			openListingCompletedModal: ref(false),
+			openBuyNowCompletedModal: ref(false),
+			insufficientFundsToBuy: ref(false),
+			userStore,
+			wivFee,
+			currentCount: ref({
+				days: 0,
+				hours: 0,
+				minutes: 0,
+				seconds: 0,
+			}),
+			totalPrice: ref(0),
+			currentInterval: ref<NodeJS.Timeout>(),
 		};
 	},
+
 	watch: {
 		openMakeOfferModal: function (val) {
 			if (val) {
 				this.offerPrice = Number(this.nft.orderDetails?.highestBid) + 1;
 			}
 		},
+		listingPrice: function (val) {
+			if (val) {
+				this.totalPrice = ((100 - this.wivFee) / 100) * this.listingPrice;
+			}
+		},
+		openBuyNowModal: function (val) {
+			console.log(new Date(this.nft.orderDetails?.expTime));
+			if (val === true) {
+				const timer = new CountdownTimer({
+					selector: '#clock1',
+					targetDate: new Date(this.nft.orderDetails?.expTime),
+					backgroundColor: 'rgba(0,0,0,.15)',
+					foregroundColor: 'rgba(0,0,0,.50)',
+				});
+				this.currentInterval = setInterval(() => {
+					const t = timer.getTimeRemaining();
+					this.currentCount = timer.updateTimer(t);
+					console.log(
+						'🚀 ~ file: WineMetadata.vue ~ line 548 ~ setInterval ~ this.currentCount',
+						this.currentCount
+					);
+				}, 1000);
+			}
+			// TODO: Stop Timer
+		},
 	},
 	methods: {
 		async sendOffer() {
-			if(this.offerPrice <= this.highestBid)  {
+			if (this.offerPrice <= this.nft.orderDetails?.highestBid) {
 				this.offerValidation = true;
-				this.validationMessage = 'Please enter a valid price greater than ' + this.highestBid;
+				this.validationMessage =
+					'Please enter a valid price greater than ' +
+					this.nft.orderDetails?.highestBid;
 				return;
 			} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
-				await CreateERC721Offer(this.nft.tokenID, this.nft.smartContractAddress, this.nft.brand, this.nft.image,this.userStore.walletAddress, this.offerPrice.toString());
+				await CreateERC721Offer(
+					this.nft.tokenID,
+					this.nft.smartContractAddress,
+					this.nft.brand,
+					this.nft.image,
+					this.userStore.walletAddress,
+					this.offerPrice.toString()
+				);
 			}
 			this.offerPrice = 0;
 			this.openMakeOfferModal = false;
 			this.$emit('refresh');
 		},
 		async buyNow() {
-			await FulfillBasicOrder(this.nft.orderDetails?.orderHash, this.nft.brand, false, this.userStore.walletAddress);
-			this.openBuyNowModal = false
+			const walletBalance = await this.userStore.getWalletBalance();
+			if (walletBalance < Number(this.nft.orderDetails?.listingPrice)) {
+				this.insufficientFundsToBuy = true;
+				return;
+			}
+			this.buyNowLoading = true;
+			await FulfillBasicOrder(
+				this.nft.orderDetails?.orderHash,
+				this.nft.brand,
+				false,
+				this.userStore.walletAddress
+			);
+			this.openBuyNowModal = false;
+			this.openBuyNowCompletedModal = true;
+			this.buyNowLoading = false;
+			setTimeout(() => {
+				this.openBuyNowCompletedModal = false;
+				this.$emit('refresh');
+			}, 2000);
 			this.$emit('refresh');
 		},
 		async createListing() {
+			if (
+				new Date(this.listingExpirationDate).getDate() < new Date().getDate()
+			) {
+				this.listingExpirationDateErrorMessage = 'Date should be after today';
+				return;
+			}
+			this.listingLoading = true;
 			if (this.nft.tokenType === TOKENTYPE.ERC721) {
 				await CreateERC721Listing(
 					this.nft.tokenID,
@@ -282,7 +582,8 @@ export default defineComponent({
 					this.nft.brand,
 					this.nft.image,
 					this.userStore.walletAddress,
-					this.listingPrice.toString()
+					this.listingPrice.toString(),
+					this.listingExpirationDate
 				);
 			} else {
 				await CreateERC1155Listing(
@@ -292,17 +593,28 @@ export default defineComponent({
 					this.nft.image,
 					this.userStore.walletAddress,
 					this.listingPrice.toString(),
+					this.listingExpirationDate,
 					'1'
 				);
 			}
 
 			this.openCreateListingModal = false;
-			this.$emit('refresh');
+			this.listingLoading = false;
+			this.openListingCompletedModal = true;
+			setTimeout(() => {
+				this.openListingCompletedModal = false;
+				this.$emit('refresh');
+			}, 2000);
 		},
 		async cancelOrder() {
-			await CancelSelectOrders([this.nft.orderDetails?.orderHash])
-			this.$emit('refresh')
-		}
+			await CancelSelectOrders([this.nft.orderDetails?.orderHash]);
+			this.$emit('refresh');
+		},
+		async openWalletSideBar() {
+			this.openBuyNowModal = false;
+			this.buyTokenTOCAccepted = false;
+			this.$emit('openWallet');
+		},
 	},
 });
 </script>

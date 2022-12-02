@@ -26,12 +26,13 @@ export async function CreateERC721Listing(
 	brand: string,
 	image: string,
 	address: string,
-	listingPrice: string
+	listingPrice: string,
+	expirationDate: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
+	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
 	const askAmount = utils.parseEther(listingPrice).toString();
-	const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
+	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 	// const testDate = new Date('2022-08-24T14:31:18.067Z');
 	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
@@ -51,16 +52,18 @@ export async function CreateERC721Listing(
 				{
 					amount: askAmount,
 					recipient: address,
-					token: wivaContract,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECIEVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
-			// endTime: testDate2
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
@@ -96,12 +99,12 @@ export async function CreateERC1155Listing(
 	image: string,
 	address: string,
 	listingPrice: string,
+	expirationDate: string,
 	amount: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
+	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
 	const askAmount = utils.parseEther(listingPrice).toString();
-	const feeReceiver = address;
 	// const testDate = new Date('2022-08-24T14:31:18.067Z');
 	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
@@ -122,16 +125,18 @@ export async function CreateERC1155Listing(
 				{
 					amount: askAmount,
 					recipient: address,
-					token: wivaContract,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECIEVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
-			// endTime: testDate2
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
@@ -168,10 +173,10 @@ export async function CreateERC721Offer(
 	address: string,
 	offerPrice: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
+	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
 	const askAmount = utils.parseEther(offerPrice).toString();
-	const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
+	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -180,7 +185,7 @@ export async function CreateERC721Offer(
 				// buyer's offer
 				{
 					amount: askAmount,
-					token: wivaContract,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			consideration: [
@@ -194,8 +199,10 @@ export async function CreateERC721Offer(
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECIEVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
 			domain: 'Seaport',

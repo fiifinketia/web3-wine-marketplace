@@ -102,7 +102,7 @@ module.exports = configure(function (ctx) {
 					'dark-page': '#121212',
 
 					positive: '#21BA45',
-					negative: '#C10015',
+					negative: '#C11B1B',
 					info: '#31CCEC',
 					warning: '#F2C037',
 				},

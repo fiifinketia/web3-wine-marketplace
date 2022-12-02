@@ -1,5 +1,5 @@
 <template>
-	<WineMetadata :nft="nft" @refresh="refresh"/>
+	<WineMetadata :nft="nft" @refresh="refresh" @open-wallet="openWalletSideBar"/>
 	<NFTHistory />
 	<About />
 	<WineMaker />
@@ -23,6 +23,7 @@ export default defineComponent({
 		WineMaker,
 		WineMetadata
 	},
+emits: ['openWalletSidebar'],
 
 	data() {
 		const userStore = useUserStore();
@@ -55,7 +56,11 @@ export default defineComponent({
 			} catch (error) {
 				console.log(error);
 			}
-		}
+		},
+
+		openWalletSideBar() {
+			this.$emit('openWalletSidebar');
+		},
 	},
 });
 </script>

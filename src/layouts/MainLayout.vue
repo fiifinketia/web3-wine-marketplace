@@ -230,7 +230,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view />
+			<router-view @open-wallet-sidebar="onOpenModals('myWallet')"/>
 		</q-page-container>
 	</q-layout>
 </template>
