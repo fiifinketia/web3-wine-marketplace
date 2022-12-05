@@ -1,5 +1,5 @@
 <template>
-<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
+<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''" style="flex-wrap: nowrap">
   <div v-if="!loadingRequest" class="column items-center">
     <LoadingView
       :loadingText="'Loading your listings'"

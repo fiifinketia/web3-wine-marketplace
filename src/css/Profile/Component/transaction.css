@@ -71,12 +71,15 @@
 
 @media screen and (max-width: 600px) {
   .transaction-column-nft {
-    width: 56%;
+    width: 40%;
   }
   .transaction-column-price {
-    width: 22%;
+    width: 30%;
   }
   .transaction-column-date {
-    width: 22%;
+    width: 30%;
+  }
+  .transaction-number-text {
+    font-size: 16px;
   }
 }

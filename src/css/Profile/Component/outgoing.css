@@ -63,13 +63,13 @@
 
 @media screen and (max-width: 600px) {
   .outgoing-column-nft {
-    width: 50%;
+    width: 40%;
   }
   .outgoing-column-own-offer {
-    width: 25%;
+    width: 30%;
   }
   .outgoing-column-action {
-    width: 25%;
+    width: 30%;
   }
 }
 

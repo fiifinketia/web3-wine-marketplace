@@ -30,8 +30,17 @@
           <span class="outgoing-column-nft">
             NFT
           </span>
-          <span class="outgoing-column-own-offer">
+          <span 
+            v-if="$q.screen.width > 600"
+            class="outgoing-column-own-offer"
+          >
             Your offer
+          </span>
+          <span 
+            v-if="$q.screen.width <= 600"
+            class="outgoing-column-own-offer"
+          >
+            Yours
           </span>
           <span 
             v-if="$q.screen.width > 600"

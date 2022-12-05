@@ -110,3 +110,15 @@
     width: 25%;
   }
 }
+
+@media screen and (max-width: 450px) {
+  .listings-column-nft {
+    width: 40%;
+  }
+  .listings-column-yours {
+    width: 30%;
+  }
+  .listings-column-action {
+    width: 30%;
+  }
+}

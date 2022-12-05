@@ -52,7 +52,13 @@
           :class="$q.screen.width < 1265 ? 'q-py-lg' : ''"
         >
           <div class="row items-center transaction-column-nft">
-            <span class="transaction-number-text q-mr-md" :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"> {{ txn.event }} </span>
+            <span 
+              v-if=" $q.screen.width > 600"
+              class="transaction-number-text q-mr-md" 
+              :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"
+            > 
+                {{ txn.event }} 
+            </span>
             <img v-if="$q.screen.width > 1265" :src="txn.image" class="profile-nft-image q-mr-md"/>
             <span class="profile-nft-brand"> {{ txn.brand }}</span>
           </div>

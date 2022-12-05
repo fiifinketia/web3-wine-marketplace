@@ -38,6 +38,7 @@
 .profile-nft-brand {
   font-size: 18px;
   font-family: 'Obviously-Bold';
+  word-wrap: break-word;
 }
 
 .profile-nft-number, .profile-nft-number-highlight  {
@@ -112,5 +113,8 @@
 @media screen and (max-width: 600px) {
   .profile-searchbox {
     flex-grow: 1;
+  }
+  .profile-nft-number, .profile-nft-number-highlight {
+    font-size: 16px;
   }
 }
