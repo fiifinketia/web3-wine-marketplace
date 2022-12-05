@@ -4,7 +4,7 @@
 			<section class="q-gutter-y-md">
 				<q-tabs
 					v-model="tab"
-					class="text-grey hidden-a-599"
+					class="text-grey hidden-a-599 profile-tabs"
 					active-color="primary"
 					indicator-color="primary"
 					align="justify"

@@ -7,6 +7,10 @@
   flex-wrap: nowrap;
 }
 
+.profile-tabs {
+  font-family: 'Obviously-Bold' !important;
+}
+
 .profile-header-offer {
   color: rgba(33, 33, 49, 1);
   font-family: 'ProximaNova-Regular';
