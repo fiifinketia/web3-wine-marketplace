@@ -33,7 +33,7 @@
 			<q-card
 				v-for="item in favNFTs"
 				:key="item.tokenID"
-				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6 favs-card-individual"
+				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6"
 			>
 				<img class="main-marketplace-card-image" :src="item.nftDetails.image" />
 				<div class="favs-wine-name q-py-md">TokenID: {{ item.tokenID }}</div>
