@@ -93,7 +93,6 @@ import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
 	RetrieveFilteredNFTs,
-	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
@@ -115,7 +114,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
-			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
+			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -133,7 +132,7 @@ export default defineComponent({
 			switch (objective) {
 				case 'add':
 					await AddFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
@@ -142,14 +141,14 @@ export default defineComponent({
 
 				case 'remove':
 					await RemoveFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
 					});
 					break;
 			}
-			this.RetrieveTokens();
+			await this.RetrieveTokens();
 		},
 
 		selectCard(tokenID: string) {
@@ -159,8 +158,8 @@ export default defineComponent({
 		},
 
 		async RetrieveTokens() {
-			const { result: nfts, counts } = await RetrieveFavoredNFTs(
-				`?walletAddress=${this.walletAddressTemporary}`
+			const { result: nfts } = await RetrieveFilteredNFTs(
+				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
 			this.allNFTs = nfts;
 		},
