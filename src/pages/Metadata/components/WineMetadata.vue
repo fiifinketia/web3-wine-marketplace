@@ -237,10 +237,40 @@
 		>
 			<q-card
 				class="q-pa-none"
-				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
+				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
-				<q-card-section class="row items-center q-pb-none">
-					<div>Done</div>
+				<q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/listing_completed.png"
+						width="50%"
+					/>
+				</q-card-section>
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-primary"> The wine is successfully listed for selling! </p>
+					<p class="row col-7 text-center">You will receive notifications on purchases and offers.</p>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+
+		<q-dialog
+			v-model="openListingFailedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
+			>
+				<!-- <q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/listing_failed.png"
+						width="50%"
+					/>
+				</q-card-section> -->
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-negative"> Sorry, the listing failed </p>
+					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -286,7 +316,6 @@
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
 									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
 								</div>
-								<!-- // TODO: Threshold -->
 								<div class="col-6 q-pa-sm">
 									<!-- // Count down display -->
 									<p class="col-12 q-mb-xs text-primary text-right q-pr-md">
@@ -368,8 +397,37 @@
 				class="q-pa-none"
 				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
 			>
-				<q-card-section class="row items-center q-pb-none">
-					<div>Done</div>
+				<q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/buy_now_completed.png"
+						width="50%"
+					/>
+				</q-card-section>
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-primary"> NFT is already in your cellar! </p>
+					<p class="row col-7 text-center">You can monitor its growth in your. <a>Digital Wine Cellar</a></p>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+		<q-dialog
+			v-model="openBuyNowFailedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
+			>
+				<q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/buy_now_failed.png"
+						width="50%"
+					/>
+				</q-card-section>
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-negative"> Sorry, the purchase failed </p>
+					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -380,47 +438,200 @@
 			transition-hide="scale"
 		>
 			<q-card
-				class="q-pa-md"
-				style="width: 400px; border-radius: 15px; background-color: #f5f5f5"
+				class="q-pa-none"
+				style="
+					min-width: 80%;
+					background-color: #ffffff;
+					border-radius: 10px;
+					max-width: 100%;
+				"
 			>
-				<div class="text-h6">Make an offer</div>
-				<div class="q-pt-md">
-					<q-input
-						v-model="offerPrice"
-						:error="offerValidation"
-						:error-message="validationMessage"
-						label="Price"
-						stack-label
-						outlined
-						type="number"
-						debounce="500"
+				<q-card-section class="row items-center q-pb-none">
+					<div class="text-subtitle1 text-bold">Bid For</div>
+					<q-separator spaced="md" size="2px" inset vertical color="accent" />
+					<div class="text-subtitle1 text-bold">{{ nft.name }}</div>
+					<q-space />
+					<q-btn v-close-popup icon="close" flat round dense />
+				</q-card-section>
+				<div
+					v-if="insufficientFundsToMakeOffer"
+					class="row items-center justify-center q-pa-none q-ma-none"
+				>
+					<span>Insufficient funds </span
+					><q-btn flat @click="openWalletSideBar">
+						Click here to fund wallet</q-btn
+					>
+				</div>
+				<q-card-section class="row justify-between">
+					<div class="col">
+						<q-img :src="nft.image" width="100%" />
+					</div>
+					<div class="col q-pa-none">
+						<div class="row col-8">
+							<div class="row col-12 justify-between">
+								<div class="col-6 q-pa-sm">
+									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
+									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+								</div>
+							</div>
+							<div class="row col-12 justify-between">
+								<div class="q-pa-sm">
+									<span class="text-weight-thin">Your price</span>
+									<q-input
+										v-model="offerPrice"
+										:error="offerValidation"
+										:error-message="validationMessage"
+										outlined
+										dense
+										type="number"
+										debounce="500"
+										class="col-6"
+									/>
+								</div>
+								<!-- // Countdown display -->
+								<!-- <div class="col-6 q-pa-sm">
+									<p class="col-12 q-mb-xs text-primary text-right q-pr-md">
+										{{ new Date().toLocaleTimeString() }}
+									</p>
+									<q-card class="row">
+										<div class="q-pa-sm q-ma-none co-3" align="left">
+											<div class="text-weight-thin q-pa-sm">Ends In</div>
+										</div>
+										<div
+											class="row justify-around q-pa-sm q-ma-none col-8"
+											align="right"
+										>
+											<div class="column days">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.days }}
+												</div>
+												<div class="text-weight-thin">Dd</div>
+											</div>
+											<div class="column hours">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.hours }}
+												</div>
+												<div class="text-weight-thin">HH</div>
+											</div>
+											<div class="column minutes">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.minutes }}
+												</div>
+												<div class="text-weight-thin">MM</div>
+											</div>
+											<div class="column seconds">
+												<div class="text-negative text-subtitle2">
+													{{ currentCount.seconds }}
+												</div>
+												<div class="text-weight-thin">SS</div>
+											</div>
+										</div>
+									</q-card>
+								</div> -->
+							</div>
+						</div>
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Fee</p>
+							<p class="text-h6">%{{ wivFee }}</p>
+						</div>
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Keep active till</p>
+							<div class="row">
+								<q-input
+									v-model="offerExpirationDate"
+									outlined
+									:error="!!offerExpirationDateErrorMessage"
+									:error-message="offerExpirationDateErrorMessage"
+									dense
+									type="date"
+									debounce="500"
+								/>
+							</div>
+						</div>
+						<q-separator size="2px" color="accent" />
+						<div class="row col-6 q-pa-sm">
+							<p class="text-weight-thin col-12 q-mb-xs">Total</p>
+							<p class="text-h6">
+								{{
+									(
+										Number(offerPrice) +
+										((offerPrice || 0) * wivFee) / 100
+									).toFixed(2) || (0).toFixed(2)
+								}}
+							</p>
+						</div>
+						<q-checkbox
+							v-model="makeOfferTOCAccepted"
+							label="I agree with Terms and Conditions"
+						/>
+						<q-card-actions align="right" class="q-mt-xl">
+							<q-btn
+								class="make-offer-button flex items-center justify-center cursor-pointer buy-now-text"
+								no-caps
+								flat
+								:disable="
+									!makeOfferTOCAccepted ||
+									offerExpirationDate === '' ||
+									offerPrice <= 0 ||
+									makeOfferLoading
+								"
+								@click="sendOffer"
+							>
+								Make offer
+							</q-btn>
+						</q-card-actions>
+					</div>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+		<q-dialog
+			v-model="openOfferCompletedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
+			>
+				<q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/make_offer_completed.png"
+						width="50%"
 					/>
-				</div>
-				<div class="q-pt-md flex row justify-end">
-					<q-btn
-						class="cancel-button flex items-center justify-center cursor-pointer"
-						no-caps
-						flat
-						@click="openMakeOfferModal = !openMakeOfferModal"
-					>
-						Cancel
-					</q-btn>
-					<q-btn
-						class="send-button flex items-center justify-center cursor-pointer"
-						no-caps
-						flat
-						@click="sendOffer"
-					>
-						Send
-					</q-btn>
-				</div>
+				</q-card-section>
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-primary"> Your offer is sucessfully submitted. </p>
+					<p class="row col-7 text-center">We will notify you in case someone outbit you.You can update your bid or withdraw it from the offer page.</p>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+		<q-dialog
+			v-model="openOfferFailedModal"
+			transition-show="slide-up"
+			transition-hide="slide-down"
+			class="modal-bg"
+		>
+			<q-card
+				class="q-pa-none"
+				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
+			>
+				<q-card-section class="row items-center justify-center q-pa-sm">
+					<q-img
+						src="/images/make_offer_failed.png"
+						width="50%"
+					/>
+				</q-card-section>
+				<q-card-section class="row items-center justify-center q-py-sm">
+					<p class="row col-7 text-bold text-negative"> Sorry, making offer failed :( </p>
+					<p class="row col-7 text-center">The reasoning why it failed.</p>
+				</q-card-section>
 			</q-card>
 		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
-import { clearInterval } from 'timers';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
@@ -432,19 +643,7 @@ import {
 	CreateERC721Offer,
 	FulfillBasicOrder,
 } from '../services/Orders';
-import {
-	QImg,
-	QSeparator,
-	QBtn,
-	QDialog,
-	QCard,
-	QCardSection,
-	QSpace,
-	QInput,
-	QCheckbox,
-	QCardActions,
-} from 'quasar';
-import CountdownTimer from '../services/CouterDown';
+import CountdownTimer from '../services/CountDownTimer';
 export default defineComponent({
 	name: 'WineMetadata',
 	props: {
@@ -467,17 +666,27 @@ export default defineComponent({
 			openCreateListingModal: ref(false),
 			openBuyNowModal: ref(false),
 			listingPrice: ref(0),
+			completedTimeoutModal: 2000,
 			listingExpirationDate: ref(''),
+			offerExpirationDate: ref(''),
 			offerValidation: ref(false),
 			listTokenTOCAccepted: ref(false),
+			makeOfferTOCAccepted: ref(false),
 			buyTokenTOCAccepted: ref(false),
 			listingLoading: ref(false),
+			makeOfferLoading: ref(false),
 			buyNowLoading: ref(false),
 			validationMessage: '',
 			listingExpirationDateErrorMessage: '',
+			offerExpirationDateErrorMessage: '',
 			openListingCompletedModal: ref(false),
+			openListingFailedModal: ref(false),
+			openOfferCompletedModal: ref(false),
+			openOfferFailedModal: ref(false),
 			openBuyNowCompletedModal: ref(false),
+			openBuyNowFailedModal: ref(false),
 			insufficientFundsToBuy: ref(false),
+			insufficientFundsToMakeOffer: ref(false),
 			userStore,
 			wivFee,
 			currentCount: ref({
@@ -503,7 +712,6 @@ export default defineComponent({
 			}
 		},
 		openBuyNowModal: function (val) {
-			console.log(new Date(this.nft.orderDetails?.expTime));
 			if (val === true) {
 				const timer = new CountdownTimer({
 					selector: '#clock1',
@@ -514,10 +722,6 @@ export default defineComponent({
 				this.currentInterval = setInterval(() => {
 					const t = timer.getTimeRemaining();
 					this.currentCount = timer.updateTimer(t);
-					console.log(
-						'🚀 ~ file: WineMetadata.vue ~ line 548 ~ setInterval ~ this.currentCount',
-						this.currentCount
-					);
 				}, 1000);
 			}
 			// TODO: Stop Timer
@@ -525,93 +729,133 @@ export default defineComponent({
 	},
 	methods: {
 		async sendOffer() {
-			if (this.offerPrice <= this.nft.orderDetails?.highestBid) {
-				this.offerValidation = true;
-				this.validationMessage =
-					'Please enter a valid price greater than ' +
-					this.nft.orderDetails?.highestBid;
-				return;
-			} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
-				await CreateERC721Offer(
-					this.nft.tokenID,
-					this.nft.smartContractAddress,
-					this.nft.brand,
-					this.nft.image,
-					this.userStore.walletAddress,
-					this.offerPrice.toString()
-				);
+			// const walletBalance = await this.userStore.getWalletBalance();
+			// if (walletBalance < this.offerPrice) {
+			// 	this.insufficientFundsToMakeOffer = true;
+			// 	return;
+			// }
+			try {
+				this.makeOfferLoading = true;
+				if (this.offerPrice <= this.nft.orderDetails?.highestBid) {
+					this.offerValidation = true;
+					this.validationMessage =
+						'Please enter a valid price greater than ' +
+						this.nft.orderDetails?.highestBid;
+					return;
+				} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
+					try {
+						await CreateERC721Offer(
+							this.nft.tokenID,
+							this.nft.smartContractAddress,
+							this.nft.brand,
+							this.nft.image,
+							this.userStore.walletAddress,
+							this.offerPrice.toString()
+						);
+					} catch (error) {
+						throw error;
+					}
+				}
+				this.offerPrice = 0;
+				this.openMakeOfferModal = false;
+				this.makeOfferLoading = false;
+				this.openOfferCompletedModal = true;
+				setTimeout(() => {
+					this.openOfferCompletedModal = false;
+					this.$emit('refresh');
+				}, this.completedTimeoutModal);
+			} catch (error) {
+				this.makeOfferLoading = false;
+				this.openOfferFailedModal = true;
+				setTimeout(() => {
+					this.openOfferFailedModal = false;
+					this.openMakeOfferModal = true;
+				}, this.completedTimeoutModal);
 			}
-			this.offerPrice = 0;
-			this.openMakeOfferModal = false;
-			this.$emit('refresh');
 		},
 		async buyNow() {
-			const walletBalance = await this.userStore.getWalletBalance();
-			if (walletBalance < Number(this.nft.orderDetails?.listingPrice)) {
-				this.insufficientFundsToBuy = true;
-				return;
+			try {
+				// const walletBalance = await this.userStore.getWalletBalance();
+				// if (walletBalance < Number(this.nft.orderDetails?.listingPrice)) {
+				// 	this.insufficientFundsToBuy = true;
+				// 	return;
+				// }
+				this.buyNowLoading = true;
+				await FulfillBasicOrder(
+					this.nft.orderDetails?.orderHash,
+					this.nft.brand,
+					false,
+					this.userStore.walletAddress
+				);
+				this.openBuyNowModal = false;
+				this.openBuyNowCompletedModal = true;
+				this.buyNowLoading = false;
+				setTimeout(() => {
+					this.openBuyNowCompletedModal = false;
+					this.$emit('refresh');
+				}, this.completedTimeoutModal);
+			} catch (error) {
+				this.buyNowLoading = false;
+				this.openBuyNowFailedModal = true;
+				setTimeout(() => {
+					this.openBuyNowFailedModal = false;
+					this.openBuyNowModal = true;
+				}, this.completedTimeoutModal);
 			}
-			this.buyNowLoading = true;
-			await FulfillBasicOrder(
-				this.nft.orderDetails?.orderHash,
-				this.nft.brand,
-				false,
-				this.userStore.walletAddress
-			);
-			this.openBuyNowModal = false;
-			this.openBuyNowCompletedModal = true;
-			this.buyNowLoading = false;
-			setTimeout(() => {
-				this.openBuyNowCompletedModal = false;
-				this.$emit('refresh');
-			}, 2000);
-			this.$emit('refresh');
 		},
 		async createListing() {
-			if (
-				new Date(this.listingExpirationDate).getDate() < new Date().getDate()
-			) {
-				this.listingExpirationDateErrorMessage = 'Date should be after today';
-				return;
-			}
-			this.listingLoading = true;
-			if (this.nft.tokenType === TOKENTYPE.ERC721) {
-				await CreateERC721Listing(
-					this.nft.tokenID,
-					this.nft.smartContractAddress,
-					this.nft.brand,
-					this.nft.image,
-					this.userStore.walletAddress,
-					this.listingPrice.toString(),
-					this.listingExpirationDate
-				);
-			} else {
-				await CreateERC1155Listing(
-					this.nft.tokenID,
-					this.nft.smartContractAddress,
-					this.nft.brand,
-					this.nft.image,
-					this.userStore.walletAddress,
-					this.listingPrice.toString(),
-					this.listingExpirationDate,
-					'1'
-				);
-			}
+			try {
+				if (
+					new Date(this.listingExpirationDate).getDate() < new Date().getDate()
+				) {
+					this.listingExpirationDateErrorMessage = 'Date should be after today';
+					return;
+				}
+				this.listingLoading = true;
+				if (this.nft.tokenType === TOKENTYPE.ERC721) {
+					await CreateERC721Listing(
+						this.nft.tokenID,
+						this.nft.smartContractAddress,
+						this.nft.brand,
+						this.nft.image,
+						this.userStore.walletAddress,
+						this.listingPrice.toString(),
+						this.listingExpirationDate
+					);
+				} else {
+					await CreateERC1155Listing(
+						this.nft.tokenID,
+						this.nft.smartContractAddress,
+						this.nft.brand,
+						this.nft.image,
+						this.userStore.walletAddress,
+						this.listingPrice.toString(),
+						this.listingExpirationDate,
+						'1'
+					);
+				}
 
-			this.openCreateListingModal = false;
-			this.listingLoading = false;
-			this.openListingCompletedModal = true;
-			setTimeout(() => {
-				this.openListingCompletedModal = false;
-				this.$emit('refresh');
-			}, 2000);
+				this.openCreateListingModal = false;
+				this.listingLoading = false;
+				this.openListingCompletedModal = true;
+				setTimeout(() => {
+					this.openListingCompletedModal = false;
+					this.$emit('refresh');
+				}, this.completedTimeoutModal);
+			} catch (error) {
+				this.listingLoading = false;
+				this.openListingFailedModal = true;
+				setTimeout(() => {
+					this.openListingFailedModal = false;
+					this.openCreateListingModal = true;
+				}, this.completedTimeoutModal);
+			}
 		},
 		async cancelOrder() {
 			await CancelSelectOrders([this.nft.orderDetails?.orderHash]);
 			this.$emit('refresh');
 		},
 		async openWalletSideBar() {
-			this.openBuyNowModal = false;
 			this.buyTokenTOCAccepted = false;
 			this.$emit('openWallet');
 		},

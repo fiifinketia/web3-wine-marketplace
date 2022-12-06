@@ -308,7 +308,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view @open-wallet-sidebar="onOpenModals('myWallet')"/>
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet"/>
 		</q-page-container>
 	</q-layout>
 </template>
