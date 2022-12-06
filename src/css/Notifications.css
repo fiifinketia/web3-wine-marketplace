@@ -1,0 +1,341 @@
+.notification-container {
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(20px);
+	width: 55%;
+	height: 650px;
+}
+
+.notification-title-section {
+	width: 95%;
+}
+
+.images-container {
+	width: 8%;
+}
+
+.notification-start {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	letter-spacing: 0.02em;
+	color: #3586ff;
+	width: 75%;
+}
+
+.checkbox-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+}
+
+.save-settings-button {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	width: 250px;
+	height: 50px;
+}
+
+.save-settings-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
+	color: #ffffff;
+}
+
+.be-notified-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	letter-spacing: 0.02em;
+	color: #3586ff;
+	width: 90%;
+}
+
+.email-input-button {
+	border: 1px solid #c0c0c0;
+	backdrop-filter: blur(30px);
+	border-radius: 6px;
+	width: 300px;
+	height: 40px;
+}
+
+.keep-me-updated-button {
+	background: linear-gradient(270.59deg, #33335b 25.46%, #83e0b3 206.28%);
+	border-radius: 6px;
+	width: 300px;
+	height: 40px;
+	border: none;
+}
+
+.skip-step-button {
+	border-radius: 6px;
+	width: 300px;
+	height: 40px;
+	border: none;
+	background-color: #fff;
+	border: 1px solid #3586ff;
+}
+
+.skip-step-text {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	text-fill-color: transparent;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
+}
+
+.keep-me-updated-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	color: #ffffff;
+}
+
+.sorting-notifications {
+	width: 95%;
+	padding-top: 25px;
+}
+
+.notification-search {
+	border: 1px solid #c0c0c0;
+	backdrop-filter: blur(30px);
+	border-radius: 6px;
+}
+
+.notifications-search-container {
+	width: 36%;
+}
+
+.notifications-radio-button-not-clicked {
+	border: 1px solid #9d9d9d;
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+}
+
+.notifications-radio-button-clicked {
+	border: 4.5px solid #3586ff;
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+}
+
+.notifications-active-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+}
+
+.notifications-not-active-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #9d9d9d;
+}
+
+.notifications-pagination-numbers {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	color: #212131;
+}
+
+.back-button {
+	transform: rotate(180deg);
+}
+
+.notification-pagination {
+	width: 65%;
+	padding-left: 10px;
+}
+
+.pagination-notification {
+	width: 11%;
+}
+.sorting {
+	width: 70%;
+}
+
+.notifications-title {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 26px;
+	letter-spacing: 0.02em;
+	color: #212131;
+	text-transform: uppercase;
+}
+
+.notification-container-2 {
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(20px);
+	width: 55%;
+	height: 550px;
+}
+
+.notification-section {
+	width: 100%;
+	height: auto;
+}
+
+.notification-wrapper {
+	padding-top: 40px;
+	width: 95%;
+}
+
+.item-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+}
+
+.item-number {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 20px;
+	color: #3586ff;
+}
+
+.item-full-text {
+	width: 73%;
+	padding-left: 10px;
+}
+
+.time-notification-container {
+	width: 125px;
+}
+
+.notification-date {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	text-align: right;
+	color: #9d9d9d;
+}
+
+.notification-link {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 20px;
+	text-decoration-line: underline;
+	color: #3586ff;
+}
+
+.prop-container {
+	width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+	.notification-container-2 {
+		background: rgba(255, 255, 255, 0.85);
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(20px);
+		width: 70%;
+		height: 550px;
+	}
+	.time-notification-container {
+		width: 20%;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.notification-container-2 {
+		background: rgba(255, 255, 255, 0.85);
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(20px);
+		width: 100%;
+		height: 550px;
+	}
+}
+.notification-search-wrapper-2 {
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.notification-search-wrapper {
+		display: none;
+	}
+	.notifications-search-container {
+		width: 8%;
+	}
+	.sorting {
+		width: 100%;
+	}
+	.notification-search-wrapper-2 {
+		display: flex;
+	}
+	.pagination-notification {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.notification-pagination {
+		width: 9%;
+	}
+	/* .pagination-numbers {
+		padding-right: -50px;
+	} */
+	.item-full-text {
+		width: 70%;
+	}
+	.time-notification-container {
+		width: 125px;
+	}
+}
