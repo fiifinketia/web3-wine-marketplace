@@ -110,7 +110,7 @@
 						Cellar. It’s our web app to monitor manage the NFTs you own.
 					</q-card-section>
 					<q-card-section class="q-pt-none faq-text row">
-						<a class="visit-cellar">Visit Cellar</a>
+						<a class="contact-us">Visit Cellar</a>
 					</q-card-section>
 				</q-card>
 			</div>

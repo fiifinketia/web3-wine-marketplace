@@ -80,19 +80,9 @@
 	font-size: 18px;
 	line-height: 22px;
 	letter-spacing: 0.02em;
-	text-decoration-line: underline;
-	color: #3586ff;
+	text-decoration: underline;
+	color: #3586ffd1;
 	cursor: pointer;
-}
-
-.visit-cellar {
-	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 18px;
-	line-height: 22px;
-	text-decoration-line: underline;
-	color: #3586ff;
 }
 
 .bold-text {

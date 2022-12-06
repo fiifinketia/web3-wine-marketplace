@@ -1,80 +1,82 @@
 .footer-container {
-  background: #212131;
-  min-height: 300px;
-  width: 100%;
+	background: #212131;
+	min-height: 300px;
+	width: 100%;
 }
 
 .footer-bold-text {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 19px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 19px;
+	cursor: pointer;
+	color: rgba(255, 255, 255, 0.8);
+	text-decoration: none;
 }
 
 .footer-normal-text {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 16px;
+	line-height: 19px;
+	cursor: pointer;
+	color: rgba(255, 255, 255, 0.8);
+	text-decoration: none;
 }
 
 .first {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 450px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 450px;
 }
 
 .second {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 450px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 450px;
 }
 .third {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 25%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 25%;
 }
 
 @media screen and (max-width: 992px) {
-  .first {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-  }
-  .second {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-  }
-  .third {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-  }
+	.first {
+		display: flex;
+		flex-direction: column;
+		width: 30%;
+	}
+	.second {
+		display: flex;
+		flex-direction: column;
+		width: 30%;
+	}
+	.third {
+		display: flex;
+		flex-direction: column;
+		width: 30%;
+	}
 }
 
 @media screen and (max-width: 400px) {
-  .third {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 95%;
-    padding-left: 5px;
-  }
-  .first {
-    width: 50%;
-  }
+	.third {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 95%;
+		padding-left: 5px;
+	}
+	.first {
+		width: 50%;
+	}
 
-  .second {
-    width: 50%;
-  }
+	.second {
+		width: 50%;
+	}
 }
