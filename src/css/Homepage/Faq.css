@@ -1,228 +1,172 @@
 .faq-title {
-  font-family: 'Obviously-Bold';
-  font-style: normal;
-  font-weight: 470;
-  font-size: 32px;
-  line-height: 50px;
-
-  letter-spacing: 0.03em;
-
-  color: #212131;
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 32px;
+	line-height: 50px;
+	letter-spacing: 0.03em;
+	color: #212131;
+	text-align: center;
 }
 
 .faq-container {
-  background: linear-gradient(to bottom, rgba(217, 232, 255, 0.3), white);
+	background: linear-gradient(
+		to bottom,
+		rgba(217, 232, 255, 0.3) 70%,
+		white 30%
+	);
+	position: relative;
 }
-/* .container {
-  width: 100%;
-} */
 
 .rocket {
-  width: 18%;
-  position: absolute;
-  top: -60px;
-  /* bottom: 0; */
-}
-
-.rocket-wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: end;
-  align-items: center;
+	width: 22%;
+	position: absolute;
+	right: 0;
+	top: -4.5rem;
 }
 
 .faq-small-text {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 36px;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
 
-  color: #212131;
+	color: #212131;
 
-  opacity: 0.6;
+	opacity: 0.6;
 }
 
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.faq-cards-container {
+	width: 80%;
 }
 
 .my-card {
-  background: #ffffff;
-  border: 1px solid rgba(94, 151, 236, 0.27);
-  border-radius: 8px;
-  width: 50%;
-  height: 220px;
+	background: #ffffff;
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 8px;
+	box-shadow: none;
+	height: 250px;
 }
 
 .faq-image {
-  padding-left: 16px;
-  padding-top: 14px;
-  padding-bottom: 3px;
+	padding-top: 14px;
+	padding-bottom: 3px;
 }
 
 .faq-text {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
 
-  color: #212131;
-}
-
-.first-container {
-  width: 50%;
-  display: flex;
-  flex-direction: row;
-  padding-right: 8px;
-}
-.second-container {
-  width: 50%;
-  display: flex;
-  flex-direction: row;
-  padding-left: 8px;
-}
-
-@media screen and (max-width: 1200px) {
-  .my-card {
-    height: 250px;
-  }
-  .rocket {
-    top: -45px;
-    width: 17%;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .container {
-    width: 70%;
-    display: flex;
-  }
-
-  .my-card {
-    width: 90%;
-  }
-
-  .faq-title {
-    font-size: 28px;
-  }
-  .faq-small-text {
-    font-size: 18px;
-  }
-
-  .first-container {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    align-items: center;
-    padding-right: 0px;
-  }
-  .second-container {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    justify-content: center;
-    align-items: center;
-    padding-left: 0px;
-  }
-  .rocket {
-    top: -25px;
-    right: 80px;
-    width: 22%;
-  }
-}
-
-@media screen and (min-width: 1400px) {
-  .my-card {
-    width: 50%;
-  }
-  .container {
-    width: 85%;
-  }
-  .rocket {
-    top: -55px;
-    width: 15%;
-  }
-}
-
-@media screen and (max-width: 772px) {
-  .container {
-    width: 100%;
-  }
-  .my-card {
-    height: 300px;
-  }
-  .rocket {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  .my-card {
-    width: 100%;
-    height: 250px;
-  }
-  .first-container {
-    width: 80%;
-    /* height: 220px; */
-  }
-  .second-container {
-    width: 80%;
-    /* height: 220px; */
-    padding-top: 15px;
-  }
-  .rocket {
-    display: none;
-  }
+	color: #212131;
 }
 
 .still-have-question {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  color: #212131;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	color: #212131;
 }
 
 .contact-us {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  letter-spacing: 0.02em;
-  text-decoration-line: underline;
-  color: #3586ff;
-  cursor: pointer;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	letter-spacing: 0.02em;
+	text-decoration-line: underline;
+	color: #3586ff;
+	cursor: pointer;
 }
 
 .visit-cellar {
-  font-family: 'ProximaNova-Regular';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  text-decoration-line: underline;
-  color: #3586ff;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	text-decoration-line: underline;
+	color: #3586ff;
 }
 
 .bold-text {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
-  color: #212131;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+}
+
+@media screen and (max-width: 1400px) {
+	.rocket {
+		width: 25%;
+		top: -3rem;
+	}
+}
+@media screen and (max-width: 1300px) {
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1023px) {
+	.faq-title {
+		font-size: 28px;
+	}
+	.faq-small-text {
+		font-size: 18px;
+	}
+	.faq-cards-container {
+		width: 80%;
+	}
+	.rocket {
+		width: 28%;
+		top: -2rem;
+	}
+	.faq-container {
+		background: linear-gradient(
+			to bottom,
+			rgba(217, 232, 255, 0.3) 50%,
+			white 50%
+		);
+	}
+}
+
+@media screen and (max-width: 772px) {
+	.rocket {
+		display: none;
+	}
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 599px) {
+	.faq-cards-container {
+		width: 80%;
+	}
+	.faq-container {
+		background: linear-gradient(
+			to bottom,
+			rgba(217, 232, 255, 0.3) 20%,
+			white 80%
+		);
+	}
+}
+@media screen and (max-width: 400px) {
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+@media screen and (max-width: 300px) {
+	.my-card {
+		height: 280px;
+	}
 }
