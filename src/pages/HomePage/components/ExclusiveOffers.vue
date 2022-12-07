@@ -35,7 +35,7 @@
 						</div>
 						<q-img
 							src="../../../../public/images/mini-button.svg"
-							width="21px"
+							width="32px"
 						/>
 					</div>
 				</div>
