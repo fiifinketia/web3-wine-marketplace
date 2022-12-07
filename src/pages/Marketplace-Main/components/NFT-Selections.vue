@@ -15,7 +15,7 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="selectCard(token.tokenID)"
+				@click="$router.push({ name: 'nfts', params: { id: token.tokenID, contractAddress: token.smartContractAddress, network: token.network } })"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -30,10 +30,42 @@
 					<q-card-section
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
-						<span class="main-marketplace-price-header q-pb-xs">
-							Starting from
-						</span>
-						<div v-if="!!token.listingPrice">
+						<div class="row justify-between" style="width: 100%">
+							<span class="main-marketplace-price-header q-pb-xs">
+								Starting from
+							</span>
+							<q-img
+								v-if="token.favorited === true"
+								src="../../../../public/images/heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									addRemoveFavorites(
+										token.tokenID,
+										token.smartContractAddress,
+										token.network,
+										'remove'
+									)
+								"
+							/>
+							<q-img
+								v-else
+								src="../../../../public/images/empty-heart.svg"
+								width="20px"
+								height="20px"
+								@click.stop
+								@click="
+									addRemoveFavorites(
+										token.tokenID,
+										token.smartContractAddress,
+										token.network,
+										'add'
+									)
+								"
+							/>
+						</div>
+						<div v-if="!!token.orderDetails?.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -50,19 +82,6 @@
 				</q-card>
 			</q-btn>
 		</div>
-		<q-dialog v-model="card">
-			<q-card class="my-card">
-				<q-card-actions align="right">
-					<q-btn
-						flat
-						color="primary"
-						label="Create Order"
-						@click="CreateListingForERC1155"
-					/>
-					<!-- <q-btn v-close-popup flat color="primary" round icon="event" /> -->
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</q-page-container>
 </template>
 
@@ -75,8 +94,8 @@ import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
 	RetrieveFilteredNFTs,
 } from '../services/RetrieveTokens';
+import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
-import { CreateOrderERC1155 } from '../services/Orders';
 
 export default defineComponent({
 	data() {
@@ -94,7 +113,8 @@ export default defineComponent({
 			stars: ref(3),
 			selected: ref(),
 			userStore,
-			wineFiltersStore
+			wineFiltersStore,
+			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -103,31 +123,47 @@ export default defineComponent({
 	},
 
 	methods: {
+		async addRemoveFavorites(
+			tokenID: string,
+			cAddress: string,
+			network: string,
+			objective: string
+		) {
+			switch (objective) {
+				case 'add':
+					await AddFavorites({
+						walletAddress: this.userStore.walletAddress,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
+
+				case 'remove':
+					await RemoveFavorites({
+						walletAddress: this.userStore.walletAddress,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
+					break;
+			}
+			await this.RetrieveTokens();
+		},
+
 		selectCard(tokenID: string) {
 			this.card = true;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 
-		async CreateListingForERC1155() {
-			const smartContractAddressStatic =
-				'0x1458DAb28F3e94F8e4Ae3fCb03De803e53Dd443D';
-			const amountStatic = '1';
-			const address: string = this.userStore.walletAddress;
-			CreateOrderERC1155(
-				this.selected.tokenID,
-				smartContractAddressStatic,
-				this.selected.brand,
-				address,
-				amountStatic
-			);
-		},
-
 		async RetrieveTokens() {
-			const { result: nfts } = await RetrieveFilteredNFTs(this.wineFiltersStore.getFiltersQueryParams);
-			this.allNFTs = nfts
-    }
-  }
+			const { result: nfts } = await RetrieveFilteredNFTs(
+				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
+			);
+			this.allNFTs = nfts;
+		},
+	},
 });
 </script>
 

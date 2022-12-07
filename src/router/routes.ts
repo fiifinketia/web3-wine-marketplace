@@ -23,11 +23,12 @@ const routes: RouteRecordRaw[] = [
 		],
 	},
 	{
-		path: '/metadata',
+		path: '/nfts',
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
 			{
-				path: '',
+				name: 'nfts',
+				path: '/nfts/:id/:contractAddress/:network',
 				component: () => import('pages/Metadata/Metadata.vue'),
 			},
 		],

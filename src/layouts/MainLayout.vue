@@ -1,13 +1,94 @@
 <template>
-	<ConnectWallet @clicked="onCloseModals($event)" />
-	<MyWallet @clicked="onCloseModals($event)" />
+	<!-------------------------------------- POPUP MODALS -------------------------------------->
+
+	<!---------------------------- CONNECT WALLET ---------------------------->
+
+	<q-dialog
+		v-model="showConnectWallet"
+		class="connect-wallet-background row justify-center items-center"
+	>
+		<q-card class="connect-wallet-container column justify-center items-center">
+			<q-card-section>
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+			</q-card-section>
+
+			<q-card-section>
+				<div class="connect-wallet-title">
+					Connect your Web3 Wallet to signup.
+				</div>
+			</q-card-section>
+
+			<q-card-section>
+				<q-btn
+					class="connect-wallet-btns connect-btn"
+					:disable="!isMetaMaskInstalled"
+					@click="connectWallet"
+				>
+					Connect wallet
+				</q-btn>
+				<q-btn
+					class="connect-wallet-btns no-wallet-btn"
+					:disabled="!!isMetaMaskInstalled"
+					@click="setupWallet"
+				>
+					I don't have a wallet
+				</q-btn>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!---------------------------- /CONNECT WALLET ---------------------------->
+
+	<!---------------------------- MY WALLET ---------------------------->
+
+	<q-dialog
+		v-model="showMyWallet"
+		position="right"
+		full-height
+		class="my-wallet-background row justify-end"
+	>
+		<q-card class="my-wallet-container column justify-between items-center">
+			<q-card-section class="my-wallet-header row">
+				<div>MY WALLET</div>
+				<img src="../../public/images/metamask-icon.svg" alt="" />
+				<div class="wallet-id">walletID</div>
+				<img
+					class="x-icon"
+					src="../../public/images/x-icon.svg"
+					alt=""
+					@click="showMyWallet = false"
+				/>
+			</q-card-section>
+			<div class="id-mobile">walletID</div>
+
+			<q-card-section
+				class="my-wallet-ballance-container column justify-center items-center"
+			>
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+				<div class="ballance-wrapper column">
+					<div class="my-wallet-title q-pb-sm">Your balance is</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(2) }}</div>
+				</div>
+				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
+					>Fund wallet</q-btn
+				>
+			</q-card-section>
+
+			<q-card-section class="my-wallet-logout"> LOG OUT </q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!---------------------------- /MY WALLET ---------------------------->
+
 	<BurgerMenu v-if="showBurgerMenu" />
 	<SuggestedWines />
+
+	<!-------------------------------------- /POPUP MODALS -------------------------------------->
 
 	<q-layout view="lHh Lpr lFf">
 		<q-header
 			class="nav-bar q-py-xs"
-			:style="showModals && { 'z-index': '-1' }"
+			:style="(showConnectWallet || showMyWallet) && { 'z-index': '-1' }"
 		>
 			<q-toolbar class="row justify-between items-center">
 				<div
@@ -108,7 +189,7 @@
 									v-if="!!userStore.walletAddress"
 									v-close-popup
 									clickable
-									@click="onOpenModals('myWallet')"
+									@click="showMyWallet = true"
 								>
 									<q-item-section>
 										<q-item-label>my wallet</q-item-label>
@@ -118,7 +199,7 @@
 									v-else
 									v-close-popup
 									clickable
-									@click="onOpenModals('connectWallet')"
+									@click="showConnectWallet = true"
 								>
 									<q-item-section>
 										<q-item-label>sign up</q-item-label>
@@ -128,10 +209,7 @@
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									href="https://dwc.wiv-tech.com/#/"
 								>
 									<q-item-section>
 										<q-item-label>digital wine cellar</q-item-label>
@@ -218,19 +296,19 @@
 					class="burger-menu-icon"
 					src="../../public/images/burger-icon.svg"
 					alt="burger-menu"
-					@click="onOpenModals('burgerMenu')"
+					@click="onBurgerMenu('open')"
 				/>
 				<img
 					v-else
 					class="burger-menu-exit-icon"
 					src="../../public/images/x-burger-icon.svg"
 					alt="burger-menu"
-					@click="onCloseModals(true)"
+					@click="onBurgerMenu('close')"
 				/>
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view />
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet"/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -238,34 +316,39 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
+// import transakSDK from '@transak/transak-sdk';
+const transakSDK = require('@transak/transak-sdk');
 
 import '../css/MainLayout/MainLayout.scss';
+import '../css/MainLayout/ConnectWallet.css';
+import '../css/MainLayout/MyWallet.css';
 
 import { useUserStore } from 'src/stores/user-store';
-import ConnectWallet from './components/ConnectWallet.vue';
 import BurgerMenu from './components/BurgerMenu.vue';
-import MyWallet from './components/MyWallet.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
 
 export default defineComponent({
 	name: 'MainLayout',
 	components: {
-		ConnectWallet,
 		BurgerMenu,
-		MyWallet,
 		SuggestedWines,
 	},
 	data() {
 		const userStore = useUserStore();
+		const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
 		return {
 			user: true,
-			showModals: false,
 			showBurgerMenu: false,
+			showMyWallet: false,
+			showConnectWallet: false,
 			userStore,
 			walletAddress: '',
+			isMetaMaskInstalled,
+			balance: 0,
 		};
 	},
+
 	async mounted() {
 		const userStore = useUserStore();
 
@@ -273,63 +356,58 @@ export default defineComponent({
 	},
 
 	methods: {
-		animation(
-			modal: string,
-			opacity: string,
-			transform: string,
-			zIndex: string
-		) {
-			const connectBackground = document.querySelector(
-				'.connect-wallet-background'
-			) as HTMLElement;
-			const connectContainer = document.querySelector(
-				'.connect-wallet-container'
-			) as HTMLElement;
-			const walletBackground = document.querySelector(
-				'.my-wallet-background'
-			) as HTMLElement;
-			const walletContainer = document.querySelector(
-				'.my-wallet-container'
-			) as HTMLElement;
-			switch (modal) {
-				case 'connectWallet':
-					connectBackground.style.zIndex = zIndex;
-					connectBackground.style.opacity = opacity;
-					connectContainer.style.transform = transform;
-					break;
-				case 'myWallet':
-					walletBackground.style.opacity = opacity;
-					walletBackground.style.zIndex = zIndex;
-					walletContainer.style.transform = transform;
+		fundWallet() {
+			let transak = new transakSDK({
+				apiKey: process.env.TRANSAK_API_KEY, // Your API Key
+				environment: 'STAGING', // STAGING/PRODUCTION
+				widgetHeight: '625px',
+				widgetWidth: '500px',
+				// Examples of some of the customization parameters you can pass
+				defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+				walletAddress: this.userStore.walletAddress, // Your customer's wallet address
+				themeColor: '#3586ff', // App theme color
+				fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
+				// email: this.userStore.user?.email, // Your customer's email address
+				redirectURL: 'http://localhost:8081', // Redirect URL of your app
+			});
+			this.showMyWallet = false;
+			transak.init();
+
+			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
+				// console.log(orderData);
+				transak.close();
+			});
+		},
+		connectWallet() {
+			this.showConnectWallet = false;
+			this.userStore.connectWallet();
+		},
+
+		setupWallet() {
+			this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
+			if (!this.isMetaMaskInstalled) {
+				//If it isn't installed we ask the user to click to install it
+				const onboarding = new MetaMaskOnboarding({
+					forwarderOrigin: 'http://localhost:8081',
+				});
+				onboarding.startOnboarding();
 			}
 		},
 
-		onOpenModals(modal: string) {
+		onBurgerMenu(modal: string) {
 			switch (modal) {
-				case 'connectWallet':
-					this.showModals = true;
-					this.animation('connectWallet', '1', 'scale(1)', '200');
-					break;
-				case 'myWallet':
-					this.showModals = true;
-					this.animation('myWallet', '1', 'translateX(0%)', '200');
-					break;
-				case 'burgerMenu':
+				case 'open':
 					this.showBurgerMenu = true;
+
+					document.body.classList.add('no-scroll');
+					break;
+				case 'close':
+					this.showBurgerMenu = false;
+					document.body.classList.remove('no-scroll');
 					break;
 			}
-			document.body.classList.add('no-scroll');
 		},
 
-		onCloseModals(title: boolean) {
-			if (title === true) {
-				this.showModals = false;
-				this.showBurgerMenu = false;
-				this.animation('connectWallet', '0', 'scale(0.5)', '-200');
-				this.animation('myWallet', '0', 'translateX(100%)', '-200');
-				document.body.classList.remove('no-scroll');
-			}
-		},
 		async logout() {
 			this.userStore.walletAddress = '';
 		},
