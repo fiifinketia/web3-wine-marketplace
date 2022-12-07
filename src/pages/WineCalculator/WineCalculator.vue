@@ -164,13 +164,17 @@
 								</div>
 							</div>
 							<div class="q-pt-md">
-								<input
-									id="myRange"
-									type="range"
-									min="100"
-									max="50000"
-									value="13500"
-								/>
+								<div class="input-container">
+									<input
+										id="my-slider"
+										type="range"
+										min="0"
+										max="100"
+										value="50"
+										oninput="slider()"
+									/>
+									<div id="slider-value">0</div>
+								</div>
 							</div>
 						</div>
 						<div class="flex column">
@@ -335,18 +339,39 @@ export default defineComponent({
 		};
 	},
 	mounted() {
-		this.handleInput();
+		// this.handleInput();
+		this.slider();
 	},
 	methods: {
-		handleInput() {
-			var slider = document.getElementById('myRange');
-			var output = document.getElementById('demo');
-			console.log(slider, output);
-
-			(slider as HTMLElement).oninput = function () {
-				(output as HTMLElement).innerHTML = (<HTMLInputElement>slider).value;
-			};
+		slider() {
+			const mySlider = document.getElementById('my-slider');
+			const sliderValue = document.getElementById('slider-value');
+			function slider() {
+				var valPercent =
+					(((<HTMLInputElement>mySlider).value as any) /
+						((<HTMLInputElement>mySlider).max as any)) *
+					100;
+				(
+					mySlider as HTMLInputElement
+				).style.background = `linear-gradient(to right, #3264fe ${valPercent}%, #d5d5d5 ${valPercent}%)`;
+				// sliderValue.textContent = (mySlider as HTMLInputElement).value;
+			}
 		},
+		// handleInput() {
+		// 	var slider = document.getElementById('myRange');
+		// 	var output = document.getElementById('demo');
+		// 	// console.log(slider, output);
+		// 	var valPercent =
+		// 		Number((<HTMLInputElement>slider).value) /
+		// 		Number((<HTMLInputElement>slider).max);
+		// 	(
+		// 		slider as HTMLElement
+		// 	).style.background = `linear-gradient(to right, #3586FF ${valPercent}%, red ${valPercent}%)`;
+
+		// 	(slider as HTMLElement).oninput = function () {
+		// 		(output as HTMLElement).innerHTML = (<HTMLInputElement>slider).value;
+		// 	};
+		// },
 
 		handleCalculation() {
 			this.calculating = false;
@@ -405,9 +430,9 @@ export default defineComponent({
 			this.percentage = ((this.finalWorth - this.money) / this.money) * 100;
 			this.showPrice = true;
 		},
-		activateBackButton() {
-			
-		}
+		// activateBackButton() {
+
+		// }
 	},
 });
 </script>
