@@ -132,7 +132,7 @@ export async function CreateERC1155Listing(
 				{
 					basisPoints: Number(process.env.WIV_FEE),
 					recipient:
-						process.env.WIV_FEE_RECIEVER ||
+						process.env.WIV_FEE_RECEIVER ||
 						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],

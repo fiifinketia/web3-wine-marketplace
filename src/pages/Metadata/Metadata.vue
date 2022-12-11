@@ -43,7 +43,7 @@ emits: ['openWalletSidebar'],
 		},
 
 		async getMetadata() {
-			const { id, contractAddress, network } = this.$route.params;
+			const { id, contractAddress, network } = this.$route.query;
 
 			try {
 				const res = await GetMetadata({

@@ -15,7 +15,7 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="$router.push({ name: 'nfts', params: { id: token.tokenID, contractAddress: token.smartContractAddress, network: token.network } })"
+				:to="{ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} }"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
