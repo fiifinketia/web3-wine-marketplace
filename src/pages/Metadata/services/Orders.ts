@@ -236,7 +236,8 @@ export async function FulfillBasicOrder(
 	orderHash: string,
 	brand: string,
 	owner: boolean,
-	address: string
+	address: string,
+	image: string
 ) {
 	const { seaport } = await GetWeb3();
 	const order: RetrieveListingResponse = await axios
@@ -272,6 +273,7 @@ export async function FulfillBasicOrder(
 		brand: brand,
 		isOwner: owner,
 		walletAddress: address,
+		image: image
 	};
 	axios.post(
 		'http://localhost:8080/api/market/order/fulfill/order.fulfill',

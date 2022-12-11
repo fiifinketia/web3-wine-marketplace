@@ -59,6 +59,8 @@ export interface TokenIdentifier {
 export interface UpdateListingRequest extends TokenIdentifier {
 	readonly notificationID: number;
 	readonly brand: string;
+	readonly image: string;
+	
 	readonly orderHash: string;
 	readonly isOwner: boolean;
 	readonly walletAddress: string;

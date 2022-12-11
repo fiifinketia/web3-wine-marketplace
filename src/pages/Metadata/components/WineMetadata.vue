@@ -601,8 +601,8 @@
 					/>
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> Your offer is sucessfully submitted. </p>
-					<p class="row col-7 text-center">We will notify you in case someone outbit you.You can update your bid or withdraw it from the offer page.</p>
+					<p class="row col-7 text-bold text-primary"> Your offer is successfully submitted. </p>
+					<p class="row col-7 text-center">We will notify you in case someone outbids you. You can update your bid or withdraw it from the offer page.</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -785,8 +785,10 @@ export default defineComponent({
 				await FulfillBasicOrder(
 					this.nft.orderDetails?.orderHash,
 					this.nft.brand,
-					false,
-					this.userStore.walletAddress
+					// TODO: the isOwner boolean will be taken from client-side (Kelvin)
+					this.nft.isOwner,
+					this.userStore.walletAddress,
+					this.nft.image
 				);
 				this.openBuyNowModal = false;
 				this.openBuyNowCompletedModal = true;

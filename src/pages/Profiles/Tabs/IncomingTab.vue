@@ -143,7 +143,7 @@
               dense
               no-caps
               class="profile-accept-btn"
-              @click="AcceptOffer(offer.orderHash)"
+              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
             >
               Accept
             </q-btn>
@@ -153,7 +153,7 @@
               unelevated
               dense
               no-caps
-              @click="AcceptOffer(offer.orderHash)"
+              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
             >
               <img src="../../../assets/accept.svg"/>
             </q-btn>
@@ -179,6 +179,8 @@ import IncomingHeaderSm from '../Headers/IncomingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import Empty from '../EmptyOrders.vue';
 import { useNFTStore } from 'src/stores/nft-store';
+import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import { useUserStore } from 'src/stores/user-store';
 
 const nftStore = useNFTStore();
 
@@ -193,9 +195,11 @@ export default defineComponent({
   data() {
     const store = ordersStore();
     const nftStore = useNFTStore();
+    const userStore = useUserStore();
     return {
       store,
       nftStore,
+      userStore,
       incomingOffers: store.incomingOffers,
       incomingSortKey: store.getIncomingSortKey,
 
@@ -238,8 +242,15 @@ export default defineComponent({
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`
     },
-    AcceptOffer(orderHash: string) {
-      console.log(orderHash)
+    async AcceptOffer(orderHash: string, brand: string, image: string) {
+      const address = this.userStore.walletAddress;
+      await FulfillBasicOrder(
+        orderHash,
+        brand,
+        true,
+        address,
+        image
+      );
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
