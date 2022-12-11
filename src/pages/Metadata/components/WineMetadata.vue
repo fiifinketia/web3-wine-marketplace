@@ -785,8 +785,7 @@ export default defineComponent({
 				await FulfillBasicOrder(
 					this.nft.orderDetails?.orderHash,
 					this.nft.brand,
-					// TODO: the isOwner boolean will be taken from client-side (Kelvin)
-					this.nft.isOwner,
+					false,
 					this.userStore.walletAddress,
 					this.nft.image
 				);
