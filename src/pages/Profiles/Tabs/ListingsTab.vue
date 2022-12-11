@@ -183,6 +183,8 @@ import ListingHeaderLg from '../Headers/ListingHeaderLg.vue';
 import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
+import { useUserStore } from 'src/stores/user-store';
+import { utils } from 'ethers';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -196,8 +198,10 @@ export default defineComponent({
 
   data() {
     const store = ordersStore();
+    const userStore = useUserStore();
     return {
       store,
+      userStore,
       listings: store.listings,
       listingSortKey: store.getListingSortKey,
 
@@ -239,8 +243,7 @@ export default defineComponent({
   methods: {
     async FetchListings(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      // JMG/TODO: Add dynamic address herein
-      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+      const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
       if (this.listings.length == 0) {

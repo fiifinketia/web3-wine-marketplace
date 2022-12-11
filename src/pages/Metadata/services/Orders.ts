@@ -29,12 +29,7 @@ export async function CreateERC721Listing(
 	listingPrice: string,
 	expirationDate: string
 ) {
-	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
-	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
 	const askAmount = utils.parseEther(listingPrice).toString();
-	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
-	// const testDate = new Date('2022-08-24T14:31:18.067Z');
-	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -59,7 +54,7 @@ export async function CreateERC721Listing(
 				{
 					basisPoints: Number(process.env.WIV_FEE),
 					recipient:
-						process.env.WIV_FEE_RECIEVER ||
+						process.env.WIV_FEE_RECEIVER ||
 						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
@@ -171,7 +166,8 @@ export async function CreateERC721Offer(
 	brand: string,
 	image: string,
 	address: string,
-	offerPrice: string
+	offerPrice: string,
+	expirationDate: string
 ) {
 	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
@@ -201,11 +197,12 @@ export async function CreateERC721Offer(
 				{
 					basisPoints: Number(process.env.WIV_FEE),
 					recipient:
-						process.env.WIV_FEE_RECIEVER ||
+						process.env.WIV_FEE_RECEIVER ||
 						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
 			domain: 'Seaport',
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
@@ -284,7 +281,6 @@ export async function FulfillBasicOrder(
 
 export async function GetWeb3(): Promise<SeaportInstance> {
 	const web3 = new ethers.providers.Web3Provider(window.ethereum);
-	const signer = web3.getSigner();
 	const chainId = (await web3.getNetwork()).chainId;
 	let network = '';
 	switch (chainId) {
@@ -300,7 +296,7 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 		case ChainID.MUMBAI:
 			network = 'Mumbai';
 	}
-	const seaport = new Seaport(signer);
+	const seaport = new Seaport(web3);
 	const seaportInstance: SeaportInstance = {
 		seaport: seaport,
 		network: network,

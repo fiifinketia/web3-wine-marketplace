@@ -153,6 +153,7 @@ import OutgoingHeaderLg from '../Headers/OutgoingHeaderLg.vue';
 import OutgoingHeaderSm from '../Headers/OutgoingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   components: {
@@ -163,8 +164,10 @@ export default defineComponent({
   },
   data() {
     const store = ordersStore();
+    const userStore = useUserStore();
     return {
       store,
+      userStore,
       outgoingOffers: store.outgoingOffers,
       outgoingSortKey: store.getOutgoingSortKey,
 
@@ -203,8 +206,7 @@ export default defineComponent({
   methods: {
     async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      // JMG/TODO: Add dynamic address herein
-      const address = '0x37B4044A9238C4DB0A97c551D165aee3E8C9f95A';
+      const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
       if (this.outgoingOffers.length == 0) {

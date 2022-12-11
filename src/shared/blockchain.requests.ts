@@ -9,7 +9,6 @@ async function FetchOwnedNFTs (walletAddress: string) {
   let ownedTokens: TokenIdentifier[] = [];
   let FinalERC1155Map: Map<string, TokenIdentifier> = new Map();
   let FinalERC721Map: Map<string, TokenIdentifier> = new Map();
-  console.log('here')
   try {
     await GetAllNFTsForAddressMoralis(walletAddress).then(({ERC1155Map, ERC721Map}) => {
       FinalERC1155Map = ERC1155Map;
@@ -137,7 +136,7 @@ async function GetAllNFTsForAddressMoralis(walletAddress: string) : Promise<{ERC
     const token: TokenIdentifier = {
       identifierOrCriteria: f.token_id,
       network: 'Mumbai',
-      contractAddress: f.token_address
+      contractAddress: utils.getAddress(f.token_address)
     }
     if (f.token_address == (<string> process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI).toLowerCase()) {
       const tokenID = parseInt(f.token_id, 16);

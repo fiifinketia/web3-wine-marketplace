@@ -750,7 +750,8 @@ export default defineComponent({
 							this.nft.brand,
 							this.nft.image,
 							this.userStore.walletAddress,
-							this.offerPrice.toString()
+							this.offerPrice.toString(),
+							this.offerExpirationDate
 						);
 					} catch (error) {
 						throw error;

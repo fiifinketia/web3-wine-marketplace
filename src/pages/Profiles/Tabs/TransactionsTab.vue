@@ -125,6 +125,7 @@ import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import TransactionHeaderLg from '../Headers/TransactionHeaderLg.vue';
 import TransactionHeaderSm from '../Headers/TransactionHeaderSm.vue';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   components: {
@@ -135,8 +136,10 @@ export default defineComponent({
   },
   data() {
     const store = ordersStore();
+    const userStore = useUserStore();
     return {
       store,
+      userStore,
       transactions: store.transactions,
       transactionSortKey: store.getTransactionSortKey,
 
@@ -178,11 +181,8 @@ export default defineComponent({
     },
     async FetchTransactions(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      // JMG/TODO: Add dynamic address herein
-      console.log('here')
-      const address = '0xA3873a019aC68824907A3aD99D3e3542376573D0';
+      const address = this.userStore.walletAddress;
       await this.store.setTransactions(address, sortKey, brandFilter);
-      console.log(this.store.getTransactions);
       this.transactions = this.store.getTransactions;
       if (this.transactions.length == 0) {
         this.emptyRequest = true 
