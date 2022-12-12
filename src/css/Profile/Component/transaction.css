@@ -79,7 +79,7 @@
   .transaction-column-date {
     width: 30%;
   }
-  .transaction-number-text {
+  .transaction-number-text, .transaction-time-text, .transaction-date-text {
     font-size: 16px;
   }
 }

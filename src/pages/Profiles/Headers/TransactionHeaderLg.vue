@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-between items-center q-pb-md" style="width: 95%">
+  <div class="row justify-between items-center q-pb-md" style="width: 100%">
     <div class="row q-gutter-x-lg">
       <span class="profile-header-offer q-pr-xs"> Transactions </span>
       <span class="profile-nft-number"> {{ transactionsAmount }} </span>

@@ -56,7 +56,7 @@
 
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
-					<q-tab-panel class="q-pa-none q-px-md" name="listings">
+					<q-tab-panel class="q-pa-none q-px-sm" name="listings">
 						<Listings />
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="incoming">

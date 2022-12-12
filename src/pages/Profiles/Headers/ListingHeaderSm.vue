@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 95%;">
+  <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 100%;">
     <div class="row justify-between items-center q-pb-sm">
       <div class="row q-gutter-x-lg">
         <span class="profile-header-offer q-pr-xs"> Listings </span>
@@ -38,7 +38,7 @@
       </div>
     </div>
   </div>
-  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 95%">
+  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 100%">
     <q-input 
       v-model="listingBrandFilter"
       color="grey"

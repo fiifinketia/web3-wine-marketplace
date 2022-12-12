@@ -67,6 +67,10 @@
   margin-top: 2px;
 }
 
+.profile-searchbox .q-field__control {
+  border-radius: 6px !important;
+}
+
 .profile-searchbox .q-field__label {
   font-family: 'ProximaNova-Regular' !important; 
 }
@@ -119,6 +123,9 @@
     flex-grow: 1;
   }
   .profile-nft-number, .profile-nft-number-highlight {
+    font-size: 16px;
+  }
+  .profile-nft-brand {
     font-size: 16px;
   }
 }
