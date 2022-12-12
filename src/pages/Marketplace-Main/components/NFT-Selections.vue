@@ -32,7 +32,7 @@
 					>
 						<div class="row justify-between" style="width: 100%">
 							<span class="main-marketplace-price-header q-pb-xs">
-								Starting from
+								Price
 							</span>
 							<q-img
 								v-if="token.favorited === true"
@@ -71,8 +71,7 @@
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
 									style="height: 20px; width: 20px"
 								/>
-								<span class="main-marketplace-price-text-b"> 0.00 </span>
-								<span class="main-marketplace-price-text-l"> /$ 00.00 </span>
+								<span class="main-marketplace-price-text-b"> {{ ToInt(token.orderDetails.listingPrice) }} </span>
 							</div>
 						</div>
 						<div v-else>
@@ -163,6 +162,9 @@ export default defineComponent({
 			);
 			this.allNFTs = nfts;
 		},
+		ToInt(price: string) {
+			return parseInt(price);
+		}
 	},
 });
 </script>
