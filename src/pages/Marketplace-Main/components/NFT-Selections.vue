@@ -1,7 +1,5 @@
 <template>
-	<q-page-container
-		class="row justify-between q-pt-none q-px-sm q-gutter-y-md"
-	>
+	<q-page-container class="row justify-between q-pt-none q-px-sm q-gutter-y-md">
 		<div
 			v-for="token in allNFTs"
 			:key="
@@ -15,7 +13,7 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="selectCard(token.tokenID)"
+				@click="selectCard(token.tokenID, token.smartContractAddress)"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -28,7 +26,7 @@
 						</span>
 					</div>
 					<q-card-section
-						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
+						class="column items-start main-marketplace-price-container q-py-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
 							<span class="main-marketplace-price-header q-pb-xs">
@@ -100,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
+import contract from '../contract/contractABI.json';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
@@ -111,7 +109,8 @@ import {
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { CreateOrderERC1155 } from '../services/Orders';
-
+import Web3 from 'web3';
+import { AbiItem } from 'web3-utils';
 export default defineComponent({
 	data() {
 		const userStore = useUserStore();
@@ -166,10 +165,26 @@ export default defineComponent({
 			this.RetrieveTokens();
 		},
 
-		selectCard(tokenID: string) {
+		selectCard(tokenID: string, smartContract: string) {
 			this.card = true;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
+			this.checkIfTokenExists(tokenID, smartContract);
+		},
+
+		async checkIfTokenExists(tokenID: string, smartContract: string) {
+			try {
+				const web3 = new Web3('https://polygon-rpc.com');
+				const result = new web3.eth.Contract(
+					contract as AbiItem[],
+					smartContract
+				);
+
+				const exists = await result.methods.tokenURI(tokenID).call();
+				exists && console.log('Token exists\nTokenID: ' + tokenID);
+			} catch (err: any) {
+				if (err) console.log('Token Does not exists\nTokenID: ' + tokenID);
+			}
 		},
 
 		async CreateListingForERC1155() {
