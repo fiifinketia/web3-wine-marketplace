@@ -1,272 +1,148 @@
 <template>
-  <div>
-    <div class="flex column justify-center items-center">
-      <div class="trending-wines-title q-pb-lg">Trending Wines</div>
-      <table class="table q-pt-sm">
-        <thead>
-          <tr>
-            <th class="flex items-start q-pl-md q-pt-md">Wine name</th>
-            <th class="twentyFour q-pl-md q-pb-sm q-pt-md trending-titles">
-              24hrs
-            </th>
-            <th class="three-mos q-pl-md q-pb-sm trending-titles q-pt-md">
-              3mos
-            </th>
-            <th class="q-pl-md q-pb-sm trending-titles q-pt-md">6mos</th>
-            <th
-              class="trending-wines-price q-pl-md q-pb-sm q-pt-md trending-titles"
-            >
-              Price
-            </th>
-          </tr>
-          <div class="q-pl-sm">
-            <div class="thead"></div>
-          </div>
-        </thead>
-        <tbody>
-          <tr>
-            <!-- <div class="q-pl-sm">
-              <div class="background-tr"></div>
-            </div> -->
-            <td class="justify-start q-pl-md">
-              <div class="wine-name-label">The full wine name here</div>
-            </td>
-            <td>
-              <div class="flex justify-center row items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="twentyFour">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="three-mos">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="trending-wines-price">
-              <div class="flex justify-center">
-                <div class="flex row items-center q-pt-sm">
-                  <q-img
-                    src="../../../assets/usdc.png"
-                    width="20px"
-                    height="20px"
-                  />
-                  <div class="q-pl-sm currency">00.00</div>
-                </div>
-              </div>
-            </td>
-          </tr>
+	<div>
+		<div class="flex column justify-center items-center">
+			<div class="trending-wines-title q-pb-lg">Trending wines</div>
+			<div v class="trending-table">
+				<div class="row trending-header-row">
+					<div class="trending-wine-name">Wine Name</div>
+					<div class="trending-twentyFour">24 hrs</div>
+					<div class="trending-three">3 mos</div>
+					<div>6 mos</div>
+					<div class="trending-wines-price">Price</div>
+				</div>
+				<div class="trending-separator"></div>
+				<div class="column trending-wine-rows">
+					<div
+						v-for="item in items"
+						:key="item.id"
+						class="row each-trending-row"
+					>
+						<div class="trending-wine-name trending-wine-name-label">
+							{{ item.name }}
+						</div>
+						<div
+							class="trending-twentyFour"
+							:class="positive === true ? 'positive' : 'negative'"
+						>
+							{{ item.twenty }}%&nbsp;
+							<q-img
+								v-if="positive"
+								src="../../../../public/images/up.svg"
+								width="13px"
+							/>
+							<q-img
+								v-if="!positive"
+								src="../../../../public/images/down.svg"
+								width="13px"
+							/>
+						</div>
+						<div
+							class="trending-three"
+							:class="positive === true ? 'positive' : 'negative'"
+						>
+							{{ item.three }}%&nbsp;
+							<q-img
+								v-if="positive"
+								src="../../../../public/images/up.svg"
+								width="13px"
+							/>
+							<q-img
+								v-if="!positive"
+								src="../../../../public/images/down.svg"
+								width="13px"
+							/>
+						</div>
+						<div :class="positive === true ? 'positive' : 'negative'">
+							{{ item.six }}%&nbsp;
 
-          <tr>
-            <td class="justify-start q-pl-md">
-              <div class="wine-name-label">The full wine name here</div>
-            </td>
-            <td>
-              <div class="flex justify-center row items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="twentyFour">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="three-mos">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="trending-wines-price">
-              <div class="flex justify-center">
-                <div class="flex row items-center q-pt-sm">
-                  <q-img
-                    src="../../../assets/usdc.png"
-                    width="20px"
-                    height="20px"
-                  />
-                  <div class="q-pl-sm currency">00.00</div>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <td class="justify-start q-pl-md">
-            <div class="wine-name-label">The full wine name here</div>
-          </td>
-          <td>
-            <div class="flex justify-center row items-center">
-              <q-img src="../../../assets/up.png" width="20px" />
-              <div :class="positive === true ? 'positive' : 'negative'">
-                0,67
-              </div>
-            </div>
-          </td>
-          <td class="twentyFour">
-            <div class="flex justify-center items-center">
-              <q-img src="../../../assets/up.png" width="20px" />
-              <div :class="positive === true ? 'positive' : 'negative'">
-                0,67
-              </div>
-            </div>
-          </td>
-          <td class="three-mos">
-            <div class="flex justify-center items-center">
-              <q-img src="../../../assets/up.png" width="20px" />
-              <div :class="positive === true ? 'positive' : 'negative'">
-                0,67
-              </div>
-            </div>
-          </td>
-          <td class="trending-wines-price">
-            <div class="flex justify-center">
-              <div class="flex row items-center q-pt-sm">
-                <q-img
-                  src="../../../assets/usdc.png"
-                  width="20px"
-                  height="20px"
-                />
-                <div class="q-pl-sm currency">00.00</div>
-              </div>
-            </div>
-          </td>
-          <tr class="tr-width">
-            <td class="justify-start q-pl-md">
-              <div class="wine-name-label">The full wine name here</div>
-            </td>
-            <td>
-              <div class="flex justify-center row items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="twentyFour">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="three-mos">
-              <div class="flex justify-center items-center">
-                <q-img src="../../../assets/up.png" width="20px" />
-                <div :class="positive === true ? 'positive' : 'negative'">
-                  0,67
-                </div>
-              </div>
-            </td>
-            <td class="trending-wines-price">
-              <div class="flex justify-center">
-                <div class="flex row items-center q-pt-sm">
-                  <q-img
-                    src="../../../assets/usdc.png"
-                    width="20px"
-                    height="20px"
-                  />
-                  <div class="q-pl-sm currency">00.00</div>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="q-pt-md">
-        <button class="see-market-button">
-          <div class="see-market-button-text">See market statistics</div>
-        </button>
-      </div>
-    </div>
-  </div>
+							<q-img
+								v-if="positive"
+								src="../../../../public/images/up.svg"
+								width="13px"
+							/>
+							<q-img
+								v-if="!positive"
+								src="../../../../public/images/down.svg"
+								width="13px"
+							/>
+						</div>
+						<div class="trending-wines-price trending-price">
+							<q-img
+								src="../../../../public/images/USDT-black.svg"
+								width="19px"
+								class="q-mr-xs"
+							/>
+							{{ item.price }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button class="see-market-button">See market statistics</button>
+		</div>
+	</div>
 </template>
 
 <script>
-// import { remove } from '@vue/shared';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Homepage/TrendingWines.css';
 export default defineComponent({
-  name: 'TrendingWines',
-  data() {
-    return {
-      items: [
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-        {
-          name: 'Vranac',
-          twenty: 0.5,
-          three: 5,
-          six: 0.5,
-          price: 23235,
-        },
-      ],
-    };
-  },
-  data() {
-    return {
-      positive: true,
-    };
-  },
+	name: 'TrendingWines',
+	data() {
+		return {
+			items: [
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 0,
+				},
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 1,
+				},
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 2,
+				},
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 3,
+				},
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 4,
+				},
+				{
+					name: 'The full wine name here',
+					twenty: 0.67,
+					three: 0.67,
+					six: 0.67,
+					price: '00.00',
+					id: 5,
+				},
+			],
+			positive: true,
+		};
+	},
 });
 </script>
 

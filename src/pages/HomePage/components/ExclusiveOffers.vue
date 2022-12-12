@@ -1,82 +1,92 @@
 <template>
-  <div class="flex column items-center">
-    <div class="exclusive-offer-title">
-      Invest in wines to taste & exclusive offers . . .
-    </div>
-    <div class="cards">
-      <div class="q-gutter-lg items-center justify-center row q-pt-lg">
-        <q-card
-          v-for="item in arrayOfObjects"
-          :key="item.name"
-          class="flex column card-container no-shadow"
-          :class="item.class"
-        >
-          <q-img src="../../../assets/circle.png" class="circle" />
-          <div class="wine-name q-pt-sm">
-            The full name of the wine is here and here and here
-          </div>
-          <div class="q-pt-md">
-            <div class="flex column box q-pt-md border">
-              <div class="flex row justify-between">
-                <div class="card-starting-from-title">Starting from</div>
-                <q-img
-                  src="../../../assets/like.png"
-                  class="cursor-pointer like"
-                />
-              </div>
-              <div class="flex row items-center q-pt-sm">
-                <q-img src="../../../assets/usdc.png" class="usdc" />
-                <div class="q-pl-sm currency">00.00</div>
-                <div class="price10 q-pl-sm">/ $ 00.00</div>
-              </div>
-            </div>
-          </div>
-        </q-card>
-      </div>
-    </div>
-    <div class="q-pt-lg go-to-marketplace-wrapper">
-      <button class="go-to-marketplace">
-        <div class="go-to-marketplace-text" @click="$router.push('marketplace?tab=nfts')">Go to Marketplace</div>
-      </button>
-    </div>
-  </div>
+	<div class="column">
+		<div class="column exclusive-offer-title justify-center">
+			<div>Invest in wines to taste &</div>
+			<div>&nbsp;exclusive offers . . .</div>
+		</div>
+
+		<div class="row justify-center q-pt-lg exclusive-offer-container">
+			<q-card
+				v-for="item in arrayOfObjects"
+				:key="item.name"
+				class="no-shadow col q-pa-md"
+				:class="item.class"
+			>
+				<q-img src="../../../assets/circle.png" class="circle" />
+				<div class="wine-name q-py-sm">
+					The full name of the wine is here and here and here
+				</div>
+				<div class="column border q-mt-sm">
+					<div class="row justify-between card-starting-from-title">
+						Price
+						<q-img
+							src="../../../../public/images/empty-heart.svg"
+							class="cursor-pointer like"
+						/>
+					</div>
+					<div class="row justify-between items-center q-pt-sm">
+						<div class="row">
+							<q-img
+								src="../../../../public/images/USDT.svg"
+								height="22px"
+								width="22px"
+							/>
+							<div class="currency">&nbsp;00.00</div>
+						</div>
+						<q-img
+							src="../../../../public/images/mini-button.svg"
+							width="32px"
+						/>
+					</div>
+				</div>
+			</q-card>
+		</div>
+		<div class="go-to-marketplace-wrapper row justify-center">
+			<button
+				class="go-to-marketplace q-mt-lg"
+				@click="$router.push('marketplace?tab=nfts')"
+			>
+				Go to Marketplace
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/ExclusiveOffers.css';
 export default defineComponent({
-  name: 'ExclusiveOffers',
-  data() {
-    return {
-      arrayOfObjects: [
-        {
-          name: 'Vranac',
-          price: 1000,
-          image: '../../../assets/image.png',
-          class: 'one',
-        },
-        {
-          name: 'Sauvignon',
-          price: 800,
-          image: '../../../assets/image.png',
-          class: 'two',
-        },
-        {
-          name: 'Dom Perignon',
-          price: 1800,
-          image: '../../../assets/image.png',
-          class: 'three',
-        },
-        {
-          name: 'Pro Corde',
-          price: 1800,
-          image: '../../../assets/image.png',
-          class: 'four',
-        },
-      ],
-    };
-  },
+	name: 'ExclusiveOffers',
+	data() {
+		return {
+			arrayOfObjects: [
+				{
+					name: 'Vranac',
+					price: 1000,
+					image: '../../../assets/image.png',
+					class: 'one',
+				},
+				{
+					name: 'Sauvignon',
+					price: 800,
+					image: '../../../assets/image.png',
+					class: 'two',
+				},
+				{
+					name: 'Dom Perignon',
+					price: 1800,
+					image: '../../../assets/image.png',
+					class: 'three',
+				},
+				{
+					name: 'Pro Corde',
+					price: 1800,
+					image: '../../../assets/image.png',
+					class: 'four',
+				},
+			],
+		};
+	},
 });
 </script>
 

@@ -1,263 +1,165 @@
 .exclusive-offer-title {
-  font-family: 'Obviously';
-  font-style: normal;
-  font-weight: 900;
-  font-size: 32px;
-  line-height: 48px;
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 32px;
+	line-height: 48px;
 
-  text-align: center;
-  letter-spacing: 0.03em;
+	text-align: center;
+	letter-spacing: 0.03em;
 
-  color: #212131;
+	color: #212131;
 }
 
 .card-title-text {
-  font-family: 'Obviously';
-  font-style: normal;
-  font-weight: 460;
-  font-size: 18px;
-  line-height: 27px;
-  letter-spacing: 0.02em;
-  color: #212131;
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	letter-spacing: 0.02em;
+	color: #212131;
+}
+
+.exclusive-offer-container {
+	width: 75%;
+	margin: 0 auto;
 }
 
 .card-starting-from-title {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.5px;
-  color: #9d9d9d;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
 }
 
 .currency {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #212131;
-}
-
-.price {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 14px;
-  color: #9d9d9d;
-}
-
-.price10 {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 14px;
-
-  color: #9d9d9d;
-}
-
-.cards {
-  width: 100%;
-}
-
-.card-container {
-  width: 230px;
-  display: flex;
-  align-items: center;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
 }
 
 .border {
-  background: linear-gradient(
-    109.05deg,
-    rgba(255, 255, 255, 0.13) 15.61%,
-    rgba(255, 255, 255, 0.04) 98.78%
-  );
-  border: 1px solid rgba(94, 151, 236, 0.27);
-  backdrop-filter: blur(20px);
-  border-radius: 6px;
-  padding: 8px;
-}
-
-.box {
-  width: 96%;
+	border: 1px solid rgba(94, 151, 236, 0.27) !important;
+	border-radius: 6px !important;
+	padding: 8px;
 }
 
 .circle {
-  width: 230px;
+	width: 100%;
 }
 
 .like {
-  width: 20px;
-}
-.usdc {
-  width: 20px;
+	width: 20px;
+	margin-right: 6px;
 }
 
 .go-to-marketplace {
-  width: 230px;
-  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  height: 40px;
-}
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
 
-.go-to-marketplace-text {
-  font-family: 'ProximaNova-Bold';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center;
-  letter-spacing: 0.02em;
+	color: #ffffff;
 
-  color: #ffffff;
+	width: 230px;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	padding: 1rem 0;
 }
 
 .go-to-marketplace-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+	width: 86.5%;
+	margin: 0 auto;
 }
 
 .wine-name {
-  width: 230px;
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	/* or 150% */
+
+	letter-spacing: 0.02em;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+	width: 90%;
 }
 
-.box {
-  width: 230px;
-}
-
-@media screen and (max-width: 1115px) {
-  .box {
-    width: 200px;
-  }
-  .wine-name {
-    width: 200px;
-  }
-  .circle {
-    width: 200px;
-  }
+@media screen and (max-width: 1255px) {
+	.exclusive-offer-container {
+		width: 95%;
+	}
 }
 
 @media screen and (max-width: 992px) {
-  .one {
-    display: none;
-  }
-  .circle {
-    width: 200px;
-  }
-  .box {
-    width: 200px;
-  }
-  .card-container {
-    width: 220px;
-  }
-  .go-to-marketplace {
-    width: 230px;
-  }
-  .wine-name {
-    width: 200px;
-  }
+	.one {
+		display: none;
+	}
+	.exclusive-offer-title {
+		flex-direction: row;
+	}
 }
 
 @media screen and (max-width: 768px) {
-  .two {
-    display: none;
-  }
-  .go-to-marketplace {
-    width: 230px;
-  }
-  .box {
-    width: 200px;
-  }
+	.two {
+		display: none;
+	}
 }
 
 @media screen and (max-width: 576px) {
-  .circle {
-    width: 160px;
-  }
-  .card-container {
-    width: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .card-starting-from-title {
-    font-size: 14px;
-  }
-  .currency {
-    font-size: 15px;
-  }
-  .price10 {
-    font-size: 12px;
-  }
-  .usdc {
-    width: 15px;
-    height: 15px;
-  }
-  .box {
-    width: 160px;
-  }
-  .like {
-    width: 15px;
-    height: 15px;
-  }
-  .one,
-  .two {
-    display: none;
-  }
-  .go-to-marketplace {
-    width: 230px;
-  }
-  .price10 {
-    display: none;
-  }
-  .currency {
-    font-size: 18px;
-  }
-  .wine-name {
-    width: 160px;
-  }
+	.exclusive-offer-title {
+		font-size: 28px;
+	}
+	.go-to-marketplace {
+		width: 100%;
+	}
+	.card-starting-from-title {
+		font-size: 14px;
+	}
+	.currency {
+		font-size: 15px;
+	}
+	.usdc {
+		width: 15px;
+		height: 15px;
+	}
+	.like {
+		width: 15px;
+		height: 15px;
+	}
+	.currency {
+		font-size: 18px;
+	}
 }
 
 @media screen and (max-width: 400px) {
-  .circle {
-    width: 140px;
-  }
-  .card-container {
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+	.three {
+		display: none;
+	}
+	.wine-name {
+		font-size: 16px;
+	}
 
-  .border {
-    width: 140px;
-  }
-  .one,
-  .two {
-    display: none;
-  }
-
-  .go-to-marketplace {
-    width: 70%;
-  }
-
-  .price10 {
-    display: none;
-  }
-  .currency {
-    font-size: 18px;
-  }
-  .wine-name {
-    width: 140px;
-  }
+	.currency {
+		font-size: 18px;
+	}
 }

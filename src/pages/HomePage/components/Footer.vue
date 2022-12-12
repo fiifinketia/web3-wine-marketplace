@@ -1,85 +1,87 @@
 <template>
-  <div class="footer-container">
-    <div class="q-pl-sm q-pt-md">
-      <q-img src="../../../assets/wiv-logo.png" width="80px" />
-    </div>
-    <div class="flex row justify-between text-left">
-      <div class="first">
-        <div class="flex column q-pl-sm q-pt-md">
-          <a class="footer-bold-text q-py-sm " :href="nftsUrl">NFTs</a>
-          <a class="footer-normal-text q-py-sm " :href="newReleasesUrl">New Releases</a>
-          <a class="footer-normal-text q-py-sm " :href="recommendedUrl">Recommended</a>
-          <a class="footer-bold-text q-py-sm " :href="favouritesUrl">Favourites</a>
-          <a class="footer-bold-text q-py-sm">Stats</a>
-          <a class="footer-normal-text q-py-sm">Wine Statistics</a>
-        </div>
-        <div class="flex column q-pt-md">
-          <a class="footer-bold-text q-py-sm">Storefront</a>
-          <a class="footer-normal-text q-py-sm">New comings</a>
-          <a class="footer-normal-text q-py-sm">Recommended</a>
-        </div>
-      </div>
-      <div class="second">
-        <div class="flex column q-pt-md">
-          <a class="footer-bold-text q-py-sm">Profile</a>
-          <a class="footer-normal-text q-py-sm">Digital Wine Cellar</a>
-          <a class="footer-normal-text q-py-sm">Offers</a>
-          <a class="footer-normal-text q-py-sm">Trading History</a>
-          <a class="footer-normal-text q-py-sm">Notifications</a>
-          <a class="footer-bold-text q-py-sm">Settings</a>
-        </div>
-        <div class="flex column q-pt-md">
-          <a class="footer-bold-text q-py-sm">Help</a>
-          <a class="footer-normal-text q-py-sm">Contact us</a>
-          <a class="footer-normal-text q-py-sm">FAQs</a>
-          <a class="footer-normal-text q-py-sm">Privacy Policy</a>
-          <a class="footer-normal-text q-py-sm">Terms & Conditions</a>
-        </div>
-      </div>
-      <div class="third">
-        <div class="flex column q-pt-md">
-          <div class="footer-bold-text q-py-sm">Contact info:</div>
-          <div class="footer-normal-text q-py-sm">email@email.com</div>
-          <div class="footer-normal-text q-py-sm">+ 0 000 000 0000</div>
-        </div>
-        <div class="flex column footer-column q-pt-md">
-          <div class="footer-bold-text q-py-sm">Integrations</div>
-          <div class="flex row">
-            <div class="q-pr-md">
-              <q-img src="../../../assets/discord.png" width="20px" />
-            </div>
-            <div class="q-pr-md">
-              <q-img src="../../../assets/twitter.png" width="20px" />
-            </div>
-            <div class="q-pr-md">
-              <q-img src="../../../assets/instagram.png" width="20px" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- <footer class="footer">
-    <div class="q-pl-sm q-pt-md">
-      <q-img src="../../../assets/wiv-logo.png" width="80px" />
-    </div>
-    <div class=""></div>
-  </footer> -->
+	<div class="footer-container">
+		<div class="q-pl-md q-pt-md">
+			<q-img src="../../../../public/images/WiV-logo.svg" width="80px" />
+		</div>
+		<div class="row justify-between footer-wrapper text-left q-pt-md">
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<a class="footer-bold" :href="nftsUrl">NFTs</a>
+				<a class="footer-normal" :href="newReleasesUrl">New Releases</a>
+				<a class="footer-normal" :href="recommendedUrl">Recommended</a>
+				<a class="footer-bold" :href="favouritesUrl">Favourites</a>
+				<a class="footer-bold">Stats</a>
+				<a class="footer-normal">Wine Statistics</a>
+			</div>
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<a class="footer-bold">Storefront</a>
+				<a class="footer-normal">New comings</a>
+				<a class="footer-normal">Recommended</a>
+			</div>
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<a class="footer-bold">Profile</a>
+				<a class="footer-normal">Digital Wine Cellar</a>
+				<a class="footer-normal">Offers</a>
+				<a class="footer-normal">Trading History</a>
+				<a class="footer-normal">Notifications</a>
+				<a class="footer-bold">Settings</a>
+			</div>
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<a class="footer-bold">Help</a>
+				<a class="footer-normal">Contact us</a>
+				<a class="footer-normal">FAQs</a>
+				<a class="footer-normal">Privacy Policy</a>
+				<a class="footer-normal">Terms & Conditions</a>
+			</div>
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<div class="footer-bold">Contact info:</div>
+				<div class="footer-normal">email@email.com</div>
+				<div class="footer-normal">+ 0 000 000 0000</div>
+			</div>
+			<div
+				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
+			>
+				<div class="footer-bold">Integrations</div>
+				<div class="row q-pt-xs">
+					<div class="q-pr-md">
+						<q-img src="../../../../public/images/discord.svg" width="23px" />
+					</div>
+					<div class="q-px-md">
+						<q-img src="../../../../public/images/twitter.svg" width="23px" />
+					</div>
+					<div class="q-px-md">
+						<q-img src="../../../../public/images/instagram.svg" width="23px" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/Footer.css';
 export default defineComponent({
-  name: 'LandingPageFooter',
+	name: 'LandingPageFooter',
 
 	data() {
 		return {
 			nftsUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=nfts',
-			newReleasesUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=releases',
-			recommendedUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=recommended',
+			newReleasesUrl:
+				process.env.CLIENT_BASE_URL + '#/marketplace?tab=releases',
+			recommendedUrl:
+				process.env.CLIENT_BASE_URL + '#/marketplace?tab=recommended',
 			favouritesUrl: process.env.CLIENT_BASE_URL + '#/favorites',
-		}
+		};
 	},
 });
 </script>
