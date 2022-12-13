@@ -15,7 +15,8 @@
 
 .dialog-label,
 .dialog-terms-conditions,
-.dialog-delete-text-light {
+.dialog-delete-text-light,
+.dialog-info {
   font-family: 'ProximaNova-Regular';
 }
 
@@ -75,11 +76,16 @@
 
 .dialog-date-box .col{
   flex-grow: 0;
-  flex-basis: 15vw;
+  flex-basis: 10vw;
 }
 
 .dialog-terms-conditions {
   font-size: 16px;
+}
+
+.dialog-info {
+  color: #3586FF;
+  font-size: 14px;
 }
 
 .dialog-confirm {
