@@ -1,0 +1,85 @@
+.dialog-subtitle, .dialog-fee {
+  font-family: 'Obviously-Bold';
+}
+
+.dialog-title,
+.dialog-highest-offer-price,
+.dialog-total,
+.dialog-confirm,
+.dialog-reset {
+  font-family: 'ProximaNova-Bold';
+}
+
+.dialog-label,
+.dialog-terms-conditions {
+  font-family: 'ProximaNova-Regular';
+}
+
+.dialog-title,
+.dialog-subtitle,
+.dialog-fee,
+.dialog-total,
+.dialog-terms-conditions,
+.dialog-highest-offer-price {
+  line-height: 1;
+}
+
+.dialog-title {
+  color: #212131;
+  font-size: 18px;
+}
+
+.dialog-subtitle {
+  font-family: 18px;
+}
+
+.dialog-label {
+  color: #9D9D9D;
+  font-size: 16px;
+}
+
+.dialog-highest-offer-price {
+  color: #212131;
+  font-size: 20px;
+}
+
+.dialog-fee {
+  font-size: 18px;
+  color: #212131;
+}
+
+.dialog-total {
+  color: #212131;
+  font-size: 32px;
+}
+
+.dialog-input-box .col{
+  flex-grow: 0;
+  flex-basis: 10vw;
+}
+
+.dialog-date-box .col{
+  flex-grow: 0;
+  flex-basis: 15vw;
+}
+
+.dialog-terms-conditions {
+  font-size: 16px;
+}
+
+.dialog-confirm {
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+  border-radius: 6px;
+  width: 200px;
+  height: 56px;
+  color: white;
+  font-size: 20px;
+}
+
+.dialog-reset {
+  background: white;
+  border-radius: 6px;
+  width: 200px;
+  height: 56px;
+  font-size: 20px;
+}

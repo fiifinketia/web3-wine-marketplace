@@ -130,10 +130,22 @@
               flat
               unelevated
               dense
+              @click="openDialog = true"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
+          <OutgoingDialog 
+            v-model="openDialog"
+            :brand="offer.brand"
+            :highestOffer="offer.highestOffer"
+            :highestOfferCurrency="offer.highestOfferCurrency"
+            :image="offer.image"
+            :network="offer.network"
+            :orderHash="offer.orderHash"
+            :smartContractAddress="offer.contractAddress"
+            :tokenID="offer.identifierOrCriteria"
+          />
         </div>
         </div>
       </div>
@@ -154,13 +166,15 @@ import OutgoingHeaderSm from '../Headers/OutgoingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
+import OutgoingEdit from '../Popups/OutgoingEdit.vue';
 
 export default defineComponent({
   components: {
     OutgoingHeaderLg: OutgoingHeaderLg,
     OutgoingHeaderSm: OutgoingHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: EmptyOrders
+    EmptyView: EmptyOrders,
+    OutgoingDialog: OutgoingEdit
   },
   data() {
     const store = ordersStore();
@@ -174,7 +188,9 @@ export default defineComponent({
       outgoingBrandFilter: store.getOutgoingBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      openDialog: false
     }
   },
   watch: {

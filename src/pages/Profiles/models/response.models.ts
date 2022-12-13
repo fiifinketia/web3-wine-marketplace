@@ -1,15 +1,17 @@
+import { TokenIdentifier } from "src/shared/models/entities/NFT.model";
+
 interface OrdersResponse {
   incoming: IncomingOffersResponse[];
   outgoing: OutgoingOffersResponse[];
 }
 
-interface ListingsResponse extends ListingModel, HighestOfferModel {}
+interface ListingsResponse extends ListingModel, HighestOfferModel, TokenIdentifier {}
 
 interface IncomingOffersResponse extends OfferModel, LowestOfferModel {
   offerer: string;
 }
 
-interface OutgoingOffersResponse extends OfferModel, HighestOfferModel {}
+interface OutgoingOffersResponse extends OfferModel, HighestOfferModel, TokenIdentifier {}
 
 interface ListingModel extends BaseOrderModel {
   listingPrice: string;
