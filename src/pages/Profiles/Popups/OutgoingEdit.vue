@@ -17,7 +17,14 @@
         <q-separator spaced="md" size="2px" inset vertical color="accent" />
         <div class="dialog-subtitle">{{ brand }}</div>
         <q-space />
-        <q-btn v-close-popup icon="close" flat round dense />
+        <q-btn 
+          v-close-popup 
+          icon="close" 
+          flat 
+          round 
+          dense 
+          @click="ResetData()"
+        />
       </q-card-section>
 
       <q-card-section class="row justify-start">
@@ -79,7 +86,7 @@
           no-caps
           outline
           style="color: #3586FF;"
-          @click="offerExpirationDate = ''; offerPrice = ''"
+          @click="ResetData()"
         >
           <span> Reset </span>
         </q-btn>
@@ -88,7 +95,7 @@
           no-caps
           flat
           :disable="
-            !makeOfferTOCAccepted ||
+            !acceptTerms ||
             offerExpirationDate === '' ||
             offerPrice <= 0 ||
             loadingOffer
@@ -155,7 +162,13 @@ export default defineComponent({
       console.log('there')
     },
     CreateNewOrder() {
-      console.log('here')
+
+      this.$emit('outgoing-edit-close')
+    },
+    ResetData() {
+      this.offerPrice = '';
+      this.offerExpirationDate = '';
+      this.acceptTerms = false;
     }
   }
 })

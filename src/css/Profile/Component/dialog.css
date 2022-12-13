@@ -6,12 +6,16 @@
 .dialog-highest-offer-price,
 .dialog-total,
 .dialog-confirm,
+.dialog-delete,
+.dialog-delete-action,
+.dialog-delete-text-bold,
 .dialog-reset {
   font-family: 'ProximaNova-Bold';
 }
 
 .dialog-label,
-.dialog-terms-conditions {
+.dialog-terms-conditions,
+.dialog-delete-text-light {
   font-family: 'ProximaNova-Regular';
 }
 
@@ -20,13 +24,24 @@
 .dialog-fee,
 .dialog-total,
 .dialog-terms-conditions,
-.dialog-highest-offer-price {
+.dialog-highest-offer-price,
+.dialog-delete-action,
+.dialog-delete-text-light,
+.dialog-delete-text-bold {
   line-height: 1;
 }
 
-.dialog-title {
+.dialog-title,
+.dialog-delete-text-light,
+.dialog-delete-text-bold {
   color: #212131;
   font-size: 18px;
+}
+
+.dialog-delete-text-bold,
+.dialog-delete-text-light {
+  text-align: center;
+  line-height: 1.5;
 }
 
 .dialog-subtitle {
@@ -38,7 +53,7 @@
   font-size: 16px;
 }
 
-.dialog-highest-offer-price {
+.dialog-highest-offer-price, .dialog-delete-action {
   color: #212131;
   font-size: 20px;
 }
@@ -69,6 +84,15 @@
 
 .dialog-confirm {
   background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+  border-radius: 6px;
+  width: 200px;
+  height: 56px;
+  color: white;
+  font-size: 20px;
+}
+
+.dialog-delete {
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
   border-radius: 6px;
   width: 200px;
   height: 56px;

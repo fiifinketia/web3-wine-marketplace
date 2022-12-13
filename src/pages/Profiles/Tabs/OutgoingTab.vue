@@ -123,6 +123,7 @@
               flat
               unelevated
               dense
+              @click="openDeleteDialog = true"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -130,13 +131,13 @@
               flat
               unelevated
               dense
-              @click="openDialog = true"
+              @click="openEditDialog = true"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
-          <OutgoingDialog 
-            v-model="openDialog"
+          <OutgoingDialogEdit
+            v-model="openEditDialog"
             :brand="offer.brand"
             :highestOffer="offer.highestOffer"
             :highestOfferCurrency="offer.highestOfferCurrency"
@@ -145,6 +146,11 @@
             :orderHash="offer.orderHash"
             :smartContractAddress="offer.contractAddress"
             :tokenID="offer.identifierOrCriteria"
+            @outgoing-edit-close="openEditDialog = !openEditDialog"
+          />
+          <OutgoingDialogDelete
+            v-model="openDeleteDialog"
+            :orderHash="offer.orderHash"
           />
         </div>
         </div>
@@ -167,6 +173,7 @@ import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
 import OutgoingEdit from '../Popups/OutgoingEdit.vue';
+import OutgoingDelete from '../Popups/OutgoingDelete.vue';
 
 export default defineComponent({
   components: {
@@ -174,7 +181,8 @@ export default defineComponent({
     OutgoingHeaderSm: OutgoingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
-    OutgoingDialog: OutgoingEdit
+    OutgoingDialogEdit: OutgoingEdit,
+    OutgoingDialogDelete: OutgoingDelete
   },
   data() {
     const store = ordersStore();
@@ -190,7 +198,8 @@ export default defineComponent({
       loadingRequest: false,
       emptyRequest: false,
 
-      openDialog: false
+      openEditDialog: false,
+      openDeleteDialog: false
     }
   },
   watch: {
