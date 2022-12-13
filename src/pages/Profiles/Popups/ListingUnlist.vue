@@ -3,20 +3,12 @@
     transition-show="scale"
     transition-hide="scale"
   >
-    <q-card
-      class="q-pa-none"
-      style="
-        min-width: 35%;
-        background-color: #ffffff;
-        border-radius: 10px;
-        max-width: 35%;
-      "
-    >
+    <q-card class="q-pa-none dialog-confirm-box column items-center">
       <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
         <img src="../../../assets/unlist-order.svg"/>
         <span class="dialog-delete-action"> Please confirm the action. </span>
       </q-card-section>
-      <q-card-actions align="center" class="row q-mb-sm q-mx-sm q-mt-md">
+      <div class="row justify-between q-mb-sm q-mt-md" style="width: 95%">
         <q-btn
           class="dialog-reset"
           no-caps
@@ -34,7 +26,7 @@
         >
           Unlist
         </q-btn>
-      </q-card-actions>
+      </div>
     </q-card>
   </q-dialog>
 

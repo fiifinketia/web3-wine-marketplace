@@ -9,7 +9,9 @@
 .dialog-delete,
 .dialog-delete-action,
 .dialog-delete-text-bold,
-.dialog-reset {
+.dialog-reset,
+.dialog-confirm-small,
+.dialog-reset-small {
   font-family: 'ProximaNova-Bold';
 }
 
@@ -46,7 +48,7 @@
 }
 
 .dialog-subtitle {
-  font-family: 18px;
+  font-size: 18px;
 }
 
 .dialog-label {
@@ -57,6 +59,8 @@
 .dialog-highest-offer-price, .dialog-delete-action {
   color: #212131;
   font-size: 20px;
+  /* TAKE NOTE HERE */
+  text-align: center;
 }
 
 .dialog-fee {
@@ -71,12 +75,12 @@
 
 .dialog-input-box .col{
   flex-grow: 0;
-  flex-basis: 10vw;
+  flex-basis: 150px;
 }
 
 .dialog-date-box .col{
   flex-grow: 0;
-  flex-basis: 10vw;
+  flex-basis: 150px;
 }
 
 .dialog-terms-conditions {
@@ -88,10 +92,16 @@
   font-size: 14px;
 }
 
-.dialog-confirm {
+.dialog-confirm-box {
+  min-width: 435px;
+  background-color: #ffffff;
+  border-radius: 10px !important;
+}
+
+.dialog-confirm, .dialog-confirm-small {
   background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
   border-radius: 6px;
-  width: 200px;
+  width: 49%;
   height: 56px;
   color: white;
   font-size: 20px;
@@ -100,16 +110,31 @@
 .dialog-delete {
   background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
   border-radius: 6px;
-  width: 200px;
+  width: 49%;
   height: 56px;
   color: white;
   font-size: 20px;
 }
 
-.dialog-reset {
+.dialog-reset, .dialog-reset-small {
   background: white;
   border-radius: 6px;
-  width: 200px;
+  width: 49%;
   height: 56px;
   font-size: 20px;
+}
+
+@media screen and (max-width: 800px) {
+  .dialog-confirm-small {
+    width: 200px;
+  }
+  .dialog-reset-small {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .dialog-confirm-box {
+    min-width: 95vw;
+  }
 }

@@ -3,15 +3,7 @@
     transition-show="scale"
     transition-hide="scale"
   >
-    <q-card
-      class="q-pa-none"
-      style="
-        min-width: 40%;
-        background-color: #ffffff;
-        border-radius: 10px;
-        max-width: 40%;
-      "
-    >
+    <q-card class="q-pa-none dialog-confirm-box column items-center">
       <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
         <img src="../../../assets/delete-order.svg"/>
         <span class="dialog-delete-action"> Please confirm the action. </span>
@@ -23,7 +15,7 @@
           this action and will have to place a bid again for this NFT once you change your mind.
         </span>
       </q-card-section>
-      <q-card-actions align="center" class="row q-mb-sm q-mx-sm q-mt-md">
+      <div class="row justify-between q-mb-sm q-mt-md" style="width: 95%">
         <q-btn
           class="dialog-reset"
           no-caps
@@ -41,7 +33,7 @@
         >
           Delete
         </q-btn>
-      </q-card-actions>
+      </div>
     </q-card>
   </q-dialog>
 
