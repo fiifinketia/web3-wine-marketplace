@@ -218,6 +218,8 @@
 <script lang="ts">
 import 'src/css/Profile/Component/dialog.css'
 import { defineComponent } from 'vue';
+import { CreateERC721Listing, CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
+import { useUserStore } from 'src/stores/user-store';
 export default defineComponent({
   props: {
     orderHash: {
@@ -246,7 +248,9 @@ export default defineComponent({
     }
   },
   data() {
+    const userStore = useUserStore();
     return {
+      userStore,
       listingPrice: '',
       listingExpirationDate: '',
       fee: '',
@@ -254,11 +258,17 @@ export default defineComponent({
     }
   },
   methods: {
-    CancelOrder(orderHash: string) {
-      console.log('there')
-    },
-    CreateNewOrder() {
-
+    async CreateNewOrder() {
+      await CancelSingleOrder(this.orderHash);
+      await CreateERC721Listing(
+        this.tokenID,
+        this.smartContractAddress,
+        this.brand,
+        this.image,
+        this.userStore.walletAddress,
+        this.listingPrice,
+        this.listingExpirationDate
+      )
       this.$emit('listing-edit-close')
     },
     ResetData() {

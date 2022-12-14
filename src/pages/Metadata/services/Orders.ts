@@ -10,7 +10,7 @@ import {
 } from '../models/Orders';
 
 import axios from 'axios';
-import { OrderComponents } from '@opensea/seaport-js/lib/types';
+import { OrderComponents, OrderParameters } from '@opensea/seaport-js/lib/types';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -304,6 +304,23 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 		network: network,
 	};
 	return seaportInstance;
+}
+
+export async function CancelSingleOrder(orderHash: string) {
+	const order: OrderComponents = await axios
+	.get(
+		`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
+		GETParams
+	)
+	.then((result) => {
+		const data = result.data;
+		return {
+			...<OrderParameters & { counter: number }> data.parameters, signature: <string> data.signature
+		};
+	});
+	const { seaport } = await GetWeb3();
+	const { transact } = seaport.cancelOrders([order]);
+	await transact();
 }
 
 export async function CancelSelectOrders(orderHashes: string[]) {

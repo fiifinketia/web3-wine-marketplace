@@ -35,6 +35,7 @@
 <script lang="ts">
 import 'src/css/Profile/Component/dialog.css'
 import { defineComponent } from 'vue';
+import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 export default defineComponent({
   props: {
     orderHash: {
@@ -43,9 +44,9 @@ export default defineComponent({
     }
   },
   methods: {
-    CancelOrder() {
-      console.log(this.orderHash)
-    }
+    async CancelOrder() {
+      await CancelSingleOrder(this.orderHash);
+    },
   }
 })
 </script>
