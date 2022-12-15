@@ -80,7 +80,7 @@
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" />
+	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')"/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
