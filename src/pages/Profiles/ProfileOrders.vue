@@ -33,6 +33,7 @@
 						icon-right="app:down_arrow"
 						auto-close
 						class="col-auto profile-dropdown-container"
+						content-class="dropdown-menu"
 						:label="tabLabel"
 					>
 						<q-list>
