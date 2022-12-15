@@ -20,6 +20,7 @@
         class="icons"
         src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
+        @click="$router.push('/orders')"
       />
     </div>
     <div>sign up</div>

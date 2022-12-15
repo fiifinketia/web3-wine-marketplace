@@ -234,6 +234,8 @@ export default defineComponent({
     const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
     if (incomingOffersRequestStatus == false) {
       await this.FetchIncomingOffers('', '');
+    } else {
+      this.$emit('incomingAmount', this.incomingOffers.length);
     }
     this.loadingRequest = true;
   },
@@ -256,6 +258,7 @@ export default defineComponent({
       this.loadingRequest = false;
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.store.getIncomingOffers;
+      this.$emit('incomingAmount', this.incomingOffers.length);
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }

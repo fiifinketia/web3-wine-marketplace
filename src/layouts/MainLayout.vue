@@ -139,7 +139,7 @@
 									@click="$router.push('/marketplace?tab=recommended')"
 								>
 									<q-item-section>
-										<q-item-label>Recomended</q-item-label>
+										<q-item-label>Recommended</q-item-label>
 									</q-item-section>
 								</q-item>
 							</q-list>
@@ -182,6 +182,7 @@
 						flat
 						split
 						icon="app:profile"
+						:to="{ path: '/orders' }"
 					>
 						<div class="q-btn-menu-div">
 							<q-list>

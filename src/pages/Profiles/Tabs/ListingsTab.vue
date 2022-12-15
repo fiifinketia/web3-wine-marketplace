@@ -259,6 +259,8 @@ export default defineComponent({
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
       await this.FetchListings('', '');
+    } else {
+      this.$emit('listingsAmount', this.listings.length);
     }
     this.loadingRequest = true
   },
@@ -269,6 +271,7 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
+      this.$emit('listingsAmount', this.listings.length);
       if (this.listings.length == 0) {
         this.emptyRequest = true 
       }

@@ -225,6 +225,8 @@ export default defineComponent({
     const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
       await this.FetchOutgoingOffers('', '');
+    } else {
+      this.$emit('outgoingAmount', this.outgoingOffers.length);
     }
     this.loadingRequest = true;
   },
@@ -234,6 +236,7 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
+      this.$emit('outgoingAmount', this.outgoingOffers.length);
       if (this.outgoingOffers.length == 0) {
         this.emptyRequest = true 
       }

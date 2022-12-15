@@ -1,3 +1,41 @@
+.profile-dropdown {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  line-height: 0;
+  border-radius: 4px !important;
+}
+
+.profile-dropdown .q-icon > img {
+  width: 50%;
+}
+
+.profile-dropdown .q-icon {
+  margin-right: -12px;
+}
+
+.q-menu {
+  top: 115px !important;
+  border-radius: 4px !important;
+}
+
+.profile-tab-title {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  line-height: 0;
+  color: white;
+}
+
+.profile-tab-count {
+  font-family: 'ProximaNova-Bold';
+}
+
+.profile-dropdown-selection {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  align-self: center;
+  line-height: 0;
+}
+
 .profile-main-container {
   background: #FFFFFF;
   border: 1px solid rgba(94, 151, 236, 0.27);
@@ -127,5 +165,14 @@
   }
   .profile-nft-brand {
     font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .profile-dropdown {
+    width: 100% !important;
+  }
+  .profile-dropdown .justify-center{
+    justify-content: space-between;
   }
 }
