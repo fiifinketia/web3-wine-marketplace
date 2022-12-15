@@ -123,6 +123,7 @@
               flat
               unelevated
               dense
+              @click="openDeleteDialog = true"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -130,10 +131,27 @@
               flat
               unelevated
               dense
+              @click="openEditDialog = true"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
+          <OutgoingDialogEdit
+            v-model="openEditDialog"
+            :brand="offer.brand"
+            :highestOffer="offer.highestOffer"
+            :highestOfferCurrency="offer.highestOfferCurrency"
+            :image="offer.image"
+            :network="offer.network"
+            :orderHash="offer.orderHash"
+            :smartContractAddress="offer.contractAddress"
+            :tokenID="offer.identifierOrCriteria"
+            @outgoing-edit-close="openEditDialog = !openEditDialog"
+          />
+          <OutgoingDialogDelete
+            v-model="openDeleteDialog"
+            :orderHash="offer.orderHash"
+          />
         </div>
         </div>
       </div>
@@ -154,13 +172,17 @@ import OutgoingHeaderSm from '../Headers/OutgoingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
+import OutgoingEdit from '../Popups/OutgoingEdit.vue';
+import OutgoingDelete from '../Popups/OutgoingDelete.vue';
 
 export default defineComponent({
   components: {
     OutgoingHeaderLg: OutgoingHeaderLg,
     OutgoingHeaderSm: OutgoingHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: EmptyOrders
+    EmptyView: EmptyOrders,
+    OutgoingDialogEdit: OutgoingEdit,
+    OutgoingDialogDelete: OutgoingDelete
   },
   data() {
     const store = ordersStore();
@@ -174,7 +196,10 @@ export default defineComponent({
       outgoingBrandFilter: store.getOutgoingBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      openEditDialog: false,
+      openDeleteDialog: false
     }
   },
   watch: {

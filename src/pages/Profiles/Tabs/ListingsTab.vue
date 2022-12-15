@@ -151,6 +151,7 @@
               flat
               unelevated
               dense
+              @click="openDeleteDialog = true"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -158,10 +159,25 @@
               flat
               unelevated
               dense
+              @click="openEditDialog = true"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
+          <ListingDialogEdit
+            v-model="openEditDialog"
+            :brand="listing.brand"
+            :image="listing.image"
+            :orderHash="listing.orderHash"
+            :network="listing.network"
+            :smartContractAddress="listing.contractAddress"
+            :tokenID="listing.identifierOrCriteria"
+            @listing-edit-close="openEditDialog = !openEditDialog"
+          />
+          <ListingDialogUnlist
+            v-model="openDeleteDialog"
+            :orderHash="listing.orderHash"
+          />
         </div>
         </div>
       </div>
@@ -185,6 +201,8 @@ import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
 import { utils } from 'ethers';
+import ListingEdit from '../Popups/ListingEdit.vue';
+import ListingUnlist from '../Popups/ListingUnlist.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -193,7 +211,9 @@ export default defineComponent({
     ListingHeaderLg: ListingHeaderLg,
     ListingHeaderSm: ListingHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: EmptyOrders
+    EmptyView: EmptyOrders,
+    ListingDialogEdit: ListingEdit,
+    ListingDialogUnlist: ListingUnlist
   },
 
   data() {
@@ -208,7 +228,10 @@ export default defineComponent({
       listingBrandFilter: store.getListingBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      openEditDialog: false,
+      openDeleteDialog: false
     }
   },
 
