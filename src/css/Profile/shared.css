@@ -43,7 +43,7 @@
 	background-color: transparent;
 }
 
-.dropdown-menu {
+.profile-dropdown-menu {
   top: 115px !important;
   border-radius: 4px !important;
 }
@@ -175,6 +175,26 @@
   color: #3486FF;
   text-align: center;
   align-items: center;
+}
+
+.profile-disconnected-text {
+  font-family: 'ProximaNova-Bold';
+  color: #212131;
+  font-size: 24px;
+  text-align: center;
+  line-height: 29px;
+}
+
+.profile-connect-button {
+  font-family: 'ProximaNova-Bold';
+  color: white;
+  font-size: 20px;
+  line-height: 0;
+  width: 155px;
+  height: 56px;
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+  border-radius: 6px;
+  padding: 16px 32px;
 }
 
 @media screen and (max-width: 800px) {

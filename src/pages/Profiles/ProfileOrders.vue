@@ -33,7 +33,7 @@
 						icon-right="app:down_arrow"
 						auto-close
 						class="col-auto profile-dropdown-container"
-						content-class="dropdown-menu"
+						content-class="profile-dropdown-menu"
 						:label="tabLabel"
 					>
 						<q-list>
@@ -59,16 +59,20 @@
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
 					<q-tab-panel class="q-pa-none q-px-sm" name="listings">
-						<Listings @listingsAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected"/>
+						<Listings v-else @listingsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="incoming">
-						<IncomingOffers @incomingAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected"/>
+						<IncomingOffers v-else @incomingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="outgoing">
-						<OutgoingOffers @outgoingAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected"/>
+						<OutgoingOffers v-else @outgoingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="transactions">
-						<Transactions @transactionsAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected"/>
+						<Transactions v-else @transactionsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 				</q-tab-panels>
 			</section>
@@ -83,21 +87,27 @@ import IncomingTab from './Tabs/IncomingTab.vue';
 import OutgoingTab from './Tabs/OutgoingTab.vue';
 import ListingsTab from './Tabs/ListingsTab.vue';
 import TransactionsTab from './Tabs/TransactionsTab.vue';
+import UnconnectedWallet from './UnconnectedWallet.vue';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   components: {
 		IncomingOffers: IncomingTab,
 		OutgoingOffers: OutgoingTab,
     Listings: ListingsTab,
-    Transactions: TransactionsTab
+    Transactions: TransactionsTab,
+		Unconnected: UnconnectedWallet
 	},
 
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
+		const userStore = useUserStore();
     return {
       tab: ref(queryT || 'listings'),
       tabLabel: ref('Listings'),
-			countForTab: 0
+			countForTab: 0,
+			isConnected: false,
+			userStore
     };
   },
 
@@ -130,6 +140,41 @@ export default defineComponent({
 			},
 			immediate: true,
 		},
+		tab: {
+			handler(val) {
+				switch (val) {
+					case 'listings':
+						this.tabLabel = 'Listings';
+						break;
+					case 'outgoing':
+						this.tabLabel = 'Outgoing Offers';
+						break;
+					case 'incoming':
+						this.tabLabel = 'Incoming Offers';
+						break;
+					case 'transactions':
+						this.tabLabel = 'Trading History';
+						break;
+				}
+			}
+		},
+		'userStore.walletAddress': {
+      handler(val) {
+        if (!!val) {
+					this.isConnected = true;
+        } else {
+					this.countForTab = 0;
+          this.isConnected = false;
+        }
+      }
+    },
+	},
+
+	mounted() {
+		const wallet = this.userStore.walletAddress;
+		if (!!wallet) {
+			this.isConnected = true;
+		}
 	},
 
 	methods: {
