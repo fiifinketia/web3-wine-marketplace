@@ -32,7 +32,7 @@
 						dropdown-icon="none"
 						icon-right="app:down_arrow"
 						auto-close
-						class="col-auto profile-dropdown"
+						class="col-auto profile-dropdown-container"
 						:label="tabLabel"
 					>
 						<q-list>

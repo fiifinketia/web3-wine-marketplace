@@ -1,16 +1,46 @@
-.profile-dropdown {
+.profile-dropdown-container {
   font-family: 'ProximaNova-Bold';
   font-size: 18px;
   line-height: 0;
   border-radius: 4px !important;
 }
 
-.profile-dropdown .q-icon > img {
+.profile-dropdown-container .q-icon > img {
   width: 50%;
 }
 
-.profile-dropdown .q-icon {
+.profile-dropdown-container .q-icon {
   margin-right: -12px;
+}
+
+.profile-dropdown-container .q-icon {
+	font-size: 38px !important;
+	border-radius: 6px;
+
+	transition: background 0.3s ease;
+}
+.profile-dropdown-container .q-icon:hover {
+	background: rgba(94, 151, 236, 0.27);
+
+	border-radius: 6px;
+}
+
+.profile-dropdown-container .q-btn-item {
+	padding: 0;
+}
+
+.btn-dropdown-menu .q-btn-dropdown__arrow {
+	font-size: 1.2rem !important;
+	margin: 0 !important;
+	margin-top: 5px !important;
+	padding: 0 !important;
+}
+
+.profile-dropdown-container .q-btn-dropdown__arrow {
+	margin-top: 4px !important;
+}
+.profile-dropdown-container .q-btn-dropdown__arrow:hover {
+	background-color: transparent;
 }
 
 .q-menu {
@@ -169,10 +199,10 @@
 }
 
 @media screen and (max-width: 350px) {
-  .profile-dropdown {
+  .profile-dropdown-container {
     width: 100% !important;
   }
-  .profile-dropdown .justify-center{
+  .profile-dropdown-container .justify-center{
     justify-content: space-between;
   }
 }
