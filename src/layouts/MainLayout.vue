@@ -308,7 +308,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view />
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet"/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -348,6 +348,7 @@ export default defineComponent({
 			balance: 0,
 		};
 	},
+
 	async mounted() {
 		const userStore = useUserStore();
 

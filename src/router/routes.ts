@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
 		],
 	},
 	{
-		path: '/metadata',
+		path: '/nft',
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
 			{
@@ -41,6 +41,16 @@ const routes: RouteRecordRaw[] = [
 				component: () => import('pages/Favourites/Favourites.vue'),
 			},
 		],
+	},
+	{
+		path: '/orders',
+		component: () => import ('layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('pages/Profiles/ProfileOrders.vue'),
+			},
+		]
 	},
 	{
 		path: '/protected',

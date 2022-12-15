@@ -78,15 +78,17 @@ import {
 	RemoveFavorites,
 	GetAllFavorites,
 } from '../Marketplace-Main/services/FavoritesFunctions';
+import { useUserStore } from 'src/stores/user-store';
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
 		FAVsRemove,
 	},
 	data() {
+		const userStore = useUserStore();
 		return {
 			favNFTs: Array<FavoritesModel>(),
-			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
+			userStore
 		};
 	},
 	mounted() {
@@ -95,7 +97,7 @@ export default defineComponent({
 	methods: {
 		async getAllFavorites() {
 			const { result: nfts } = await GetAllFavorites(
-				`?walletAddress=${this.walletAddressTemporary}`
+				`?walletAddress=${this.userStore.walletAddress}`
 			);
 			this.favNFTs = nfts;
 		},
@@ -113,7 +115,7 @@ export default defineComponent({
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
 			await RemoveFavorites({
-				walletAddress: this.walletAddressTemporary,
+				walletAddress: this.userStore.walletAddress,
 				tokenID: tokenID,
 				contractAddress: cAddress,
 				network: network,

@@ -19,7 +19,7 @@ async function RetrieveFilteredNFTs(
 	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
 	await axios
-		.get(`${url}?${queryParams}`)
+		.get(`${url}?${queryParams}`, GETParams)
 		.then((res: AxiosResponse<ResultAndCountResponse>) => {
 			nfts = res.data.result;
 			counts = res.data.counts;
@@ -31,24 +31,24 @@ async function RetrieveFilteredNFTs(
 	};
 }
 
-async function RetrieveFavoredNFTs(
-	queryParams: string
-): Promise<ResultAndCountResponse> {
-	let nfts: ListingWithPricingAndImage[] = [];
-	let counts: DynamicKeyWithCount = {};
-	const url = 'http://localhost:3400/wivmkt-nft-service/retrieveFilteredNFTs';
+// async function RetrieveFavoredNFTs(
+// 	queryParams: string
+// ): Promise<ResultAndCountResponse> {
+// 	let nfts: ListingWithPricingAndImage[] = [];
+// 	let counts: DynamicKeyWithCount = {};
+// 	const url = <string>process.env.RETRIEVE_FILTERED_NFTS_URL;
 
-	await axios
-		.get(url + queryParams)
-		.then((res: AxiosResponse<ResultAndCountResponse>) => {
-			nfts = res.data.result;
-			counts = res.data.counts;
-		});
+// 	await axios
+// 		.get(url + queryParams)
+// 		.then((res: AxiosResponse<ResultAndCountResponse>) => {
+// 			nfts = res.data.result;
+// 			counts = res.data.counts;
+// 		});
 
-	return {
-		result: nfts,
-		counts: counts,
-	};
-}
+// 	return {
+// 		result: nfts,
+// 		counts: counts,
+// 	};
+// }
 
-export { RetrieveFilteredNFTs, RetrieveFavoredNFTs };
+export { RetrieveFilteredNFTs };

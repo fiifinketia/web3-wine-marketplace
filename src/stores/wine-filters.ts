@@ -6,12 +6,12 @@ export const useWineFilters = defineStore('wineFilters', {
 		listedOnly: '',
 		listedOnlyOptions: [
 			{
-				label: 'Yes',
-				value: 'Yes',
+				label: 'Listed',
+				value: 'Listed',
 			},
 			{
-				label: 'No',
-				value: 'No',
+				label: 'Unlisted',
+				value: 'Unlisted',
 			},
 		],
 		type: [''],
@@ -212,6 +212,14 @@ export const useWineFilters = defineStore('wineFilters', {
 							);
 						}
 						break;
+					case 'listedOnly':
+						if (!!state.listedOnly) {
+							if (state.listedOnly == 'Listed') {
+								filters.push('listed[]=1');
+							} else {
+								filters.push('listed[]=0');
+							}
+						}
 				}
 			});
 			if (state.searchQuery) filters.push('q=' + state.searchQuery);
@@ -282,7 +290,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.format = this.format.filter((i) => i !== value);
 			this.investmentGrade = this.investmentGrade.filter((i) => i !== value);
 			this.listedOnly =
-				value === 'Yes' || value === 'No' ? '' : this.listedOnly;
+				value === 'Listed' || value === 'Unlisted' ? '' : this.listedOnly;
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
 		},

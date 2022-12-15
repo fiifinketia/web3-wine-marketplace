@@ -1,19 +1,16 @@
 import { Seaport } from '@opensea/seaport-js';
-import { BigNumber, ethers, utils } from 'ethers';
-import { ChainID, ItemType } from '../models/Request.models/Seaport.constants';
-import { OpenSeaSDK } from 'opensea-js';
+import { ethers, utils } from 'ethers';
 import {
+	ChainID,
+	ItemType,
 	OrderListingModel,
-	OrderRequest,
+	RetrieveListingResponse,
 	SeaportInstance,
-	TokenIdentifier,
 	UpdateListingRequest,
-} from '../models/Request.models/Seaport.Request.models';
-import { RetrieveListingResponse } from '../models/Response.models/Seaport.Response.models';
+} from '../models/Orders';
+
 import axios from 'axios';
-import { OrderComponents } from '@opensea/seaport-js/lib/types';
-import { useUserStore } from 'src/stores/user-store';
-import Web3 from 'web3';
+import { OrderComponents, OrderParameters } from '@opensea/seaport-js/lib/types';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -23,18 +20,16 @@ const GETParams = {
 	},
 };
 
-export async function CreateOrder(
+export async function CreateERC721Listing(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
-	address: string
+	image: string,
+	address: string,
+	listingPrice: string,
+	expirationDate: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
-	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther('100').toString();
-	const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
-	// const testDate = new Date('2022-08-24T14:31:18.067Z');
-	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
+	const askAmount = utils.parseEther(listingPrice).toString();
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -52,22 +47,24 @@ export async function CreateOrder(
 				{
 					amount: askAmount,
 					recipient: address,
-					token: wivaContract,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECEIVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
-			// endTime: testDate2
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	const { hash } = await transact();
+	await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -78,6 +75,7 @@ export async function CreateOrder(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -89,17 +87,19 @@ export async function CreateOrder(
 	);
 }
 
-export async function CreateOrderERC1155(
+export async function CreateERC1155Listing(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
+	image: string,
 	address: string,
+	listingPrice: string,
+	expirationDate: string,
 	amount: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
+	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther('100').toString();
-	const feeReceiver = address;
+	const askAmount = utils.parseEther(listingPrice).toString();
 	// const testDate = new Date('2022-08-24T14:31:18.067Z');
 	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
@@ -120,22 +120,24 @@ export async function CreateOrderERC1155(
 				{
 					amount: askAmount,
 					recipient: address,
-					token: wivaContract,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECEIVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
-			// endTime: testDate2
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	const { hash } = await transact();
+	await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -146,6 +148,7 @@ export async function CreateOrderERC1155(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -157,16 +160,19 @@ export async function CreateOrderERC1155(
 	);
 }
 
-export async function CreateOffer(
+export async function CreateERC721Offer(
 	tokenID: string,
 	smartContractAddress: string,
 	brand: string,
-	address: string
+	image: string,
+	address: string,
+	offerPrice: string,
+	expirationDate: string
 ) {
-	const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
+	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther('100').toString();
-	const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
+	const askAmount = utils.parseEther(offerPrice).toString();
+	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -174,8 +180,8 @@ export async function CreateOffer(
 			offer: [
 				// buyer's offer
 				{
-					token: wivaContract,
 					amount: askAmount,
+					token: process.env.WIVA_CONTRACT,
 				},
 			],
 			consideration: [
@@ -189,17 +195,20 @@ export async function CreateOffer(
 			],
 			fees: [
 				{
-					basisPoints: 250,
-					recipient: feeReceiver,
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient:
+						process.env.WIV_FEE_RECEIVER ||
+						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
 				},
 			],
 			domain: 'Seaport',
+			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
 		},
 		address
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	const { hash } = await transact();
+	await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -210,6 +219,8 @@ export async function CreateOffer(
 		contractAddress: smartContractAddress,
 		identifierOrCriteria: tokenID,
 		brand: brand,
+		image: image,
+		highestBid: offerPrice,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -225,9 +236,10 @@ export async function FulfillBasicOrder(
 	orderHash: string,
 	brand: string,
 	owner: boolean,
-	address: string
+	address: string,
+	image: string
 ) {
-	const { seaport, network } = await GetWeb3();
+	const { seaport } = await GetWeb3();
 	const order: RetrieveListingResponse = await axios
 		.get(
 			`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
@@ -250,7 +262,7 @@ export async function FulfillBasicOrder(
 				signature: order.signature,
 			},
 		});
-	const { hash } = await executeAllFulfillActions();
+	await executeAllFulfillActions();
 
 	const updateOrder: UpdateListingRequest = {
 		notificationID: RandomIdGenerator(),
@@ -261,6 +273,7 @@ export async function FulfillBasicOrder(
 		brand: brand,
 		isOwner: owner,
 		walletAddress: address,
+		image: image
 	};
 	axios.post(
 		'http://localhost:8080/api/market/order/fulfill/order.fulfill',
@@ -270,7 +283,6 @@ export async function FulfillBasicOrder(
 
 export async function GetWeb3(): Promise<SeaportInstance> {
 	const web3 = new ethers.providers.Web3Provider(window.ethereum);
-	const signer = web3.getSigner();
 	const chainId = (await web3.getNetwork()).chainId;
 	let network = '';
 	switch (chainId) {
@@ -286,7 +298,7 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 		case ChainID.MUMBAI:
 			network = 'Mumbai';
 	}
-	const seaport = new Seaport(signer);
+	const seaport = new Seaport(web3);
 	const seaportInstance: SeaportInstance = {
 		seaport: seaport,
 		network: network,
@@ -294,10 +306,27 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 	return seaportInstance;
 }
 
+export async function CancelSingleOrder(orderHash: string) {
+	const order: OrderComponents = await axios
+	.get(
+		`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
+		GETParams
+	)
+	.then((result) => {
+		const data = result.data;
+		return {
+			...<OrderParameters & { counter: number }> data.parameters, signature: <string> data.signature
+		};
+	});
+	const { seaport } = await GetWeb3();
+	const { transact } = seaport.cancelOrders([order]);
+	await transact();
+}
+
 export async function CancelSelectOrders(orderHashes: string[]) {
 	let orders: OrderComponents[] = [];
 	await axios
-		.post('http://localhost:4200/seaport/cancelSelectOrders/', orderHashes)
+		.post('http://localhost:8080/api/market/order/cancel', orderHashes)
 		.then((res) => {
 			orders = res.data;
 		});
@@ -305,7 +334,7 @@ export async function CancelSelectOrders(orderHashes: string[]) {
 	const { transact } = seaport.cancelOrders(orders);
 	await transact();
 	axios.post(
-		'http://localhost:4200/seaport/updateCancelledOrders/',
+		'http://localhost:8080/api/market/order/cancel/confirm/order.cancel',
 		orderHashes
 	);
 }

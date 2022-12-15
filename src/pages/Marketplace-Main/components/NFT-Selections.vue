@@ -15,7 +15,7 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="selectCard(token.tokenID)"
+				:to="{ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} }"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -32,7 +32,7 @@
 					>
 						<div class="row justify-between" style="width: 100%">
 							<span class="main-marketplace-price-header q-pb-xs">
-								Starting from
+								Price
 							</span>
 							<q-img
 								v-if="token.favorited === true"
@@ -65,14 +65,13 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.listingPrice">
+						<div v-if="!!token.orderDetails?.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
 									style="height: 20px; width: 20px"
 								/>
-								<span class="main-marketplace-price-text-b"> 0.00 </span>
-								<span class="main-marketplace-price-text-l"> /$ 00.00 </span>
+								<span class="main-marketplace-price-text-b"> {{ ToInt(token.orderDetails.listingPrice) }} </span>
 							</div>
 						</div>
 						<div v-else>
@@ -82,19 +81,6 @@
 				</q-card>
 			</q-btn>
 		</div>
-		<q-dialog v-model="card">
-			<q-card class="my-card">
-				<q-card-actions align="right">
-					<q-btn
-						flat
-						color="primary"
-						label="Create Order"
-						@click="CreateListingForERC1155"
-					/>
-					<!-- <q-btn v-close-popup flat color="primary" round icon="event" /> -->
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</q-page-container>
 </template>
 
@@ -106,11 +92,9 @@ import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import {
 	RetrieveFilteredNFTs,
-	RetrieveFavoredNFTs,
 } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
-import { CreateOrderERC1155 } from '../services/Orders';
 
 export default defineComponent({
 	data() {
@@ -129,7 +113,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
-			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
+			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -147,7 +131,7 @@ export default defineComponent({
 			switch (objective) {
 				case 'add':
 					await AddFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
@@ -156,14 +140,14 @@ export default defineComponent({
 
 				case 'remove':
 					await RemoveFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
 					});
 					break;
 			}
-			this.RetrieveTokens();
+			await this.RetrieveTokens();
 		},
 
 		selectCard(tokenID: string) {
@@ -172,26 +156,15 @@ export default defineComponent({
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 
-		async CreateListingForERC1155() {
-			const smartContractAddressStatic =
-				'0x1458DAb28F3e94F8e4Ae3fCb03De803e53Dd443D';
-			const amountStatic = '1';
-			const address: string = this.userStore.walletAddress;
-			CreateOrderERC1155(
-				this.selected.tokenID,
-				smartContractAddressStatic,
-				this.selected.brand,
-				address,
-				amountStatic
-			);
-		},
-
 		async RetrieveTokens() {
-			const { result: nfts, counts } = await RetrieveFavoredNFTs(
-				`?walletAddress=${this.walletAddressTemporary}`
+			const { result: nfts } = await RetrieveFilteredNFTs(
+				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
 			this.allNFTs = nfts;
 		},
+		ToInt(price: string) {
+			return parseInt(price);
+		}
 	},
 });
 </script>
