@@ -25,7 +25,9 @@
 					<div class="q-pl-lg q-pt-lg portfolio-calculation-title">
 						Portfolio Calculation
 					</div>
-					<div class="flex column justify-between q-pt-lg">
+					<div
+						class="flex column justify-between q-pt-lg portfolio-calculation-desktop"
+					>
 						<div class="flex justify-center">
 							<div class="flex items-center column q-pt-lg plant-section">
 								<q-img
@@ -100,6 +102,64 @@
 							</div>
 						</div>
 					</div>
+					<div
+						class="flex column justify-between q-pt-lg justify-center items-center"
+					>
+						<div
+							class="flex row calculation-images-container portfolio-calculation-mobile justify-between"
+						>
+							<q-img src="../../assets/plant.svg" width="50px" height="50px" />
+							<q-img
+								src="../../assets/bombUnselected.svg"
+								width="50px"
+								height="50px"
+							/>
+							<q-img
+								src="../../assets/hourglassUnselected.svg"
+								width="50px"
+								height="50px"
+							/>
+						</div>
+						<div
+							v-if="
+								firstStepMobile === true &&
+								secondStepMobile === false &&
+								thirdStepMobile === false
+							"
+							class="step-mobile flex column"
+						>
+							<div>1.</div>
+							<div>Please select the amount you would like to invest</div>
+						</div>
+						<div
+							v-else-if="
+								firstStepMobile === false &&
+								secondStepMobile === true &&
+								thirdStepMobile === false
+							"
+							class="step-mobile flex column"
+						>
+							<div>2.</div>
+							<div>
+								Pick the Risk level you are going to apply to your future
+								portfolio.
+							</div>
+						</div>
+						<div
+							v-else-if="
+								firstStepMobile === false &&
+								secondStepMobile === false &&
+								thirdStepMobile === true
+							"
+							class="step-mobile flex column"
+						>
+							<div>3.</div>
+							<div>
+								Select the time you want to make the investment for to see
+								possible.
+							</div>
+						</div>
+					</div>
 					<div class="full-width flex justify-end q-pr-sm q-pt-lg help-section">
 						Help
 					</div>
@@ -144,36 +204,40 @@
 						/>
 					</div>
 					<div class="end-amount q-pt-sm">End amount</div>
-					<div class="end-amount-price">${{ finalWorth }}</div>
+					<div class="end-amount-price">${{ finalWorth.toFixed(2) }}</div>
 					<div class="end-amount-percentage-title q-pt-lg">Percentage</div>
-					<div class="end-amount-percentage">+{{ percentage }}%</div>
+					<div class="end-amount-percentage">+{{ percentage.toFixed(2) }}%</div>
 				</div>
 				<div
 					v-if="secondSection === false"
 					class="flex full-height justify-center calculator-second-part"
 				>
 					<div class="calculator-second-part-wrapper flex column">
-						<div class="line"></div>
+						<div v-if="secondSection === false" class="flex row q-pt-lg">
+							<div class="line-2"></div>
+							<div class="line-3"></div>
+						</div>
+
 						<div class="starting-investment-wrapper q-pt-lg">
 							<div class="flex row justify-between">
 								<div class="starting-investment-text">
 									Starting investment (USD)
 								</div>
 								<div class="starting-investment-number">
-									<span id="demo"></span>
+									<div id="rangeValue">15000</div>
 								</div>
 							</div>
 							<div class="q-pt-md">
-								<div class="input-container">
-									<input
-										id="my-slider"
-										type="range"
-										min="0"
-										max="100"
-										value="50"
-										oninput="slider()"
-									/>
-									<div id="slider-value">0</div>
+								<div class="center">
+									<div class="form-element">
+										<input
+											type="range"
+											min="100"
+											max="50000"
+											value="15000"
+											oninput="rangeValue.innerText = this.value"
+										/>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -190,13 +254,13 @@
 										@click="calculateRisk('low')"
 									></div>
 								</div>
-								<div class="flex column q-pl-md">
+								<div class="flex column q-pl-md risk-wrapper">
 									<div class="flex row justify-between items-center">
 										<div class="risk-title">Low risk name</div>
 										<div class="low-risk-border"></div>
 									</div>
 									<div class="risk-desc q-pt-sm">
-										A shot description of what it is and takes max two lines
+										A short description of what it is and takes max two lines
 									</div>
 								</div>
 							</div>
@@ -214,7 +278,7 @@
 											@click="calculateRisk('medium')"
 										></div>
 									</div>
-									<div class="flex column q-pl-md">
+									<div class="flex column q-pl-md risk-wrapper">
 										<div class="flex row justify-between items-center">
 											<div class="risk-title">Mid risk name</div>
 											<div class="medium-risk-border"></div>
@@ -239,7 +303,7 @@
 											@click="calculateRisk('high')"
 										></div>
 									</div>
-									<div class="flex column q-pl-md">
+									<div class="flex column q-pl-md risk-wrapper">
 										<div class="flex row justify-between items-center">
 											<div class="risk-title">High risk</div>
 											<div class="high-risk-border"></div>
@@ -268,7 +332,9 @@
 					class="flex column calculator-second-part full-height items-center q-pt-lg"
 				>
 					<div class="calculator-second-part-wrapper">
-						<div class="full-line"></div>
+						<div v-if="secondSection === true" class="flex row q-pb-lg">
+							<div class="line"></div>
+						</div>
 						<div class="flex row justify-between">
 							<div class="starting-investment-text-bold">
 								Starting investment (USD)
@@ -283,17 +349,21 @@
 							<div class="flex row justify-between">
 								<div class="starting-investment-text-bold">Timing</div>
 								<div class="starting-investment-number">
-									<span id="demo1"></span>
+									<span id="timeRange">1 year</span>
 								</div>
 							</div>
-							<div>
-								<input
-									id="timeSlider"
-									type="range"
-									min="1"
-									max="30"
-									value="20"
-								/>
+							<div class="q-pt-lg">
+								<div class="center">
+									<div class="form-element">
+										<input
+											type="range"
+											min="1"
+											max="30"
+											value="10"
+											oninput="this.value < 10 ? timeRange.innerText = this.value + 'mos': this.value == 10 || this.value == 20 || this.value == 30 ? timeRange.innerText = this.value.slice(0,1) + 'year': timeRange.innerText = this.value.split('').join(' year ') +' mos'"
+										/>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="calculate-button-wrapper full-width">
@@ -336,49 +406,21 @@ export default defineComponent({
 			selectedRisk: String(),
 			finalWorth: Number(),
 			percentage: Number(),
+			firstStepMobile: true,
+			secondStepMobile: false,
+			thirdStepMobile: false,
 		};
 	},
-	mounted() {
-		// this.handleInput();
-		this.slider();
-	},
+
 	methods: {
-		slider() {
-			const mySlider = document.getElementById('my-slider');
-			const sliderValue = document.getElementById('slider-value');
-			function slider() {
-				var valPercent =
-					(((<HTMLInputElement>mySlider).value as any) /
-						((<HTMLInputElement>mySlider).max as any)) *
-					100;
-				(
-					mySlider as HTMLInputElement
-				).style.background = `linear-gradient(to right, #3264fe ${valPercent}%, #d5d5d5 ${valPercent}%)`;
-				// sliderValue.textContent = (mySlider as HTMLInputElement).value;
-			}
-		},
-		// handleInput() {
-		// 	var slider = document.getElementById('myRange');
-		// 	var output = document.getElementById('demo');
-		// 	// console.log(slider, output);
-		// 	var valPercent =
-		// 		Number((<HTMLInputElement>slider).value) /
-		// 		Number((<HTMLInputElement>slider).max);
-		// 	(
-		// 		slider as HTMLElement
-		// 	).style.background = `linear-gradient(to right, #3586FF ${valPercent}%, red ${valPercent}%)`;
-
-		// 	(slider as HTMLElement).oninput = function () {
-		// 		(output as HTMLElement).innerHTML = (<HTMLInputElement>slider).value;
-		// 	};
-		// },
-
 		handleCalculation() {
 			this.calculating = false;
 		},
 		calculateRisk(type: string) {
-			const number = (<HTMLInputElement>document.getElementById('myRange'))
-				.value;
+			const number = document.getElementById('rangeValue')?.innerHTML;
+			this.firstStepMobile = false;
+			this.secondStepMobile = true;
+
 			if (type === 'low') {
 				this.lowRisk = true;
 				this.mediumRisk = false;
@@ -407,32 +449,42 @@ export default defineComponent({
 		openCalculationPage() {
 			this.showButton = false;
 			this.secondSection = true;
-			var timeSlider = document.getElementById('timeSlider');
-			var outputTime = document.getElementById('demo1');
+			this.firstStepMobile = false;
+			this.secondStepMobile = false;
+			this.thirdStepMobile = true;
 		},
 
 		calculateFinalWorth(type: string) {
+			const time = document.getElementById('timeRange')?.innerHTML;
+			if (time === '1year') {
+				this.time = 10;
+			} else if (time === '2year') {
+				this.time = 20;
+			} else if (time === '3year') {
+				this.time = 30;
+			}
+
 			this.calculateWorth = true;
 
 			setTimeout(() => {
 				this.calculateWorth = false;
 			}, 2000);
 			if (type === 'low') {
-				this.finalWorth = this.money * 1.08;
+				this.finalWorth = this.money * 1.08 * this.time;
 				this.finalWorth.toFixed(2);
 			} else if (type === 'medium') {
-				this.finalWorth = this.money * 1.11;
+				this.finalWorth = this.money * 1.11 * this.time;
 				this.finalWorth.toFixed(2);
 			} else if (type === 'high') {
-				this.finalWorth = this.money * 1.15;
+				this.finalWorth = this.money * 1.15 * this.time;
 				this.finalWorth.toFixed(2);
 			}
 			this.percentage = ((this.finalWorth - this.money) / this.money) * 100;
 			this.showPrice = true;
 		},
-		// activateBackButton() {
-
-		// }
+		activateBackButton() {
+			this.secondSection = false;
+		},
 	},
 });
 </script>
