@@ -151,7 +151,7 @@
               flat
               unelevated
               dense
-              @click="openDeleteDialog = true"
+              @click="OpenDeleteDialog(listing)"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -159,24 +159,25 @@
               flat
               unelevated
               dense
-              @click="openEditDialog = true"
+              @click="OpenEditDialog(listing)"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
           <ListingDialogEdit
             v-model="openEditDialog"
-            :brand="listing.brand"
-            :image="listing.image"
-            :orderHash="listing.orderHash"
-            :network="listing.network"
-            :smartContractAddress="listing.contractAddress"
-            :tokenID="listing.identifierOrCriteria"
-            @listing-edit-close="openEditDialog = !openEditDialog"
+            :brand="singleListing.brand"
+            :image="singleListing.image"
+            :orderHash="singleListing.orderHash"
+            :network="singleListing.network"
+            :smartContractAddress="singleListing.contractAddress"
+            :tokenID="singleListing.identifierOrCriteria"
+            @listing-edit-close="openEditDialog = false"
           />
           <ListingDialogUnlist
             v-model="openDeleteDialog"
-            :orderHash="listing.orderHash"
+            :orderHash="singleListing.orderHash"
+            @listing-delete-close="openDeleteDialog = false"
           />
         </div>
         </div>
@@ -200,9 +201,9 @@ import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
-import { utils } from 'ethers';
 import ListingEdit from '../Popups/ListingEdit.vue';
 import ListingUnlist from '../Popups/ListingUnlist.vue';
+import { ListingsResponse } from '../models/response.models';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -231,7 +232,9 @@ export default defineComponent({
       emptyRequest: false,
 
       openEditDialog: false,
-      openDeleteDialog: false
+      openDeleteDialog: false,
+
+      singleListing: {} as ListingsResponse
     }
   },
 
@@ -276,6 +279,14 @@ export default defineComponent({
         this.emptyRequest = true 
       }
       this.loadingRequest = true
+    },
+    OpenDeleteDialog(listing: ListingsResponse) {
+      this.singleListing = listing;
+      this.openDeleteDialog = true;
+    },
+    OpenEditDialog(listing: ListingsResponse) {
+      this.singleListing = listing;
+      this.openEditDialog = true;
     }
   }
 });

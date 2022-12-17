@@ -45,7 +45,13 @@ export default defineComponent({
   },
   methods: {
     async CancelOrder() {
-      await CancelSingleOrder(this.orderHash);
+      try {
+        await CancelSingleOrder(this.orderHash);
+      } catch {
+        return 0
+      } finally {
+        this.$emit('listing-delete-close');
+      }
     },
   }
 })
