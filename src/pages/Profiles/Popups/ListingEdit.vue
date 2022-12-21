@@ -261,6 +261,7 @@ export default defineComponent({
     async CreateNewOrder() {
       try {
         await CancelSingleOrder(this.orderHash);
+        this.$emit('remove-listing', this.orderHash);
         try {
           await CreateERC721Listing(
             this.tokenID,

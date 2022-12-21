@@ -47,6 +47,7 @@ export default defineComponent({
     async CancelOrder() {
       try {
         await CancelSingleOrder(this.orderHash);
+        this.$emit('remove-listing', this.orderHash);
       } catch {
         return 0
       } finally {

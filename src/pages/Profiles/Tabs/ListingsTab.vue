@@ -173,11 +173,13 @@
             :smartContractAddress="singleListing.contractAddress"
             :tokenID="singleListing.identifierOrCriteria"
             @listing-edit-close="openEditDialog = false"
+            @remove-listing="(val) => RemoveRow(val)"
           />
           <ListingDialogUnlist
             v-model="openDeleteDialog"
             :orderHash="singleListing.orderHash"
             @listing-delete-close="openDeleteDialog = false"
+            @remove-listing="(val) => RemoveRow(val)"
           />
         </div>
         </div>
@@ -287,6 +289,9 @@ export default defineComponent({
     OpenEditDialog(listing: ListingsResponse) {
       this.singleListing = listing;
       this.openEditDialog = true;
+    },
+    RemoveRow(orderHash: string) {
+      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
     }
   }
 });
