@@ -80,7 +80,7 @@
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')"/>
+	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')" @openConnectWallet="showConnectWallet = true"/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -309,7 +309,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet"/>
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @openConnectWallet="showConnectWallet = true"/>
 		</q-page-container>
 	</q-layout>
 </template>

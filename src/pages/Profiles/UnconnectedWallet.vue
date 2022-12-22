@@ -25,7 +25,7 @@ export default defineComponent({
   },
   methods: {
     async ConnectWallet() {
-      await this.userStore.connectWallet();
+      this.$emit('openConnectWallet');
     }
   }
 })

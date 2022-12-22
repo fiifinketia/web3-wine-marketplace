@@ -59,19 +59,19 @@
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
 					<q-tab-panel class="q-pa-none q-px-sm" name="listings">
-						<Unconnected v-if="!isConnected"/>
+						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<Listings v-else @listingsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="incoming">
-						<Unconnected v-if="!isConnected"/>
+						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<IncomingOffers v-else @incomingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="outgoing">
-						<Unconnected v-if="!isConnected"/>
+						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<OutgoingOffers v-else @outgoingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="transactions">
-						<Unconnected v-if="!isConnected"/>
+						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<Transactions v-else @transactionsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
 				</q-tab-panels>

@@ -20,7 +20,7 @@
         class="icons"
         src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
-        @click="$router.push('/orders')"
+        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
       />
     </div>
     <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
@@ -56,8 +56,8 @@ export default defineComponent({
       this.$emit('clicked', true);
     },
     async ConnectWallet() {
-      await this.userStore.connectWallet();
       this.$emit('closeBurgerMenu');
+      this.$emit('openConnectWallet');
     },
     async Logout() {
 			this.userStore.walletAddress = '';
