@@ -236,6 +236,7 @@ export default defineComponent({
       await this.FetchIncomingOffers('', '');
     } else {
       this.$emit('incomingAmount', this.incomingOffers.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
   },
@@ -253,16 +254,20 @@ export default defineComponent({
         address,
         image
       );
+      this.CheckForEmptyRequest();
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.store.getIncomingOffers;
       this.$emit('incomingAmount', this.incomingOffers.length);
+      this.CheckForEmptyRequest();
+      this.loadingRequest = true;
+    },
+    CheckForEmptyRequest() {
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }
-      this.loadingRequest = true;
     }
   }
 });

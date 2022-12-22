@@ -233,6 +233,7 @@ export default defineComponent({
       await this.FetchOutgoingOffers('', '');
     } else {
       this.$emit('outgoingAmount', this.outgoingOffers.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
   },
@@ -243,9 +244,7 @@ export default defineComponent({
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
       this.$emit('outgoingAmount', this.outgoingOffers.length);
-      if (this.outgoingOffers.length == 0) {
-        this.emptyRequest = true 
-      }
+      this.CheckForEmptyRequest();
       this.loadingRequest = true
     },
     OpenDeleteDialog(offer: OutgoingOffersResponse) {
@@ -258,6 +257,12 @@ export default defineComponent({
     },
     RemoveRow(orderHash: string) {
       this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
+      this.CheckForEmptyRequest();
+    },
+    CheckForEmptyRequest() {
+      if (this.outgoingOffers.length == 0) {
+        this.emptyRequest = true;
+      }
     }
   }
 

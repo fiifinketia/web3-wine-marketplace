@@ -266,6 +266,7 @@ export default defineComponent({
       await this.FetchListings('', '');
     } else {
       this.$emit('listingsAmount', this.listings.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true
   },
@@ -277,9 +278,7 @@ export default defineComponent({
       await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
       this.$emit('listingsAmount', this.listings.length);
-      if (this.listings.length == 0) {
-        this.emptyRequest = true 
-      }
+      this.CheckForEmptyRequest();
       this.loadingRequest = true
     },
     OpenDeleteDialog(listing: ListingsResponse) {
@@ -292,6 +291,12 @@ export default defineComponent({
     },
     RemoveRow(orderHash: string) {
       this.listings = this.listings.filter(f => f.orderHash !== orderHash);
+      this.CheckForEmptyRequest();
+    },
+    CheckForEmptyRequest() {
+      if (this.listings.length == 0) {
+        this.emptyRequest = true 
+      }
     }
   }
 });

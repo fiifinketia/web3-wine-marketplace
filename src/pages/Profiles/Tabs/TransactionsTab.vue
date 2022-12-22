@@ -174,6 +174,7 @@ export default defineComponent({
       await this.FetchTransactions('', '');
     } else {
       this.$emit('transactionsAmount', this.transactions.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
   },
@@ -187,10 +188,13 @@ export default defineComponent({
       await this.store.setTransactions(address, sortKey, brandFilter);
       this.transactions = this.store.getTransactions;
       this.$emit('transactionsAmount', this.transactions.length);
+      this.CheckForEmptyRequest();
+      this.loadingRequest = true
+    },
+    CheckForEmptyRequest() {
       if (this.transactions.length == 0) {
         this.emptyRequest = true 
       }
-      this.loadingRequest = true
     }
   }
 
