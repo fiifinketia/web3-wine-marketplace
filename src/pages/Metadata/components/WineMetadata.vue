@@ -3,16 +3,26 @@
 		class="flex column justify-center items-center q-mt-xl"
 		@click="openModal === true ? 'modal' : 'content'"
 	>
-		<div class="brand-name">{{ nft.brand }}</div>
-		<div class="wine-name">{{ nft.name }}</div>
+		<!-- <div class="brand-name">{{ nft.brand }}</div> -->
+		<div class="brand-name">Screaming Eagle, The Flight</div>
+		<!-- <div class="wine-name">{{ nft.name }}</div> -->
+		<div class="wine-name">Screaming Eagle, The Flight</div>
 		<div class="flex r q-pt-lg test-class">
 			<div class="flex justify-center">
-				<q-img :src="nft.image" class="picture" />
+				<q-img
+					src="https://wivmetadata.blob.core.windows.net/polygon-wine-icons/0.jpg"
+					class="picture"
+				/>
+				<!-- <q-img :src="nft.image" class="picture" /> -->
 			</div>
 			<div class="flex column info q-pa-md">
 				<div class="flex row">
-					<div class="q-pl-lg">
-						<q-img src="../../../assets/user.png" width="40px" height="40px" />
+					<div class="q-pl-md">
+						<q-img
+							src="../../../../public/images/profile-icon.svg"
+							width="40px"
+							height="40px"
+						/>
 					</div>
 					<div class="flex column q-pl-sm">
 						<div class="owned-by">Owned by</div>
@@ -21,16 +31,29 @@
 				</div>
 				<div class="metadata q-pa-md">
 					<div class="row q-pb-sm">
-						<div class="metadata-text">{{ nft.type }} wine</div>
+						<div class="metadata-text">Red wine</div>
+						<!-- <div class="metadata-text">{{ nft.type }} wine</div> -->
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text">{{ nft.maturity }} yrs</div>
+						<div class="metadata-text">25 yrs</div>
+						<!-- <div class="metadata-text">{{ nft.maturity }} yrs</div> -->
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text">{{ nft.productionCountry }}</div>
+						<div class="metadata-text">America</div>
+						<!-- <div class="metadata-text">{{ nft.productionCountry }}</div> -->
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text q-pl-sm">{{ nft.region }}</div>
+						<div class="metadata-text q-pl-sm">Napa Valley</div>
+						<!-- <div class="metadata-text q-pl-sm">{{ nft.region }}</div> -->
 					</div>
 					<div class="wine-description">
-						{{ nft.description || 'No description' }}
+						1 case of 3btl ( 75 cl ). Produced in America, Napa Valley,
+						Oakville. Vintage: 2016. About: Screaming Eagle is California's
+						original cult wine. Produced in tiny quantities from a small
+						vineyard in Napa's Oakville appellation, the Cabernet
+						Sauvignon-based wine regularly sells for upwards of $3000 a bottle
+						and is America's most expensive regularly produced wine. The 2016
+						Californian vintage was very good. The spring was warmer than normal
+						and followed by a hot June and July, with temperatures only finally
+						cooling in August.
+						<!-- {{ nft.description || 'No description' }} -->
 					</div>
 					<div class="q-pt-lg q-px-xl">
 						<div class="flex column">
@@ -116,13 +139,9 @@
 				Please Connect Wallet to view actions.
 			</div>
 		</div>
-		<q-btn
-			class="q-pt-md update-metadata-text flex row items-center"
-			flat
-			@click="$emit('refresh')"
-		>
+		<q-btn class="q-pt-md items-center" flat @click="$emit('refresh')">
 			<div class="q-pr-sm cursor-pointer">
-				<q-img src="../../../assets/refresh.png" width="24px" />
+				<q-img src="../../../../public/images/refresh.svg" width="24px" />
 			</div>
 			<div class="update-metadata-text">Update metadata</div>
 		</q-btn>
@@ -240,14 +259,15 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/listing_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/listing_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> The wine is successfully listed for selling! </p>
-					<p class="row col-7 text-center">You will receive notifications on purchases and offers.</p>
+					<p class="row col-7 text-bold text-primary">
+						The wine is successfully listed for selling!
+					</p>
+					<p class="row col-7 text-center">
+						You will receive notifications on purchases and offers.
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -269,7 +289,9 @@
 					/>
 				</q-card-section> -->
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, the listing failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the listing failed
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -398,14 +420,15 @@
 				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/buy_now_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/buy_now_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> NFT is already in your cellar! </p>
-					<p class="row col-7 text-center">You can monitor its growth in your. <a>Digital Wine Cellar</a></p>
+					<p class="row col-7 text-bold text-primary">
+						NFT is already in your cellar!
+					</p>
+					<p class="row col-7 text-center">
+						You can monitor its growth in your. <a>Digital Wine Cellar</a>
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -420,13 +443,12 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/buy_now_failed.png"
-						width="50%"
-					/>
+					<q-img src="/images/buy_now_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, the purchase failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the purchase failed
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -595,14 +617,16 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/make_offer_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/make_offer_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> Your offer is successfully submitted. </p>
-					<p class="row col-7 text-center">We will notify you in case someone outbids you. You can update your bid or withdraw it from the offer page.</p>
+					<p class="row col-7 text-bold text-primary">
+						Your offer is successfully submitted.
+					</p>
+					<p class="row col-7 text-center">
+						We will notify you in case someone outbids you. You can update your
+						bid or withdraw it from the offer page.
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -617,13 +641,12 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/make_offer_failed.png"
-						width="50%"
-					/>
+					<q-img src="/images/make_offer_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, making offer failed :( </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, making offer failed :(
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -865,4 +888,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+:deep(.q-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+</style>
