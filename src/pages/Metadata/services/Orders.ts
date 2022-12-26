@@ -321,6 +321,10 @@ export async function CancelSingleOrder(orderHash: string) {
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders([order]);
 	await transact();
+	axios.post(
+		'http://localhost:8080/api/market/order/cancel/order.cancel',
+		[ orderHash ]
+	);
 }
 
 export async function CancelSelectOrders(orderHashes: string[]) {
@@ -334,7 +338,7 @@ export async function CancelSelectOrders(orderHashes: string[]) {
 	const { transact } = seaport.cancelOrders(orders);
 	await transact();
 	axios.post(
-		'http://localhost:8080/api/market/order/cancel/confirm/order.cancel',
+		'http://localhost:8080/api/market/order/cancel/order.cancel',
 		orderHashes
 	);
 }

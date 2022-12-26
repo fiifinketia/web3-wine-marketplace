@@ -52,7 +52,14 @@ export default defineComponent({
   },
   methods: {
     async CancelOrder() {
-      await CancelSingleOrder(this.orderHash);
+      try {
+        await CancelSingleOrder(this.orderHash);
+        this.$emit('remove-offer', this.orderHash);
+      } catch {
+        return 0
+      } finally {
+        this.$emit('outgoing-delete-close')
+      }
     },
   }
 })

@@ -20,26 +20,49 @@
         class="icons"
         src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
+        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
       />
     </div>
-    <div>sign up</div>
+    <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
     <div class="burger-bolder-text">digital wine cellar</div>
     <div>settings</div>
     <div>contact us</div>
     <div>faqs</div>
-    <div>log out</div>
+    <div v-if="isConnected" @click="Logout()">log out</div>
   </div>
 </template>
 
 <script>
+import { useUserStore } from 'src/stores/user-store';
 import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
 export default defineComponent({
   name: 'BurgerMenu',
+  data() {
+    const userStore = useUserStore();
+    return {
+      userStore,
+      isConnected: false
+    }
+  },
+  mounted() {
+		const wallet = this.userStore.walletAddress;
+		if (!!wallet) {
+			this.isConnected = true;
+		}
+	},
   methods: {
     onClickBackground() {
       this.$emit('clicked', true);
     },
+    async ConnectWallet() {
+      this.$emit('closeBurgerMenu');
+      this.$emit('openConnectWallet');
+    },
+    async Logout() {
+			this.userStore.walletAddress = '';
+      this.$emit('closeBurgerMenu');
+		},
   },
 });
 </script>
