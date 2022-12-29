@@ -33,6 +33,12 @@ RETRIEVE_FILTERS_URL=http://localhost:8080/api/nfts/filters
 RETRIEVE_FILTERED_NFTS_URL=http://localhost:8080/api/nfts
 RETRIEVE_NEWLY_MINTED_NFTS_URL=http://localhost:8080/api/release/newlyMinted
 
+# Transactions Microservice
+CREATE_ORDER_URL=http://localhost:8080/api/market/order/listing/order.list
+FULFILL_ORDER_URL=http://localhost:8080/api/market/order/fulfill/order.fulfill
+CANCEL_ORDER_URL=http://localhost:8080/api/market/order/cancel/order.cancel
+RETRIEVE_ORDER_URL=http://localhost:8080/api/market/single/getOrderParameters
+
 # Orders Microservice
 RETRIEVE_LISTINGS_URL=http://localhost:8080/api/orders/listings
 RETRIEVE_INCOMING_OFFERS_URL=http://localhost:8080/api/orders/incoming
