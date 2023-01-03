@@ -3,19 +3,20 @@
 		class="flex column justify-center items-center q-mt-xl"
 		@click="openModal === true ? 'modal' : 'content'"
 	>
-		<!-- <div class="brand-name">{{ nft.brand }}</div> -->
-		<div class="brand-name">Screaming Eagle, The Flight</div>
-		<!-- <div class="wine-name">{{ nft.name }}</div> -->
-		<div class="wine-name">Screaming Eagle, The Flight</div>
-		<div class="flex r q-pt-lg test-class">
-			<div class="flex justify-center">
-				<q-img
+		<div class="brand-name">{{ nft.brand }}</div>
+		<!-- <div class="brand-name">Screaming Eagle, The Flight</div> -->
+		<div class="wine-name">{{ nft.name }}</div>
+		<!-- <div class="wine-name">Screaming Eagle, The Flight</div> -->
+		<div class="row q-pt-lg metadata-container">
+			<div class="metadata-nft-container col">
+				<!-- <q-img
 					src="https://wivmetadata.blob.core.windows.net/polygon-wine-icons/0.jpg"
-					class="picture"
-				/>
-				<!-- <q-img :src="nft.image" class="picture" /> -->
+					width="100%"
+				/> -->
+				<q-img :src="nft.image" class="picture" />
 			</div>
-			<div class="flex column info q-pa-md">
+
+			<div class="column info q-pa-md col">
 				<div class="flex row">
 					<div class="q-pl-md">
 						<q-img
@@ -139,12 +140,16 @@
 				Please Connect Wallet to view actions.
 			</div>
 		</div>
-		<q-btn class="q-pt-md items-center" flat @click="$emit('refresh')">
+		<button
+			class="q-mt-lg row items-center update-metadata-button"
+			flat
+			@click="$emit('refresh')"
+		>
 			<div class="q-pr-sm cursor-pointer">
 				<q-img src="../../../../public/images/refresh.svg" width="24px" />
 			</div>
 			<div class="update-metadata-text">Update metadata</div>
-		</q-btn>
+		</button>
 
 		<q-dialog
 			v-model="openCreateListingModal"

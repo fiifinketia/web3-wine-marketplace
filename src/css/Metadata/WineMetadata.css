@@ -1,3 +1,7 @@
+.metadata-container {
+	width: 70%;
+}
+
 .owned-by {
 	font-family: 'ProximaNova-Regular';
 	font-style: normal;
@@ -235,6 +239,12 @@
 	text-transform: none;
 }
 
+.update-metadata-button {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}
+
 .wine-container {
 	background: #ffffff;
 	position: absolute;
@@ -441,20 +451,7 @@
 	filter: blur(8px);
 }
 
-.picture-container {
-	width: 25%;
-}
-
-.picture {
-	width: 370px;
-	height: 370px;
-}
-
 @media screen and (max-width: 880px) {
-	.picture {
-		width: 250px;
-		height: 250px;
-	}
 	.wine-description {
 		font-size: 17px;
 	}
@@ -464,11 +461,6 @@
 }
 
 @media screen and (max-width: 740px) {
-	.picture {
-		width: 200px;
-		height: 200px;
-		margin-left: 10px;
-	}
 	.info {
 		width: 50%;
 	}
@@ -484,11 +476,6 @@
 }
 
 @media screen and (max-width: 600px) {
-	.test-class {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
 	.info {
 		padding-top: 20px;
 	}

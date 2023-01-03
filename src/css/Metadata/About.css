@@ -17,7 +17,7 @@
 }
 
 .paragraph {
-	width: 60%;
+	width: 70%;
 	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
@@ -62,7 +62,7 @@
 }
 
 .property-name {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 18px;
