@@ -271,17 +271,27 @@ export default defineComponent({
   },
   methods: {
     async CreateNewOrder() {
-      await CancelSingleOrder(this.orderHash);
-      await CreateERC721Offer (
-        this.tokenID,
-        this.smartContractAddress,
-        this.brand,
-        this.image,
-        this.userStore.walletAddress,
-        this.offerPrice,
-        this.offerExpirationDate
-      )
-      this.$emit('outgoing-edit-close')
+      try {
+        await CancelSingleOrder(this.orderHash);
+        this.$emit('remove-offer', this.orderHash);
+        try {
+          await CreateERC721Offer (
+            this.tokenID,
+            this.smartContractAddress,
+            this.brand,
+            this.image,
+            this.userStore.walletAddress,
+            this.offerPrice,
+            this.offerExpirationDate
+          )
+        } catch {
+          return 0
+        }
+      } catch {
+        return 0
+      } finally {
+        this.$emit('outgoing-edit-close')
+      }
     },
     ResetData() {
       this.offerPrice = '';

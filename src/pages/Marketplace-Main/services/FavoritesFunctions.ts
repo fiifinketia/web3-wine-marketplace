@@ -13,7 +13,7 @@ async function RemoveFavorites(body: object) {
 
 async function GetAllFavorites(queryParams: string) {
 	let nfts: FavoritesModel[] = [];
-	const url = marketPlaceAPI + 'favorite/getAll';
+	const url = marketPlaceAPI + '/favorite/getAll';
 
 	await axios.get(url + queryParams).then((res) => {
 		nfts = res.data;

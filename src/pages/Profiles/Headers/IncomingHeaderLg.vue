@@ -9,7 +9,6 @@
       <q-radio v-model="incomingSortKey" dense val="expireFirst" label="Expiring First" class="profile-checkbox" :style="IsSelectedSortKey('expireFirst') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
     </div>
     <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-      <img src="../../../assets/sell.svg" style="cursor: pointer;" @click="test()"/>
       <q-input 
         v-model="incomingBrandFilter"
         color="grey"

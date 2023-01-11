@@ -21,9 +21,14 @@ export const useUserStore = defineStore(
 			walletAddress.value = utils.getAddress(accounts[0]);
 			await nftStorage.fetchNFTs(accounts[0]);
 
-			await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
-				walletAddress: walletAddress.value,
-			});
+			try {
+				await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
+					walletAddress: walletAddress.value,
+				});
+			}
+			catch {
+				console.log('Failed to upload user!')
+			}
 		};
 
 		const getWalletBalance = async () => {

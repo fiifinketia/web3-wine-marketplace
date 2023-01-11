@@ -81,8 +81,9 @@ export async function CreateERC721Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
+	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
 	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
+		createOrderURL,
 		OrderRequest
 	);
 }
@@ -154,8 +155,9 @@ export async function CreateERC1155Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
+	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
 	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
+		createOrderURL,
 		OrderRequest
 	);
 }
@@ -226,8 +228,9 @@ export async function CreateERC721Offer(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
+	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
 	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
+		createOrderURL,
 		OrderRequest
 	);
 }
@@ -240,9 +243,10 @@ export async function FulfillBasicOrder(
 	image: string
 ) {
 	const { seaport } = await GetWeb3();
+	const retrieveOrderUrl = <string> process.env.RETRIEVE_ORDER_URL;
 	const order: RetrieveListingResponse = await axios
 		.get(
-			`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
+			`${retrieveOrderUrl}?orderHash=${orderHash}`,
 			GETParams
 		)
 		.then((result) => {
@@ -275,8 +279,9 @@ export async function FulfillBasicOrder(
 		walletAddress: address,
 		image: image
 	};
+	const fulfillOrderURL = <string> process.env.FULFILL_ORDER_URL;
 	axios.post(
-		'http://localhost:8080/api/market/order/fulfill/order.fulfill',
+		fulfillOrderURL,
 		updateOrder
 	);
 }
@@ -307,9 +312,10 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 }
 
 export async function CancelSingleOrder(orderHash: string) {
+	const retrieveOrderUrl = <string> process.env.RETRIEVE_ORDER_URL;
 	const order: OrderComponents = await axios
 	.get(
-		`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
+		`${retrieveOrderUrl}?orderHash=${orderHash}`,
 		GETParams
 	)
 	.then((result) => {
@@ -321,8 +327,14 @@ export async function CancelSingleOrder(orderHash: string) {
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders([order]);
 	await transact();
+	const cancelOrderURL = <string> process.env.CANCEL_ORDER_URL;
+	axios.post(
+		cancelOrderURL,
+		[ orderHash ]
+	);
 }
 
+// HAVE TO DELETE!
 export async function CancelSelectOrders(orderHashes: string[]) {
 	let orders: OrderComponents[] = [];
 	await axios
@@ -333,8 +345,9 @@ export async function CancelSelectOrders(orderHashes: string[]) {
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders(orders);
 	await transact();
+	const cancelOrderURL = <string> process.env.CANCEL_ORDER_URL;
 	axios.post(
-		'http://localhost:8080/api/market/order/cancel/confirm/order.cancel',
+		cancelOrderURL,
 		orderHashes
 	);
 }
