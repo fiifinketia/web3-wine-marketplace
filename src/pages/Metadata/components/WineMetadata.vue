@@ -240,14 +240,15 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/listing_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/listing_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> The wine is successfully listed for selling! </p>
-					<p class="row col-7 text-center">You will receive notifications on purchases and offers.</p>
+					<p class="row col-7 text-bold text-primary">
+						The wine is successfully listed for selling!
+					</p>
+					<p class="row col-7 text-center">
+						You will receive notifications on purchases and offers.
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -269,7 +270,9 @@
 					/>
 				</q-card-section> -->
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, the listing failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the listing failed
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -398,14 +401,15 @@
 				style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/buy_now_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/buy_now_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> NFT is already in your cellar! </p>
-					<p class="row col-7 text-center">You can monitor its growth in your. <a>Digital Wine Cellar</a></p>
+					<p class="row col-7 text-bold text-primary">
+						NFT is already in your cellar!
+					</p>
+					<p class="row col-7 text-center">
+						You can monitor its growth in your. <a>Digital Wine Cellar</a>
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -420,13 +424,12 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/buy_now_failed.png"
-						width="50%"
-					/>
+					<q-img src="/images/buy_now_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, the purchase failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the purchase failed
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -536,7 +539,7 @@
 						</div>
 						<div class="row col-6 q-pa-sm">
 							<p class="text-weight-thin col-12 q-mb-xs">Keep active till</p>
-							<div class="row">
+							<div class="row justify-between">
 								<q-input
 									v-model="offerExpirationDate"
 									outlined
@@ -545,7 +548,13 @@
 									dense
 									type="date"
 									debounce="500"
+									@change="dateCheck"
 								/>
+								<span
+									v-if="falseDate"
+									style="color: #cc3300ed; margin: 9px 0 0 10px"
+									>Please enter a date in future</span
+								>
 							</div>
 						</div>
 						<q-separator size="2px" color="accent" />
@@ -573,7 +582,8 @@
 									!makeOfferTOCAccepted ||
 									offerExpirationDate === '' ||
 									offerPrice <= 0 ||
-									makeOfferLoading
+									makeOfferLoading ||
+									falseDate
 								"
 								@click="sendOffer"
 							>
@@ -595,14 +605,16 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/make_offer_completed.png"
-						width="50%"
-					/>
+					<q-img src="/images/make_offer_completed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-primary"> Your offer is successfully submitted. </p>
-					<p class="row col-7 text-center">We will notify you in case someone outbids you. You can update your bid or withdraw it from the offer page.</p>
+					<p class="row col-7 text-bold text-primary">
+						Your offer is successfully submitted.
+					</p>
+					<p class="row col-7 text-center">
+						We will notify you in case someone outbids you. You can update your
+						bid or withdraw it from the offer page.
+					</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -617,13 +629,12 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/make_offer_failed.png"
-						width="50%"
-					/>
+					<q-img src="/images/make_offer_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative"> Sorry, making offer failed :( </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, making offer failed :(
+					</p>
 					<p class="row col-7 text-center">The reasoning why it failed.</p>
 				</q-card-section>
 			</q-card>
@@ -669,6 +680,7 @@ export default defineComponent({
 			completedTimeoutModal: 2000,
 			listingExpirationDate: ref(''),
 			offerExpirationDate: ref(''),
+			falseDate: false,
 			offerValidation: ref(false),
 			listTokenTOCAccepted: ref(false),
 			makeOfferTOCAccepted: ref(false),
@@ -728,6 +740,14 @@ export default defineComponent({
 		},
 	},
 	methods: {
+		dateCheck() {
+			const today = new Date();
+			if (today >= new Date(this.offerExpirationDate)) {
+				this.falseDate = true;
+			} else {
+				this.falseDate = false;
+			}
+		},
 		async sendOffer() {
 			// const walletBalance = await this.userStore.getWalletBalance();
 			// if (walletBalance < this.offerPrice) {
