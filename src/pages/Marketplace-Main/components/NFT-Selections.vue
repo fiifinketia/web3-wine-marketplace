@@ -1,7 +1,5 @@
 <template>
-	<q-page-container
-		class="row justify-between q-pt-none q-px-sm q-gutter-y-md"
-	>
+	<q-page-container class="row justify-between q-pt-none q-px-sm q-gutter-y-md">
 		<div
 			v-for="token in allNFTs"
 			:key="
@@ -15,7 +13,13 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				:to="{ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} }"
+				@click="
+					navigateToNFT(
+						token.tokenID,
+						token.network,
+						token.smartContractAddress
+					)
+				"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -31,31 +35,29 @@
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
-							<span class="main-marketplace-price-header q-pb-xs">
-								Price
-							</span>
+							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
 							<q-img
 								v-if="token.favorited === true"
+								key="favored"
 								src="../../../../public/images/heart.svg"
 								width="20px"
 								height="20px"
-								@click.stop
-								@click="
+								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
 										token.smartContractAddress,
 										token.network,
-										'remove'
+										'add'
 									)
 								"
 							/>
 							<q-img
 								v-else
+								key="unfavored"
 								src="../../../../public/images/empty-heart.svg"
 								width="20px"
 								height="20px"
-								@click.stop
-								@click="
+								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
 										token.smartContractAddress,
@@ -71,7 +73,9 @@
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
 									style="height: 20px; width: 20px"
 								/>
-								<span class="main-marketplace-price-text-b"> {{ ToInt(token.orderDetails.listingPrice) }} </span>
+								<span class="main-marketplace-price-text-b">
+									{{ ToInt(token.orderDetails.listingPrice) }}
+								</span>
 							</div>
 						</div>
 						<div v-else>
@@ -90,9 +94,7 @@ import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
-import {
-	RetrieveFilteredNFTs,
-} from '../services/RetrieveTokens';
+import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 
@@ -122,6 +124,17 @@ export default defineComponent({
 	},
 
 	methods: {
+		navigateToNFT(id: string, network: string, contractAddress: string) {
+			this.$router.replace({
+				path: '/nft',
+				query: {
+					id,
+					network,
+					contractAddress,
+				},
+			});
+		},
+
 		async addRemoveFavorites(
 			tokenID: string,
 			cAddress: string,
@@ -164,7 +177,7 @@ export default defineComponent({
 		},
 		ToInt(price: string) {
 			return parseInt(price);
-		}
+		},
 	},
 });
 </script>
