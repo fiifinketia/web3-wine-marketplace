@@ -1,7 +1,9 @@
 <template>
 	<!-- Main box -->
 	<q-card flat bordered class="main-filter-box dark-blue-border q-px-md">
-		<q-card-section class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs">
+		<q-card-section
+			class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs"
+		>
 			<q-input
 				v-model="searchQuery"
 				outlined
@@ -17,23 +19,21 @@
 				</template>
 			</q-input>
 			<q-btn
-					class="col-2"
-					color="primary"
-					outlined
-					label="GO"
-					dense
-					@click="wineFiltersStore.searchQuery = searchQuery"
-				/>
+				class="col-2"
+				color="primary"
+				outlined
+				label="GO"
+				dense
+				@click="sukabljat"
+			/>
 		</q-card-section>
-		<q-list class=" rounded-borders">
+		<q-list class="rounded-borders">
 			<!-- Listed Only filter -->
 			<q-expansion-item
 				label="Listed Only"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.listedOnly"
 						:options="wineFiltersStore.listedOnlyOptions"
@@ -47,9 +47,7 @@
 				label="Sort A-Z"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.sortedAtoZ"
 						:options="wineFiltersStore.sortedAtoZOptions"
@@ -63,9 +61,7 @@
 				label="Type"
 				header-class="dark-blue-border rounded-borders q-my-sm"
 			>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.type"
 						:options="wineFiltersStore.typeOptions"
@@ -91,9 +87,7 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.brand"
 						:options="brandOptions"
@@ -120,9 +114,7 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.origin"
 						:options="originOptions"
@@ -149,15 +141,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.producer"
 						:options="producerOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -178,15 +168,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.country"
 						:options="countryOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -207,15 +195,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.region"
 						:options="regionOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -236,15 +222,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.appellation"
 						:options="appellationOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -357,15 +341,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.wineCase"
 						:options="caseOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -386,15 +368,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.format"
 						:options="formatOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -415,15 +395,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.investmentGrade"
 						:options="investmentGradeOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -444,15 +422,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.LWIN"
 						:options="LWINOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 
@@ -473,15 +449,13 @@
 						<q-icon name="search" />
 					</template>
 				</q-input>
-				<q-list
-					class="dark-blue-border rounded-borders q-my-sm"
-				>
+				<q-list class="dark-blue-border rounded-borders q-my-sm">
 					<q-option-group
 						v-model="wineFiltersStore.heritage"
 						:options="heritageOptions"
 						type="checkbox"
 						:style="{ maxHeight: '200px', overflowY: 'scroll' }"
-						/>
+					/>
 				</q-list>
 			</q-expansion-item>
 		</q-list>
@@ -528,8 +502,14 @@ export default defineComponent({
 		};
 	},
 
-
 	watch: {
+		searchQuery: {
+			handler: function (val) {
+				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
+					b.value.toLowerCase().includes(val.toLowerCase())
+				);
+			},
+		},
 		brandQuery: {
 			handler: function (val) {
 				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
@@ -546,8 +526,8 @@ export default defineComponent({
 		},
 		producerQuery: {
 			handler: function (val) {
-				this.producerOptions = this.wineFiltersStore.producerOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
+				this.producerOptions = this.wineFiltersStore.producerOptions.filter(
+					(b) => b.value.toLowerCase().includes(val.toLowerCase())
 				);
 			},
 		},
@@ -560,9 +540,10 @@ export default defineComponent({
 		},
 		appellationQuery: {
 			handler: function (val) {
-				this.appellationOptions = this.wineFiltersStore.appellationOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
+				this.appellationOptions =
+					this.wineFiltersStore.appellationOptions.filter((b) =>
+						b.value.toLowerCase().includes(val.toLowerCase())
+					);
 			},
 		},
 		countryQuery: {
@@ -581,9 +562,10 @@ export default defineComponent({
 		},
 		investmentGradeQuery: {
 			handler: function (val) {
-				this.investmentGradeOptions = this.wineFiltersStore.investmentGradeOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
+				this.investmentGradeOptions =
+					this.wineFiltersStore.investmentGradeOptions.filter((b) =>
+						b.value.toLowerCase().includes(val.toLowerCase())
+					);
 			},
 		},
 		lwinQuery: {
@@ -595,9 +577,12 @@ export default defineComponent({
 		},
 		heritageQuery: {
 			handler: function (val) {
-				this.heritageOptions = this.wineFiltersStore.heritageOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
+				console.log({ val });
+				console.log({ options: this.heritageOptions });
+				this.heritageOptions = this.wineFiltersStore.heritageOptions.filter(
+					(b) => b.value.toLowerCase().includes(val.toLowerCase())
 				);
+				console.log({ options: this.heritageOptions });
 			},
 		},
 		caseQuery: {
@@ -606,7 +591,7 @@ export default defineComponent({
 					b.value.toLowerCase().includes(val.toLowerCase())
 				);
 			},
-		}
+		},
 	},
 
 	async mounted() {
@@ -615,6 +600,10 @@ export default defineComponent({
 	},
 
 	methods: {
+		sukabljat() {
+			this.wineFiltersStore.searchQuery = this.searchQuery;
+			console.log('aklejhaliew');
+		},
 		applyMaturityFilter() {
 			// console.log(this.wineFiltersStore);
 		},
@@ -647,7 +636,8 @@ export default defineComponent({
 
 	border-radius: 18px;
 }
-#filter_price .q-slider__thumb, #filter_maturity .q-slider__thumb {
+#filter_price .q-slider__thumb,
+#filter_maturity .q-slider__thumb {
 	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
 	border-radius: 100px;
 }

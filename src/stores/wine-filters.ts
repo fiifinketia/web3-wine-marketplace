@@ -15,7 +15,7 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		type: [''],
-		typeOptions: [] as {label: string, value: string}[],
+		typeOptions: [] as { label: string; value: string }[],
 
 		sortedAtoZ: '',
 		sortedAtoZOptions: [
@@ -29,17 +29,17 @@ export const useWineFilters = defineStore('wineFilters', {
 			},
 		],
 		brand: [''],
-		brandOptions: [] as {label: string, value: string}[],
+		brandOptions: [] as { label: string; value: string }[],
 		origin: [''],
-		originOptions: [] as {label: string, value: string}[],
+		originOptions: [] as { label: string; value: string }[],
 		producer: [''],
-		producerOptions: [] as {label: string, value: string}[],
+		producerOptions: [] as { label: string; value: string }[],
 		country: [''],
-		countryOptions: [] as {label: string, value: string}[],
+		countryOptions: [] as { label: string; value: string }[],
 		region: [''],
-		regionOptions: [] as {label: string, value: string}[],
+		regionOptions: [] as { label: string; value: string }[],
 		appellation: [''],
-		appellationOptions: [] as {label: string, value: string}[],
+		appellationOptions: [] as { label: string; value: string }[],
 		price: {
 			min: 0,
 			max: 1000000,
@@ -49,15 +49,15 @@ export const useWineFilters = defineStore('wineFilters', {
 			max: 100,
 		},
 		wineCase: [''],
-		wineCaseOptions: [] as {label: string, value: string}[],
+		wineCaseOptions: [] as { label: string; value: string }[],
 		heritage: [''],
-		heritageOptions: [] as {label: string, value: string}[],
+		heritageOptions: [] as { label: string; value: string }[],
 		format: [''],
-		formatOptions: [] as {label: string, value: string}[],
+		formatOptions: [] as { label: string; value: string }[],
 		investmentGrade: [''],
-		investmentGradeOptions: [] as {label: string, value: string}[],
+		investmentGradeOptions: [] as { label: string; value: string }[],
 		LWIN: [''],
-		LWINOptions: [] as {label: string, value: string}[],
+		LWINOptions: [] as { label: string; value: string }[],
 		searchQuery: '',
 	}),
 	getters: {
@@ -372,7 +372,6 @@ export const useWineFilters = defineStore('wineFilters', {
 						break;
 				}
 			}
-
-		}
+		},
 	},
 });
