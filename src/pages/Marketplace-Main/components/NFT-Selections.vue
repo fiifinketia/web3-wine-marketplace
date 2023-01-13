@@ -38,7 +38,6 @@
 							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
 							<q-img
 								v-if="token.favorited === true"
-								key="favored"
 								src="../../../../public/images/heart.svg"
 								width="20px"
 								height="20px"
@@ -53,7 +52,6 @@
 							/>
 							<q-img
 								v-else
-								key="unfavored"
 								src="../../../../public/images/empty-heart.svg"
 								width="20px"
 								height="20px"
