@@ -34,7 +34,7 @@
 						type="search"
 						color="primary"
 						class="col-10"
-						style="width:80%"
+						style="width: 80%"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -82,10 +82,13 @@
 
 		<!-- Sidebar -->
 
-		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
+		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023 market-sidebar" />
 
 		<!-- List Section -->
-		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
+		<NFTSelections
+			class="col-md-9 col-sm-12"
+			style="overflow: auto; padding-top: 0px !important"
+		/>
 		<q-page-sticky
 			class="hidden-b-599 q-mr-md"
 			position="bottom-right"
