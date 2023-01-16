@@ -234,12 +234,9 @@ export async function FulfillBasicOrder(
 	image: string
 ) {
 	const { seaport } = await GetWeb3();
-	const retrieveOrderUrl = <string> process.env.RETRIEVE_ORDER_URL;
+	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const order: RetrieveListingResponse = await axios
-		.get(
-			`${retrieveOrderUrl}?orderHash=${orderHash}`,
-			GETParams
-		)
+		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
 		.then((result) => {
 			const data = result.data;
 			return {
@@ -257,6 +254,7 @@ export async function FulfillBasicOrder(
 				signature: order.signature,
 			},
 		});
+
 	await executeAllFulfillActions();
 
 	const updateOrder: UpdateListingRequest = {
@@ -268,13 +266,10 @@ export async function FulfillBasicOrder(
 		brand: brand,
 		isOwner: owner,
 		walletAddress: address,
-		image: image
+		image: image,
 	};
-	const fulfillOrderURL = <string> process.env.FULFILL_ORDER_URL;
-	axios.post(
-		fulfillOrderURL,
-		updateOrder
-	);
+	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
+	axios.post(fulfillOrderURL, updateOrder);
 }
 
 export async function GetWeb3(): Promise<SeaportInstance> {
@@ -303,44 +298,36 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 }
 
 export async function CancelSingleOrder(orderHash: string) {
-	const retrieveOrderUrl = <string> process.env.RETRIEVE_ORDER_URL;
+	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const order: OrderComponents = await axios
-	.get(
-		`${retrieveOrderUrl}?orderHash=${orderHash}`,
-		GETParams
-	)
-	.then((result) => {
-		const data = result.data;
-		return {
-			...<OrderParameters & { counter: number }> data.parameters, signature: <string> data.signature
-		};
-	});
+		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
+		.then((result) => {
+			const data = result.data;
+			return {
+				...(<OrderParameters & { counter: number }>data.parameters),
+				signature: <string>data.signature,
+			};
+		});
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders([order]);
 	await transact();
-	const cancelOrderURL = <string> process.env.CANCEL_ORDER_URL;
-	axios.post(
-		cancelOrderURL,
-		[ orderHash ]
-	);
+	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+	axios.post(cancelOrderURL, [orderHash]);
 }
 
 // HAVE TO DELETE!
 export async function CancelSelectOrders(orderHashes: string[]) {
 	let orders: OrderComponents[] = [];
-	await axios
-		.post('http://localhost:8080/api/market/order/cancel', orderHashes)
-		.then((res) => {
-			orders = res.data;
-		});
+	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+	const cancelOrderConfirmedURL = <string>(
+		process.env.CANCEL_ORDER_CONFIRMED_URL
+	);
+	const { data } = await axios.post(cancelOrderURL, orderHashes);
+	orders = data;
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders(orders);
 	await transact();
-	const cancelOrderURL = <string> process.env.CANCEL_ORDER_URL;
-	axios.post(
-		cancelOrderURL,
-		orderHashes
-	);
+	axios.post(cancelOrderConfirmedURL, orderHashes);
 }
 
 const RandomIdGenerator = () => {

@@ -39,7 +39,7 @@
 								<div>
 									<q-img
 										v-if="nft.orderDetails?.listingPrice"
-										src="../../../assets/ethereum.png"
+										src="../../../assets/usdc.png"
 										width="20px"
 									/>
 								</div>
@@ -52,7 +52,7 @@
 							<div class="bid-text">Highest bid from</div>
 							<div class="flex row items-center q-pt-sm">
 								<div>
-									<q-img src="../../../assets/ethereum.png" width="20px" />
+									<q-img src="../../../assets/usdc.png" width="20px" />
 								</div>
 								<div class="bid-price1">
 									{{ nft.orderDetails?.highestBid || '--.--' }}
