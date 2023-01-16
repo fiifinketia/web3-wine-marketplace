@@ -1,5 +1,5 @@
 import { Seaport } from '@opensea/seaport-js';
-import { ethers, utils } from 'ethers';
+import { ethers } from 'ethers';
 import {
 	ChainID,
 	ItemType,
@@ -10,7 +10,10 @@ import {
 } from '../models/Orders';
 
 import axios from 'axios';
-import { OrderComponents, OrderParameters } from '@opensea/seaport-js/lib/types';
+import {
+	OrderComponents,
+	OrderParameters,
+} from '@opensea/seaport-js/lib/types';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -29,8 +32,6 @@ export async function CreateERC721Listing(
 	listingPrice: string,
 	expirationDate: string
 ) {
-	const askAmount = utils.parseEther(listingPrice).toString();
-
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
 		{
@@ -45,9 +46,9 @@ export async function CreateERC721Listing(
 			consideration: [
 				// owner's ask
 				{
-					amount: askAmount,
+					amount: listingPrice,
 					recipient: address,
-					token: process.env.WIVA_CONTRACT,
+					token: process.env.USDC_CONTRACT,
 				},
 			],
 			fees: [
@@ -81,11 +82,8 @@ export async function CreateERC721Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
-	axios.post(
-		createOrderURL,
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	axios.post(createOrderURL, OrderRequest);
 }
 
 export async function CreateERC1155Listing(
@@ -100,7 +98,7 @@ export async function CreateERC1155Listing(
 ) {
 	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther(listingPrice).toString();
+	// const askAmount = utils.parseEther(listingPrice).toString();
 	// const testDate = new Date('2022-08-24T14:31:18.067Z');
 	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
@@ -119,9 +117,9 @@ export async function CreateERC1155Listing(
 			consideration: [
 				// owner's ask
 				{
-					amount: askAmount,
+					amount: listingPrice,
 					recipient: address,
-					token: process.env.WIVA_CONTRACT,
+					token: process.env.USDC_CONTRACT,
 				},
 			],
 			fees: [
@@ -155,11 +153,8 @@ export async function CreateERC1155Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
-	axios.post(
-		createOrderURL,
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	axios.post(createOrderURL, OrderRequest);
 }
 
 export async function CreateERC721Offer(
@@ -173,7 +168,6 @@ export async function CreateERC721Offer(
 ) {
 	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther(offerPrice).toString();
 	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 
 	const { seaport, network } = await GetWeb3();
@@ -182,8 +176,8 @@ export async function CreateERC721Offer(
 			offer: [
 				// buyer's offer
 				{
-					amount: askAmount,
-					token: process.env.WIVA_CONTRACT,
+					amount: offerPrice,
+					token: process.env.USDC_CONTRACT,
 				},
 			],
 			consideration: [
@@ -228,11 +222,8 @@ export async function CreateERC721Offer(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	const createOrderURL = <string> process.env.CREATE_ORDER_URL;
-	axios.post(
-		createOrderURL,
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	await axios.post(createOrderURL, OrderRequest);
 }
 
 export async function FulfillBasicOrder(

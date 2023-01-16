@@ -790,11 +790,8 @@ export default defineComponent({
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
 				}
-				else if(error.code = -32603) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
 				else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openOfferFailedModal = false;
@@ -831,11 +828,8 @@ export default defineComponent({
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
 				}
-				else if(error.code = -32603) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
 				else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openBuyNowFailedModal = false;
@@ -889,11 +883,8 @@ export default defineComponent({
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
 				}
-				else if(error.code === -32603) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
 				else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openListingFailedModal = false;
