@@ -828,6 +828,10 @@ export default defineComponent({
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
 				}
+				else if (error.message && error.message.includes('unknown account'))
+				{
+					this.errorMessage = 'Account locked, please unlock meteamask to continue';
+				}
 				else {
 					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
