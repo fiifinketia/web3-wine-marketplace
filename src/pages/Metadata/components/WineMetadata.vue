@@ -646,6 +646,7 @@ import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
 	CancelSelectOrders,
+	CancelSingleOrder,
 	CreateERC1155Listing,
 	CreateERC721Listing,
 	CreateERC721Offer,
@@ -894,7 +895,7 @@ export default defineComponent({
 			}
 		},
 		async cancelOrder() {
-			await CancelSelectOrders([this.nft.orderDetails?.orderHash]);
+			await CancelSingleOrder(this.nft.orderDetails?.orderHash);
 			this.$emit('refresh');
 		},
 		async openWalletSideBar() {
