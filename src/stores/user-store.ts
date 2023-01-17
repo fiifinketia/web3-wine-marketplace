@@ -22,7 +22,7 @@ export const useUserStore = defineStore(
 			await nftStorage.fetchNFTs(accounts[0]);
 
 			try {
-				await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
+				await axios.post(process.env.MARKETPLACE_API_URL + '/market/users', {
 					walletAddress: walletAddress.value,
 				});
 			}
