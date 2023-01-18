@@ -264,14 +264,12 @@
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
 				<q-card-section class="row items-center justify-center q-pa-sm">
-					<q-img
-						src="/images/listing_failed.png"
-						width="50%"
-					/>
+					<q-img src="/images/listing_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-
-					<p class="row col-7 text-bold text-negative"> Sorry, the listing failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the listing failed
+					</p>
 					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
@@ -325,7 +323,9 @@
 									</p>
 									<q-card class="row">
 										<div class="q-pa-sm q-ma-none col-4" align="left">
-											<div class="text-weight-thin q-pa-xs text-caption">Ends In</div>
+											<div class="text-weight-thin q-pa-xs text-caption">
+												Ends In
+											</div>
 										</div>
 										<div
 											class="row justify-around q-pa-sm q-ma-none col-8"
@@ -426,8 +426,9 @@
 					<q-img src="/images/buy_now_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-
-					<p class="row col-7 text-bold text-negative"> Sorry, the purchase failed </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, the purchase failed
+					</p>
 					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
@@ -630,8 +631,9 @@
 					<q-img src="/images/make_offer_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-
-					<p class="row col-7 text-bold text-negative"> Sorry, making offer failed :( </p>
+					<p class="row col-7 text-bold text-negative">
+						Sorry, making offer failed :(
+					</p>
 					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
@@ -640,6 +642,7 @@
 </template>
 
 <script lang="ts">
+import ContractABI from '../contract/contract.json';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
@@ -652,6 +655,8 @@ import {
 	FulfillBasicOrder,
 } from '../services/Orders';
 import CountdownTimer from '../services/CountDownTimer';
+import Web3 from 'web3';
+import { AbiItem } from 'web3-utils';
 export default defineComponent({
 	name: 'WineMetadata',
 	props: {
@@ -726,7 +731,7 @@ export default defineComponent({
 				const tDate = this.nft.orderDetails?.expTime;
 				const timer = new CountdownTimer({
 					selector: '#clock1',
-					targetDate: new Date(tDate*1000),
+					targetDate: new Date(tDate * 1000),
 					backgroundColor: 'rgba(0,0,0,.15)',
 					foregroundColor: 'rgba(0,0,0,.50)',
 				});
@@ -738,6 +743,21 @@ export default defineComponent({
 			// TODO: Stop Timer
 		},
 	},
+
+	async updated() {
+		try {
+			const web3 = new Web3(window.ethereum);
+			const contract = new web3.eth.Contract(
+				ContractABI as AbiItem[],
+				this.nft.smartContractAddress
+			);
+			const owner = await contract.methods.ownerOf(this.nft.tokenID).call();
+			console.log(owner);
+		} catch (err) {
+			console.log(err);
+		}
+	},
+
 	methods: {
 		dateCheck() {
 			const today = new Date();
@@ -787,13 +807,11 @@ export default defineComponent({
 			} catch (error: any) {
 				this.makeOfferLoading = false;
 				this.openOfferFailedModal = true;
-				if(error.code === 'ACTION_REJECTED') {
+				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if(error.code = -32603) {
+				} else if ((error.code = -32603)) {
 					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
-				else {
+				} else {
 					this.errorMessage = 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
@@ -828,13 +846,11 @@ export default defineComponent({
 			} catch (error: any) {
 				this.buyNowLoading = false;
 				this.openBuyNowFailedModal = true;
-				if(error.code === 'ACTION_REJECTED') {
+				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if(error.code = -32603) {
+				} else if ((error.code = -32603)) {
 					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
-				else {
+				} else {
 					this.errorMessage = 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
@@ -886,13 +902,11 @@ export default defineComponent({
 			} catch (error: any) {
 				this.listingLoading = false;
 				this.openListingFailedModal = true;
-				if(error.code === 'ACTION_REJECTED') {
+				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if(error.code === -32603) {
+				} else if (error.code === -32603) {
 					this.errorMessage = 'Transaction underpriced, please try again.';
-				}
-				else {
+				} else {
 					this.errorMessage = 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
