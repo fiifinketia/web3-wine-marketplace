@@ -131,6 +131,7 @@ export default defineComponent({
 					contractAddress,
 				},
 			});
+			console.log('agre');
 		},
 
 		async addRemoveFavorites(
