@@ -641,6 +641,7 @@
 	</div>
 </template>
 
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import ContractABI from '../contract/contract.json';
 import { useUserStore } from 'src/stores/user-store';
@@ -754,6 +755,7 @@ export default defineComponent({
 			const owner = await contract.methods.ownerOf(this.nft.tokenID).call();
 			const exists = await contract.methods.tokenURI(this.nft.tokenID).call();
 			exists && console.log('Token exists\nTokenID: ' + this.nft.tokenID);
+
 			console.log(owner);
 		} catch (err) {
 			console.log(err);
