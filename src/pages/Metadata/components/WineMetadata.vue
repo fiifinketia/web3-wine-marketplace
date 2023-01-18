@@ -39,7 +39,7 @@
 								<div>
 									<q-img
 										v-if="nft.orderDetails?.listingPrice"
-										src="../../../assets/ethereum.png"
+										src="../../../assets/usdc.png"
 										width="20px"
 									/>
 								</div>
@@ -52,7 +52,7 @@
 							<div class="bid-text">Highest bid from</div>
 							<div class="flex row items-center q-pt-sm">
 								<div>
-									<q-img src="../../../assets/ethereum.png" width="20px" />
+									<q-img src="../../../assets/usdc.png" width="20px" />
 								</div>
 								<div class="bid-price1">
 									{{ nft.orderDetails?.highestBid || '--.--' }}
@@ -650,6 +650,7 @@ import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
 	CancelSelectOrders,
+	CancelSingleOrder,
 	CreateERC1155Listing,
 	CreateERC721Listing,
 	CreateERC721Offer,
@@ -813,10 +814,9 @@ export default defineComponent({
 				this.openOfferFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				} else if ((error.code = -32603)) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				} else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openOfferFailedModal = false;
@@ -852,10 +852,13 @@ export default defineComponent({
 				this.openBuyNowFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				} else if ((error.code = -32603)) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				} else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+				}
+				else if (error.message && error.message.includes('unknown account'))
+				{
+					this.errorMessage = 'Account locked, please unlock meteamask to continue';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openBuyNowFailedModal = false;
@@ -908,10 +911,9 @@ export default defineComponent({
 				this.openListingFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				} else if (error.code === -32603) {
-					this.errorMessage = 'Transaction underpriced, please try again.';
-				} else {
-					this.errorMessage = 'Please try again or reconnect wallet.';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openListingFailedModal = false;
@@ -921,7 +923,7 @@ export default defineComponent({
 			}
 		},
 		async cancelOrder() {
-			await CancelSelectOrders([this.nft.orderDetails?.orderHash]);
+			await CancelSingleOrder(this.nft.orderDetails?.orderHash);
 			this.$emit('refresh');
 		},
 		async openWalletSideBar() {

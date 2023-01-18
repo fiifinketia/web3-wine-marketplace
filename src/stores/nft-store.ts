@@ -4,14 +4,13 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { ref } from 'vue';
 
 export const useNFTStore = defineStore(
-  'nftStore', 
+  'nftStore',
   () => {
     const ownedNFTs = ref([] as TokenIdentifier[])
     const fetchNFTs = async (walletAddress: string) => {
-      ownedNFTs.value = await FetchOwnedNFTs(walletAddress);
-      // ownedNFTs = await FetchOwnedNFTs(walletAddress);
-      console.log('Owned NFTs', ownedNFTs.value)
-    }
+			ownedNFTs.value = await FetchOwnedNFTs(walletAddress);
+			// ownedNFTs = await FetchOwnedNFTs(walletAddress);
+		}
     return {
 			ownedNFTs,
 			fetchNFTs

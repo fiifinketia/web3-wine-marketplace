@@ -7,22 +7,21 @@
 			"
 			class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
 		>
-			<q-btn
-				flat
-				dense
-				:ripple="false"
-				no-caps
-				class="btn--no-hover"
-				@click="
-					navigateToNFT(
-						token.tokenID,
-						token.network,
-						token.smartContractAddress
-					)
-				"
-			>
+			<div>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
-					<img class="main-marketplace-card-image" :src="token.image" />
+					<q-btn
+						flat
+						dense
+						:ripple="false"
+						:to="{ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} }"
+						class="btn--no-hover"
+					>
+						<img
+							:src="token.image"
+							class="main-marketplace-card-image"
+							style="width: 100%"
+						/>
+					</q-btn>
 					<div
 						class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
 						style="text-align: left"
@@ -39,6 +38,7 @@
 							<q-img
 								v-if="token.favorited === true"
 								src="../../../../public/images/heart.svg"
+								class="clickable-image"
 								width="20px"
 								height="20px"
 								@click.stop="
@@ -46,13 +46,14 @@
 										token.tokenID,
 										token.smartContractAddress,
 										token.network,
-										'add'
+										'remove'
 									)
 								"
 							/>
 							<q-img
 								v-else
 								src="../../../../public/images/empty-heart.svg"
+								class="clickable-image"
 								width="20px"
 								height="20px"
 								@click.stop="
@@ -81,7 +82,7 @@
 						</div>
 					</q-card-section>
 				</q-card>
-			</q-btn>
+			</div>
 		</div>
 	</q-page-container>
 </template>
@@ -120,17 +121,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		navigateToNFT(id: string, network: string, contractAddress: string) {
-			this.$router.replace({
-				path: '/nft',
-				query: {
-					id,
-					network,
-					contractAddress,
-				},
-			});
-		},
-
 		async addRemoveFavorites(
 			tokenID: string,
 			cAddress: string,
