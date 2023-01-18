@@ -51,7 +51,7 @@ export async function CreateERC721Listing(
 					amount: listingPrice,
 					recipient: address,
 					// TODO: CHANGE IN PRODUCTION
-					token: process.env.WIVA_CONTRACT,
+					token: process.env.MARKETPLACE_CURRENCY,
 				},
 			],
 			fees: [
