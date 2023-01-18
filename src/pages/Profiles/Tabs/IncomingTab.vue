@@ -2,28 +2,28 @@
 <q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
   <div v-if="!loadingRequest" class="column items-center">
     <LoadingView
-      :loadingText="'Loading your incoming offers'"
+      :loading-text="'Loading your incoming offers'"
     />
   </div>
   <div v-else class="column items-center">
     <div v-if="!emptyRequest" class="column items-center">
       <IncomingHeaderLg
         v-if="$q.screen.width > 1020"
-        :incomingAmount="incomingOffers.length"
-        :selectedIncomingSortKey="incomingSortKey"
-        :updatedIncomingBrandFilter="incomingBrandFilter"
-        @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
-        @incomingSortKeySelected="(val) => incomingSortKey = val"
-        @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
+        :incoming-amount="incomingOffers.length"
+        :selected-incoming-sort-key="incomingSortKey"
+        :updated-incoming-brand-filter="incomingBrandFilter"
+        @incoming-brand-filter-updated="(val) => incomingBrandFilter = val"
+        @incoming-sort-key-selected="(val) => incomingSortKey = val"
+        @fetch-incoming-with-brand-filter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
       />
       <IncomingHeaderSm
         v-else
-        :incomingAmount="incomingOffers.length"
-        :selectedIncomingSortKey="incomingSortKey"
-        :updatedIncomingBrandFilter="incomingBrandFilter"
-        @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
-        @incomingSortKeySelected="(val) => incomingSortKey = val"
-        @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
+        :incoming-amount="incomingOffers.length"
+        :selected-incoming-sort-key="incomingSortKey"
+        :updated-incoming-brand-filter="incomingBrandFilter"
+        @incoming-brand-filter-updated="(val) => incomingBrandFilter = val"
+        @incoming-sort-key-selected="(val) => incomingSortKey = val"
+        @fetch-incoming-with-brand-filter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -163,7 +163,7 @@
       </div>
     </div>
     <div v-else class="column items-center">
-      <EmptyView :emptyText="'You do not have incoming offers yet.'" />
+      <EmptyView :empty-text="'You do not have incoming offers yet.'" />
     </div>
   </div>
 </q-page>
@@ -191,6 +191,9 @@ export default defineComponent({
     LoadingView: OrderLoading,
     EmptyView: Empty
   },
+  emits: [
+    'incoming-amount'
+  ],
 
   data() {
     const store = ordersStore();
@@ -235,7 +238,7 @@ export default defineComponent({
     if (incomingOffersRequestStatus == false) {
       await this.FetchIncomingOffers('', '');
     } else {
-      this.$emit('incomingAmount', this.incomingOffers.length);
+      this.$emit('incoming-amount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
@@ -260,7 +263,7 @@ export default defineComponent({
       this.loadingRequest = false;
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.store.getIncomingOffers;
-      this.$emit('incomingAmount', this.incomingOffers.length);
+      this.$emit('incoming-amount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true;
     },

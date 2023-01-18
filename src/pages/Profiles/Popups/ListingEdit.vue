@@ -242,11 +242,15 @@ export default defineComponent({
       type: String,
       required: true
     },
-    tokenID: {
+    identifierOrCriteria: {
       type: String,
       required: true
     }
   },
+  emits: [
+    'remove-listing',
+    'listing-edit-close'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -264,7 +268,7 @@ export default defineComponent({
         this.$emit('remove-listing', this.orderHash);
         try {
           await CreateERC721Listing(
-            this.tokenID,
+            this.identifierOrCriteria,
             this.smartContractAddress,
             this.brand,
             this.image,

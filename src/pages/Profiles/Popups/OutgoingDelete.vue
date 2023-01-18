@@ -17,11 +17,11 @@
       </q-card-section>
       <div class="row justify-between q-mb-sm q-mt-md" style="width: 95%">
         <q-btn
+          v-close-popup
           class="dialog-reset"
           no-caps
           outline
           style="color: #3586FF;"
-          v-close-popup
         >
           <span> Cancel </span>
         </q-btn>
@@ -50,6 +50,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: [
+    'remove-offer',
+    'outgoing-delete-close'
+  ],
   methods: {
     async CancelOrder() {
       try {

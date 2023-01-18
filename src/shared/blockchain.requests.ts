@@ -1,9 +1,9 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { ethers, utils } from "ethers";
-import { TokenIdentifier } from "./models/entities/NFT.model";
-import { MoralisAddressNFTs } from "./models/response/moralis.response";
-import { EventLog } from "./models/response/polygonscan.response";
-import { ERC1155PolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_MumbaiInstance } from "./web3.helper";
+import axios, { AxiosRequestConfig } from 'axios';
+import { ethers, utils } from 'ethers';
+import { TokenIdentifier } from './models/entities/NFT.model';
+import { MoralisAddressNFTs } from './models/response/moralis.response';
+import { EventLog } from './models/response/polygonscan.response';
+import { ERC1155PolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_MumbaiInstance } from './web3.helper';
 
 async function FetchOwnedNFTs (walletAddress: string) {
   let ownedTokens: TokenIdentifier[] = [];
@@ -187,8 +187,8 @@ async function DeconstructEventLog(transferredToRes: EventLog[], transferredFrom
 function ReturnTokenTransactionDetails(v: string, index: number) : {tokenID: string, amount: number} | undefined {
   const isInt = (n: any) => { return parseInt(n) === n };
 
-  const value = v.substring(0, index) + "," + v.substring(index);
-  const tokenIDAndAmount: string[] = value.split(",");
+  const value = v.substring(0, index) + ',' + v.substring(index);
+  const tokenIDAndAmount: string[] = value.split(',');
 
   // convert hexadecimal to int
   const tokenID = parseInt(tokenIDAndAmount[0], 16);

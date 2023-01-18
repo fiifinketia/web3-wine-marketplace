@@ -2,28 +2,28 @@
 <q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
   <div v-if="!loadingRequest" class="column items-center">
     <LoadingView
-      :loadingText="'Loading your transactions'"
+      :loading-text="'Loading your transactions'"
     />
   </div>
   <div v-else class="column items-center">
     <div v-if="!emptyRequest" class="column items-center">
       <TransactionHeaderLg
         v-if="$q.screen.width > 1020"
-        :transactionsAmount="transactions.length"
-        :selectedTransactionSortKey="transactionSortKey"
-        :updatedTransactionBrandFilter="transactionBrandFilter"
-        @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
-        @transactionSortKeySelected="(val) => transactionSortKey = val"
-        @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
+        :transactions-amount="transactions.length"
+        :selected-transaction-sort-key="transactionSortKey"
+        :updated-transaction-brand-filter="transactionBrandFilter"
+        @transaction-brand-filter-updated="(val) => transactionBrandFilter = val"
+        @transaction-sort-key-selected="(val) => transactionSortKey = val"
+        @fetch-transaction-with-brand-filter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
       />
       <TransactionHeaderSm
         v-else
-        :transactionsAmount="transactions.length"
-        :selectedTransactionSortKey="transactionSortKey"
-        :updatedTransactionBrandFilter="transactionBrandFilter"
-        @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
-        @transactionSortKeySelected="(val) => transactionSortKey = val"
-        @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
+        :transactions-amount="transactions.length"
+        :selected-transaction-sort-key="transactionSortKey"
+        :updated-transaction-brand-filter="transactionBrandFilter"
+        @transaction-brand-filter-updated="(val) => transactionBrandFilter = val"
+        @transaction-sort-key-selected="(val) => transactionSortKey = val"
+        @fetch-transaction-with-brand-filter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -111,7 +111,7 @@
       </div>
     </div>
     <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any offers yet.'" />
+      <EmptyView :empty-text="'You have not made any offers yet.'" />
     </div>
   </div>
 </q-page>
@@ -134,6 +134,9 @@ export default defineComponent({
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders
   },
+  emits: [
+    'transactions-amount'
+  ],
   data() {
     const store = ordersStore();
     const userStore = useUserStore();
@@ -173,7 +176,7 @@ export default defineComponent({
     if (transactionRequestStatus == false) {
       await this.FetchTransactions('', '');
     } else {
-      this.$emit('transactionsAmount', this.transactions.length);
+      this.$emit('transactions-amount', this.transactions.length);
       this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
@@ -187,7 +190,7 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setTransactions(address, sortKey, brandFilter);
       this.transactions = this.store.getTransactions;
-      this.$emit('transactionsAmount', this.transactions.length);
+      this.$emit('transactions-amount', this.transactions.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true
     },

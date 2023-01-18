@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse, TransactionResponse } from './models/response.models';
+import { IncomingOffersResponse, ListingsResponse, OutgoingOffersResponse, TransactionResponse } from './models/response.models';
 
 async function ReturnListings(walletAddress: string, sortKey: string, brandFilter: string) : Promise<ListingsResponse[]> {
   let listingResponse: ListingsResponse[] = [];

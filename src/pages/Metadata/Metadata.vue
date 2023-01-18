@@ -8,7 +8,7 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import StatisticsMenu from './components/StatisticsMenu.vue';
+// import StatisticsMenu from './components/StatisticsMenu.vue';
 import { NFTMetadata } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';

@@ -1,5 +1,5 @@
-import { OrderWithCounter } from "@opensea/seaport-js/lib/types";
-import { TokenIdentifier } from "../Request.models/Seaport.Request.models";
+import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
+import { TokenIdentifier } from '../Request.models/Seaport.Request.models';
 
 export interface RetrieveListingResponse extends OrderWithCounter, TokenIdentifier {
   network: string;

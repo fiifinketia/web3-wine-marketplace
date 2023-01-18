@@ -78,7 +78,14 @@ import { SuggestedWinesResponseModel } from './models/Response/ResponseModel.mod
 export default defineComponent({
 	name: 'NewWine',
 	setup() {
-		const selected = ref([]);
+		const selected = ref([] as {
+			lwin: string,
+			name: string,
+			bottleSize: string,
+			packSize: string,
+			tokenID: string,
+			smartContract: string
+		}[]);
 
 		return {
 			selected,
@@ -111,7 +118,14 @@ export default defineComponent({
 			});
 		},
 		filterWine() {
-			this.selected.filter((item: any) => {
+			this.selected.filter((item: {
+				lwin: string,
+				name: string,
+				bottleSize: string,
+				packSize: string,
+				tokenID: string,
+				smartContract: string
+			}) => {
 				this.lwin = item.lwin;
 				this.name = item.name;
 				this.bottleSize = item.bottleSize;

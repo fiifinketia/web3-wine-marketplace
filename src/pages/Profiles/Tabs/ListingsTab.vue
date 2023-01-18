@@ -2,28 +2,28 @@
 <q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''" style="flex-wrap: nowrap">
   <div v-if="!loadingRequest" class="column items-center">
     <LoadingView
-      :loadingText="'Loading your listings'"
+      :loading-text="'Loading your listings'"
     />
   </div>
   <div v-else class="column items-center">
     <div v-if="!emptyRequest" class="column items-center">
       <ListingHeaderLg
         v-if="$q.screen.width > 1020"
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
+        :listings-amount="listings.length"
+        :selected-listing-sort-key="listingSortKey"
+        :updated-listing-brand-filter="listingBrandFilter"
+        @listing-brand-filter-updated="(val) => listingBrandFilter = val"
+        @listing-sort-key-selected="(val) => listingSortKey = val"
+        @fetch-listings-with-brand-filter="(val) => FetchListings(val.sortKey, val.brandFilter)"
       />
       <ListingHeaderSm
         v-else
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
+        :listings-amount="listings.length"
+        :selected-listing-sort-key="listingSortKey"
+        :updated-listing-brand-filter="listingBrandFilter"
+        @listing-brand-filter-updated="(val) => listingBrandFilter = val"
+        @listing-sort-key-selected="(val) => listingSortKey = val"
+        @fetch-listings-with-brand-filter="(val) => FetchListings(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -168,16 +168,16 @@
             v-model="openEditDialog"
             :brand="singleListing.brand"
             :image="singleListing.image"
-            :orderHash="singleListing.orderHash"
+            :order-hash="singleListing.orderHash"
             :network="singleListing.network"
-            :smartContractAddress="singleListing.contractAddress"
-            :tokenID="singleListing.identifierOrCriteria"
+            :smart-contract-address="singleListing.contractAddress"
+            :identifier-or-criteria="singleListing.identifierOrCriteria"
             @listing-edit-close="openEditDialog = false"
             @remove-listing="(val) => RemoveRow(val)"
           />
           <ListingDialogUnlist
             v-model="openDeleteDialog"
-            :orderHash="singleListing.orderHash"
+            :order-hash="singleListing.orderHash"
             @listing-delete-close="openDeleteDialog = false"
             @remove-listing="(val) => RemoveRow(val)"
           />
@@ -186,7 +186,7 @@
       </div>
     </div>
     <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any listings yet.'" />
+      <EmptyView :empty-text="'You have not made any listings yet.'" />
     </div>
   </div>
 </q-page>
@@ -218,6 +218,9 @@ export default defineComponent({
     ListingDialogEdit: ListingEdit,
     ListingDialogUnlist: ListingUnlist
   },
+  emits: [
+    'listings-amount'
+  ],
 
   data() {
     const store = ordersStore();
@@ -265,7 +268,7 @@ export default defineComponent({
     if (listingsRequestStatus == false) {
       await this.FetchListings('', '');
     } else {
-      this.$emit('listingsAmount', this.listings.length);
+      this.$emit('listings-amount', this.listings.length);
       this.CheckForEmptyRequest();
     }
     this.loadingRequest = true
@@ -277,7 +280,7 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
-      this.$emit('listingsAmount', this.listings.length);
+      this.$emit('listings-amount', this.listings.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true
     },

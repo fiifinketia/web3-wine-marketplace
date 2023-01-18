@@ -1,4 +1,4 @@
-import { TokenIdentifier } from "src/shared/models/entities/NFT.model";
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 interface OrdersResponse {
   incoming: IncomingOffersResponse[];

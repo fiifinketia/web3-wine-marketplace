@@ -82,6 +82,11 @@ export default defineComponent({
       required: true
     }
   },
+  emits: [
+    'transaction-sort-key-selected',
+    'transaction-brand-filter-updated',
+    'fetch-transaction-with-brand-filter'
+  ],
   data() {
     const store = ordersStore();
     return {
@@ -93,12 +98,12 @@ export default defineComponent({
   watch: {
     transactionSortKey: {
       handler: function (val) {
-        this.$emit('transactionSortKeySelected', val)
+        this.$emit('transaction-sort-key-selected', val)
       }
     },
     transactionBrandFilter: {
       handler: function (val) {
-        this.$emit('transactionBrandFilterUpdated', val)
+        this.$emit('transaction-brand-filter-updated', val)
       }
     }
   },
@@ -116,7 +121,7 @@ export default defineComponent({
     },
     FetchTransactionWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setTransactionBrandFilterStatus(true);
-      this.$emit('fetchTransactionWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+      this.$emit('fetch-transaction-with-brand-filter', {sortKey: sortKey, brandFilter: brandFilter})
     }
   }
 })

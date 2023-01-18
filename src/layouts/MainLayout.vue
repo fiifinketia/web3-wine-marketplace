@@ -80,7 +80,7 @@
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')" @openConnectWallet="showConnectWallet = true"/>
+	<BurgerMenu v-if="showBurgerMenu" @close-burger-menu="onBurgerMenu('close')" @open-connect-wallet="showConnectWallet = true"/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -309,7 +309,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @openConnectWallet="showConnectWallet = true"/>
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @open-connect-wallet="showConnectWallet = true"/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -374,8 +374,7 @@ export default defineComponent({
 			this.showMyWallet = false;
 			transak.init();
 
-			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
-				// console.log(orderData);
+			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, () => {
 				transak.close();
 			});
 		},

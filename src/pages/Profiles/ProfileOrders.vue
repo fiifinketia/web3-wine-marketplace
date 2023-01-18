@@ -59,20 +59,20 @@
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
 					<q-tab-panel class="q-pa-none q-px-sm" name="listings">
-						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
-						<Listings v-else @listingsAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected" @open-connect-wallet="$emit('open-connect-wallet')"/>
+						<Listings v-else @listings-amount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="incoming">
-						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
-						<IncomingOffers v-else @incomingAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected" @open-connect-wallet="$emit('open-connect-wallet')"/>
+						<IncomingOffers v-else @incoming-amount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="outgoing">
-						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
-						<OutgoingOffers v-else @outgoingAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected" @open-connect-wallet="$emit('open-connect-wallet')"/>
+						<OutgoingOffers v-else @outgoing-amount="(val) => countForTab = val"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-md" name="transactions">
-						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
-						<Transactions v-else @transactionsAmount="(val) => countForTab = val"/>
+						<Unconnected v-if="!isConnected" @open-connect-wallet="$emit('open-connect-wallet')"/>
+						<Transactions v-else @transactions-amount="(val) => countForTab = val"/>
 					</q-tab-panel>
 				</q-tab-panels>
 			</section>
@@ -91,14 +91,16 @@ import UnconnectedWallet from './UnconnectedWallet.vue';
 import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
-  components: {
+	components: {
 		IncomingOffers: IncomingTab,
 		OutgoingOffers: OutgoingTab,
-    Listings: ListingsTab,
-    Transactions: TransactionsTab,
+		Listings: ListingsTab,
+		Transactions: TransactionsTab,
 		Unconnected: UnconnectedWallet
 	},
-
+	emits: [
+		'open-connect-wallet'
+	],
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
 		const userStore = useUserStore();

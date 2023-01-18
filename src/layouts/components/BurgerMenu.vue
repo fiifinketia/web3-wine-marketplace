@@ -20,7 +20,7 @@
         class="icons"
         src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
-        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
+        @click="$router.push('/orders'); $emit('close-burger-menu')"
       />
     </div>
     <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
@@ -38,6 +38,11 @@ import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
 export default defineComponent({
   name: 'BurgerMenu',
+  emits: [
+    'close-burger-menu',
+    'clicked',
+    'open-connect-wallet'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -56,12 +61,12 @@ export default defineComponent({
       this.$emit('clicked', true);
     },
     async ConnectWallet() {
-      this.$emit('closeBurgerMenu');
-      this.$emit('openConnectWallet');
+      this.$emit('close-burger-menu');
+      this.$emit('open-connect-wallet');
     },
     async Logout() {
 			this.userStore.walletAddress = '';
-      this.$emit('closeBurgerMenu');
+      this.$emit('close-burger-menu');
 		},
   },
 });

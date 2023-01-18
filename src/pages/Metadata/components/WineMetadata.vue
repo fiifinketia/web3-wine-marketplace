@@ -645,7 +645,6 @@ import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
-	CancelSelectOrders,
 	CancelSingleOrder,
 	CreateERC1155Listing,
 	CreateERC721Listing,

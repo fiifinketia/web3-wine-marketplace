@@ -1,6 +1,6 @@
-import { Seaport } from "@opensea/seaport-js";
-import { OrderWithCounter } from "@opensea/seaport-js/lib/types";
-import { ContractTransaction, Transaction } from "ethers";
+import { Seaport } from '@opensea/seaport-js';
+import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
+import { Transaction } from 'ethers';
 
 export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
 	orderHash: string;

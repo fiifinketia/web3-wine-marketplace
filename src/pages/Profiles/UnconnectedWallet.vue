@@ -17,6 +17,9 @@ import 'src/css/Profile/shared.css';
 import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
+  emits: [
+    'open-connect-wallet'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -25,7 +28,7 @@ export default defineComponent({
   },
   methods: {
     async ConnectWallet() {
-      this.$emit('openConnectWallet');
+      this.$emit('open-connect-wallet');
     }
   }
 })

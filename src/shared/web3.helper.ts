@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import NewWivPolygonABI from './ABIs/WiVNewPolygon.abi.json';
 import NewWivMumbaiABI from './ABIs/WiVNewPolygonMUMBAI.abi.json';
 import ERC1155MumbaiABI from './ABIs/WiVERC1155MumbaiContract.abi.json';

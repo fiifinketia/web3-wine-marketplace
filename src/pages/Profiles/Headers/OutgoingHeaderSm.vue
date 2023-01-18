@@ -83,6 +83,11 @@ export default defineComponent({
       required: true
     }
   },
+  emits: [
+    'outgoing-sort-key-selected',
+    'outgoing-brand-filter-updated',
+    'fetch-outgoing-with-brand-filter'
+  ],
   data() {
     const store = ordersStore();
     return {
@@ -94,12 +99,12 @@ export default defineComponent({
   watch: {
     outgoingSortKey: {
       handler: function (val) {
-        this.$emit('outgoingSortKeySelected', val)
+        this.$emit('outgoing-sort-key-selected', val)
       }
     },
     outgoingBrandFilter: {
       handler: function (val) {
-        this.$emit('outgoingBrandFilterUpdated', val)
+        this.$emit('outgoing-brand-filter-updated', val)
       }
     }
   },
@@ -117,7 +122,7 @@ export default defineComponent({
     },
     FetchOutgoingWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setOutgoingBrandFilterStatus(true);
-      this.$emit('fetchOutgoingWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+      this.$emit('fetch-outgoing-with-brand-filter', {sortKey: sortKey, brandFilter: brandFilter})
     }
   }
 })

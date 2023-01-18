@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/TrendingWines.css';
 export default defineComponent({
 	name: 'TrendingWines',

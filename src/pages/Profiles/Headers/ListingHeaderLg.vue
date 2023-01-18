@@ -55,6 +55,11 @@ export default defineComponent({
       required: true
     }
   },
+  emits: [
+    'listing-sort-key-selected',
+    'listing-brand-filter-updated',
+    'fetch-listings-with-brand-filter'
+  ],
   data() {
     const store = ordersStore();
     return {
@@ -66,12 +71,12 @@ export default defineComponent({
   watch: {
     listingSortKey: {
       handler: function (val) {
-        this.$emit('listingSortKeySelected', val)
+        this.$emit('listing-sort-key-selected', val)
       }
     },
     listingBrandFilter: {
       handler: function (val) {
-        this.$emit('listingBrandFilterUpdated', val)
+        this.$emit('listing-brand-filter-updated', val)
       }
     }
   },
@@ -89,7 +94,7 @@ export default defineComponent({
     },
     FetchListingsWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setListingBrandFilterStatus(true);
-      this.$emit('fetchListingsWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+      this.$emit('fetch-listings-with-brand-filter', {sortKey: sortKey, brandFilter: brandFilter})
     }
   }
 })

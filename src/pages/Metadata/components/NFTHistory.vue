@@ -293,8 +293,8 @@ export default defineComponent({
 				this.five_years = original.setMonth(original.getMonth() - 60);
 			}
 			const options = [
-				this.$refs.overallChart as any,
-				this.$refs.overallChartMobile as any,
+				this.$refs.overallChart as ApexCharts,
+				this.$refs.overallChartMobile as ApexCharts,
 			];
 			let chosenOption;
 			if (isMobile) {

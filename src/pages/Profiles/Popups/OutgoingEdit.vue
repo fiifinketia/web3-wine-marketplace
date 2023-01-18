@@ -245,7 +245,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    tokenID: {
+    identifierOrCriteria: {
       type: String,
       required: true
     },
@@ -258,6 +258,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: [
+    'remove-offer',
+    'outgoing-edit-close'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -276,7 +280,7 @@ export default defineComponent({
         this.$emit('remove-offer', this.orderHash);
         try {
           await CreateERC721Offer (
-            this.tokenID,
+            this.identifierOrCriteria,
             this.smartContractAddress,
             this.brand,
             this.image,

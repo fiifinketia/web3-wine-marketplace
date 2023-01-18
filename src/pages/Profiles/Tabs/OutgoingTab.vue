@@ -2,28 +2,28 @@
 <q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
   <div v-if="!loadingRequest" class="column items-center">
     <LoadingView
-      :loadingText="'Loading your outgoing offers'"
+      :loading-text="'Loading your outgoing offers'"
     />
   </div>
   <div v-else class="column items-center">
     <div v-if="!emptyRequest" class="column items-center">
       <OutgoingHeaderLg
         v-if="$q.screen.width > 1020"
-        :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingSortKey="outgoingSortKey"
-        :updatedOutgoingBrandFilter="outgoingBrandFilter"
-        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
-        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
-        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        :outgoing-amount="outgoingOffers.length"
+        :selected-outgoing-sort-key="outgoingSortKey"
+        :updated-outgoing-brand-filter="outgoingBrandFilter"
+        @outgoing-brand-filter-updated="(val) => outgoingBrandFilter = val"
+        @outgoing-sort-key-selected="(val) => outgoingSortKey = val"
+        @fetch-outgoing-with-brand-filter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
       />
       <OutgoingHeaderSm
         v-else
-        :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingSortKey="outgoingSortKey"
-        :updatedOutgoingBrandFilter="outgoingBrandFilter"
-        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
-        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
-        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        :outgoing-amount="outgoingOffers.length"
+        :selected-outgoing-sort-key="outgoingSortKey"
+        :updated-outgoing-brand-filter="outgoingBrandFilter"
+        @outgoing-brand-filter-updated="(val) => outgoingBrandFilter = val"
+        @outgoing-sort-key-selected="(val) => outgoingSortKey = val"
+        @fetch-outgoing-with-brand-filter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
       />
       <div class="profile-main-container column">
         <div class="row q-pa-lg profile-column-name">
@@ -139,19 +139,19 @@
           <OutgoingDialogEdit
             v-model="openEditDialog"
             :brand="singleOffer.brand"
-            :highestOffer="singleOffer.highestOffer"
-            :highestOfferCurrency="singleOffer.highestOfferCurrency"
+            :highest-offer="singleOffer.highestOffer"
+            :highest-offer-currency="singleOffer.highestOfferCurrency"
             :image="singleOffer.image"
             :network="singleOffer.network"
-            :orderHash="singleOffer.orderHash"
-            :smartContractAddress="singleOffer.contractAddress"
-            :tokenID="singleOffer.identifierOrCriteria"
+            :order-hash="singleOffer.orderHash"
+            :smart-contract-address="singleOffer.contractAddress"
+            :identifier-or-criteria="singleOffer.identifierOrCriteria"
             @outgoing-edit-close="openEditDialog = false"
             @remove-offer="(val) => RemoveRow(val)"
           />
           <OutgoingDialogDelete
             v-model="openDeleteDialog"
-            :orderHash="singleOffer.orderHash"
+            :order-hash="singleOffer.orderHash"
             @outgoing-delete-close="openDeleteDialog = false"
             @remove-offer="(val) => RemoveRow(val)"
           />
@@ -160,7 +160,7 @@
       </div>
     </div>
     <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any offers yet.'" />
+      <EmptyView :empty-text="'You have not made any offers yet.'" />
     </div>
   </div>
 </q-page>
@@ -188,6 +188,9 @@ export default defineComponent({
     OutgoingDialogEdit: OutgoingEdit,
     OutgoingDialogDelete: OutgoingDelete
   },
+  emits: [
+    'outgoing-amount'
+  ],
   data() {
     const store = ordersStore();
     const userStore = useUserStore();
@@ -232,7 +235,7 @@ export default defineComponent({
     if (outgoingOffersRequestStatus == false) {
       await this.FetchOutgoingOffers('', '');
     } else {
-      this.$emit('outgoingAmount', this.outgoingOffers.length);
+      this.$emit('outgoing-amount', this.outgoingOffers.length);
       this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
@@ -243,7 +246,7 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
-      this.$emit('outgoingAmount', this.outgoingOffers.length);
+      this.$emit('outgoing-amount', this.outgoingOffers.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true
     },
