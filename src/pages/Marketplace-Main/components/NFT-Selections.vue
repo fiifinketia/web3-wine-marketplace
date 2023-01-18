@@ -13,7 +13,13 @@
 				:ripple="false"
 				no-caps
 				class="btn--no-hover"
-				@click="selectCard(token.tokenID, token.smartContractAddress)"
+				@click="
+					navigateToNFT(
+						token.tokenID,
+						token.network,
+						token.smartContractAddress
+					)
+				"
 			>
 				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
 					<img class="main-marketplace-card-image" :src="token.image" />
@@ -29,21 +35,18 @@
 						class="column items-start main-marketplace-price-container q-py-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
-							<span class="main-marketplace-price-header q-pb-xs">
-								Starting from
-							</span>
+							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
 							<q-img
 								v-if="token.favorited === true"
 								src="../../../../public/images/heart.svg"
 								width="20px"
 								height="20px"
-								@click.stop
-								@click="
+								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
 										token.smartContractAddress,
 										token.network,
-										'remove'
+										'add'
 									)
 								"
 							/>
@@ -52,8 +55,7 @@
 								src="../../../../public/images/empty-heart.svg"
 								width="20px"
 								height="20px"
-								@click.stop
-								@click="
+								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
 										token.smartContractAddress,
@@ -63,14 +65,15 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.listingPrice">
+						<div v-if="!!token.orderDetails?.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
 									style="height: 20px; width: 20px"
 								/>
-								<span class="main-marketplace-price-text-b"> 0.00 </span>
-								<span class="main-marketplace-price-text-l"> /$ 00.00 </span>
+								<span class="main-marketplace-price-text-b">
+									{{ ToInt(token.orderDetails.listingPrice) }}
+								</span>
 							</div>
 						</div>
 						<div v-else>
@@ -80,19 +83,6 @@
 				</q-card>
 			</q-btn>
 		</div>
-		<q-dialog v-model="card">
-			<q-card class="my-card">
-				<q-card-actions align="right">
-					<q-btn
-						flat
-						color="primary"
-						label="Create Order"
-						@click="CreateListingForERC1155"
-					/>
-					<!-- <q-btn v-close-popup flat color="primary" round icon="event" /> -->
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</q-page-container>
 </template>
 
@@ -102,10 +92,7 @@ import contract from '../contract/contractABI.json';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
-import {
-	RetrieveFilteredNFTs,
-	RetrieveFavoredNFTs,
-} from '../services/RetrieveTokens';
+import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { CreateOrderERC1155 } from '../services/Orders';
@@ -128,7 +115,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
-			walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
+			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
 	},
 
@@ -137,6 +124,17 @@ export default defineComponent({
 	},
 
 	methods: {
+		navigateToNFT(id: string, network: string, contractAddress: string) {
+			this.$router.replace({
+				path: '/nft',
+				query: {
+					id,
+					network,
+					contractAddress,
+				},
+			});
+		},
+
 		async addRemoveFavorites(
 			tokenID: string,
 			cAddress: string,
@@ -146,7 +144,7 @@ export default defineComponent({
 			switch (objective) {
 				case 'add':
 					await AddFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
@@ -155,14 +153,14 @@ export default defineComponent({
 
 				case 'remove':
 					await RemoveFavorites({
-						walletAddress: this.walletAddressTemporary,
+						walletAddress: this.userStore.walletAddress,
 						tokenID: tokenID,
 						contractAddress: cAddress,
 						network: network,
 					});
 					break;
 			}
-			this.RetrieveTokens();
+			await this.RetrieveTokens();
 		},
 
 		selectCard(tokenID: string, smartContract: string) {
@@ -187,25 +185,14 @@ export default defineComponent({
 			}
 		},
 
-		async CreateListingForERC1155() {
-			const smartContractAddressStatic =
-				'0x1458DAb28F3e94F8e4Ae3fCb03De803e53Dd443D';
-			const amountStatic = '1';
-			const address: string = this.userStore.walletAddress;
-			CreateOrderERC1155(
-				this.selected.tokenID,
-				smartContractAddressStatic,
-				this.selected.brand,
-				address,
-				amountStatic
-			);
-		},
-
 		async RetrieveTokens() {
-			const { result: nfts, counts } = await RetrieveFavoredNFTs(
-				`?walletAddress=${this.walletAddressTemporary}`
+			const { result: nfts } = await RetrieveFilteredNFTs(
+				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
 			this.allNFTs = nfts;
+		},
+		ToInt(price: string) {
+			return parseInt(price);
 		},
 	},
 });

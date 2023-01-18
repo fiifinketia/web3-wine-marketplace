@@ -80,7 +80,7 @@
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" />
+	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')" @openConnectWallet="showConnectWallet = true"/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -139,7 +139,7 @@
 									@click="$router.push('/marketplace?tab=recommended')"
 								>
 									<q-item-section>
-										<q-item-label>Recomended</q-item-label>
+										<q-item-label>Recommended</q-item-label>
 									</q-item-section>
 								</q-item>
 							</q-list>
@@ -182,6 +182,7 @@
 						flat
 						split
 						icon="app:profile"
+						:to="{ path: '/orders' }"
 					>
 						<div class="q-btn-menu-div">
 							<q-list>
@@ -308,7 +309,7 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view />
+			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @openConnectWallet="showConnectWallet = true"/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -348,6 +349,7 @@ export default defineComponent({
 			balance: 0,
 		};
 	},
+
 	async mounted() {
 		const userStore = useUserStore();
 

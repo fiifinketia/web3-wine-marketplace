@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
+import { useNFTStore } from './nft-store';
 
 export const useUserStore = defineStore(
 	'userStore',
 	() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const walletAddress = ref('');
+		const nftStorage = useNFTStore();
 
 		const connectWallet = async () => {
 			// this.showConnectWallet = true;
@@ -16,11 +18,17 @@ export const useUserStore = defineStore(
 			const accounts = await window.ethereum.request({
 				method: 'eth_requestAccounts',
 			});
-			walletAddress.value = accounts[0];
+			walletAddress.value = utils.getAddress(accounts[0]);
+			await nftStorage.fetchNFTs(accounts[0]);
 
-			await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
-				walletAddress: walletAddress.value,
-			});
+			try {
+				await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
+					walletAddress: walletAddress.value,
+				});
+			}
+			catch {
+				console.log('Failed to upload user!')
+			}
 		};
 
 		const getWalletBalance = async () => {
