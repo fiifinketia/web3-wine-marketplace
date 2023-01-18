@@ -752,6 +752,8 @@ export default defineComponent({
 				this.nft.smartContractAddress
 			);
 			const owner = await contract.methods.ownerOf(this.nft.tokenID).call();
+			const exists = await contract.methods.tokenURI(this.nft.tokenID).call();
+			exists && console.log('Token exists\nTokenID: ' + this.nft.tokenID);
 			console.log(owner);
 		} catch (err) {
 			console.log(err);
