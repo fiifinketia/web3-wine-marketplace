@@ -181,6 +181,8 @@ import Empty from '../EmptyOrders.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
+import { IncomingOffersResponse } from '../models/response.models';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 const nftStore = useNFTStore();
 
@@ -259,7 +261,7 @@ export default defineComponent({
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
-      this.incomingOffers = this.store.getIncomingOffers;
+      this.incomingOffers = this.EnsureIncomingOffersAreOwned();
       this.$emit('incomingAmount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true;
@@ -268,6 +270,29 @@ export default defineComponent({
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }
+    },
+    EnsureIncomingOffersAreOwned() : IncomingOffersResponse[] {
+      const incomingOffers = this.store.getIncomingOffers;
+      const ownedNFTs = nftStore.ownedNFTs;
+      
+      const incomingOffersMap: Map<string, IncomingOffersResponse> = new Map();
+      const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
+
+      incomingOffers.forEach(f => {
+        const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
+        incomingOffersMap.set(key, f);
+      })
+      ownedNFTs.forEach(f => {
+        const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
+        ownedNFTsMap.set(key, f);
+      })
+      
+      const actualIncomingOffers: IncomingOffersResponse[] = [];
+      incomingOffersMap.forEach((v,k) => {
+        const actualIncomingOffer = ownedNFTsMap.has(k);
+        if (actualIncomingOffer) actualIncomingOffers.push(v);
+      })
+      return actualIncomingOffers;
     }
   }
 });

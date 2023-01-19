@@ -9,7 +9,6 @@ export const useNFTStore = defineStore(
     const ownedNFTs = ref([] as TokenIdentifier[])
     const fetchNFTs = async (walletAddress: string) => {
 			ownedNFTs.value = await FetchOwnedNFTs(walletAddress);
-			// ownedNFTs = await FetchOwnedNFTs(walletAddress);
 		}
     return {
 			ownedNFTs,
