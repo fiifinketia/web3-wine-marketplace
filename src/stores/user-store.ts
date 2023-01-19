@@ -31,6 +31,15 @@ export const useUserStore = defineStore(
 			}
 		};
 
+		const checkConnection = async () => {
+			const connectedAccounts: string[] = await window.ethereum.request({
+				method: 'eth_accounts'
+			})
+			if (connectedAccounts.length == 0) {
+				walletAddress.value = '';
+			}
+		}
+
 		const getWalletBalance = async () => {
 			if (!window.ethereum) return 0;
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -50,6 +59,7 @@ export const useUserStore = defineStore(
 			walletAddress,
 			connectWallet,
 			getWalletBalance,
+			checkConnection
 			// isConnected,
 			// walletBalance,
 			// connect,

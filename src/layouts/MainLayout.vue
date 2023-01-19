@@ -352,7 +352,7 @@ export default defineComponent({
 
 	async mounted() {
 		const userStore = useUserStore();
-
+		await userStore.checkConnection();
 		this.walletAddress = userStore.walletAddress;
 	},
 
