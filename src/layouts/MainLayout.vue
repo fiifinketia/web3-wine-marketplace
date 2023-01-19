@@ -369,7 +369,7 @@ export default defineComponent({
 				themeColor: '#3586ff', // App theme color
 				fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
 				// email: this.userStore.user?.email, // Your customer's email address
-				redirectURL: 'http://localhost:8081', // Redirect URL of your app
+				redirectURL: this.$route.fullPath, // Redirect URL of your app
 			});
 			this.showMyWallet = false;
 			transak.init();
@@ -389,7 +389,7 @@ export default defineComponent({
 			if (!this.isMetaMaskInstalled) {
 				//If it isn't installed we ask the user to click to install it
 				const onboarding = new MetaMaskOnboarding({
-					forwarderOrigin: 'http://localhost:8081',
+					forwarderOrigin: this.$route.fullPath,
 				});
 				onboarding.startOnboarding();
 			}
@@ -424,7 +424,7 @@ export default defineComponent({
 				})
 				.onOk(() => {
 					const onboarding = new MetaMaskOnboarding({
-						forwarderOrigin: 'http://localhost:8081',
+						forwarderOrigin: this.$route.fullPath,
 					});
 					onboarding.startOnboarding();
 				})

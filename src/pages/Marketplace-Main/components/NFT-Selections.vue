@@ -8,7 +8,7 @@
 			class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
 		>
 			<div>
-				<q-card class="q-pa-xs main-marketplace-nft-card" flat>
+				<q-card class="q-ma-xs main-marketplace-nft-card" flat>
 					<q-btn
 						flat
 						dense
@@ -35,7 +35,12 @@
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
-							<span class="main-marketplace-price-header q-pb-xs" @click="openNFT(token)"> Price </span>
+							<span
+								class="main-marketplace-price-header q-pb-xs"
+								@click="openNFT(token)"
+							>
+								Price
+							</span>
 							<q-img
 								v-if="token.favorited === true"
 								src="../../../../public/images/heart.svg"
@@ -67,7 +72,10 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.orderDetails?.listingPrice" @click="openNFT(token)">
+						<div
+							v-if="!!token.orderDetails?.listingPrice"
+							@click="openNFT(token)"
+						>
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -82,6 +90,30 @@
 							<span class="main-marketplace-price-text-b"> Not available </span>
 						</div>
 					</q-card-section>
+					<q-menu touch-position context-menu>
+						<q-list dense style="min-width: 100px">
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(token)">Open</q-item-section>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(token, 'new-tab')"
+									>Open link in New Tab</q-item-section
+								>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(token, 'new-window')"
+									>Open link in New Window</q-item-section
+								>
+							</q-item>
+							<q-separator />
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyAddress(token)">Copy Link</q-item-section>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyToken(token)">Copy Token Details</q-item-section>
+							</q-item>
+						</q-list>
+					</q-menu>
 				</q-card>
 			</div>
 		</div>
@@ -152,8 +184,59 @@ export default defineComponent({
 			await this.RetrieveTokens();
 		},
 
-		openNFT(token: any) {
-			this.$router.push({ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} })
+		openNFT(token: any, where?: string) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.smartContractAddress,
+				},
+			});
+			switch (where) {
+				case 'here':
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.smartContractAddress,
+						},
+					});
+					break;
+				case 'new-tab':
+					window.open(routeData.href, '_blank');
+					break;
+				case 'new-window':
+					window.open(routeData.href, '_blank', 'location=yes,status=yes,scrollbars=yes,height=auto,width=auto');
+					break;
+				default:
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.smartContractAddress,
+						},
+					});
+					break;
+			}
+		},
+
+		copyToken(token: any) {
+			navigator.clipboard.writeText(JSON.stringify(token))
+		},
+
+		copyAddress(token: any) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.smartContractAddress,
+				},
+			});
+			navigator.clipboard.writeText(window.location.host+routeData.href)
 		},
 
 		selectCard(tokenID: string) {
