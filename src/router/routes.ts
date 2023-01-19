@@ -67,7 +67,6 @@ const routes: RouteRecordRaw[] = [
 				method: 'eth_requestAccounts',
 			});
 			const account = accounts[0];
-			console.log(account);
 			if (account != '0xade82f372e70f8032f675b80e3c6a7d31e3a5269') {
 				return false;
 			}

@@ -10,7 +10,10 @@ import {
 } from '../models/Orders';
 
 import axios from 'axios';
-import { OrderComponents, OrderParameters } from '@opensea/seaport-js/lib/types';
+import {
+	OrderComponents,
+	OrderParameters,
+} from '@opensea/seaport-js/lib/types';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -29,7 +32,7 @@ export async function CreateERC721Listing(
 	listingPrice: string,
 	expirationDate: string
 ) {
-	const askAmount = utils.parseEther(listingPrice).toString();
+	listingPrice = utils.parseEther(listingPrice).toString();
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -45,9 +48,10 @@ export async function CreateERC721Listing(
 			consideration: [
 				// owner's ask
 				{
-					amount: askAmount,
+					amount: listingPrice,
 					recipient: address,
-					token: process.env.WIVA_CONTRACT,
+					// TODO: CHANGE IN PRODUCTION
+					token: process.env.MARKETPLACE_CURRENCY,
 				},
 			],
 			fees: [
@@ -81,10 +85,8 @@ export async function CreateERC721Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	axios.post(createOrderURL, OrderRequest);
 }
 
 export async function CreateERC1155Listing(
@@ -99,7 +101,7 @@ export async function CreateERC1155Listing(
 ) {
 	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther(listingPrice).toString();
+	listingPrice = utils.parseEther(listingPrice).toString();
 	// const testDate = new Date('2022-08-24T14:31:18.067Z');
 	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
 
@@ -118,9 +120,9 @@ export async function CreateERC1155Listing(
 			consideration: [
 				// owner's ask
 				{
-					amount: askAmount,
+					amount: listingPrice,
 					recipient: address,
-					token: process.env.WIVA_CONTRACT,
+					token: process.env.USDC_CONTRACT,
 				},
 			],
 			fees: [
@@ -154,10 +156,8 @@ export async function CreateERC1155Listing(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	axios.post(createOrderURL, OrderRequest);
 }
 
 export async function CreateERC721Offer(
@@ -171,8 +171,8 @@ export async function CreateERC721Offer(
 ) {
 	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
 	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	const askAmount = utils.parseEther(offerPrice).toString();
 	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
+	offerPrice = utils.parseEther(offerPrice).toString();
 
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
@@ -180,8 +180,8 @@ export async function CreateERC721Offer(
 			offer: [
 				// buyer's offer
 				{
-					amount: askAmount,
-					token: process.env.WIVA_CONTRACT,
+					amount: offerPrice,
+					token: process.env.USDC_CONTRACT,
 				},
 			],
 			consideration: [
@@ -226,10 +226,8 @@ export async function CreateERC721Offer(
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
 	};
-	axios.post(
-		'http://localhost:8080/api/market/order/listing/order.list',
-		OrderRequest
-	);
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	await axios.post(createOrderURL, OrderRequest);
 }
 
 export async function FulfillBasicOrder(
@@ -240,11 +238,9 @@ export async function FulfillBasicOrder(
 	image: string
 ) {
 	const { seaport } = await GetWeb3();
+	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const order: RetrieveListingResponse = await axios
-		.get(
-			`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
-			GETParams
-		)
+		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
 		.then((result) => {
 			const data = result.data;
 			return {
@@ -262,6 +258,7 @@ export async function FulfillBasicOrder(
 				signature: order.signature,
 			},
 		});
+
 	await executeAllFulfillActions();
 
 	const updateOrder: UpdateListingRequest = {
@@ -273,12 +270,10 @@ export async function FulfillBasicOrder(
 		brand: brand,
 		isOwner: owner,
 		walletAddress: address,
-		image: image
+		image: image,
 	};
-	axios.post(
-		'http://localhost:8080/api/market/order/fulfill/order.fulfill',
-		updateOrder
-	);
+	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
+	axios.post(fulfillOrderURL, updateOrder);
 }
 
 export async function GetWeb3(): Promise<SeaportInstance> {
@@ -307,36 +302,36 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 }
 
 export async function CancelSingleOrder(orderHash: string) {
+	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const order: OrderComponents = await axios
-	.get(
-		`http://localhost:8080/api/market/single/getOrderParameters?orderHash=${orderHash}`,
-		GETParams
-	)
-	.then((result) => {
-		const data = result.data;
-		return {
-			...<OrderParameters & { counter: number }> data.parameters, signature: <string> data.signature
-		};
-	});
+		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
+		.then((result) => {
+			const data = result.data;
+			return {
+				...(<OrderParameters & { counter: number }>data.parameters),
+				signature: <string>data.signature,
+			};
+		});
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders([order]);
 	await transact();
+	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+	axios.post(cancelOrderURL, [orderHash]);
 }
 
+// HAVE TO DELETE!
 export async function CancelSelectOrders(orderHashes: string[]) {
 	let orders: OrderComponents[] = [];
-	await axios
-		.post('http://localhost:8080/api/market/order/cancel', orderHashes)
-		.then((res) => {
-			orders = res.data;
-		});
+	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+	const cancelOrderConfirmedURL = <string>(
+		process.env.CANCEL_ORDER_CONFIRMED_URL
+	);
+	const { data } = await axios.post(cancelOrderURL, orderHashes);
+	orders = data;
 	const { seaport } = await GetWeb3();
 	const { transact } = seaport.cancelOrders(orders);
 	await transact();
-	axios.post(
-		'http://localhost:8080/api/market/order/cancel/confirm/order.cancel',
-		orderHashes
-	);
+	axios.post(cancelOrderConfirmedURL, orderHashes);
 }
 
 const RandomIdGenerator = () => {

@@ -151,7 +151,7 @@
               flat
               unelevated
               dense
-              @click="openDeleteDialog = true"
+              @click="OpenDeleteDialog(listing)"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -159,24 +159,27 @@
               flat
               unelevated
               dense
-              @click="openEditDialog = true"
+              @click="OpenEditDialog(listing)"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
           <ListingDialogEdit
             v-model="openEditDialog"
-            :brand="listing.brand"
-            :image="listing.image"
-            :orderHash="listing.orderHash"
-            :network="listing.network"
-            :smartContractAddress="listing.contractAddress"
-            :tokenID="listing.identifierOrCriteria"
-            @listing-edit-close="openEditDialog = !openEditDialog"
+            :brand="singleListing.brand"
+            :image="singleListing.image"
+            :orderHash="singleListing.orderHash"
+            :network="singleListing.network"
+            :smartContractAddress="singleListing.contractAddress"
+            :tokenID="singleListing.identifierOrCriteria"
+            @listing-edit-close="openEditDialog = false"
+            @remove-listing="(val) => RemoveRow(val)"
           />
           <ListingDialogUnlist
             v-model="openDeleteDialog"
-            :orderHash="listing.orderHash"
+            :orderHash="singleListing.orderHash"
+            @listing-delete-close="openDeleteDialog = false"
+            @remove-listing="(val) => RemoveRow(val)"
           />
         </div>
         </div>
@@ -200,9 +203,9 @@ import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
-import { utils } from 'ethers';
 import ListingEdit from '../Popups/ListingEdit.vue';
 import ListingUnlist from '../Popups/ListingUnlist.vue';
+import { ListingsResponse } from '../models/response.models';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -231,7 +234,9 @@ export default defineComponent({
       emptyRequest: false,
 
       openEditDialog: false,
-      openDeleteDialog: false
+      openDeleteDialog: false,
+
+      singleListing: {} as ListingsResponse
     }
   },
 
@@ -259,6 +264,9 @@ export default defineComponent({
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
       await this.FetchListings('', '');
+    } else {
+      this.$emit('listingsAmount', this.listings.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true
   },
@@ -269,10 +277,26 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
       this.listings = this.store.getListings;
+      this.$emit('listingsAmount', this.listings.length);
+      this.CheckForEmptyRequest();
+      this.loadingRequest = true
+    },
+    OpenDeleteDialog(listing: ListingsResponse) {
+      this.singleListing = listing;
+      this.openDeleteDialog = true;
+    },
+    OpenEditDialog(listing: ListingsResponse) {
+      this.singleListing = listing;
+      this.openEditDialog = true;
+    },
+    RemoveRow(orderHash: string) {
+      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
+      this.CheckForEmptyRequest();
+    },
+    CheckForEmptyRequest() {
       if (this.listings.length == 0) {
         this.emptyRequest = true 
       }
-      this.loadingRequest = true
     }
   }
 });

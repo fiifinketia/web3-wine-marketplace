@@ -43,7 +43,7 @@
 								<div>
 									<q-img
 										v-if="nft.orderDetails?.listingPrice"
-										src="../../../assets/ethereum.png"
+										src="../../../assets/usdc.png"
 										width="20px"
 									/>
 								</div>
@@ -56,7 +56,7 @@
 							<div class="bid-text">Highest bid from</div>
 							<div class="flex row items-center q-pt-sm">
 								<div>
-									<q-img src="../../../assets/ethereum.png" width="20px" />
+									<q-img src="../../../assets/usdc.png" width="20px" />
 								</div>
 								<div class="bid-price1">
 									{{ nft.orderDetails?.highestBid || '--.--' }}
@@ -263,17 +263,16 @@
 				class="q-pa-none"
 				style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
 			>
-				<!-- <q-card-section class="row items-center justify-center q-pa-sm">
+				<q-card-section class="row items-center justify-center q-pa-sm">
 					<q-img
 						src="/images/listing_failed.png"
 						width="50%"
 					/>
-				</q-card-section> -->
+				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative">
-						Sorry, the listing failed
-					</p>
-					<p class="row col-7 text-center">The reasoning why it failed.</p>
+
+					<p class="row col-7 text-bold text-negative"> Sorry, the listing failed </p>
+					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -315,43 +314,43 @@
 					<div class="col q-pa-none">
 						<div class="row col-8">
 							<div class="row col-12 justify-between">
-								<div class="col-6 q-pa-sm">
+								<div class="col-5 q-pa-sm">
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
 									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
 								</div>
-								<div class="col-6 q-pa-sm">
+								<div class="col-7 q-pa-none">
 									<!-- // Count down display -->
 									<p class="col-12 q-mb-xs text-primary text-right q-pr-md">
 										{{ new Date().toLocaleTimeString() }}
 									</p>
 									<q-card class="row">
-										<div class="q-pa-sm q-ma-none co-3" align="left">
-											<div class="text-weight-thin q-pa-sm">Ends In</div>
+										<div class="q-pa-sm q-ma-none col-4" align="left">
+											<div class="text-weight-thin q-pa-xs text-caption">Ends In</div>
 										</div>
 										<div
 											class="row justify-around q-pa-sm q-ma-none col-8"
 											align="right"
 										>
-											<div class="column days">
-												<div class="text-negative text-subtitle2">
+											<div class="col-3 q-pa-xs days">
+												<div class="text-negative text-caption">
 													{{ currentCount.days }}
 												</div>
 												<div class="text-weight-thin">Dd</div>
 											</div>
-											<div class="column hours">
-												<div class="text-negative text-subtitle2">
+											<div class="col-3 q-pa-xs hours">
+												<div class="text-negative text-caption">
 													{{ currentCount.hours }}
 												</div>
 												<div class="text-weight-thin">HH</div>
 											</div>
-											<div class="column minutes">
-												<div class="text-negative text-subtitle2">
+											<div class="col-3 q-pa-xs minutes">
+												<div class="text-negative text-caption">
 													{{ currentCount.minutes }}
 												</div>
 												<div class="text-weight-thin">MM</div>
 											</div>
-											<div class="column seconds">
-												<div class="text-negative text-subtitle2">
+											<div class="col-3 q-pa-xs seconds">
+												<div class="text-negative text-caption">
 													{{ currentCount.seconds }}
 												</div>
 												<div class="text-weight-thin">SS</div>
@@ -427,10 +426,9 @@
 					<q-img src="/images/buy_now_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative">
-						Sorry, the purchase failed
-					</p>
-					<p class="row col-7 text-center">The reasoning why it failed.</p>
+
+					<p class="row col-7 text-bold text-negative"> Sorry, the purchase failed </p>
+					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -539,7 +537,7 @@
 						</div>
 						<div class="row col-6 q-pa-sm">
 							<p class="text-weight-thin col-12 q-mb-xs">Keep active till</p>
-							<div class="row">
+							<div class="row justify-between">
 								<q-input
 									v-model="offerExpirationDate"
 									outlined
@@ -548,7 +546,13 @@
 									dense
 									type="date"
 									debounce="500"
+									@change="dateCheck"
 								/>
+								<span
+									v-if="falseDate"
+									style="color: #cc3300ed; margin: 9px 0 0 10px"
+									>Please enter a date in future</span
+								>
 							</div>
 						</div>
 						<q-separator size="2px" color="accent" />
@@ -576,7 +580,8 @@
 									!makeOfferTOCAccepted ||
 									offerExpirationDate === '' ||
 									offerPrice <= 0 ||
-									makeOfferLoading
+									makeOfferLoading ||
+									falseDate
 								"
 								@click="sendOffer"
 							>
@@ -625,10 +630,9 @@
 					<q-img src="/images/make_offer_failed.png" width="50%" />
 				</q-card-section>
 				<q-card-section class="row items-center justify-center q-py-sm">
-					<p class="row col-7 text-bold text-negative">
-						Sorry, making offer failed :(
-					</p>
-					<p class="row col-7 text-center">The reasoning why it failed.</p>
+
+					<p class="row col-7 text-bold text-negative"> Sorry, making offer failed :( </p>
+					<p class="row col-7 text-center">{{ errorMessage }}</p>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -642,6 +646,7 @@ import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
 	CancelSelectOrders,
+	CancelSingleOrder,
 	CreateERC1155Listing,
 	CreateERC721Listing,
 	CreateERC721Offer,
@@ -673,6 +678,7 @@ export default defineComponent({
 			completedTimeoutModal: 2000,
 			listingExpirationDate: ref(''),
 			offerExpirationDate: ref(''),
+			falseDate: false,
 			offerValidation: ref(false),
 			listTokenTOCAccepted: ref(false),
 			makeOfferTOCAccepted: ref(false),
@@ -683,6 +689,7 @@ export default defineComponent({
 			validationMessage: '',
 			listingExpirationDateErrorMessage: '',
 			offerExpirationDateErrorMessage: '',
+			errorMessage: ref(''),
 			openListingCompletedModal: ref(false),
 			openListingFailedModal: ref(false),
 			openOfferCompletedModal: ref(false),
@@ -717,9 +724,10 @@ export default defineComponent({
 		},
 		openBuyNowModal: function (val) {
 			if (val === true) {
+				const tDate = this.nft.orderDetails?.expTime;
 				const timer = new CountdownTimer({
 					selector: '#clock1',
-					targetDate: new Date(this.nft.orderDetails?.expTime),
+					targetDate: new Date(tDate*1000),
 					backgroundColor: 'rgba(0,0,0,.15)',
 					foregroundColor: 'rgba(0,0,0,.50)',
 				});
@@ -732,6 +740,14 @@ export default defineComponent({
 		},
 	},
 	methods: {
+		dateCheck() {
+			const today = new Date();
+			if (today >= new Date(this.offerExpirationDate)) {
+				this.falseDate = true;
+			} else {
+				this.falseDate = false;
+			}
+		},
 		async sendOffer() {
 			// const walletBalance = await this.userStore.getWalletBalance();
 			// if (walletBalance < this.offerPrice) {
@@ -769,12 +785,19 @@ export default defineComponent({
 					this.openOfferCompletedModal = false;
 					this.$emit('refresh');
 				}, this.completedTimeoutModal);
-			} catch (error) {
+			} catch (error: any) {
 				this.makeOfferLoading = false;
 				this.openOfferFailedModal = true;
+				if(error.code === 'ACTION_REJECTED') {
+					this.errorMessage = 'User cancelled transaction.';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				}
 				setTimeout(() => {
 					this.openOfferFailedModal = false;
 					this.openMakeOfferModal = true;
+					this.errorMessage = '';
 				}, this.completedTimeoutModal);
 			}
 		},
@@ -800,12 +823,23 @@ export default defineComponent({
 					this.openBuyNowCompletedModal = false;
 					this.$emit('refresh');
 				}, this.completedTimeoutModal);
-			} catch (error) {
+			} catch (error: any) {
 				this.buyNowLoading = false;
 				this.openBuyNowFailedModal = true;
+				if(error.code === 'ACTION_REJECTED') {
+					this.errorMessage = 'User cancelled transaction.';
+				}
+				else if (error.message && error.message.includes('unknown account'))
+				{
+					this.errorMessage = 'Account locked, please unlock meteamask to continue';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				}
 				setTimeout(() => {
 					this.openBuyNowFailedModal = false;
 					this.openBuyNowModal = true;
+					this.errorMessage = '';
 				}, this.completedTimeoutModal);
 			}
 		},
@@ -848,17 +882,24 @@ export default defineComponent({
 					this.openListingCompletedModal = false;
 					this.$emit('refresh');
 				}, this.completedTimeoutModal);
-			} catch (error) {
+			} catch (error: any) {
 				this.listingLoading = false;
 				this.openListingFailedModal = true;
+				if(error.code === 'ACTION_REJECTED') {
+					this.errorMessage = 'User cancelled transaction.';
+				}
+				else {
+					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				}
 				setTimeout(() => {
 					this.openListingFailedModal = false;
 					this.openCreateListingModal = true;
+					this.errorMessage = '';
 				}, this.completedTimeoutModal);
 			}
 		},
 		async cancelOrder() {
-			await CancelSelectOrders([this.nft.orderDetails?.orderHash]);
+			await CancelSingleOrder(this.nft.orderDetails?.orderHash);
 			this.$emit('refresh');
 		},
 		async openWalletSideBar() {

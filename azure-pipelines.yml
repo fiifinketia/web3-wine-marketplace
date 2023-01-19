@@ -1,0 +1,54 @@
+# Node.js with Vue
+# Build a Node.js project that uses Vue.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
+- task: DownloadSecureFile@1
+  name: quasarEnv
+  inputs:
+    secureFile: 'mkt.env.test'
+
+- script: mv mkt.env.test .env
+  workingDirectory: $(Agent.TempDirectory)
+  displayName: 'rename env file'
+
+- script: rm -f .env
+  workingDirectory: '$(Agent.BuildDirectory)/s'
+  displayName: 'remove any old env files'
+
+- task: CopyFiles@2
+  displayName: 'Copy files from: $(quasarEnv.secureFilePath) or $(Agent.TempDirectory)'
+  inputs:
+    SourceFolder: $(Agent.TempDirectory)
+    Contents: '$(Agent.TempDirectory)/.env'
+    TargetFolder: '$(Agent.BuildDirectory)/s'
+
+- script: npm install -g @quasar/cli
+  displayName: 'install quasar cli'
+  workingDirectory: '$(Agent.BuildDirectory)/s'
+
+- script: npm install
+  displayName: 'npm install dependencies and packages'
+  workingDirectory: '$(Agent.BuildDirectory)/s'
+
+- script: QENV=test npx quasar build
+  displayName: 'build quasar application'
+  workingDirectory: '$(Agent.BuildDirectory)/s'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop-mkt-staging'
+  inputs:
+    PathtoPublish: './dist'
+    ArtifactName: 'drop-mkt-staging'

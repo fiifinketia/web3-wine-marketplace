@@ -1,8 +1,8 @@
 <template>
 	<div class="column">
 		<div class="column exclusive-offer-title justify-center">
-			<div>Invest in wines to taste &</div>
-			<div>&nbsp;exclusive offers . . .</div>
+			<div>Our wines are selected using 20+ years of historic</div>
+			<div>wine data to offer the best opportunities</div>
 		</div>
 
 		<div class="row justify-center q-pt-lg exclusive-offer-container">

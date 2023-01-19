@@ -123,7 +123,7 @@
               flat
               unelevated
               dense
-              @click="openDeleteDialog = true"
+              @click="OpenDeleteDialog(offer)"
             >
               <img src="../../../assets/trash.svg" />
             </q-btn>
@@ -131,26 +131,29 @@
               flat
               unelevated
               dense
-              @click="openEditDialog = true"
+              @click="OpenEditDialog(offer)"
             >
               <img src="../../../assets/edit.svg" />
             </q-btn>
           </div>
           <OutgoingDialogEdit
             v-model="openEditDialog"
-            :brand="offer.brand"
-            :highestOffer="offer.highestOffer"
-            :highestOfferCurrency="offer.highestOfferCurrency"
-            :image="offer.image"
-            :network="offer.network"
-            :orderHash="offer.orderHash"
-            :smartContractAddress="offer.contractAddress"
-            :tokenID="offer.identifierOrCriteria"
-            @outgoing-edit-close="openEditDialog = !openEditDialog"
+            :brand="singleOffer.brand"
+            :highestOffer="singleOffer.highestOffer"
+            :highestOfferCurrency="singleOffer.highestOfferCurrency"
+            :image="singleOffer.image"
+            :network="singleOffer.network"
+            :orderHash="singleOffer.orderHash"
+            :smartContractAddress="singleOffer.contractAddress"
+            :tokenID="singleOffer.identifierOrCriteria"
+            @outgoing-edit-close="openEditDialog = false"
+            @remove-offer="(val) => RemoveRow(val)"
           />
           <OutgoingDialogDelete
             v-model="openDeleteDialog"
-            :orderHash="offer.orderHash"
+            :orderHash="singleOffer.orderHash"
+            @outgoing-delete-close="openDeleteDialog = false"
+            @remove-offer="(val) => RemoveRow(val)"
           />
         </div>
         </div>
@@ -174,6 +177,7 @@ import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
 import OutgoingEdit from '../Popups/OutgoingEdit.vue';
 import OutgoingDelete from '../Popups/OutgoingDelete.vue';
+import { OutgoingOffersResponse } from '../models/response.models';
 
 export default defineComponent({
   components: {
@@ -199,7 +203,9 @@ export default defineComponent({
       emptyRequest: false,
 
       openEditDialog: false,
-      openDeleteDialog: false
+      openDeleteDialog: false,
+
+      singleOffer: {} as OutgoingOffersResponse
     }
   },
   watch: {
@@ -225,6 +231,9 @@ export default defineComponent({
     const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
       await this.FetchOutgoingOffers('', '');
+    } else {
+      this.$emit('outgoingAmount', this.outgoingOffers.length);
+      this.CheckForEmptyRequest();
     }
     this.loadingRequest = true;
   },
@@ -234,10 +243,26 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       this.outgoingOffers = this.store.getOutgoingOffers;
-      if (this.outgoingOffers.length == 0) {
-        this.emptyRequest = true 
-      }
+      this.$emit('outgoingAmount', this.outgoingOffers.length);
+      this.CheckForEmptyRequest();
       this.loadingRequest = true
+    },
+    OpenDeleteDialog(offer: OutgoingOffersResponse) {
+      this.singleOffer = offer;
+      this.openDeleteDialog = true;
+    },
+    OpenEditDialog(offer: OutgoingOffersResponse) {
+      this.singleOffer = offer;
+      this.openEditDialog = true;
+    },
+    RemoveRow(orderHash: string) {
+      this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
+      this.CheckForEmptyRequest();
+    },
+    CheckForEmptyRequest() {
+      if (this.outgoingOffers.length == 0) {
+        this.emptyRequest = true;
+      }
     }
   }
 
