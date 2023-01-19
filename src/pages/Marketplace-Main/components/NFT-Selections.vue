@@ -6,6 +6,7 @@
 				token.tokenID + ',' + token.network + ',' + token.smartContractAddress
 			"
 			class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
+			@click="openNFT(token)"
 		>
 			<div>
 				<q-card class="q-ma-xs main-marketplace-nft-card" flat>
@@ -14,7 +15,7 @@
 						dense
 						:ripple="false"
 						class="btn--no-hover"
-						@click="openNFT(token)"
+
 					>
 						<img
 							:src="token.image"
@@ -25,7 +26,6 @@
 					<div
 						class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
 						style="text-align: left"
-						@click="openNFT(token)"
 					>
 						<span>
 							{{ token.brand }}
@@ -37,7 +37,6 @@
 						<div class="row justify-between" style="width: 100%">
 							<span
 								class="main-marketplace-price-header q-pb-xs"
-								@click="openNFT(token)"
 							>
 								Price
 							</span>
@@ -74,7 +73,6 @@
 						</div>
 						<div
 							v-if="!!token.orderDetails?.listingPrice"
-							@click="openNFT(token)"
 						>
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
@@ -86,7 +84,7 @@
 								</span>
 							</div>
 						</div>
-						<div v-else @click="openNFT(token)">
+						<div v-else>
 							<span class="main-marketplace-price-text-b"> Not available </span>
 						</div>
 					</q-card-section>
