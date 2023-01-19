@@ -4,59 +4,39 @@
 		@click="openModal === true ? 'modal' : 'content'"
 	>
 		<div class="brand-name">{{ nft.brand }}</div>
-		<!-- <div class="brand-name">Screaming Eagle, The Flight</div> -->
 		<div class="wine-name">{{ nft.name }}</div>
-		<!-- <div class="wine-name">Screaming Eagle, The Flight</div> -->
 		<div class="row q-pt-lg metadata-container">
-			<div class="metadata-nft-container col">
-				<!-- <q-img
-					src="https://wivmetadata.blob.core.windows.net/polygon-wine-icons/0.jpg"
-					width="100%"
-				/> -->
+			<div class="metadata-nft-container col-sm-6 col-xs-12">
 				<q-img :src="nft.image" class="picture" />
 			</div>
 
-			<div class="column info q-pa-md col">
+			<div class="column info col-sm-6 col-xs-12 q-pa-sm">
 				<div class="flex row">
-					<div class="q-pl-md">
-						<q-img
-							src="../../../../public/images/profile-icon.svg"
-							width="40px"
-							height="40px"
-						/>
-					</div>
+					<q-img
+						src="../../../../public/images/profile-icon.svg"
+						width="40px"
+						height="40px"
+						style="border-radius: 50%"
+					/>
 					<div class="flex column q-pl-sm">
 						<div class="owned-by">Owned by</div>
 						<div class="user-id">WiV</div>
 					</div>
 				</div>
-				<div class="metadata q-pa-md">
-					<div class="row q-pb-sm">
-						<div class="metadata-text">Red wine</div>
-						<!-- <div class="metadata-text">{{ nft.type }} wine</div> -->
+				<div class="metadata q-py-md">
+					<div class="row justify-between q-pb-sm">
+						<div class="metadata-text">{{ nft.type }} wine</div>
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text">25 yrs</div>
-						<!-- <div class="metadata-text">{{ nft.maturity }} yrs</div> -->
+						<div class="metadata-text">{{ nft.maturity }} yrs</div>
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text">America</div>
-						<!-- <div class="metadata-text">{{ nft.productionCountry }}</div> -->
+						<div class="metadata-text">{{ nft.productionCountry }}</div>
 						<q-separator spaced="md" size="2px" vertical color="accent" />
-						<div class="metadata-text q-pl-sm">Napa Valley</div>
-						<!-- <div class="metadata-text q-pl-sm">{{ nft.region }}</div> -->
+						<div class="metadata-text">{{ nft.region }}</div>
 					</div>
 					<div class="wine-description">
-						1 case of 3btl ( 75 cl ). Produced in America, Napa Valley,
-						Oakville. Vintage: 2016. About: Screaming Eagle is California's
-						original cult wine. Produced in tiny quantities from a small
-						vineyard in Napa's Oakville appellation, the Cabernet
-						Sauvignon-based wine regularly sells for upwards of $3000 a bottle
-						and is America's most expensive regularly produced wine. The 2016
-						Californian vintage was very good. The spring was warmer than normal
-						and followed by a hot June and July, with temperatures only finally
-						cooling in August.
-						<!-- {{ nft.description || 'No description' }} -->
+						{{ nft.description || 'No description' }}
 					</div>
-					<div class="q-pt-lg q-px-xl">
+					<div class="q-pt-lg metadata-price-wrapper">
 						<div class="flex column">
 							<div class="starting-from">Price</div>
 							<div class="flex row items-center">
@@ -89,7 +69,7 @@
 		</div>
 		<div v-if="userStore.walletAddress" class="q-pt-lg row modal-container">
 			<div v-if="nft.isOwner" class="q-pt-lg flex row modal-container">
-				<div v-if="!nft.orderDetails?.listingPrice" class="q-pr-sm whole-modal">
+				<div v-if="!nft.orderDetails?.listingPrice" class="q-pr-sm">
 					<q-btn
 						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 						no-caps
@@ -99,7 +79,7 @@
 						List For Sale
 					</q-btn>
 				</div>
-				<div v-else class="q-pr-sm whole-modal">
+				<div v-else class="q-pr-sm">
 					<q-btn
 						class="buy-now-button_outline flex items-center justify-center cursor-pointer buy-now-text_outline"
 						no-caps
@@ -111,32 +91,28 @@
 					</q-btn>
 				</div>
 			</div>
-			<div v-else class="row">
-				<div class="q-pr-sm whole-modal row">
-					<q-btn
-						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
-						no-caps
-						flat
-						:disable="!nft.orderDetails?.listingPrice"
-						@click="openBuyNowModal = !openBuyNowModal"
-					>
-						Buy now
-					</q-btn>
-				</div>
-				<div class="q-pl-sm">
-					<q-btn
-						no-caps
-						flat
-						class="make-offer-button flex items-center justify-center cursor-pointer buy-now-text"
-						@click="openMakeOfferModal = !openMakeOfferModal"
-					>
-						Make an offer
-					</q-btn>
-				</div>
+			<div v-else class="row metadata-button-container">
+				<q-btn
+					class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+					no-caps
+					flat
+					:disable="!nft.orderDetails?.listingPrice"
+					@click="openBuyNowModal = !openBuyNowModal"
+				>
+					Buy now
+				</q-btn>
+				<q-btn
+					no-caps
+					flat
+					class="make-offer-button flex items-center justify-center cursor-pointer buy-now-text"
+					@click="openMakeOfferModal = !openMakeOfferModal"
+				>
+					Make an offer
+				</q-btn>
 			</div>
 		</div>
 		<div v-else class="q-pt-lg row modal-container">
-			<div class="q-pr-sm whole-modal text-warning text-bold">
+			<div class="q-pr-sm text-warning text-bold">
 				Please Connect Wallet to view actions.
 			</div>
 		</div>
