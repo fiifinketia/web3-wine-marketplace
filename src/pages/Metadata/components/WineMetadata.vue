@@ -645,7 +645,6 @@ import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
-	CancelSelectOrders,
 	CancelSingleOrder,
 	CreateERC1155Listing,
 	CreateERC721Listing,
@@ -791,6 +790,10 @@ export default defineComponent({
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
 				}
+				else if (error.message && error.message.includes('unknown account'))
+				{
+					this.errorMessage = 'Account locked, please unlock meteamask to continue';
+				}
 				else {
 					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
 				}
@@ -887,6 +890,10 @@ export default defineComponent({
 				this.openListingFailedModal = true;
 				if(error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
+				}
+				else if (error.message && error.message.includes('unknown account'))
+				{
+					this.errorMessage = 'Account locked, please unlock meteamask to continue';
 				}
 				else {
 					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
