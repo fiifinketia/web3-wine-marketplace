@@ -25,6 +25,7 @@
 					<div
 						class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
 						style="text-align: left"
+						@click="$router.push({ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} })"
 					>
 						<span>
 							{{ token.brand }}
@@ -66,7 +67,7 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.orderDetails?.listingPrice">
+						<div v-if="!!token.orderDetails?.listingPrice" @click="$router.push({ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} })">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -77,7 +78,7 @@
 								</span>
 							</div>
 						</div>
-						<div v-else>
+						<div v-else @click="$router.push({ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} })">
 							<span class="main-marketplace-price-text-b"> Not available </span>
 						</div>
 					</q-card-section>
