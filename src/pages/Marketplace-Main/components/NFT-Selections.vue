@@ -13,8 +13,8 @@
 						flat
 						dense
 						:ripple="false"
-						:to="{ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} }"
 						class="btn--no-hover"
+						@click="openNFT(token)"
 					>
 						<img
 							:src="token.image"
@@ -25,6 +25,7 @@
 					<div
 						class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
 						style="text-align: left"
+						@click="openNFT(token)"
 					>
 						<span>
 							{{ token.brand }}
@@ -34,7 +35,7 @@
 						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
-							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
+							<span class="main-marketplace-price-header q-pb-xs" @click="openNFT(token)"> Price </span>
 							<q-img
 								v-if="token.favorited === true"
 								src="../../../../public/images/heart.svg"
@@ -66,7 +67,7 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.orderDetails?.listingPrice">
+						<div v-if="!!token.orderDetails?.listingPrice" @click="openNFT(token)">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -77,7 +78,7 @@
 								</span>
 							</div>
 						</div>
-						<div v-else>
+						<div v-else @click="openNFT(token)">
 							<span class="main-marketplace-price-text-b"> Not available </span>
 						</div>
 					</q-card-section>
@@ -149,6 +150,10 @@ export default defineComponent({
 					break;
 			}
 			await this.RetrieveTokens();
+		},
+
+		openNFT(token: any) {
+			this.$router.push({ path: '/nft', query: { id: token.tokenID, network: token.network, contractAddress: token.smartContractAddress} })
 		},
 
 		selectCard(tokenID: string) {
