@@ -45,7 +45,8 @@ export default defineComponent({
       isConnected: false
     }
   },
-  mounted() {
+  async mounted() {
+    await this.userStore.checkConnection();
 		const wallet = this.userStore.walletAddress;
 		if (!!wallet) {
 			this.isConnected = true;
