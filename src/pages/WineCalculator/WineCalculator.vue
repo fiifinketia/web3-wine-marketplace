@@ -255,7 +255,9 @@
 								<div class="center">
 									<div class="form-element">
 										<input
+											id="range"
 											type="range"
+											class="range"
 											min="100"
 											max="50000"
 											value="15000"
@@ -271,21 +273,21 @@
 								<div
 									class="flex justify-center items-center unselected-border-wrapper"
 								>
-									<!-- <div
+									<div
 										:class="
 											lowRisk === true ? 'selected-risk' : 'unselected-border'
 										"
 										@click="calculateRisk('low')"
-									></div> -->
-									<q-radio v-model="risk" dense val="low" />
+									></div>
+									<!-- <q-radio v-model="risk" dense val="low" /> -->
 								</div>
 								<div class="flex column q-pl-md risk-wrapper">
 									<div class="flex row justify-between items-center">
-										<div class="risk-title">Low risk name</div>
+										<div class="risk-title">Low Risk Portfolio</div>
 										<div class="low-risk-border"></div>
 									</div>
 									<div class="risk-desc q-pt-sm">
-										A short description of what it is and takes max two lines
+										Steadily returning wines with low volatility
 									</div>
 								</div>
 							</div>
@@ -294,23 +296,23 @@
 									<div
 										class="flex justify-center items-center unselected-border-wrapper"
 									>
-										<!-- <div
+										<div
 											:class="
 												mediumRisk === true
 													? 'selected-risk'
 													: 'unselected-border'
 											"
 											@click="calculateRisk('medium')"
-										></div> -->
-										<q-radio v-model="risk" dense val="medium" />
+										></div>
+										<!-- <q-radio v-model="risk" dense val="medium" /> -->
 									</div>
 									<div class="flex column q-pl-md risk-wrapper">
 										<div class="flex row justify-between items-center">
-											<div class="risk-title">Mid risk name</div>
+											<div class="risk-title">Medium Risk Portfolio</div>
 											<div class="medium-risk-border"></div>
 										</div>
 										<div class="risk-desc q-pt-sm">
-											A shot description of what it is and takes max two lines
+											Mostly high volume, high liquid investments
 										</div>
 									</div>
 								</div>
@@ -320,23 +322,23 @@
 									<div
 										class="flex justify-center items-center unselected-border-wrapper"
 									>
-										<!-- <div
+										<div
 											:class="
 												highRisk === true
 													? 'selected-risk'
 													: 'unselected-border'
 											"
 											@click="calculateRisk('high')"
-										></div> -->
-										<q-radio v-model="risk" dense val="high" />
+										></div>
+										<!-- <q-radio v-model="risk" dense val="high" /> -->
 									</div>
 									<div class="flex column q-pl-md risk-wrapper">
 										<div class="flex row justify-between items-center">
-											<div class="risk-title">High risk</div>
+											<div class="risk-title">High Risk Portfolio</div>
 											<div class="high-risk-border"></div>
 										</div>
 										<div class="risk-desc q-pt-sm">
-											A shot description of what it is and takes max two lines
+											Very volitile, highly risky wines
 										</div>
 									</div>
 								</div>
@@ -468,14 +470,21 @@ export default defineComponent({
 		};
 	},
 
+	mounted() {
+		const progress = document.getElementById('range') as any;
+
+		progress.addEventListener('input', function () {
+			let value = progress.value as any;
+			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${value}%, #fff ${value}%, white 100%)`;
+		});
+	},
+
 	methods: {
 		handleCalculation() {
 			this.calculating = false;
 		},
 		calculateRisk(type: string) {
-			const number = document
-				.getElementById('rangeValue')
-				?.innerHTML.replace(/\,/g, '');
+			const number = document.getElementById('rangeValue')?.innerHTML;
 			this.firstStepMobile = false;
 			this.secondStepMobile = true;
 

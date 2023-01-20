@@ -396,13 +396,14 @@
 	/* left: 60%; */
 	/* transform: translate(-50%, -50%); */
 }
-.form-element #rangeValue {
+/* .form-element #rangeValue {
 	margin-bottom: 20px;
 	font-size: 50px;
 	font-family: 'Raleway';
 	text-align: center;
 	color: #ddd;
-}
+} */
+
 .form-element input[type='range'] {
 	-webkit-appearance: none;
 	width: 99%;
@@ -416,6 +417,20 @@
 
 .form-element input[type='range']::-webkit-slider-thumb {
 	-webkit-appearance: none;
+	background: rgba(255, 255, 255, 0.45);
+	background-image: url('../../../public/images/drag.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	border-radius: 4px;
+	/* box-shadow: -338px 0px 0px 340px #3586ff; */
+}
+
+/* .form-element input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
 	background-image: url('../../../public/images/drag.svg');
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -428,7 +443,7 @@
 	box-shadow: -338px 0px 0px 340px #3586ff;
 	cursor: pointer;
 	position: relative;
-}
+} */
 .timing-container .form-element,
 .starting-investment-wrapper .form-element {
 	border: 1px solid rgba(94, 151, 236, 0.27);
