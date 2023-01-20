@@ -32,7 +32,7 @@
 						</span>
 					</div>
 					<q-card-section
-						class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
+						class="column items-start main-marketplace-price-container q-py-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
 							<span
@@ -120,14 +120,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { ListingWithPricingAndImage } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
-
 export default defineComponent({
 	data() {
 		const userStore = useUserStore();
