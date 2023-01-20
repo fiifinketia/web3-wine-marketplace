@@ -279,17 +279,18 @@ export default defineComponent({
       const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
 
       incomingOffers.forEach(f => {
-        const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
+        const key = f.orderHash;
         incomingOffersMap.set(key, f);
       })
       ownedNFTs.forEach(f => {
         const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
         ownedNFTsMap.set(key, f);
       })
-      
+
       const actualIncomingOffers: IncomingOffersResponse[] = [];
       incomingOffersMap.forEach((v,k) => {
-        const actualIncomingOffer = ownedNFTsMap.has(k);
+        const key = `${v.identifierOrCriteria},${v.contractAddress},${v.network}`;
+        const actualIncomingOffer = ownedNFTsMap.has(key);
         if (actualIncomingOffer) actualIncomingOffers.push(v);
       })
       return actualIncomingOffers;
