@@ -143,7 +143,16 @@
               dense
               no-caps
               class="profile-accept-btn"
-              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
+              @click="AcceptOffer(
+                offer.orderHash,
+                offer.brand,
+                offer.image,
+                {
+                  identifierOrCriteria: offer.identifierOrCriteria,
+                  contractAddress: offer.contractAddress,
+                  network: offer.network
+                }
+              )"
             >
               Accept
             </q-btn>
@@ -153,7 +162,16 @@
               unelevated
               dense
               no-caps
-              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
+              @click="AcceptOffer(
+                offer.orderHash,
+                offer.brand,
+                offer.image,
+                {
+                  identifierOrCriteria: offer.identifierOrCriteria,
+                  contractAddress: offer.contractAddress,
+                  network: offer.network
+                }
+              )"
             >
               <img src="../../../assets/accept.svg"/>
             </q-btn>
@@ -240,14 +258,13 @@ export default defineComponent({
       this.$emit('incomingAmount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
     }
-    this.loadingRequest = true;
   },
 
   methods: {
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`
     },
-    async AcceptOffer(orderHash: string, brand: string, image: string) {
+    async AcceptOffer(orderHash: string, brand: string, image: string, token: TokenIdentifier) {
       const address = this.userStore.walletAddress;
       await FulfillBasicOrder(
         orderHash,
@@ -256,10 +273,15 @@ export default defineComponent({
         address,
         image
       );
+      this.RemoveRow(token);
       this.CheckForEmptyRequest();
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
+      if (this.nftStore.fetchNFTsStatus == false) {
+        setTimeout(this.FetchIncomingOffers, 1000);
+        return
+      }
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.EnsureIncomingOffersAreOwned();
       this.$emit('incomingAmount', this.incomingOffers.length);
@@ -270,6 +292,7 @@ export default defineComponent({
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true;
     },
     EnsureIncomingOffersAreOwned() : IncomingOffersResponse[] {
       const incomingOffers = this.store.getIncomingOffers;
@@ -294,7 +317,15 @@ export default defineComponent({
         if (actualIncomingOffer) actualIncomingOffers.push(v);
       })
       return actualIncomingOffers;
-    }
+    },
+    RemoveRow(token: TokenIdentifier) {
+      const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
+      this.incomingOffers = this.incomingOffers.filter(f => {
+          const offersKey = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`
+          return offersKey !== tokenKey
+        }
+      );
+    },
   }
 });
 

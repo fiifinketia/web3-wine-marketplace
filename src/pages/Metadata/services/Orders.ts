@@ -122,7 +122,7 @@ export async function CreateERC1155Listing(
 				{
 					amount: listingPrice,
 					recipient: address,
-					token: process.env.USDC_CONTRACT,
+					token: process.env.MARKETPLACE_CURRENCY,
 				},
 			],
 			fees: [
@@ -181,7 +181,7 @@ export async function CreateERC721Offer(
 				// buyer's offer
 				{
 					amount: offerPrice,
-					token: process.env.USDC_CONTRACT,
+					token: process.env.MARKETPLACE_CURRENCY,
 				},
 			],
 			consideration: [

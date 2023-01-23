@@ -317,7 +317,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
-// import transakSDK from '@transak/transak-sdk';
 const transakSDK = require('@transak/transak-sdk');
 
 import '../css/MainLayout/MainLayout.scss';
@@ -327,6 +326,9 @@ import '../css/MainLayout/MyWallet.css';
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { ordersStore } from 'src/stores/orders-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -336,6 +338,8 @@ export default defineComponent({
 	},
 	data() {
 		const userStore = useUserStore();
+		const nftStore = useNFTStore();
+		const orderStore = ordersStore();
 		const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
 		return {
@@ -344,6 +348,8 @@ export default defineComponent({
 			showMyWallet: false,
 			showConnectWallet: false,
 			userStore,
+			nftStore,
+			orderStore,
 			walletAddress: '',
 			isMetaMaskInstalled,
 			balance: 0,
@@ -354,6 +360,9 @@ export default defineComponent({
 		const userStore = useUserStore();
 		await userStore.checkConnection();
 		this.walletAddress = userStore.walletAddress;
+		if (!this.walletAddress) {
+			this.ClearStore();
+		}
 	},
 
 	methods: {
@@ -411,7 +420,13 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
+			this.ClearStore();
 		},
+    ClearStore() {
+      this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+      this.nftStore.fetchNFTsStatus = false;
+      this.orderStore.$reset();
+    },
 		installMetaMask() {
 			this.$q
 				.dialog({
