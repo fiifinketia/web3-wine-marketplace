@@ -7,10 +7,24 @@
 			<div
 				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
 			>
-				<a class="footer-bold" :href="nftsUrl">NFTs</a>
-				<a class="footer-normal" :href="newReleasesUrl">New Releases</a>
-				<a class="footer-normal" :href="recommendedUrl">Recommended</a>
-				<a class="footer-bold" :href="favouritesUrl">Favourites</a>
+				<a
+					class="footer-bold"
+					:href="$router.resolve('/marketplace?tab=nfts').href"
+					>NFTs</a
+				>
+				<a
+					class="footer-normal"
+					:href="$router.resolve('/marketplace?tab=releases').href"
+					>New Releases</a
+				>
+				<a
+					class="footer-normal"
+					:href="$router.resolve('/marketplace?tab=recommended').href"
+					>Recommended</a
+				>
+				<a class="footer-bold" :href="$router.resolve('/favorites').href"
+					>Favourites</a
+				>
 				<a class="footer-bold">Stats</a>
 				<a class="footer-normal">Wine Statistics</a>
 			</div>
@@ -24,10 +38,16 @@
 			<div
 				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
 			>
-				<a class="footer-bold">Profile</a>
+				<a class="footer-bold" :href="$router.resolve('/orders').href"
+					>Profile</a
+				>
 				<a class="footer-normal">Digital Wine Cellar</a>
-				<a class="footer-normal">Offers</a>
-				<a class="footer-normal">Trading History</a>
+				<a class="footer-normal" :href="$router.resolve('/orders').href"
+					>Offers</a
+				>
+				<a class="footer-normal" :href="$router.resolve('/orders').href"
+					>Trading History</a
+				>
 				<a class="footer-normal">Notifications</a>
 				<a class="footer-bold">Settings</a>
 			</div>
@@ -72,17 +92,6 @@ import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/Footer.css';
 export default defineComponent({
 	name: 'LandingPageFooter',
-
-	data() {
-		return {
-			nftsUrl: process.env.CLIENT_BASE_URL + '#/marketplace?tab=nfts',
-			newReleasesUrl:
-				process.env.CLIENT_BASE_URL + '#/marketplace?tab=releases',
-			recommendedUrl:
-				process.env.CLIENT_BASE_URL + '#/marketplace?tab=recommended',
-			favouritesUrl: process.env.CLIENT_BASE_URL + '#/favorites',
-		};
-	},
 });
 </script>
 

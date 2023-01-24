@@ -1,8 +1,8 @@
 <template>
   <div class="burger-menu-background column justify-around items-center">
-    <div class="burger-bolder-text">Marketplace</div>
-    <div>New Releases</div>
-    <div>recommended</div>
+    <div class="burger-bolder-text" @click="$router.push('/marketplace?tab=nfts'); $emit('closeBurgerMenu')">Marketplace</div>
+    <div @click="$router.push('/marketplace?tab=releases'); $emit('closeBurgerMenu')">New Releases</div>
+    <div @click="$router.push('/marketplace?tab=releases'); $emit('closeBurgerMenu')">Recommended</div>
     <div class="burger-bolder-text">stats</div>
     <div class="burger-bolder-text">storefront</div>
     <div class="burger-icons row justify-between">
@@ -10,6 +10,7 @@
         class="icons"
         src="../../../public/images/favs-icon.svg"
         alt="favorite-icon"
+				@click="$router.push('/favorites'); $emit('closeBurgerMenu')"
       />
       <img
         class="icons"
@@ -38,6 +39,7 @@ import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
 export default defineComponent({
   name: 'BurgerMenu',
+	emits: ['closeBurgerMenu'],
   data() {
     const userStore = useUserStore();
     return {

@@ -119,7 +119,7 @@
 									@click="$router.push('/marketplace?tab=nfts')"
 								>
 									<q-item-section>
-										<q-item-label>All NFTs</q-item-label>
+										<q-item-label>Marketplace</q-item-label>
 									</q-item-section>
 								</q-item>
 
