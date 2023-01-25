@@ -208,6 +208,7 @@ import { useUserStore } from 'src/stores/user-store';
 import { IncomingOffersResponse } from '../models/response.models';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import ProfileErrors from '../Popups/ProfileErrors.vue';
+import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 
 const nftStore = useNFTStore();
 
@@ -290,23 +291,7 @@ export default defineComponent({
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
       } catch (err: any) {
-        if(err.code === 'ACTION_REJECTED') {
-          this.errorType = 'cancel';
-          this.errorTitle = 'Sorry, the transaction failed';
-					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (err.message && err.message.includes('unknown account')) {
-          this.errorType = 'locked';
-          this.errorTitle = 'Account locked';
-					this.errorMessage = 'Account locked, please unlock Metamask to continue.';
-				}
-				else {
-          this.errorType = 'unknown';
-          this.errorTitle = '';
-					this.errorMessage = err.message || 'Please try again or reconnect wallet.';
-				}
-        this.openErrorDialog = true;
-        setTimeout(() => { this.openErrorDialog = false }, 2000);
+        this.HandleError(err);
       }
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
@@ -359,6 +344,14 @@ export default defineComponent({
         }
       );
     },
+    HandleError(err: any) {
+      const { errorType, errorTitle, errorMessage } = ErrorMessageBuilder(err);
+      this.errorType = errorType;
+      this.errorTitle = errorTitle;
+      this.errorMessage = errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
+    }
   }
 });
 
