@@ -265,13 +265,12 @@ export default defineComponent({
   },
 
   async mounted() {
-    const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
-    if (incomingOffersRequestStatus == false) {
-      await this.FetchIncomingOffers('', '');
-    } else {
-      this.$emit('incomingAmount', this.incomingOffers.length);
-      this.CheckForEmptyRequest();
-    }
+    // if (incomingOffersRequestStatus == false) {
+    await this.FetchIncomingOffers('', '');
+    // } else {
+    //   this.$emit('incomingAmount', this.incomingOffers.length);
+    //   this.CheckForEmptyRequest();
+    // }
   },
 
   methods: {
@@ -296,10 +295,11 @@ export default defineComponent({
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      if (this.nftStore.fetchNFTsStatus == false) {
-        setTimeout(this.FetchIncomingOffers, 1000);
-        return
-      }
+      await this.RefetchNFTs();
+      // if (this.nftStore.fetchNFTsStatus == false) {
+      //   setTimeout(this.FetchIncomingOffers, 1000);
+      //   return
+      // }
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = this.EnsureIncomingOffersAreOwned();
       this.$emit('incomingAmount', this.incomingOffers.length);
@@ -351,6 +351,11 @@ export default defineComponent({
       this.errorMessage = errorMessage;
       this.openErrorDialog = true;
       setTimeout(() => { this.openErrorDialog = false }, 2000);
+    },
+    async RefetchNFTs() {
+      nftStore.ownedNFTs = [] as TokenIdentifier[];
+      // TODO: Exception handling
+      await nftStore.fetchNFTs(this.userStore.walletAddress);
     }
   }
 });

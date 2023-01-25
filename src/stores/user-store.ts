@@ -9,7 +9,7 @@ export const useUserStore = defineStore(
 	() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const walletAddress = ref('');
-		const nftStorage = useNFTStore();
+		// const nftStorage = useNFTStore();
 
 		const connectWallet = async () => {
 			// this.showConnectWallet = true;
@@ -19,7 +19,7 @@ export const useUserStore = defineStore(
 				method: 'eth_requestAccounts',
 			});
 			walletAddress.value = utils.getAddress(accounts[0]);
-			await nftStorage.fetchNFTs(accounts[0]);
+			// await nftStorage.fetchNFTs(accounts[0]);
 
 			try {
 				await axios.post(process.env.MARKETPLACE_API_URL + 'market/users', {
