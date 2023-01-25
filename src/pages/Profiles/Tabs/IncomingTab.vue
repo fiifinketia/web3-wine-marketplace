@@ -179,6 +179,12 @@
         </div>
         </div>
       </div>
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
+      />
     </div>
     <div v-else class="column items-center">
       <EmptyView :emptyText="'You do not have incoming offers yet.'" />
@@ -201,6 +207,7 @@ import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { IncomingOffersResponse } from '../models/response.models';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import ProfileErrors from '../Popups/ProfileErrors.vue';
 
 const nftStore = useNFTStore();
 
@@ -209,7 +216,8 @@ export default defineComponent({
     IncomingHeaderLg: IncomingHeaderLg,
     IncomingHeaderSm: IncomingHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: Empty
+    EmptyView: Empty,
+    ErrorDialog: ProfileErrors
   },
 
   data() {
@@ -226,7 +234,12 @@ export default defineComponent({
       incomingBrandFilter: store.getIncomingBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
     }
   },
 
@@ -266,15 +279,35 @@ export default defineComponent({
     },
     async AcceptOffer(orderHash: string, brand: string, image: string, token: TokenIdentifier) {
       const address = this.userStore.walletAddress;
-      await FulfillBasicOrder(
-        orderHash,
-        brand,
-        true,
-        address,
-        image
-      );
-      this.RemoveRow(token);
-      this.CheckForEmptyRequest();
+      try {
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          true,
+          address,
+          image
+        );
+        this.RemoveRow(token);
+        this.CheckForEmptyRequest();
+      } catch (err: any) {
+        if(err.code === 'ACTION_REJECTED') {
+          this.errorType = 'cancel';
+          this.errorTitle = 'Sorry, the transaction failed';
+					this.errorMessage = 'User cancelled transaction.';
+				}
+				else if (err.message && err.message.includes('unknown account')) {
+          this.errorType = 'locked';
+          this.errorTitle = 'Account locked';
+					this.errorMessage = 'Account locked, please unlock Metamask to continue.';
+				}
+				else {
+          this.errorType = 'unknown';
+          this.errorTitle = '';
+					this.errorMessage = err.message || 'Please try again or reconnect wallet.';
+				}
+        this.openErrorDialog = true;
+        setTimeout(() => { this.openErrorDialog = false }, 2000);
+      }
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
