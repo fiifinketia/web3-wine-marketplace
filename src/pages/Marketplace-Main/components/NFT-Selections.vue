@@ -41,7 +41,7 @@
 								Price
 							</span>
 							<q-img
-								v-if="token.favorited === true"
+								v-if="!!userStore.walletAddress && token.favorited === true"
 								src="../../../../public/images/heart.svg"
 								class="clickable-image"
 								width="20px"
@@ -56,7 +56,7 @@
 								"
 							/>
 							<q-img
-								v-else
+								v-else-if="!!userStore.walletAddress && token.favorited === false"
 								src="../../../../public/images/empty-heart.svg"
 								class="clickable-image"
 								width="20px"
