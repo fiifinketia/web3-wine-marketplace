@@ -143,7 +143,16 @@
               dense
               no-caps
               class="profile-accept-btn"
-              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
+              @click="AcceptOffer(
+                offer.orderHash,
+                offer.brand,
+                offer.image,
+                {
+                  identifierOrCriteria: offer.identifierOrCriteria,
+                  contractAddress: offer.contractAddress,
+                  network: offer.network
+                }
+              )"
             >
               Accept
             </q-btn>
@@ -153,7 +162,16 @@
               unelevated
               dense
               no-caps
-              @click="AcceptOffer(offer.orderHash, offer.brand, offer.image)"
+              @click="AcceptOffer(
+                offer.orderHash,
+                offer.brand,
+                offer.image,
+                {
+                  identifierOrCriteria: offer.identifierOrCriteria,
+                  contractAddress: offer.contractAddress,
+                  network: offer.network
+                }
+              )"
             >
               <img src="../../../assets/accept.svg"/>
             </q-btn>
@@ -161,6 +179,12 @@
         </div>
         </div>
       </div>
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
+      />
     </div>
     <div v-else class="column items-center">
       <EmptyView :emptyText="'You do not have incoming offers yet.'" />
@@ -181,6 +205,10 @@ import Empty from '../EmptyOrders.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
+import { IncomingOffersResponse } from '../models/response.models';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import ProfileErrors from '../Popups/ProfileErrors.vue';
+import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 
 const nftStore = useNFTStore();
 
@@ -189,7 +217,8 @@ export default defineComponent({
     IncomingHeaderLg: IncomingHeaderLg,
     IncomingHeaderSm: IncomingHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: Empty
+    EmptyView: Empty,
+    ErrorDialog: ProfileErrors
   },
 
   data() {
@@ -206,7 +235,12 @@ export default defineComponent({
       incomingBrandFilter: store.getIncomingBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
     }
   },
 
@@ -238,28 +272,36 @@ export default defineComponent({
       this.$emit('incomingAmount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
     }
-    this.loadingRequest = true;
   },
 
   methods: {
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`
     },
-    async AcceptOffer(orderHash: string, brand: string, image: string) {
+    async AcceptOffer(orderHash: string, brand: string, image: string, token: TokenIdentifier) {
       const address = this.userStore.walletAddress;
-      await FulfillBasicOrder(
-        orderHash,
-        brand,
-        true,
-        address,
-        image
-      );
-      this.CheckForEmptyRequest();
+      try {
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          true,
+          address,
+          image
+        );
+        this.RemoveRow(token);
+        this.CheckForEmptyRequest();
+      } catch (err: any) {
+        this.HandleError(err);
+      }
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
+      if (this.nftStore.fetchNFTsStatus == false) {
+        setTimeout(this.FetchIncomingOffers, 1000);
+        return
+      }
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
-      this.incomingOffers = this.store.getIncomingOffers;
+      this.incomingOffers = this.EnsureIncomingOffersAreOwned();
       this.$emit('incomingAmount', this.incomingOffers.length);
       this.CheckForEmptyRequest();
       this.loadingRequest = true;
@@ -268,6 +310,47 @@ export default defineComponent({
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true;
+    },
+    EnsureIncomingOffersAreOwned() : IncomingOffersResponse[] {
+      const incomingOffers = this.store.getIncomingOffers;
+      const ownedNFTs = nftStore.ownedNFTs;
+      
+      const incomingOffersMap: Map<string, IncomingOffersResponse> = new Map();
+      const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
+
+      incomingOffers.forEach(f => {
+        const key = f.orderHash;
+        incomingOffersMap.set(key, f);
+      })
+      ownedNFTs.forEach(f => {
+        const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
+        ownedNFTsMap.set(key, f);
+      })
+
+      const actualIncomingOffers: IncomingOffersResponse[] = [];
+      incomingOffersMap.forEach((v,k) => {
+        const key = `${v.identifierOrCriteria},${v.contractAddress},${v.network}`;
+        const actualIncomingOffer = ownedNFTsMap.has(key);
+        if (actualIncomingOffer) actualIncomingOffers.push(v);
+      })
+      return actualIncomingOffers;
+    },
+    RemoveRow(token: TokenIdentifier) {
+      const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
+      this.incomingOffers = this.incomingOffers.filter(f => {
+          const offersKey = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`
+          return offersKey !== tokenKey
+        }
+      );
+    },
+    HandleError(err: any) {
+      const { errorType, errorTitle, errorMessage } = ErrorMessageBuilder(err);
+      this.errorType = errorType;
+      this.errorTitle = errorTitle;
+      this.errorMessage = errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     }
   }
 });

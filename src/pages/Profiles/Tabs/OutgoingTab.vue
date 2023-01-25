@@ -148,16 +148,24 @@
             :tokenID="singleOffer.identifierOrCriteria"
             @outgoing-edit-close="openEditDialog = false"
             @remove-offer="(val) => RemoveRow(val)"
+            @outgoing-error-dialog="HandleError"
           />
           <OutgoingDialogDelete
             v-model="openDeleteDialog"
             :orderHash="singleOffer.orderHash"
             @outgoing-delete-close="openDeleteDialog = false"
             @remove-offer="(val) => RemoveRow(val)"
+            @outgoing-error-dialog="HandleError"
           />
         </div>
         </div>
       </div>
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
+      />
     </div>
     <div v-else class="column items-center">
       <EmptyView :emptyText="'You have not made any offers yet.'" />
@@ -178,6 +186,7 @@ import { useUserStore } from 'src/stores/user-store';
 import OutgoingEdit from '../Popups/OutgoingEdit.vue';
 import OutgoingDelete from '../Popups/OutgoingDelete.vue';
 import { OutgoingOffersResponse } from '../models/response.models';
+import ProfileErrors from '../Popups/ProfileErrors.vue';
 
 export default defineComponent({
   components: {
@@ -186,7 +195,8 @@ export default defineComponent({
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
     OutgoingDialogEdit: OutgoingEdit,
-    OutgoingDialogDelete: OutgoingDelete
+    OutgoingDialogDelete: OutgoingDelete,
+    ErrorDialog: ProfileErrors
   },
   data() {
     const store = ordersStore();
@@ -205,7 +215,12 @@ export default defineComponent({
       openEditDialog: false,
       openDeleteDialog: false,
 
-      singleOffer: {} as OutgoingOffersResponse
+      singleOffer: {} as OutgoingOffersResponse,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
     }
   },
   watch: {
@@ -263,6 +278,17 @@ export default defineComponent({
       if (this.outgoingOffers.length == 0) {
         this.emptyRequest = true;
       }
+    },
+    HandleError(err: {
+      errorType: string,
+      errorTitle: string,
+      errorMessage: string
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     }
   }
 

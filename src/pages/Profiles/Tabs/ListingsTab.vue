@@ -174,16 +174,24 @@
             :tokenID="singleListing.identifierOrCriteria"
             @listing-edit-close="openEditDialog = false"
             @remove-listing="(val) => RemoveRow(val)"
+            @listing-error-dialog="HandleError"
           />
           <ListingDialogUnlist
             v-model="openDeleteDialog"
             :orderHash="singleListing.orderHash"
             @listing-delete-close="openDeleteDialog = false"
             @remove-listing="(val) => RemoveRow(val)"
+            @listing-error-dialog="HandleError"
           />
         </div>
         </div>
       </div>
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
+      />
     </div>
     <div v-else class="column items-center">
       <EmptyView :emptyText="'You have not made any listings yet.'" />
@@ -206,6 +214,7 @@ import { useUserStore } from 'src/stores/user-store';
 import ListingEdit from '../Popups/ListingEdit.vue';
 import ListingUnlist from '../Popups/ListingUnlist.vue';
 import { ListingsResponse } from '../models/response.models';
+import ProfileErrors from '../Popups/ProfileErrors.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -216,7 +225,8 @@ export default defineComponent({
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
     ListingDialogEdit: ListingEdit,
-    ListingDialogUnlist: ListingUnlist
+    ListingDialogUnlist: ListingUnlist,
+    ErrorDialog: ProfileErrors
   },
 
   data() {
@@ -236,7 +246,12 @@ export default defineComponent({
       openEditDialog: false,
       openDeleteDialog: false,
 
-      singleListing: {} as ListingsResponse
+      singleListing: {} as ListingsResponse,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
     }
   },
 
@@ -297,6 +312,17 @@ export default defineComponent({
       if (this.listings.length == 0) {
         this.emptyRequest = true 
       }
+    },
+    HandleError(err: {
+      errorType: string,
+      errorTitle: string,
+      errorMessage: string
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     }
   }
 });

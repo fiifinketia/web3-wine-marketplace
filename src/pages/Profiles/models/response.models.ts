@@ -7,7 +7,7 @@ interface OrdersResponse {
 
 interface ListingsResponse extends ListingModel, HighestOfferModel, TokenIdentifier {}
 
-interface IncomingOffersResponse extends OfferModel, LowestOfferModel {
+interface IncomingOffersResponse extends OfferModel, LowestOfferModel, TokenIdentifier {
   offerer: string;
 }
 

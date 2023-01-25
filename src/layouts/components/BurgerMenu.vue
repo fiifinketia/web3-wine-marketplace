@@ -32,16 +32,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { useNFTStore } from 'src/stores/nft-store';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { ordersStore } from 'src/stores/orders-store';
 export default defineComponent({
   name: 'BurgerMenu',
   data() {
     const userStore = useUserStore();
+    const nftStore = useNFTStore();
+    const orderStore = ordersStore();
     return {
       userStore,
+      nftStore,
+      orderStore,
       isConnected: false
     }
   },
@@ -50,7 +57,9 @@ export default defineComponent({
 		const wallet = this.userStore.walletAddress;
 		if (!!wallet) {
 			this.isConnected = true;
-		}
+		} else {
+			this.ClearStore();
+    }
 	},
   methods: {
     onClickBackground() {
@@ -62,8 +71,14 @@ export default defineComponent({
     },
     async Logout() {
 			this.userStore.walletAddress = '';
+      this.ClearStore();
       this.$emit('closeBurgerMenu');
 		},
+    ClearStore() {
+      this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+      this.nftStore.fetchNFTsStatus = false;
+      this.orderStore.$reset();
+    }
   },
 });
 </script>
