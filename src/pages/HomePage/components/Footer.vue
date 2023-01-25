@@ -10,7 +10,7 @@
 				<a
 					class="footer-bold"
 					:href="$router.resolve('/marketplace?tab=nfts').href"
-					>NFTs</a
+					>Marketplace</a
 				>
 				<a
 					class="footer-normal"

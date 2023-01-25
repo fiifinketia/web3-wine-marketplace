@@ -80,7 +80,11 @@
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')" @openConnectWallet="showConnectWallet = true"/>
+	<BurgerMenu
+		v-if="showBurgerMenu"
+		@closeBurgerMenu="onBurgerMenu('close')"
+		@openConnectWallet="showConnectWallet = true"
+	/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -119,7 +123,7 @@
 									@click="$router.push('/marketplace?tab=nfts')"
 								>
 									<q-item-section>
-										<q-item-label>Marketplace</q-item-label>
+										<q-item-label>All NFTs</q-item-label>
 									</q-item-section>
 								</q-item>
 
@@ -180,11 +184,23 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
-						split
 						icon="app:profile"
-						:to="{ path: '/orders' }"
 					>
 						<div class="q-btn-menu-div">
+							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
+								<q-chip
+									v-close-popup
+									clickable
+									color="white"
+									class="text-bold"
+									@click="$router.push('orders')"
+								>
+									<q-avatar  size="24px">
+										<img :src="userStore.user?.avatar" />
+									</q-avatar>
+									{{ userStore.walletAddress.slice(0, 10) }}...
+								</q-chip>
+							</q-toolbar>
 							<q-list>
 								<q-item
 									v-if="!!userStore.walletAddress"
@@ -309,7 +325,10 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @openConnectWallet="showConnectWallet = true"/>
+			<router-view
+				@open-wallet-sidebar="showMyWallet = !showMyWallet"
+				@openConnectWallet="showConnectWallet = true"
+			/>
 		</q-page-container>
 	</q-layout>
 </template>
