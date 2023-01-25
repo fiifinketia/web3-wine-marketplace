@@ -71,10 +71,19 @@
           :key="listing.orderHash"
           class="q-px-lg q-py-md row items-center"
         >
-          <div class="row items-center listings-column-nft">
+          <q-btn 
+            flat
+            unelevated
+            dense
+            no-caps
+            align="left"
+            padding="0px"
+            class="listings-column-nft btn--no-hover"
+            :to="{ path: '/nft', query: { id: listing.identifierOrCriteria, network: listing.network, contractAddress: listing.contractAddress} }"
+          >
             <img v-if="$q.screen.width > 1265" :src="listing.image" class="profile-nft-image q-mr-md"/>
             <span class="profile-nft-brand"> {{ listing.brand }}</span>
-          </div>
+          </q-btn>
           <div
             v-if="$q.screen.width > 1265"
             class="row items-center listings-column-threshold"
@@ -329,6 +338,8 @@ export default defineComponent({
 
 </script>
 
-<style>
-
+<style scoped>
+:deep(.q-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>
