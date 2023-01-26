@@ -305,15 +305,15 @@ export default defineComponent({
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       await this.RefetchNFTs();
-      // if (this.nftStore.fetchNFTsStatus == false) {
-      //   setTimeout(this.FetchIncomingOffers, 1000);
-      //   return
-      // }
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
-      this.incomingOffers = this.EnsureIncomingOffersAreOwned();
-      this.$emit('incomingAmount', this.incomingOffers.length);
-      this.CheckForEmptyRequest();
-      this.loadingRequest = true;
+      if (this.store.getIncomingOffers.length == 0 && this.store.incomingBrandFilterStatus == true) {
+        this.HandleMissingBrand();
+      } else {
+        this.incomingOffers = this.EnsureIncomingOffersAreOwned();
+        this.$emit('incomingAmount', this.incomingOffers.length);
+        this.CheckForEmptyRequest();
+        this.loadingRequest = true;
+      }
     },
     CheckForEmptyRequest() {
       if (this.incomingOffers.length == 0) {
@@ -352,6 +352,8 @@ export default defineComponent({
           return offersKey !== tokenKey
         }
       );
+      this.store.filterIncomingOffers(token);
+      this.CheckForEmptyRequest();
     },
     HandleError(err: any) {
       const { errorType, errorTitle, errorMessage } = ErrorMessageBuilder(err);
@@ -365,6 +367,18 @@ export default defineComponent({
       nftStore.ownedNFTs = [] as TokenIdentifier[];
       // TODO: Exception handling
       await nftStore.fetchNFTs(this.userStore.walletAddress);
+    },
+    HandleMissingBrand() {
+      this.incomingBrandFilter = '';
+      this.store.resetIncomingOffers();
+      this.store.setIncomingBrandFilterStatus(false);
+      this.loadingRequest = true;
+
+      this.errorType = 'filter';
+      this.errorTitle = 'Unable to fetch your orders';
+      this.errorMessage = 'There are no orders under your current filter';
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     }
   }
 });

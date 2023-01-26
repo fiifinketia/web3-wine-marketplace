@@ -12,7 +12,11 @@ export const ordersStore = defineStore('ordersStore', {
     previousOutgoingOffers: [] as OutgoingOffersResponse[],
 
 		incomingOffers: [] as IncomingOffersResponse[],
+    previousIncomingOffers: [] as IncomingOffersResponse[],
+
     transactions: [] as TransactionResponse[],
+    previousTransactions: [] as TransactionResponse[],
+
     fetchedOutgoingOffers: false,
     fetchedIncomingOffers: false,
     fetchedListings: false,
@@ -93,12 +97,36 @@ export const ordersStore = defineStore('ordersStore', {
     },
 
     async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string, brandFilter: string) {
-      this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
+      const incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
+      this.incomingOffers = incomingOffers;
+      if (this.incomingOffers.length > 0) {
+        this.previousIncomingOffers = incomingOffers
+      }
       this.fetchedIncomingOffers = true;
     },
+    resetIncomingOffers() {
+      this.incomingOffers = this.previousIncomingOffers;
+    },
+    filterIncomingOffers(token: TokenIdentifier) {
+      const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
+      this.incomingOffers = this.incomingOffers.filter(f => {
+          const offersKey = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`
+          return offersKey !== tokenKey
+        }
+      );
+      this.previousIncomingOffers = this.incomingOffers;
+    },
+
     async setTransactions(walletAddress: string, sortKey: string, brandFilter: string) {
-      this.transactions = await ReturnTransactions(walletAddress, sortKey, brandFilter);
+      const transactions = await ReturnTransactions(walletAddress, sortKey, brandFilter);
+      this.transactions = transactions;
+      if (this.transactions.length > 0) {
+        this.previousTransactions = transactions;
+      }
       this.fetchedTransactions = true;
+    },
+    resetTransactions() {
+      this.transactions = this.previousTransactions;
     },
 
     setListingSortKey(sortKey: string) {
