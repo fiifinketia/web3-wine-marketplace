@@ -39,7 +39,7 @@ import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
 export default defineComponent({
   name: 'BurgerMenu',
-	emits: ['closeBurgerMenu'],
+	emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet'],
   data() {
     const userStore = useUserStore();
     return {
