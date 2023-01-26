@@ -32,6 +32,11 @@ export const ordersStore = defineStore('ordersStore', {
     incomingBrandFilter: '',
     transactionBrandFilter: '',
 
+    previousListingBrandFilter: '',
+    previousOutgoingBrandFilter: '',
+    previousIncomingBrandFilter: '',
+    previousTransactionBrandFilter: '',
+
     listingBrandFilterStatus: false,
     outgoingBrandFilterStatus: false,
     incomingBrandFilterStatus: false,
@@ -69,11 +74,13 @@ export const ordersStore = defineStore('ordersStore', {
       this.listings = listings;
       if (this.listings.length > 0) {
         this.previousListings = listings;
+        this.previousListingBrandFilter = brandFilter;
       }
       this.fetchedListings = true;
 		},
     resetListings() {
       this.listings = this.previousListings;
+      this.listingBrandFilter = this.previousListingBrandFilter;
     },
     filterListings(orderHash: string) {
       this.listings = this.listings.filter(f => f.orderHash !== orderHash);
@@ -85,11 +92,13 @@ export const ordersStore = defineStore('ordersStore', {
       this.outgoingOffers = outgoingOffers;
       if (this.outgoingOffers.length > 0) {
         this.previousOutgoingOffers = outgoingOffers;
+        this.previousOutgoingBrandFilter = brandFilter;
       }
       this.fetchedOutgoingOffers = true;
     },
     resetOutgoingOffers() {
       this.outgoingOffers = this.previousOutgoingOffers;
+      this.outgoingBrandFilter = this.previousOutgoingBrandFilter;
     },
     filterOutgoingOffers(orderHash: string) {
       this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
@@ -100,12 +109,14 @@ export const ordersStore = defineStore('ordersStore', {
       const incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
       this.incomingOffers = incomingOffers;
       if (this.incomingOffers.length > 0) {
-        this.previousIncomingOffers = incomingOffers
+        this.previousIncomingOffers = incomingOffers;
+        this.previousIncomingBrandFilter = brandFilter;
       }
       this.fetchedIncomingOffers = true;
     },
     resetIncomingOffers() {
       this.incomingOffers = this.previousIncomingOffers;
+      this.incomingBrandFilter = this.previousIncomingBrandFilter;
     },
     filterIncomingOffers(token: TokenIdentifier) {
       const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
@@ -122,11 +133,13 @@ export const ordersStore = defineStore('ordersStore', {
       this.transactions = transactions;
       if (this.transactions.length > 0) {
         this.previousTransactions = transactions;
+        this.previousTransactionBrandFilter = brandFilter;
       }
       this.fetchedTransactions = true;
     },
     resetTransactions() {
       this.transactions = this.previousTransactions;
+      this.transactionBrandFilter = this.previousTransactionBrandFilter;
     },
 
     setListingSortKey(sortKey: string) {

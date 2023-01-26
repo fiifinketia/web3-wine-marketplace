@@ -306,8 +306,8 @@ export default defineComponent({
       setTimeout(() => { this.openErrorDialog = false }, 2000);
     },
     HandleMissingBrand() {
-      this.outgoingBrandFilter = '';
       this.store.resetOutgoingOffers();
+      this.outgoingBrandFilter = this.store.outgoingBrandFilter;
       this.store.setOutgoingBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({

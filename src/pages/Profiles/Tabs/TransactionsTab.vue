@@ -225,8 +225,8 @@ export default defineComponent({
       }
     },
     HandleMissingBrand() {
-      this.transactionBrandFilter = '';
       this.store.resetTransactions();
+      this.transactionBrandFilter = this.store.transactionBrandFilter;
       this.store.setTransactionBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({

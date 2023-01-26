@@ -369,8 +369,8 @@ export default defineComponent({
       await nftStore.fetchNFTs(this.userStore.walletAddress);
     },
     HandleMissingBrand() {
-      this.incomingBrandFilter = '';
       this.store.resetIncomingOffers();
+      this.incomingBrandFilter = this.store.incomingBrandFilter;
       this.store.setIncomingBrandFilterStatus(false);
       this.loadingRequest = true;
 
