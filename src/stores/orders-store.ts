@@ -6,7 +6,10 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export const ordersStore = defineStore('ordersStore', {
 	state: () => ({
 		listings: [] as ListingsResponse[],
+
 		outgoingOffers: [] as OutgoingOffersResponse[],
+    previousOutgoingOffers: [] as OutgoingOffersResponse[],
+
 		incomingOffers: [] as IncomingOffersResponse[],
     transactions: [] as TransactionResponse[],
     fetchedOutgoingOffers: false,
@@ -61,8 +64,19 @@ export const ordersStore = defineStore('ordersStore', {
       this.fetchedListings = true;
 		},
     async setOutgoingOffers(walletAddress: string, sortKey: string, brandFilter: string) {
-      this.outgoingOffers = await ReturnOutgoingOffers(walletAddress, sortKey, brandFilter);
+      const outgoingOffers = await ReturnOutgoingOffers(walletAddress, sortKey, brandFilter); 
+      this.outgoingOffers = outgoingOffers;
+      if (this.outgoingOffers.length > 0) {
+        this.previousOutgoingOffers = outgoingOffers;
+      }
       this.fetchedOutgoingOffers = true;
+    },
+    resetOutgoingOffers() {
+      this.outgoingOffers = this.previousOutgoingOffers;
+    },
+    filterOutgoingOffers(orderHash: string) {
+      this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
+      this.previousOutgoingOffers = this.outgoingOffers;
     },
     async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string, brandFilter: string) {
       this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
