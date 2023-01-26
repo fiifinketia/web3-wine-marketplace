@@ -1,7 +1,5 @@
 interface FilterOptionsResponse {
-  [keyt: string]: string[];
+	[key: string]: string[];
 }
 
-export {
-  FilterOptionsResponse
-}
+export { FilterOptionsResponse };
