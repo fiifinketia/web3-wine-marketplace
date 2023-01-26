@@ -168,11 +168,13 @@
 				</div>
 				<div class="nav-bar-container-right row items-center">
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/favs-icon.svg"
 						@click="$router.push('/favorites')"
 					/>
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/bell-icon.svg"
 						@click="
@@ -195,7 +197,7 @@
 									class="text-bold"
 									@click="$router.push('orders')"
 								>
-									<q-avatar  size="24px">
+									<q-avatar size="24px">
 										<img :src="userStore.user?.avatar" />
 									</q-avatar>
 									{{ userStore.walletAddress.slice(0, 10) }}...
@@ -368,6 +370,19 @@ export default defineComponent({
 			balance: 0,
 		};
 	},
+	watch: {
+		$route: {
+			handler: function () {
+				if (
+					this.$route.query?.connect &&
+					this.$route.query?.connect === 'open'
+				) {
+					this.showConnectWallet = true;
+				}
+			},
+			immediate: true,
+		},
+	},
 
 	async mounted() {
 		const userStore = useUserStore();
@@ -398,9 +413,14 @@ export default defineComponent({
 				transak.close();
 			});
 		},
-		connectWallet() {
+		async connectWallet() {
 			this.showConnectWallet = false;
-			this.userStore.connectWallet();
+			await this.userStore.connectWallet();
+			if(this.$route.query?.next)
+			{
+				const next = this.$route.query?.next as string;
+				this.$router.replace({ path: next })
+			}
 		},
 
 		setupWallet() {
@@ -430,6 +450,12 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
+			if (this.$route.meta.requiresAuth)
+			{
+				this.$router.push('/')
+				return
+			}
+			window.location.reload();
 		},
 		installMetaMask() {
 			this.$q
