@@ -6,6 +6,7 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export const ordersStore = defineStore('ordersStore', {
 	state: () => ({
 		listings: [] as ListingsResponse[],
+    previousListings: [] as ListingsResponse[],
 
 		outgoingOffers: [] as OutgoingOffersResponse[],
     previousOutgoingOffers: [] as OutgoingOffersResponse[],
@@ -60,9 +61,21 @@ export const ordersStore = defineStore('ordersStore', {
 	},
 	actions: {
 		async setListings(walletAddress: string, sortKey: string, brandFilter: string) {
-      this.listings = await ReturnListings(walletAddress, sortKey, brandFilter);
+      const listings = await ReturnListings(walletAddress, sortKey, brandFilter);
+      this.listings = listings;
+      if (this.listings.length > 0) {
+        this.previousListings = listings;
+      }
       this.fetchedListings = true;
 		},
+    resetListings() {
+      this.listings = this.previousListings;
+    },
+    filterListings(orderHash: string) {
+      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
+      this.previousListings = this.listings;
+    },
+
     async setOutgoingOffers(walletAddress: string, sortKey: string, brandFilter: string) {
       const outgoingOffers = await ReturnOutgoingOffers(walletAddress, sortKey, brandFilter); 
       this.outgoingOffers = outgoingOffers;
@@ -78,6 +91,7 @@ export const ordersStore = defineStore('ordersStore', {
       this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
       this.previousOutgoingOffers = this.outgoingOffers;
     },
+
     async setIncomingOffers(ownedNFTs: TokenIdentifier[], sortKey: string, brandFilter: string) {
       this.incomingOffers = await ReturnIncomingOffers(ownedNFTs, sortKey, brandFilter);
       this.fetchedIncomingOffers = true;

@@ -300,10 +300,14 @@ export default defineComponent({
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
-      this.listings = this.store.getListings;
-      this.$emit('listingsAmount', this.listings.length);
-      this.CheckForEmptyRequest();
-      this.loadingRequest = true
+      if (this.store.getListings.length == 0 && this.store.listingBrandFilterStatus == true) {
+        this.HandleMissingBrand();
+      } else {        
+        this.listings = this.store.getListings;
+        this.$emit('listingsAmount', this.listings.length);
+        this.CheckForEmptyRequest();
+        this.loadingRequest = true
+      }
     },
     OpenDeleteDialog(listing: ListingsResponse) {
       this.singleListing = listing;
@@ -315,6 +319,7 @@ export default defineComponent({
     },
     RemoveRow(orderHash: string) {
       this.listings = this.listings.filter(f => f.orderHash !== orderHash);
+      this.store.filterListings(orderHash);
       this.CheckForEmptyRequest();
     },
     CheckForEmptyRequest() {
@@ -332,6 +337,17 @@ export default defineComponent({
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
       setTimeout(() => { this.openErrorDialog = false }, 2000);
+    },
+    HandleMissingBrand() {
+      this.listingBrandFilter = '';
+      this.store.resetListings();
+      this.store.setListingBrandFilterStatus(false);
+      this.loadingRequest = true;
+      this.HandleError({
+        errorType: 'filter',
+        errorTitle: 'Unable to fetch your orders',
+        errorMessage: 'There are no orders under your current filter'
+      })
     }
   }
 });
