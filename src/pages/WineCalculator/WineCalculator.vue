@@ -256,7 +256,7 @@
 									<div class="form-element">
 										<input
 											id="range"
-											v-model="value1"
+											v-model="value"
 											type="range"
 											class="range"
 											min="100"
@@ -344,13 +344,13 @@
 									</div>
 								</div>
 							</div>
-							<div v-if="risk">
+							<div>
 								<div class="full-width continue-button-wrapper">
 									<button
 										class="continue-button full-width"
 										@click="calculateRisk(risk)"
 									>
-										<div class="continue-text">Continue</div>
+										<div v-if="showButton" class="continue-text">Continue</div>
 									</button>
 								</div>
 							</div>
@@ -468,8 +468,7 @@ export default defineComponent({
 			firstStepMobile: true,
 			secondStepMobile: false,
 			thirdStepMobile: false,
-			risk: ref(),
-			value1: 15000,
+			value: 15000,
 			timeValue: String(),
 		};
 	},
@@ -481,16 +480,17 @@ export default defineComponent({
 	methods: {
 		updateSlider() {
 			const progress = document.getElementById('range') as any;
-			this.value1 = progress.value;
+			this.value = progress.value;
 			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${
-				this.value1 / 500
-			}%, #fff ${this.value1 / 500}%, white 100%)`;
+				this.value / 500
+			}%, #fff ${this.value / 500}%, white 100%)`;
 		},
 		handleCalculation() {
 			this.calculating = false;
 		},
 		calculateRisk(type: string) {
 			const number = document.getElementById('rangeValue')?.innerHTML;
+
 			this.firstStepMobile = false;
 			this.secondStepMobile = true;
 
@@ -512,9 +512,9 @@ export default defineComponent({
 			}
 			this.money = Number(number);
 			this.calculating = true;
-			this.showButton = false;
 			setInterval(() => {
 				this.calculating = false;
+				this.showButton = true;
 				this.openCalculationPage();
 			}, 3000);
 		},
@@ -533,11 +533,13 @@ export default defineComponent({
 				this.timeValue
 			)}%, #fff ${Number(this.timeValue)}%, white 100%)`;
 			let time = progress.value;
-			if (time <= 12) {
+			if (time < 12) {
 				this.timeValue = time + ' ' + 'months';
-			}
-			if (time > 12 && time < 24) {
-				this.timeValue = '1 year' + time;
+			} else if (time > 12 && time < 24) {
+				for (let i: any; time > 12 && time < 24; ) {
+					this.timeValue = '1 year' + ' ' + 1;
+				}
+				// this.timeValue = '1 year' + time;
 			}
 		},
 
