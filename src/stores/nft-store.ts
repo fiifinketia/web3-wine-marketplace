@@ -6,14 +6,16 @@ import { ref } from 'vue';
 export const useNFTStore = defineStore(
   'nftStore',
   () => {
-    const ownedNFTs = ref([] as TokenIdentifier[])
+    const ownedNFTs = ref([] as TokenIdentifier[]);
+    const fetchNFTsStatus = ref(false);
     const fetchNFTs = async (walletAddress: string) => {
 			ownedNFTs.value = await FetchOwnedNFTs(walletAddress);
-			// ownedNFTs = await FetchOwnedNFTs(walletAddress);
+      fetchNFTsStatus.value = true;
 		}
     return {
 			ownedNFTs,
-			fetchNFTs
+			fetchNFTs,
+      fetchNFTsStatus
 		};
   },
   { persist: true }

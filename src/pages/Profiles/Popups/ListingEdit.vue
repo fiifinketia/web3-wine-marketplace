@@ -220,6 +220,7 @@ import 'src/css/Profile/Component/dialog.css'
 import { defineComponent } from 'vue';
 import { CreateERC721Listing, CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
+import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 export default defineComponent({
   props: {
     orderHash: {
@@ -272,11 +273,11 @@ export default defineComponent({
             this.listingPrice,
             this.listingExpirationDate
           )
-        } catch {
-          return 0
+        } catch (err) {
+          this.BuildErrorDialog(err)
         }
-      } catch {
-        return 0
+      } catch (err) {
+        this.BuildErrorDialog(err)
       } finally {
         this.$emit('listing-edit-close')
       }
@@ -285,6 +286,10 @@ export default defineComponent({
       this.listingPrice = '';
       this.listingExpirationDate = '';
       this.acceptTerms = false;
+    },
+    BuildErrorDialog(err: any) {
+      const errorDetails: ErrorModel = ErrorMessageBuilder(err);
+      this.$emit('listing-error-dialog', errorDetails);
     }
   }
 })
