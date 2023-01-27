@@ -56,7 +56,7 @@
 								"
 							/>
 							<q-img
-								v-else-if="!!userStore.walletAddress && token.favorited === false"
+								v-else-if="!!userStore.walletAddress"
 								src="../../../../public/images/empty-heart.svg"
 								class="clickable-image"
 								width="20px"
