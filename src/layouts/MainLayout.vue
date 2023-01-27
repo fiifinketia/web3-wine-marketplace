@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
 	<!-------------------------------------- POPUP MODALS -------------------------------------->
 
@@ -48,10 +49,12 @@
 		class="my-wallet-background row justify-end"
 	>
 		<q-card class="my-wallet-container column justify-between items-center">
-			<q-card-section class="my-wallet-header row">
-				<div>MY WALLET</div>
-				<img src="../../public/images/metamask-icon.svg" alt="" />
-				<div class="wallet-id">walletID</div>
+			<q-card-section class="my-wallet-header row items-center no-wrap">
+				<div class="my-wallet-header-container row">
+					<div>MY WALLET</div>
+					<img src="../../public/images/metamask-icon.svg" alt="" />
+					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
+				</div>
 				<img
 					class="x-icon"
 					src="../../public/images/x-icon.svg"
@@ -67,20 +70,26 @@
 				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
 				<div class="ballance-wrapper column">
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
-					<div class="my-wallet-balance">$ {{ balance.toFixed(2) }}</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
 				</div>
 				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
 					>Fund wallet</q-btn
 				>
 			</q-card-section>
 
-			<q-card-section class="my-wallet-logout"> LOG OUT </q-card-section>
+			<q-card-section class="my-wallet-logout" @click="logout">
+				LOG OUT
+			</q-card-section>
 		</q-card>
 	</q-dialog>
 
 	<!---------------------------- /MY WALLET ---------------------------->
 
-	<BurgerMenu v-if="showBurgerMenu" @closeBurgerMenu="onBurgerMenu('close')" @openConnectWallet="showConnectWallet = true"/>
+	<BurgerMenu
+		v-if="showBurgerMenu"
+		@closeBurgerMenu="onBurgerMenu('close')"
+		@openConnectWallet="showConnectWallet = true"
+	/>
 	<SuggestedWines />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -309,7 +318,10 @@
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view @open-wallet-sidebar="showMyWallet = !showMyWallet" @openConnectWallet="showConnectWallet = true"/>
+			<router-view
+				@open-wallet-sidebar="showMyWallet = !showMyWallet"
+				@openConnectWallet="showConnectWallet = true"
+			/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -329,6 +341,8 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import Web3 from 'web3';
+import { log } from 'console';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -364,9 +378,8 @@ export default defineComponent({
 			this.ClearStore();
 		}
 	},
-
 	methods: {
-		fundWallet() {
+		async fundWallet() {
 			let transak = new transakSDK({
 				apiKey: process.env.TRANSAK_API_KEY, // Your API Key
 				environment: 'STAGING', // STAGING/PRODUCTION
@@ -387,10 +400,25 @@ export default defineComponent({
 				// console.log(orderData);
 				transak.close();
 			});
+			// This is so that the balance is updated after new funds are imported
+			const web3 = new Web3(window.ethereum);
+			const userStore = useUserStore();
+			await userStore.checkConnection();
+			this.walletAddress = userStore.walletAddress;
+			const balance = await web3.eth.getBalance(this.walletAddress);
+			const balanceInEther = web3.utils.fromWei(balance, 'ether');
+			this.balance = Number(balanceInEther);
 		},
-		connectWallet() {
+		async connectWallet() {
 			this.showConnectWallet = false;
 			this.userStore.connectWallet();
+			const web3 = new Web3(window.ethereum);
+			const userStore = useUserStore();
+			await userStore.checkConnection();
+			this.walletAddress = userStore.walletAddress;
+			const balance = await web3.eth.getBalance(this.walletAddress);
+			const balanceInEther = web3.utils.fromWei(balance, 'ether');
+			this.balance = Number(balanceInEther);
 		},
 
 		setupWallet() {
@@ -420,13 +448,14 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
+			this.showMyWallet = false;
 			this.ClearStore();
 		},
-    ClearStore() {
-      this.nftStore.ownedNFTs = [] as TokenIdentifier[];
-      this.nftStore.fetchNFTsStatus = false;
-      this.orderStore.$reset();
-    },
+		ClearStore() {
+			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+			this.nftStore.fetchNFTsStatus = false;
+			this.orderStore.$reset();
+		},
 		installMetaMask() {
 			this.$q
 				.dialog({

@@ -26,7 +26,6 @@
 }
 
 .my-wallet-header {
-	gap: 2rem;
 	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 700;
@@ -35,9 +34,12 @@
 	letter-spacing: 0.02em;
 }
 
+.my-wallet-header-container {
+	gap: 1rem;
+}
+
 .x-icon {
-	margin-left: 7rem;
-	margin-right: 0;
+	padding-left: 5rem;
 	cursor: pointer;
 }
 
@@ -143,9 +145,6 @@
 @media screen and (max-width: 470px) {
 	.x-icon {
 		margin-left: 1rem;
-	}
-	.my-wallet-header {
-		gap: 0.5rem;
 	}
 	.my-wallet-container {
 		padding: 1rem;
