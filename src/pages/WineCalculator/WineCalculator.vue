@@ -344,13 +344,13 @@
 									</div>
 								</div>
 							</div>
-							<div>
+							<div v-if="showButton">
 								<div class="full-width continue-button-wrapper">
 									<button
 										class="continue-button full-width"
-										@click="calculateRisk(risk)"
+										@click="openCalculationPage()"
 									>
-										<div v-if="showButton" class="continue-text">Continue</div>
+										<div class="continue-text">Continue</div>
 									</button>
 								</div>
 							</div>
@@ -454,7 +454,7 @@ export default defineComponent({
 			mediumRisk: false,
 			highRisk: false,
 			calculating: false,
-			showButton: true,
+			showButton: false,
 			secondSection: false,
 			calculateWorth: false,
 			calculationFinished: false,
@@ -489,10 +489,10 @@ export default defineComponent({
 			this.calculating = false;
 		},
 		calculateRisk(type: string) {
-			const number = document.getElementById('rangeValue')?.innerHTML;
+			this.money = document.getElementById('rangeValue')?.innerHTML as any;
 
-			this.firstStepMobile = false;
-			this.secondStepMobile = true;
+			// this.firstStepMobile = false;
+			// this.secondStepMobile = true;
 
 			if (type === 'low') {
 				this.lowRisk = true;
@@ -510,12 +510,11 @@ export default defineComponent({
 				this.highRisk = true;
 				this.selectedRisk = 'High';
 			}
-			this.money = Number(number);
+
 			this.calculating = true;
 			setInterval(() => {
 				this.calculating = false;
 				this.showButton = true;
-				this.openCalculationPage();
 			}, 3000);
 		},
 		openCalculationPage() {
@@ -545,6 +544,7 @@ export default defineComponent({
 
 		calculateFinalWorth(type: string) {
 			const time = document.getElementById('timeInput');
+
 			// const value = time.value;
 			// if(time > 10 && time !== '1year')
 			// if (time === '1year') {
