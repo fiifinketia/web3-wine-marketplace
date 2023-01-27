@@ -186,7 +186,9 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
-						icon="app:profile"
+						:to="{ path: '/orders' }"
+						split
+						:icon="!!userStore.walletAddress? 'app:profile' : ''"
 					>
 						<div class="q-btn-menu-div">
 							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
@@ -416,10 +418,9 @@ export default defineComponent({
 		async connectWallet() {
 			this.showConnectWallet = false;
 			await this.userStore.connectWallet();
-			if(this.$route.query?.next)
-			{
+			if (this.$route.query?.next) {
 				const next = this.$route.query?.next as string;
-				this.$router.replace({ path: next })
+				this.$router.replace({ path: next });
 			}
 		},
 
@@ -450,10 +451,9 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
-			if (this.$route.meta.requiresAuth)
-			{
-				this.$router.push('/')
-				return
+			if (this.$route.meta.requiresAuth) {
+				this.$router.push('/');
+				return;
 			}
 			window.location.reload();
 		},
