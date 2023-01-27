@@ -173,11 +173,13 @@
 				</div>
 				<div class="nav-bar-container-right row items-center">
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/favs-icon.svg"
 						@click="$router.push('/favorites')"
 					/>
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/bell-icon.svg"
 						@click="
@@ -189,11 +191,25 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
-						split
-						icon="app:profile"
 						:to="{ path: '/orders' }"
+						split
+						:icon="!!userStore.walletAddress? 'app:profile' : ''"
 					>
 						<div class="q-btn-menu-div">
+							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
+								<q-chip
+									v-close-popup
+									clickable
+									color="white"
+									class="text-bold"
+									@click="$router.push('orders')"
+								>
+									<q-avatar size="24px">
+										<img :src="userStore.user?.avatar" />
+									</q-avatar>
+									{{ userStore.walletAddress.slice(0, 10) }}...
+								</q-chip>
+							</q-toolbar>
 							<q-list>
 								<q-item
 									v-if="!!userStore.walletAddress"
@@ -329,7 +345,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
-const transakSDK = require('@transak/transak-sdk');
+// import transakSDK from '@transak/transak-sdk';
+import transakSDK from '@transak/transak-sdk';
 
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';
@@ -368,6 +385,19 @@ export default defineComponent({
 			isMetaMaskInstalled,
 			balance: 0,
 		};
+	},
+	watch: {
+		$route: {
+			handler: function () {
+				if (
+					this.$route.query?.connect &&
+					this.$route.query?.connect === 'open'
+				) {
+					this.showConnectWallet = true;
+				}
+			},
+			immediate: true,
+		},
 	},
 
 	async mounted() {
@@ -411,6 +441,7 @@ export default defineComponent({
 		},
 		async connectWallet() {
 			this.showConnectWallet = false;
+
 			this.userStore.connectWallet();
 			const web3 = new Web3(window.ethereum);
 			const userStore = useUserStore();
@@ -419,6 +450,13 @@ export default defineComponent({
 			const balance = await web3.eth.getBalance(this.walletAddress);
 			const balanceInEther = web3.utils.fromWei(balance, 'ether');
 			this.balance = Number(balanceInEther);
+
+			await this.userStore.connectWallet();
+			if (this.$route.query?.next) {
+				const next = this.$route.query?.next as string;
+				this.$router.replace({ path: next });
+			}
+
 		},
 
 		setupWallet() {
@@ -448,8 +486,16 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
+
 			this.showMyWallet = false;
-			this.ClearStore();
+
+			if (this.$route.meta.requiresAuth) {
+				this.$router.push('/');
+				return;
+			}
+			window.location.reload();
+      this.ClearStore();
+
 		},
 		ClearStore() {
 			this.nftStore.ownedNFTs = [] as TokenIdentifier[];

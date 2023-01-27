@@ -10,7 +10,7 @@
 					align="justify"
 					no-caps
 				>
-					<q-tab name="nfts" label="All NFTs" />
+					<q-tab name="nfts" label="Marketplace" />
 					<q-tab name="releases" label="Releases" />
 					<q-tab name="recommended" label="Recommended" />
 				</q-tabs>
@@ -34,8 +34,8 @@
 						:label="tabLabel"
 					>
 						<q-list>
-							<q-item clickable @click="tabLabel = 'All NFTs'">
-								<q-tab name="nfts" label="All NFTs" />
+							<q-item clickable @click="tabLabel = 'Marketplace'">
+								<q-tab name="nfts" label="Marketplace" />
 							</q-item>
 
 							<q-item clickable @click="tabLabel = 'Releases'">
@@ -73,14 +73,14 @@ import NewReleasedTab from './components/NewReleasedTab.vue';
 export default defineComponent({
 	components: {
 		AllNFTsTab: AllNFTsTab,
-		NewlyReleasedTab: NewReleasedTab
+		NewlyReleasedTab: NewReleasedTab,
 	},
 
 	data() {
 		const queryT = this.$router.currentRoute.value.query.tab as string;
 		return {
 			tab: ref(queryT || 'nfts'),
-			tabLabel: ref('All NFTs'),
+			tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
 		};
 	},
 
@@ -98,7 +98,7 @@ export default defineComponent({
 						this.tab = tabTo;
 						switch (tabTo) {
 							case 'nfts':
-								this.tabLabel = 'All NFTs';
+								this.tabLabel = 'Marketplace';
 								break;
 							case 'releases':
 								this.tabLabel = 'Releases';
@@ -111,6 +111,19 @@ export default defineComponent({
 				}
 			},
 			immediate: true,
+		},
+	},
+
+	methods: {
+		getLabel(query: string) {
+			switch (query) {
+				case 'nfts':
+					return 'Marketplace';
+				case 'releases':
+					return 'Releases';
+				case 'recommended':
+					return 'Recommended';
+			}
 		},
 	},
 });
