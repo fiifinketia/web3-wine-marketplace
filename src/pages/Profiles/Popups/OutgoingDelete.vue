@@ -43,6 +43,7 @@
 import 'src/css/Profile/Component/dialog.css'
 import { defineComponent } from 'vue';
 import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
+import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 export default defineComponent({
   props: {
     orderHash: {
@@ -55,12 +56,16 @@ export default defineComponent({
       try {
         await CancelSingleOrder(this.orderHash);
         this.$emit('remove-offer', this.orderHash);
-      } catch {
-        return 0
+      } catch (err) {
+        this.BuildErrorDialog(err);
       } finally {
         this.$emit('outgoing-delete-close')
       }
     },
+    BuildErrorDialog(err: any) {
+      const errorDetails: ErrorModel = ErrorMessageBuilder(err);
+      this.$emit('outgoing-error-dialog', errorDetails);
+    }
   }
 })
 </script>
