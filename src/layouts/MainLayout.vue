@@ -340,7 +340,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
-const transakSDK = require('@transak/transak-sdk');
+// import transakSDK from '@transak/transak-sdk';
+import transakSDK from '@transak/transak-sdk';
 
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';

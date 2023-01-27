@@ -10,3 +10,5 @@
 interface Window {
 	ethereum: any;
 }
+
+declare module '@transak/transak-sdk';
