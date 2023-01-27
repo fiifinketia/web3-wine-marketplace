@@ -54,7 +54,7 @@
 					<div class="row justify-between">
 						<div class="favs-price">
 							<q-img src="../../../public/images/USDT.svg" width="20px" />
-							&nbsp;00.00
+							&nbsp;{{ item.nftDetails?.orderDetails?.listingPrice || '00.00' }}
 						</div>
 						<q-img
 							src="../../../public/images/mini-button.svg"
