@@ -1,6 +1,7 @@
 <template>
 	<HeadlineComponent />
 	<ExclusiveOffers />
+	<WineCalculator />
 	<TrendingWines class="trending" />
 	<PartnershipWines class="partnership" />
 	<FAQ class="faq" />
@@ -10,7 +11,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PartnershipWines from './components/PartnershipWines.vue';
-
+import WineCalculator from './components/WineCalculator.vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
 import TrendingWines from './components/TrendingWines.vue';
 
@@ -25,6 +26,7 @@ export default defineComponent({
 	components: {
 		HeadlineComponent,
 		ExclusiveOffers,
+		WineCalculator,
 		TrendingWines,
 		LandingPageFooter,
 		PartnershipWines,
