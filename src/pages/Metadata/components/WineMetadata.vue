@@ -643,7 +643,6 @@
 
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
-import ContractABI from '../contract/contract.json';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, ref } from 'vue-demi';
 import '../../../css/Metadata/WineMetadata.css';
@@ -656,8 +655,10 @@ import {
 	FulfillBasicOrder,
 } from '../services/Orders';
 import CountdownTimer from '../services/CountDownTimer';
-import Web3 from 'web3';
-import { AbiItem } from 'web3-utils';
+import { NewPolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_PolygonInstance } from 'src/shared/web3.helper';
+import { Contract } from '@ethersproject/contracts';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+
 export default defineComponent({
 	name: 'WineMetadata',
 	props: {
@@ -747,18 +748,28 @@ export default defineComponent({
 
 	async updated() {
 		try {
-			const web3 = new Web3(window.ethereum);
-			const contract = new web3.eth.Contract(
-				ContractABI as AbiItem[],
-				this.nft.smartContractAddress
-			);
-			const owner = await contract.methods.ownerOf(this.nft.tokenID).call();
-			const exists = await contract.methods.tokenURI(this.nft.tokenID).call();
-			exists && console.log('Token exists\nTokenID: ' + this.nft.tokenID);
-
-			console.log(owner);
-		} catch (err) {
-			console.log(err);
+			let contract: Contract;
+			switch (this.nft.smartContractAddress) {
+				case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+					contract = NewPolygonCollectionContract_MumbaiInstance;
+					await contract.tokenURI(this.nft.tokenID);
+					break;
+				case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
+					contract = NewPolygonCollectionContract_PolygonInstance;
+					await contract.tokenURI(this.nft.tokenID);
+					break;
+			}
+			console.log('Token:', this.nft.tokenID, 'exists')
+		} catch (err: any) {
+			const nonexistentMessage = err.message.toString().includes('URI query for nonexistent token');
+			if (nonexistentMessage) {
+				const burntNFT: TokenIdentifier = {
+					contractAddress: this.nft.smartContractAddress,
+					identifierOrCriteria: this.nft.tokenID,
+					network: this.nft.network
+				}
+				this.$axios.post(<string> process.env.BURN_NFT_URL, burntNFT)
+			}
 		}
 	},
 
