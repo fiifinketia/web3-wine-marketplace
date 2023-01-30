@@ -746,33 +746,6 @@ export default defineComponent({
 		},
 	},
 
-	async updated() {
-		try {
-			let contract: Contract;
-			switch (this.nft.smartContractAddress) {
-				case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-					contract = NewPolygonCollectionContract_MumbaiInstance;
-					await contract.tokenURI(this.nft.tokenID);
-					break;
-				case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
-					contract = NewPolygonCollectionContract_PolygonInstance;
-					await contract.tokenURI(this.nft.tokenID);
-					break;
-			}
-			console.log('Token:', this.nft.tokenID, 'exists')
-		} catch (err: any) {
-			const nonexistentMessage = err.message.toString().includes('URI query for nonexistent token');
-			if (nonexistentMessage) {
-				const burntNFT: TokenIdentifier = {
-					contractAddress: this.nft.smartContractAddress,
-					identifierOrCriteria: this.nft.tokenID,
-					network: this.nft.network
-				}
-				this.$axios.post(<string> process.env.BURN_NFT_URL, burntNFT)
-			}
-		}
-	},
-
 	methods: {
 		dateCheck() {
 			const today = new Date();
