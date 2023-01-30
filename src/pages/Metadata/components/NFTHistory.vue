@@ -1,7 +1,6 @@
 <template>
-	<StatisticsMenu />
-	<div class="flex items-center justify-center">
-		<div class="flex items-start history-container column">
+	<div class="column items-center justify-center">
+		<div class="flex items-start history-container column q-mb-xl">
 			<div class="price-history">Price history</div>
 			<div class="flex column chart-container">
 				<div class="flex row items-center justify-between chart1">
@@ -86,13 +85,33 @@
 				</div>
 			</div>
 		</div>
+		<div class="flex items-start history-container column">
+			<div class="price-history q-pb-lg">Price history</div>
+			<div v class="price-table">
+				<div class="column price-history-rows">
+					<div
+						v-for="item in buyers"
+						:key="item.id"
+						class="row each-price-row justify-between"
+					>
+						<div class="">
+							actions done from
+							<span class="user-ids-bold">{{ item.user1 }}</span> to
+							<span class="user-ids-bold">{{ item.user2 }}</span>
+						</div>
+						<div class="date-of-transaction">
+							{{ item.date }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, createApp } from 'vue-demi';
 import ApexCharts from 'apexcharts';
-import StatisticsMenu from './StatisticsMenu.vue';
 import '../../../css/Metadata/NFTHistory.css';
 import App from '../../../App.vue';
 import VueApexCharts from 'vue3-apexcharts';
@@ -105,7 +124,7 @@ declare module '@vue/runtime-core' {
 }
 export default defineComponent({
 	name: 'NFTHistory',
-	components: { StatisticsMenu, apexchart: VueApexCharts },
+	components: { apexchart: VueApexCharts },
 
 	data() {
 		return {
@@ -276,6 +295,44 @@ export default defineComponent({
 				},
 			},
 			selection: 'three_months',
+			buyers: [
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 0,
+				},
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 1,
+				},
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 2,
+				},
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 3,
+				},
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 4,
+				},
+				{
+					user1: 'UserIdOneHere',
+					user2: 'UserIdTwoHere',
+					date: '00/00/00',
+					id: 5,
+				},
+			],
 		};
 	},
 	methods: {

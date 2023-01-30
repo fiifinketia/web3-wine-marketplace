@@ -1,3 +1,4 @@
+import { useUserStore } from 'src/stores/user-store';
 import { RouteRecordRaw } from 'vue-router';
 import Web3 from 'web3';
 
@@ -39,18 +40,20 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				component: () => import('pages/Favourites/Favourites.vue'),
+				meta: { requiresAuth: true },
 			},
 		],
 	},
 	{
 		path: '/orders',
-		component: () => import ('layouts/MainLayout.vue'),
+		component: () => import('layouts/MainLayout.vue'),
 		children: [
 			{
 				path: '',
 				component: () => import('pages/Profiles/ProfileOrders.vue'),
+				meta: { requiresAuth: true },
 			},
-		]
+		],
 	},
 	{
 		path: '/protected',
