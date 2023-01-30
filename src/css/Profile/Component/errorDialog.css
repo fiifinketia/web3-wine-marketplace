@@ -14,6 +14,13 @@
   font-size: 20px;
 }
 
+.profile-warning-title {
+  color: rgba(53, 134, 255, 1);
+  font-family: 'ProximaNova-Bold';
+  text-align: center;
+  font-size: 20px;
+}
+
 .profile-error-text {
   color: #212131;
   font-size: 18px;

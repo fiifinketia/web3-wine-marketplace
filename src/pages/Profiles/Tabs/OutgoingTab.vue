@@ -65,10 +65,19 @@
           :key="offer.orderHash"
           class="q-px-lg q-py-md row items-center"
         >
-          <div class="row items-center outgoing-column-nft">
+          <q-btn 
+            flat
+            unelevated
+            dense
+            no-caps
+            align="left"
+            padding="0px"
+            class="outgoing-column-nft btn--no-hover"
+            :to="{ path: '/nft', query: { id: offer.identifierOrCriteria, network: offer.network, contractAddress: offer.contractAddress} }"
+          >
             <img v-if="$q.screen.width > 1265" :src="offer.image" class="profile-nft-image q-mr-md"/>
             <span class="profile-nft-brand"> {{ offer.brand }}</span>
-          </div>
+          </q-btn>
           <div 
             v-if="$q.screen.width > 600"
             class="row items-center outgoing-column-own-offer"
@@ -257,10 +266,15 @@ export default defineComponent({
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
-      this.outgoingOffers = this.store.getOutgoingOffers;
-      this.$emit('outgoingAmount', this.outgoingOffers.length);
-      this.CheckForEmptyRequest();
-      this.loadingRequest = true
+      // Checks whether a brand filter was used
+      if (this.store.getOutgoingOffers.length == 0 && this.store.outgoingBrandFilterStatus == true) {
+        this.HandleMissingBrand();
+      } else {
+        this.outgoingOffers = this.store.getOutgoingOffers;
+        this.$emit('outgoingAmount', this.outgoingOffers.length);
+        this.CheckForEmptyRequest();
+        this.loadingRequest = true
+      }
     },
     OpenDeleteDialog(offer: OutgoingOffersResponse) {
       this.singleOffer = offer;
@@ -272,6 +286,7 @@ export default defineComponent({
     },
     RemoveRow(orderHash: string) {
       this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
+      this.store.filterOutgoingOffers(orderHash);
       this.CheckForEmptyRequest();
     },
     CheckForEmptyRequest() {
@@ -289,6 +304,17 @@ export default defineComponent({
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
       setTimeout(() => { this.openErrorDialog = false }, 2000);
+    },
+    HandleMissingBrand() {
+      this.store.resetOutgoingOffers();
+      this.outgoingBrandFilter = this.store.outgoingBrandFilter;
+      this.store.setOutgoingBrandFilterStatus(false);
+      this.loadingRequest = true;
+      this.HandleError({
+        errorType: 'filter',
+        errorTitle: 'Unable to fetch your orders',
+        errorMessage: 'There are no orders under your current filter'
+      })
     }
   }
 
@@ -296,6 +322,8 @@ export default defineComponent({
 
 </script>
 
-<style>
-
+<style scoped>
+:deep(.q-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

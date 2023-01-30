@@ -11,8 +11,8 @@ export const useUserStore = defineStore(
 	() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const walletAddress = ref('');
+		// const nftStorage = useNFTStore();
 		const user: Ref<UserModel | null> = ref<UserModel | null>(null);
-		const nftStorage = useNFTStore();
 
 		const connectWallet = async () => {
 			// this.showConnectWallet = true;
@@ -22,7 +22,7 @@ export const useUserStore = defineStore(
 				method: 'eth_requestAccounts',
 			});
 			walletAddress.value = utils.getAddress(accounts[0]);
-			await nftStorage.fetchNFTs(accounts[0]);
+			// await nftStorage.fetchNFTs(accounts[0]);
 
 			const getUser = await axios.get(
 				process.env.MARKETPLACE_API_URL + 'market/users/' + walletAddress.value
@@ -41,10 +41,6 @@ export const useUserStore = defineStore(
 						walletAddress: walletAddress.value,
 						avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
 					}
-				);
-				console.log(
-					'🚀 ~ file: user-store.ts:42 ~ connectWal ~ newUser',
-					newUser
 				);
 				user.value = newUser.data;
 			} catch (error: any) {

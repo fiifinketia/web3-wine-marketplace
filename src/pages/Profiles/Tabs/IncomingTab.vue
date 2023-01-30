@@ -62,10 +62,19 @@
           :key="offer.orderHash"
           class="q-px-lg q-py-md row items-center"
         >
-          <div class="row items-center incoming-column-nft">
+          <q-btn 
+            flat
+            unelevated
+            dense
+            no-caps
+            align="left"
+            padding="0px"
+            class="incoming-column-nft btn--no-hover"
+            :to="{ path: '/nft', query: { id: offer.identifierOrCriteria, network: offer.network, contractAddress: offer.contractAddress} }"
+          >
             <img v-if="$q.screen.width > 1265" :src="offer.image" class="profile-nft-image q-mr-md"/>
             <span class="profile-nft-brand"> {{ offer.brand }}</span>
-          </div>
+          </q-btn>
           <div 
             v-if="$q.screen.width > 1020"
             class="row items-center incoming-column-price-floor"
@@ -265,13 +274,12 @@ export default defineComponent({
   },
 
   async mounted() {
-    const incomingOffersRequestStatus = this.store.getIncomingOffersRequestStatus;
-    if (incomingOffersRequestStatus == false) {
-      await this.FetchIncomingOffers('', '');
-    } else {
-      this.$emit('incomingAmount', this.incomingOffers.length);
-      this.CheckForEmptyRequest();
-    }
+    // if (incomingOffersRequestStatus == false) {
+    await this.FetchIncomingOffers('', '');
+    // } else {
+    //   this.$emit('incomingAmount', this.incomingOffers.length);
+    //   this.CheckForEmptyRequest();
+    // }
   },
 
   methods: {
@@ -296,15 +304,16 @@ export default defineComponent({
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
-      if (this.nftStore.fetchNFTsStatus == false) {
-        setTimeout(this.FetchIncomingOffers, 1000);
-        return
-      }
+      await this.RefetchNFTs();
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
-      this.incomingOffers = this.EnsureIncomingOffersAreOwned();
-      this.$emit('incomingAmount', this.incomingOffers.length);
-      this.CheckForEmptyRequest();
-      this.loadingRequest = true;
+      if (this.store.getIncomingOffers.length == 0 && this.store.incomingBrandFilterStatus == true) {
+        this.HandleMissingBrand();
+      } else {
+        this.incomingOffers = this.EnsureIncomingOffersAreOwned();
+        this.$emit('incomingAmount', this.incomingOffers.length);
+        this.CheckForEmptyRequest();
+        this.loadingRequest = true;
+      }
     },
     CheckForEmptyRequest() {
       if (this.incomingOffers.length == 0) {
@@ -343,6 +352,8 @@ export default defineComponent({
           return offersKey !== tokenKey
         }
       );
+      this.store.filterIncomingOffers(token);
+      this.CheckForEmptyRequest();
     },
     HandleError(err: any) {
       const { errorType, errorTitle, errorMessage } = ErrorMessageBuilder(err);
@@ -351,12 +362,31 @@ export default defineComponent({
       this.errorMessage = errorMessage;
       this.openErrorDialog = true;
       setTimeout(() => { this.openErrorDialog = false }, 2000);
+    },
+    async RefetchNFTs() {
+      nftStore.ownedNFTs = [] as TokenIdentifier[];
+      // TODO: Exception handling
+      await nftStore.fetchNFTs(this.userStore.walletAddress);
+    },
+    HandleMissingBrand() {
+      this.store.resetIncomingOffers();
+      this.incomingBrandFilter = this.store.incomingBrandFilter;
+      this.store.setIncomingBrandFilterStatus(false);
+      this.loadingRequest = true;
+
+      this.errorType = 'filter';
+      this.errorTitle = 'Unable to fetch your orders';
+      this.errorMessage = 'There are no orders under your current filter';
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     }
   }
 });
 
 </script>
 
-<style>
-
+<style scoped>
+:deep(.q-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

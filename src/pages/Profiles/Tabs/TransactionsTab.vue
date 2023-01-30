@@ -109,6 +109,12 @@
         </div>
         </div>
       </div>
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
+      />
     </div>
     <div v-else class="column items-center">
       <EmptyView :emptyText="'You have not made any offers yet.'" />
@@ -126,13 +132,15 @@ import EmptyOrders from '../EmptyOrders.vue';
 import TransactionHeaderLg from '../Headers/TransactionHeaderLg.vue';
 import TransactionHeaderSm from '../Headers/TransactionHeaderSm.vue';
 import { useUserStore } from 'src/stores/user-store';
+import ProfileErrors from '../Popups/ProfileErrors.vue';
 
 export default defineComponent({
   components: {
     TransactionHeaderLg: TransactionHeaderLg,
     TransactionHeaderSm: TransactionHeaderSm,
     LoadingView: OrderLoading,
-    EmptyView: EmptyOrders
+    EmptyView: EmptyOrders,
+    ErrorDialog: ProfileErrors
   },
   data() {
     const store = ordersStore();
@@ -146,7 +154,12 @@ export default defineComponent({
       transactionBrandFilter: store.getTransactionBrandFilter,
 
       loadingRequest: false,
-      emptyRequest: false
+      emptyRequest: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
     }
   },
   watch: {
@@ -186,18 +199,43 @@ export default defineComponent({
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
       await this.store.setTransactions(address, sortKey, brandFilter);
-      this.transactions = this.store.getTransactions;
-      this.$emit('transactionsAmount', this.transactions.length);
-      this.CheckForEmptyRequest();
-      this.loadingRequest = true
+      if (this.store.getTransactions.length == 0 && this.store.transactionBrandFilterStatus == true) {
+        this.HandleMissingBrand();
+      } else {
+        this.transactions = this.store.getTransactions;
+        this.$emit('transactionsAmount', this.transactions.length);
+        this.CheckForEmptyRequest();
+        this.loadingRequest = true
+      }
+    },
+    HandleError(err: {
+      errorType: string,
+      errorTitle: string,
+      errorMessage: string
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
     },
     CheckForEmptyRequest() {
       if (this.transactions.length == 0) {
         this.emptyRequest = true 
       }
+    },
+    HandleMissingBrand() {
+      this.store.resetTransactions();
+      this.transactionBrandFilter = this.store.transactionBrandFilter;
+      this.store.setTransactionBrandFilterStatus(false);
+      this.loadingRequest = true;
+      this.HandleError({
+        errorType: 'filter',
+        errorTitle: 'Unable to fetch your transactions',
+        errorMessage: 'There are no transactions under your current filter'
+      })
     }
   }
-
 });
 
 </script>
