@@ -1,38 +1,44 @@
 <template>
-	<div v-if="tokenExists">
-		<WineMetadata
-			:nft="nft"
-			@refresh="refresh"
-			@open-wallet="openWalletSideBar"
+	<div v-if="!loadingMetadata">
+		<div v-if="tokenExists">
+			<WineMetadata
+				:nft="nft"
+				@refresh="refresh"
+				@open-wallet="openWalletSideBar"
+			/>
+			<q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
+				<q-tab name="history" label="NFT history" />
+				<q-tab class="tab-text-not-clicked" name="about" label="About" />
+				<q-tab name="wine-maker" class="tab-text-not-clicked" label="Wine-maker" />
+			</q-tabs>
+			<q-tab-panels
+				v-model="tab"
+				animated
+				swipeable
+				transition-prev="jump-right"
+				transition-next="jump-left"
+			>
+				<q-tab-panel name="history">
+					<NFTHistory />
+				</q-tab-panel>
+
+				<q-tab-panel name="about">
+					<About />
+				</q-tab-panel>
+
+				<q-tab-panel name="wine-maker">
+					<WineMaker />
+				</q-tab-panel>
+			</q-tab-panels>
+		</div>
+		<UnavailableNFT
+			v-else
 		/>
-		<q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
-			<q-tab name="history" label="NFT history" />
-			<q-tab class="tab-text-not-clicked" name="about" label="About" />
-			<q-tab name="wine-maker" class="tab-text-not-clicked" label="Wine-maker" />
-		</q-tabs>
-		<q-tab-panels
-			v-model="tab"
-			animated
-			swipeable
-			transition-prev="jump-right"
-			transition-next="jump-left"
-		>
-			<q-tab-panel name="history">
-				<NFTHistory />
-			</q-tab-panel>
-
-			<q-tab-panel name="about">
-				<About />
-			</q-tab-panel>
-
-			<q-tab-panel name="wine-maker">
-				<WineMaker />
-			</q-tab-panel>
-		</q-tab-panels>
 	</div>
-	<UnavailableNFT
-		v-else
-	/>
+	<div v-else>
+		<LoadingMetadata
+		/>
+	</div>
 </template>
 
 <script lang="ts">
@@ -49,6 +55,7 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
 import { NewPolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_PolygonInstance } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
+import LoadingMetadata from './components/LoadingMetadata.vue';
 
 export default defineComponent({
 	name: 'MetadataPage',
@@ -57,7 +64,8 @@ export default defineComponent({
 		About,
 		WineMaker,
 		WineMetadata,
-		UnavailableNFT: UnavailableNFT
+		UnavailableNFT: UnavailableNFT,
+		LoadingMetadata: LoadingMetadata
 	},
 	emits: ['openWalletSidebar'],
 
@@ -67,7 +75,8 @@ export default defineComponent({
 			nft: {} as NewPolygonNFT,
 			userStore,
 			tab: ref('history'),
-			tokenExists: false
+			tokenExists: false,
+			loadingMetadata: true
 		};
 	},
 
@@ -83,12 +92,12 @@ export default defineComponent({
 		async getMetadata() {
 			const { id, contractAddress, network } = this.$route.query;
 			if (typeof id === 'string' && typeof contractAddress === 'string' && typeof network === 'string') {
-				console.log('working')
 				const tokenExistCheck = await this.CheckTokenExistence(id, contractAddress, network);
 				if (!!tokenExistCheck) {
 					await this.FetchMetadata(id, contractAddress, network);
 					this.tokenExists = true;
 				}
+				this.loadingMetadata = false;
 			}
 		},
 

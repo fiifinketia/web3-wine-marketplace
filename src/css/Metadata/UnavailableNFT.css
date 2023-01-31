@@ -25,7 +25,7 @@
   text-align: center;
 }
 
-@media screen and (max-width: 1255px) {
+@media screen and (max-width: 600px) {
 	.unavailable-nft-icon {
 		width: 250px;
 	}
