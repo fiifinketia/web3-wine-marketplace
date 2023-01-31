@@ -253,18 +253,25 @@
 							</div>
 							<div class="q-pt-md">
 								<div class="center">
-									<div class="form-element">
+									<label class="slider-container align-middle">
+										<h2 class="adventure-header"></h2>
 										<input
-											id="range"
-											v-model="value"
 											type="range"
-											class="range"
-											min="100"
-											max="50000"
-											oninput="rangeValue.innerText = this.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-											@input="updateSlider"
+											min="0"
+											max="100"
+											oninput="updateSlider"
 										/>
-									</div>
+										<div class="adventure-slider">
+											<div class="thumb" draggable="true">
+												<div class="face align-middle">
+													<div class="eyes"></div>
+													<div class="mouth">
+														<div class="tongue"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -393,8 +400,8 @@
 											id="timeInput"
 											v-model="timeValue"
 											type="range"
-											min="1"
-											max="36"
+											min="0.1"
+											max="3.6"
 											@input="updateTimeSlider"
 										/>
 									</div>
@@ -444,7 +451,6 @@
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
-import { ref } from 'vue';
 
 export default defineComponent({
 	name: 'WineCalculator',
@@ -490,7 +496,6 @@ export default defineComponent({
 		},
 		calculateRisk(type: string) {
 			this.money = document.getElementById('rangeValue')?.innerHTML as any;
-
 			// this.firstStepMobile = false;
 			// this.secondStepMobile = true;
 
@@ -529,34 +534,22 @@ export default defineComponent({
 			const progress = document.getElementById('timeInput') as any;
 			this.timeValue = progress.value;
 			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${Number(
-				this.timeValue
-			)}%, #fff ${Number(this.timeValue)}%, white 100%)`;
+				Number(this.timeValue) * 10
+			)}%, #fff ${Number(this.timeValue) * 10}%, white 100%)`;
 			let time = progress.value;
-			if (time < 12) {
-				this.timeValue = time + ' ' + 'months';
-			} else if (time > 12 && time < 24) {
-				for (let i: any; time > 12 && time < 24; ) {
-					this.timeValue = '1 year' + ' ' + 1;
-				}
-				// this.timeValue = '1 year' + time;
-			}
+			// if (time < 12) {
+			// 	this.timeValue = time + ' ' + 'months';
+			// } else if (time > 12 && time < 24) {
+			// 	for (let i: any; time > 12 && time < 24; ) {
+			// 		this.timeValue = '1 year' + ' ' + 1;
+			// 	}
+			// this.timeValue = '1 year' + time;
+			// }
 		},
 
 		calculateFinalWorth(type: string) {
-			const time = document.getElementById('timeInput');
-
-			// const value = time.value;
-			// if(time > 10 && time !== '1year')
-			// if (time === '1year') {
-			// 	this.time = 10;
-			// } else if (time === '2year') {
-			// 	this.time = 20;
-			// } else if (time === '3year') {
-			// 	this.time = 30;
-			// }
-
-			// oninput="this.value < 10 ? timeRange.innerText = this.value + 'mos': this.value == 10 || this.value == 20 || this.value == 30 ? timeRange.innerText = this.value.slice(0,1) + 'year': timeRange.innerText = this.value.split('').join(' year ') +' mos'"
-			// if(time)
+			this.time = Number(document.getElementById('timeInput'));
+			console.log(this.time);
 
 			this.calculateWorth = true;
 

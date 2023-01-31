@@ -121,7 +121,7 @@
 }
 
 .next-step-number {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -149,7 +149,7 @@
 }
 
 .starting-investment-text {
-	font-family: 'Obviously';
+	font-family: 'Obviously-Bold';
 	font-style: normal;
 	font-weight: 450;
 	font-size: 18px;
@@ -162,7 +162,7 @@
 .starting-investment-number {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 470;
+	font-weight: 900;
 	font-size: 18px;
 	line-height: 28px;
 	text-align: right;
@@ -215,7 +215,7 @@
 .risk-title {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 460;
+	font-weight: 900;
 	font-size: 16px;
 	line-height: 25px;
 	display: flex;
@@ -404,42 +404,49 @@
 	color: #ddd;
 } */
 
-.form-element input[type='range'] {
+/* input[type='range'] {
 	-webkit-appearance: none;
 	width: 100%;
 	height: 35px;
 	border-radius: 6px;
-	/* background: rgba(217, 232, 255, 0.3); */
+	background: rgba(217, 232, 255, 0.3);
 	outline: none;
 	overflow: hidden;
 	margin: 2px;
+	box-shadow: -407px 0 0 409px #3586ff;
 
-	/* background: -webkit-gradient(
+	background: -webkit-gradient(
 		linear,
 		20% 0%,
 		20% 100%,
 		color-stop(0%, #add8e6),
 		color-stop(100%, #add8e6)
-	); */
-	/* background: -webkit-linear-gradient(left, #add8e6 0%, #add8e6 100%);
+	);
+	background: -webkit-linear-gradient(left, #add8e6 0%, #add8e6 100%);
 	background: -moz-linear-gradient(left, #add8e6 0%, #add8e6 100%);
 	background: -o-linear-gradient(to right, #add8e6 0%, #add8e6 100%);
 	background: linear-gradient(to right, #add8e6 0%, #add8e6 100%);
-	background-repeat: no-repeat; */
-}
+	background-repeat: no-repeat;
+} */
 
-.form-element input[type='range']::-webkit-slider-thumb {
+/* input[type='range']::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	background: rgba(255, 255, 255, 0.45);
+	color: rgba(255, 255, 255, 0.45);
 	background-image: url('../../../public/images/drag.svg');
 	background-position: center center;
 	background-size: contain;
+	background: #ffffff;
+	opacity: 0.4;
+
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
 	border-radius: 4px;
-	padding: 0 10px;
-}
+	border: 4px solid black;
+	padding: 10px;
+	border-radius: 50%;
+	box-shadow: -407px 0 0 409px #3586ff;
+} */
 
 .timing-container .form-element,
 .starting-investment-wrapper .form-element {
@@ -642,4 +649,199 @@
 	border: 3px solid rgba(94, 151, 236, 0.27);
 	width: 50%;
 	height: 0;
+}
+
+/* //////////////////////SLIDER//////////////////////// */
+
+:root {
+	--dark-color: #232323;
+	--light-color: #f4f4f4;
+	--text-color: #f4f4f4;
+	--text-border-color: hsl(215, 85%, 65%);
+	--overlay-color: hsla(0, 0%, 14%, 0.7);
+
+	--finn-sword: url('https://i.ibb.co/t8Lj0Y6/Fin-sword.png');
+
+	/*
+			The "adventure range slider" is fully scalable, so feel free to adjust it's size by changing the value of '--slider-size' in order to meet your demands :D
+	*/
+
+	--slider-size: 300px;
+	--slider-height: 40px;
+
+	--text-size: calc(var(--slider-size) * 0.08);
+	--text-border-size: calc(var(--text-size) * 0.055);
+
+	--overlay-size: 100;
+
+	--thumb-size: calc(var(--slider-height) * 0.5);
+	--thumb-ear-size: calc(var(--thumb-size) * 0.35);
+
+	--thumb-face-size: calc(var(--thumb-size) * 0.75);
+	--thumb-skin-color: hsl(18, 81%, 85%);
+
+	--thumb-eye-size: calc(var(--thumb-face-size) * 0.15);
+	--thumb-eye-color: #000;
+
+	--thumb-mouth-width: calc(var(--thumb-face-size) * 0.35);
+	--thumb-mouth-height: calc(var(--thumb-mouth-width) * 0.6);
+	--thumb-mouth-color: hsl(18, 100%, 25%);
+
+	--thumb-tooth-width: calc(var(--thumb-mouth-height) * 0.3);
+	--thumb-tooth-height: calc(var(--thumb-mouth-height) * 0.35);
+
+	--thumb-tongue-width: calc(var(--thumb-mouth-width) * 0.65);
+	--thumb-tongue-height: calc(var(--thumb-mouth-height) * 0.45);
+	--thumb-tongue-color: hsl(357, 85%, 79%);
+}
+
+.align-middle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.slider-container > input[type='range'] {
+	display: none;
+}
+.slider-container > .adventure-slider {
+	position: relative;
+	width: var(--slider-size);
+	height: var(--slider-height);
+	background: var(--finn-sword);
+	background-size: cover;
+	/* overflow: hidden; */
+}
+.slider-container > .adventure-slider::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(var(--slider-size) * var(--overlay-size) / 100);
+	background-color: var(--overlay-color);
+}
+.slider-container > .adventure-slider > .thumb {
+	position: absolute;
+	top: 50%;
+	left: calc(
+		var(--slider-size) * calc(100 - var(--overlay-size)) / 100 -
+			calc(var(--thumb-size) * 0.5)
+	);
+	transform: translateY(-50%);
+	width: var(--thumb-size);
+	height: var(--thumb-size);
+	background-color: var(--light-color);
+	border-radius: 50%;
+	z-index: 2;
+	cursor: grab;
+}
+.slider-container > .adventure-slider > .thumb.active {
+	cursor: grabbing !important;
+}
+.slider-container > .adventure-slider > .thumb::before,
+.slider-container > .adventure-slider > .thumb::after {
+	content: '';
+	position: absolute;
+	width: calc(var(--thumb-ear-size) * 0.75);
+	height: 0;
+	background-color: var(--light-color);
+	bottom: calc(var(--thumb-ear-size) * 2.1);
+	border-radius: calc(var(--thumb-size) / 7) calc(var(--thumb-size) / 7)
+		calc(var(--thumb-size) / 34) calc(var(--thumb-size) / 34);
+	transition: height 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active::before,
+.slider-container > .adventure-slider > .thumb.active::after {
+	height: var(--thumb-ear-size);
+}
+.slider-container > .adventure-slider > .thumb::before {
+	left: calc(var(--thumb-ear-size) * 0.1);
+	transform: rotate(-9deg);
+}
+.slider-container > .adventure-slider > .thumb::after {
+	right: calc(var(--thumb-ear-size) * 0.1);
+	transform: rotate(9deg);
+}
+.slider-container > .adventure-slider > .thumb > .face {
+	position: relative;
+	width: var(--thumb-face-size);
+	height: var(--thumb-face-size);
+	background-color: var(--thumb-skin-color);
+	border-radius: 50%;
+	z-index: 3;
+}
+.slider-container > .adventure-slider > .thumb .eyes::before,
+.slider-container > .adventure-slider > .thumb .eyes::after {
+	content: '';
+	position: absolute;
+	top: calc(var(--thumb-ear-size) * 0.6);
+	width: var(--thumb-eye-size);
+	height: calc(var(--thumb-ear-size) * 0.1);
+	background-color: var(--thumb-eye-color);
+	border-radius: 25%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .eyes::before,
+.slider-container > .adventure-slider > .thumb.active .eyes::after {
+	height: var(--thumb-eye-size);
+	border-radius: 50%;
+}
+.slider-container > .adventure-slider > .thumb .eyes::before {
+	left: calc(var(--thumb-eye-size) * 1.1);
+}
+.slider-container > .adventure-slider > .thumb .eyes::after {
+	right: calc(var(--thumb-eye-size) * 1.1);
+}
+.slider-container > .adventure-slider > .thumb .mouth {
+	position: absolute;
+	left: 50%;
+	bottom: calc(var(--thumb-mouth-height) * 0.9);
+	transform: translateX(-50%);
+	width: calc(var(--thumb-mouth-width) * 0.5);
+	height: calc(var(--thumb-mouth-height) * 0.35);
+	background-color: var(--thumb-mouth-color);
+	border-radius: 35%;
+	overflow: hidden;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .mouth {
+	width: var(--thumb-mouth-width);
+	height: var(--thumb-mouth-height);
+}
+.slider-container > .adventure-slider > .thumb .mouth::before,
+.slider-container > .adventure-slider > .thumb .mouth::after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	background-color: var(--light-color);
+	border-radius: 0 0 15% 15%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .mouth::before,
+.slider-container > .adventure-slider > .thumb.active .mouth::after {
+	width: var(--thumb-tooth-width);
+	height: var(--thumb-tooth-height);
+}
+.slider-container > .adventure-slider > .thumb .mouth::before {
+	left: 20%;
+}
+.slider-container > .adventure-slider > .thumb .mouth::after {
+	right: 20%;
+}
+.slider-container > .adventure-slider > .thumb .tongue {
+	position: absolute;
+	left: 50%;
+	width: 0;
+	height: 0;
+	transform: translateX(-50%);
+	background-color: var(--thumb-tongue-color);
+	bottom: calc(var(--thumb-tongue-height) * -0.55);
+	border-radius: 35%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .tongue {
+	width: var(--thumb-tongue-width);
+	height: var(--thumb-tongue-height);
 }
