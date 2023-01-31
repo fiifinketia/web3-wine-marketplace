@@ -18,7 +18,9 @@
 			</div>
 			<div class="justify-center items-center">
 				<button class="calculate-worth-button">
-					<div class="calculate-worth-text">Calculate The Worth</div>
+					<a href="/calculator" class="calculate-worth-text"
+						>Calculate The Worth</a
+					>
 				</button>
 			</div>
 		</div>
