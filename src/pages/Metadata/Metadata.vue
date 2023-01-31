@@ -3,7 +3,6 @@
 		<div v-if="tokenExists">
 			<WineMetadata
 				:nft="nft"
-				@refresh="refresh"
 				@open-wallet="openWalletSideBar"
 			/>
 			<q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
@@ -44,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NewPolygonNFT } from './models/Metadata';
+import { NewPolygonNFT, NFTWithListingAndFavorites } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';
 import WineMetadata from './components/WineMetadata.vue';
@@ -72,7 +71,7 @@ export default defineComponent({
 	data() {
 		const userStore = useUserStore();
 		return {
-			nft: {} as NewPolygonNFT,
+			nft: {} as NFTWithListingAndFavorites,
 			userStore,
 			tab: ref('history'),
 			tokenExists: false,
@@ -85,10 +84,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		async refresh() {
-			this.$router.go(0);
-		},
-
 		async getMetadata() {
 			const { id, contractAddress, network } = this.$route.query;
 			if (typeof id === 'string' && typeof contractAddress === 'string' && typeof network === 'string') {
@@ -109,6 +104,7 @@ export default defineComponent({
 					network,
 					walletAddress: this.userStore.walletAddress,
 				});
+				console.log(res)
 				this.nft = res;
 			} catch (error) {
 				console.log(error);

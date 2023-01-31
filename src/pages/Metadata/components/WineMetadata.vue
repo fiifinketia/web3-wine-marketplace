@@ -39,24 +39,47 @@
 					<div class="q-pt-lg metadata-price-wrapper">
 						<div class="flex column">
 							<div class="starting-from">Price</div>
-							<div class="flex row items-center">
+							<div v-if="!!ongoingListingTransaction" class="flex row items-center">
+								<q-img
+									src="../../../assets/processing.svg"
+									width="30px"
+								/>
+								<div class="price1-blue">
+									Processing price
+								</div>
+							</div>
+							<div v-else-if="!!nft.orderDetails?.listingPrice && !!nft.orderDetails.transactionStatus" class="flex row items-center">
 								<div>
 									<q-img
-										v-if="nft.orderDetails?.listingPrice"
-										src="../../../assets/usdc.png"
-										width="20px"
+										src="../../../assets/usdc.svg"
+										width="28px"
 									/>
 								</div>
 								<div class="price1">
-									{{ nft.orderDetails?.listingPrice || 'Not Available' }}
+									{{ nft.orderDetails?.listingPrice }}
 								</div>
 							</div>
+							<div v-else-if="nft.orderDetails?.listingPrice == null" class="flex row items-center">
+								<div class="price1">
+									Not Available
+								</div>
+							</div>
+							<div v-else class="flex row items-center">
+								<q-img
+									src="../../../assets/processing.svg"
+									width="30px"
+								/>
+								<div class="price1-blue">
+									Processing price
+								</div>
+							</div>
+							
 						</div>
 						<div v-if="nft.orderDetails?.listingPrice" class="flex column">
 							<div class="bid-text">Highest bid from</div>
 							<div class="flex row items-center q-pt-sm">
 								<div>
-									<q-img src="../../../assets/usdc.png" width="20px" />
+									<q-img src="../../../assets/usdc.svg" width="20px" />
 								</div>
 								<div class="bid-price1">
 									{{ nft.orderDetails?.highestBid || '--.--' }}
@@ -68,7 +91,7 @@
 			</div>
 		</div>
 		<div v-if="userStore.walletAddress" class="q-pt-lg row modal-container">
-			<div v-if="nft.isOwner" class="q-pt-lg flex row modal-container">
+			<div v-if="nft.isOwner" class="q-pt-lg flex row justify-center modal-container">
 				<div v-if="!nft.orderDetails?.listingPrice" class="q-pr-sm">
 					<q-btn
 						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
@@ -119,7 +142,6 @@
 		<button
 			class="q-mt-lg row items-center update-metadata-button"
 			flat
-			@click="$emit('refresh')"
 		>
 			<div class="q-pr-sm cursor-pointer">
 				<q-img src="../../../../public/images/refresh.svg" width="24px" />
@@ -167,18 +189,6 @@
 										class="col-6"
 									/>
 								</div>
-								<!-- // TODO: Threshold -->
-								<!-- <div class="col-6 q-pa-sm">
-									<span class="text-weight-thin">Your price</span>
-									<q-input
-										v-model="listingPrice"
-										outlined
-										dense
-										type="number"
-										debounce="500"
-										class="col-6"
-									/>
-								</div> -->
 							</div>
 						</div>
 						<div class="row col-6 q-pa-sm">
@@ -644,7 +654,8 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import { useUserStore } from 'src/stores/user-store';
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent, PropType, ref } from 'vue-demi';
+import { NFTWithListingAndFavorites } from '../models/Metadata'
 import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
@@ -655,19 +666,16 @@ import {
 	FulfillBasicOrder,
 } from '../services/Orders';
 import CountdownTimer from '../services/CountDownTimer';
-import { NewPolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_PolygonInstance } from 'src/shared/web3.helper';
-import { Contract } from '@ethersproject/contracts';
-import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
 	name: 'WineMetadata',
 	props: {
 		nft: {
-			type: Object,
+			type: Object as PropType<NFTWithListingAndFavorites>,
 			required: true,
 		},
 	},
-	emits: ['refresh', 'openWallet'],
+	emits: ['openWallet'],
 	setup() {
 		const userStore = useUserStore();
 		const wivFee = Number(process.env.WIV_FEE) * 0.01;
@@ -714,6 +722,7 @@ export default defineComponent({
 			}),
 			totalPrice: ref(0),
 			currentInterval: ref<NodeJS.Timeout>(),
+			ongoingListingTransaction: false
 		};
 	},
 
@@ -730,7 +739,7 @@ export default defineComponent({
 		},
 		openBuyNowModal: function (val) {
 			if (val === true) {
-				const tDate = this.nft.orderDetails?.expTime;
+				const tDate = parseInt(this.nft.orderDetails!.expTime);
 				const timer = new CountdownTimer({
 					selector: '#clock1',
 					targetDate: new Date(tDate * 1000),
@@ -763,35 +772,36 @@ export default defineComponent({
 			// }
 			try {
 				this.makeOfferLoading = true;
-				if (this.offerPrice <= this.nft.orderDetails?.highestBid) {
-					this.offerValidation = true;
-					this.validationMessage =
-						'Please enter a valid price greater than ' +
-						this.nft.orderDetails?.highestBid;
-					return;
-				} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
-					try {
-						await CreateERC721Offer(
-							this.nft.tokenID,
-							this.nft.smartContractAddress,
-							this.nft.brand,
-							this.nft.image,
-							this.userStore.walletAddress,
-							this.offerPrice.toString(),
-							this.offerExpirationDate
-						);
-					} catch (error) {
-						throw error;
+				if (!!this.nft.orderDetails) {					
+					if (this.offerPrice <= parseInt(this.nft.orderDetails.highestBid)) {
+						this.offerValidation = true;
+						this.validationMessage =
+							'Please enter a valid price greater than ' +
+							this.nft.orderDetails?.highestBid;
+						return;
+					} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
+						try {
+							await CreateERC721Offer(
+								this.nft.tokenID,
+								this.nft.smartContractAddress,
+								this.nft.brand,
+								this.nft.image,
+								this.userStore.walletAddress,
+								this.offerPrice.toString(),
+								this.offerExpirationDate
+							);
+						} catch (error) {
+							throw error;
+						}
 					}
+					this.offerPrice = 0;
+					this.openMakeOfferModal = false;
+					this.makeOfferLoading = false;
+					this.openOfferCompletedModal = true;
+					setTimeout(() => {
+						this.openOfferCompletedModal = false;
+					}, this.completedTimeoutModal);
 				}
-				this.offerPrice = 0;
-				this.openMakeOfferModal = false;
-				this.makeOfferLoading = false;
-				this.openOfferCompletedModal = true;
-				setTimeout(() => {
-					this.openOfferCompletedModal = false;
-					this.$emit('refresh');
-				}, this.completedTimeoutModal);
 			} catch (error: any) {
 				this.makeOfferLoading = false;
 				this.openOfferFailedModal = true;
@@ -819,21 +829,22 @@ export default defineComponent({
 				// 	this.insufficientFundsToBuy = true;
 				// 	return;
 				// }
-				this.buyNowLoading = true;
-				await FulfillBasicOrder(
-					this.nft.orderDetails?.orderHash,
-					this.nft.brand,
-					false,
-					this.userStore.walletAddress,
-					this.nft.image
-				);
-				this.openBuyNowModal = false;
-				this.openBuyNowCompletedModal = true;
-				this.buyNowLoading = false;
-				setTimeout(() => {
-					this.openBuyNowCompletedModal = false;
-					this.$emit('refresh');
-				}, this.completedTimeoutModal);
+				if (!!this.nft.orderDetails) {
+					this.buyNowLoading = true;
+					await FulfillBasicOrder(
+						this.nft.orderDetails.orderHash,
+						this.nft.brand,
+						false,
+						this.userStore.walletAddress,
+						this.nft.image
+					);
+					this.openBuyNowModal = false;
+					this.openBuyNowCompletedModal = true;
+					this.buyNowLoading = false;
+					setTimeout(() => {
+						this.openBuyNowCompletedModal = false;
+					}, this.completedTimeoutModal);
+				}
 			} catch (error: any) {
 				this.buyNowLoading = false;
 				this.openBuyNowFailedModal = true;
@@ -842,7 +853,7 @@ export default defineComponent({
 				}
 				else if (error.message && error.message.includes('unknown account'))
 				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
+					this.errorMessage = 'Account locked, please unlock Metamask to continue';
 				}
 				else {
 					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
@@ -888,10 +899,10 @@ export default defineComponent({
 
 				this.openCreateListingModal = false;
 				this.listingLoading = false;
+				this.ongoingListingTransaction = true;
 				this.openListingCompletedModal = true;
 				setTimeout(() => {
 					this.openListingCompletedModal = false;
-					this.$emit('refresh');
 				}, this.completedTimeoutModal);
 			} catch (error: any) {
 				this.listingLoading = false;
@@ -914,8 +925,9 @@ export default defineComponent({
 			}
 		},
 		async cancelOrder() {
-			await CancelSingleOrder(this.nft.orderDetails?.orderHash);
-			this.$emit('refresh');
+			if (!!this.nft.orderDetails) {
+				await CancelSingleOrder(this.nft.orderDetails.orderHash);
+			}
 		},
 		async openWalletSideBar() {
 			this.buyTokenTOCAccepted = false;
