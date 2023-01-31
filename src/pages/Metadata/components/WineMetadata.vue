@@ -491,8 +491,6 @@
 									<span class="text-weight-thin">Your price</span>
 									<q-input
 										v-model="offerPrice"
-										:error="offerValidation"
-										:error-message="validationMessage"
 										outlined
 										dense
 										type="number"
@@ -693,14 +691,12 @@ export default defineComponent({
 			listingExpirationDate: ref(''),
 			offerExpirationDate: ref(''),
 			falseDate: false,
-			offerValidation: ref(false),
 			listTokenTOCAccepted: ref(false),
 			makeOfferTOCAccepted: ref(false),
 			buyTokenTOCAccepted: ref(false),
 			listingLoading: ref(false),
 			makeOfferLoading: ref(false),
 			buyNowLoading: ref(false),
-			validationMessage: '',
 			listingExpirationDateErrorMessage: '',
 			offerExpirationDateErrorMessage: '',
 			errorMessage: ref(''),
@@ -727,11 +723,6 @@ export default defineComponent({
 	},
 
 	watch: {
-		openMakeOfferModal: function (val) {
-			if (val) {
-				this.offerPrice = Number(this.nft.orderDetails?.highestBid) + 1;
-			}
-		},
 		listingPrice: function (val) {
 			if (val) {
 				this.totalPrice = ((100 - this.wivFee) / 100) * this.listingPrice;
@@ -773,13 +764,7 @@ export default defineComponent({
 			try {
 				this.makeOfferLoading = true;
 				if (!!this.nft.orderDetails) {					
-					if (this.offerPrice <= parseInt(this.nft.orderDetails.highestBid)) {
-						this.offerValidation = true;
-						this.validationMessage =
-							'Please enter a valid price greater than ' +
-							this.nft.orderDetails?.highestBid;
-						return;
-					} else if (this.nft.tokenType === TOKENTYPE.ERC721) {
+					if (this.nft.tokenType === TOKENTYPE.ERC721) {
 						try {
 							await CreateERC721Offer(
 								this.nft.tokenID,
