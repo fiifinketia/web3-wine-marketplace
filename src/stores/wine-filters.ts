@@ -172,8 +172,6 @@ export const useWineFilters = defineStore('wineFilters', {
 										.filter((i: string) => i !== '')
 										.join('&case[]=')
 							);
-							console.log(state.wineCase);
-							console.log(state.wineCaseOptions);
 						}
 						break;
 					case 'heritage':
