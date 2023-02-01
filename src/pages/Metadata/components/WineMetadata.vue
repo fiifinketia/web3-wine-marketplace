@@ -483,7 +483,7 @@
 							<div class="row col-12 justify-between">
 								<div class="col-6 q-pa-sm">
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
-									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+									<p class="text-h6">{{ nft.orderDetails?.listingPrice ? nft.orderDetails.listingPrice : 'Not Available'}}</p>
 								</div>
 							</div>
 							<div class="row col-12 justify-between">
@@ -568,12 +568,7 @@
 						<div class="row col-6 q-pa-sm">
 							<p class="text-weight-thin col-12 q-mb-xs">Total</p>
 							<p class="text-h6">
-								{{
-									(
-										Number(offerPrice) +
-										((offerPrice || 0) * wivFee) / 100
-									).toFixed(2) || (0).toFixed(2)
-								}}
+								{{ offerPrice || (0).toFixed(2) }}
 							</p>
 						</div>
 						<q-checkbox
