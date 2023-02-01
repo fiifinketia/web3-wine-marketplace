@@ -358,8 +358,6 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import Web3 from 'web3';
-import { log } from 'console';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -401,9 +399,8 @@ export default defineComponent({
 	},
 
 	async mounted() {
-		const userStore = useUserStore();
-		await userStore.checkConnection();
-		this.walletAddress = userStore.walletAddress;
+		await this.userStore.checkConnection();
+		this.walletAddress = this.userStore.walletAddress;
 		if (!this.walletAddress) {
 			this.ClearStore();
 		}
@@ -431,27 +428,12 @@ export default defineComponent({
 				transak.close();
 			});
 			// This is so that the balance is updated after new funds are imported
-			const web3 = new Web3(window.ethereum);
-			const userStore = useUserStore();
-			await userStore.checkConnection();
-			this.walletAddress = userStore.walletAddress;
-			const balance = await web3.eth.getBalance(this.walletAddress);
-			const balanceInEther = web3.utils.fromWei(balance, 'ether');
-			this.balance = Number(balanceInEther);
+			this.balance = await this.userStore.getWalletBalance();
 		},
 		async connectWallet() {
 			this.showConnectWallet = false;
-
-			this.userStore.connectWallet();
-			const web3 = new Web3(window.ethereum);
-			const userStore = useUserStore();
-			await userStore.checkConnection();
-			this.walletAddress = userStore.walletAddress;
-			const balance = await web3.eth.getBalance(this.walletAddress);
-			const balanceInEther = web3.utils.fromWei(balance, 'ether');
-			this.balance = Number(balanceInEther);
-
 			await this.userStore.connectWallet();
+			this.balance = await this.userStore.getWalletBalance();
 			if (this.$route.query?.next) {
 				const next = this.$route.query?.next as string;
 				this.$router.replace({ path: next });
