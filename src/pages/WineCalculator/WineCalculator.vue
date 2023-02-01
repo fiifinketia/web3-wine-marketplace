@@ -444,13 +444,13 @@
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
-import { ref, onMounted, reactive, toRefs } from 'vue';
+import { ref, reactive, toRefs } from 'vue';
 
 export default defineComponent({
 	name: 'WineCalculator',
 	setup() {
 		const state = reactive({
-			selectedMonth: 1,
+			selectedMonth: 6,
 			selectedYear: 0,
 		});
 
@@ -487,14 +487,6 @@ export default defineComponent({
 			secondStepMobile: false,
 			thirdStepMobile: false,
 			value: 15000,
-			timeValue: String(),
-			selectedTime: ref(1),
-			start: [1],
-			range: {
-				min: 1,
-				max: 60,
-			},
-			step: 1,
 		};
 	},
 
