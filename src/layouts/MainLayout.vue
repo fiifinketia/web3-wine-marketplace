@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
 	<!-------------------------------------- POPUP MODALS -------------------------------------->
 
@@ -48,10 +49,12 @@
 		class="my-wallet-background row justify-end"
 	>
 		<q-card class="my-wallet-container column justify-between items-center">
-			<q-card-section class="my-wallet-header row">
-				<div>MY WALLET</div>
-				<img src="../../public/images/metamask-icon.svg" alt="" />
-				<div class="wallet-id">walletID</div>
+			<q-card-section class="my-wallet-header row items-center no-wrap">
+				<div class="my-wallet-header-container row">
+					<div>MY WALLET</div>
+					<img src="../../public/images/metamask-icon.svg" alt="" />
+					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
+				</div>
 				<img
 					class="x-icon"
 					src="../../public/images/x-icon.svg"
@@ -67,14 +70,16 @@
 				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
 				<div class="ballance-wrapper column">
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
-					<div class="my-wallet-balance">$ {{ balance.toFixed(2) }}</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
 				</div>
 				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
 					>Fund wallet</q-btn
 				>
 			</q-card-section>
 
-			<q-card-section class="my-wallet-logout"> LOG OUT </q-card-section>
+			<q-card-section class="my-wallet-logout" @click="logout">
+				LOG OUT
+			</q-card-section>
 		</q-card>
 	</q-dialog>
 
@@ -186,9 +191,13 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
-						:to="{ path: '/orders' }"
+						:to="
+							!!userStore.walletAddress
+								? { path: '/orders' }
+								: { query: { next: $route.fullPath, connect: 'open' } }
+						"
 						split
-						:icon="!!userStore.walletAddress? 'app:profile' : ''"
+						icon="app:profile"
 					>
 						<div class="q-btn-menu-div">
 							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
@@ -394,16 +403,14 @@ export default defineComponent({
 	},
 
 	async mounted() {
-		const userStore = useUserStore();
-		await userStore.checkConnection();
-		this.walletAddress = userStore.walletAddress;
+		await this.userStore.checkConnection();
+		this.walletAddress = this.userStore.walletAddress;
 		if (!this.walletAddress) {
 			this.ClearStore();
 		}
 	},
-
 	methods: {
-		fundWallet() {
+		async fundWallet() {
 			let transak = new transakSDK({
 				apiKey: process.env.TRANSAK_API_KEY, // Your API Key
 				environment: 'STAGING', // STAGING/PRODUCTION
@@ -420,14 +427,21 @@ export default defineComponent({
 			this.showMyWallet = false;
 			transak.init();
 
-			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
-				// console.log(orderData);
-				transak.close();
-			});
+			transak.on(
+				transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
+				async (orderData: any) => {
+					// TODO: Notitfy user on balance update
+					this.balance = await this.userStore.getWalletBalance();
+					// console.log(orderData);
+					transak.close();
+				}
+			);
+			// This is so that the balance is updated after new funds are imported
 		},
 		async connectWallet() {
 			this.showConnectWallet = false;
 			await this.userStore.connectWallet();
+			this.balance = await this.userStore.getWalletBalance();
 			if (this.$route.query?.next) {
 				const next = this.$route.query?.next as string;
 				this.$router.replace({ path: next });
@@ -461,18 +475,21 @@ export default defineComponent({
 
 		async logout() {
 			this.userStore.walletAddress = '';
+
+			this.showMyWallet = false;
+
 			if (this.$route.meta.requiresAuth) {
 				this.$router.push('/');
 				return;
 			}
 			window.location.reload();
-      this.ClearStore();
+			this.ClearStore();
 		},
-    ClearStore() {
-      this.nftStore.ownedNFTs = [] as TokenIdentifier[];
-      this.nftStore.fetchNFTsStatus = false;
-      this.orderStore.$reset();
-    },
+		ClearStore() {
+			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+			this.nftStore.fetchNFTsStatus = false;
+			this.orderStore.$reset();
+		},
 		installMetaMask() {
 			this.$q
 				.dialog({
