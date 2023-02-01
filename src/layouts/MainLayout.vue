@@ -191,9 +191,13 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
-						:to="{ path: '/orders' }"
+						:to="
+							!!userStore.walletAddress
+								? { path: '/orders' }
+								: { query: { next: $route.fullPath, connect: 'open' } }
+						"
 						split
-						:icon="!!userStore.walletAddress? 'app:profile' : ''"
+						icon="app:profile"
 					>
 						<div class="q-btn-menu-div">
 							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
@@ -423,12 +427,15 @@ export default defineComponent({
 			this.showMyWallet = false;
 			transak.init();
 
-			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, async (orderData: any) => {
-				// TODO: Notitfy user on balance update
-				this.balance = await this.userStore.getWalletBalance();
-				// console.log(orderData);
-				transak.close();
-			});
+			transak.on(
+				transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
+				async (orderData: any) => {
+					// TODO: Notitfy user on balance update
+					this.balance = await this.userStore.getWalletBalance();
+					// console.log(orderData);
+					transak.close();
+				}
+			);
 			// This is so that the balance is updated after new funds are imported
 		},
 		async connectWallet() {
@@ -439,7 +446,6 @@ export default defineComponent({
 				const next = this.$route.query?.next as string;
 				this.$router.replace({ path: next });
 			}
-
 		},
 
 		setupWallet() {
@@ -477,8 +483,7 @@ export default defineComponent({
 				return;
 			}
 			window.location.reload();
-      this.ClearStore();
-
+			this.ClearStore();
 		},
 		ClearStore() {
 			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
