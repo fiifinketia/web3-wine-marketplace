@@ -1,0 +1,847 @@
+.grape-img-left {
+	width: 25%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -5;
+}
+
+.grape-img-right {
+	width: 30%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: -5;
+}
+
+.welcome-to-calculator {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 870;
+	font-size: 32px;
+	line-height: 48px;
+	text-align: center;
+	letter-spacing: 0.03em;
+	color: #212131;
+}
+
+.welcome-to-calculator-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	width: 40%;
+}
+
+.calculator {
+	width: 80%;
+	height: 680px;
+	background: #ffffff;
+	/* Primary/Light blue */
+
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(20px);
+	border-radius: 20px;
+	margin-bottom: 4rem;
+	overflow: hidden;
+}
+
+.calculator-first-part {
+	width: 60%;
+	background: rgba(217, 232, 255, 0.3);
+	height: 100%;
+}
+
+.plant-section {
+	width: 60%;
+}
+
+.help-section {
+	padding-top: 120px;
+	padding-right: 30px;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 20px;
+	text-decoration-line: underline;
+	color: #3586ff;
+	cursor: pointer;
+}
+.current-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	width: 90%;
+}
+
+.step-number {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.next-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 85%;
+}
+
+.next-step-second-version {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 90%;
+}
+
+.next-step-number {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+}
+
+.portfolio-calculation-title {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+	text-transform: uppercase;
+}
+
+.calculator-second-part {
+	width: 40%;
+}
+
+.calculator-second-part-wrapper {
+	width: 90%;
+	justify-content: start;
+}
+
+.starting-investment-text {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #262626;
+}
+
+.starting-investment-number {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	color: #3586ff;
+}
+
+.risk-container {
+	background: linear-gradient(
+		109.05deg,
+		rgba(255, 255, 255, 0.13) 15.61%,
+		rgba(255, 255, 255, 0.04) 98.78%
+	);
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 6px;
+	width: 100%;
+	height: 100px;
+}
+
+.low-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #05a30b;
+}
+.medium-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #3586ff;
+}
+.high-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #c11b1b;
+}
+
+.unselected-border {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1.6px solid #9d9d9d;
+	cursor: pointer;
+}
+
+.unselected-border-wrapper {
+	padding-left: 10px;
+}
+
+.risk-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 25px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.6px;
+	color: #212131;
+}
+
+.risk-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	/* width: 95%; */
+}
+
+.selected-risk {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 5px solid #3586ff;
+	cursor: pointer;
+}
+
+.risk-level-title {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: left;
+	letter-spacing: 0.02em;
+	color: #262626;
+	padding-bottom: 10px;
+}
+
+.calculating {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	padding-bottom: 30px;
+}
+
+.take-time {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	padding-top: 20px;
+}
+
+.continue-button {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	padding: 0.8rem;
+}
+
+.continue-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 29px;
+	letter-spacing: 0.02em;
+	color: #ffffff;
+}
+
+.continue-button-wrapper {
+	padding-top: 90px;
+}
+
+.back-button {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	color: #9d9d9d;
+	cursor: pointer;
+}
+
+.starting-investment-text-bold {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 16px;
+	line-height: 25px;
+	text-align: right;
+	letter-spacing: 0.04em;
+	color: #262626;
+}
+
+.timing-container {
+	padding-top: 100px;
+}
+
+.end-amount {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-price {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 32px;
+	line-height: 50px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #3586ff;
+}
+
+.end-amount-percentage-title {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-percentage {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 28px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	color: #212131;
+}
+
+/* .container {
+	background-color: #ffffff;
+	width: 90vmin;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	padding: 30px 20px;
+	border-radius: 5px;
+} */
+
+.center {
+	position: relative;
+	/* top: 50%; */
+	/* left: 60%; */
+	/* transform: translate(-50%, -50%); */
+}
+/* .form-element #rangeValue {
+	margin-bottom: 20px;
+	font-size: 50px;
+	font-family: 'Raleway';
+	text-align: center;
+	color: #ddd;
+} */
+
+/* input[type='range'] {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 35px;
+	border-radius: 6px;
+	background: rgba(217, 232, 255, 0.3);
+	outline: none;
+	overflow: hidden;
+	margin: 2px;
+	box-shadow: -407px 0 0 409px #3586ff;
+
+	background: -webkit-gradient(
+		linear,
+		20% 0%,
+		20% 100%,
+		color-stop(0%, #add8e6),
+		color-stop(100%, #add8e6)
+	);
+	background: -webkit-linear-gradient(left, #add8e6 0%, #add8e6 100%);
+	background: -moz-linear-gradient(left, #add8e6 0%, #add8e6 100%);
+	background: -o-linear-gradient(to right, #add8e6 0%, #add8e6 100%);
+	background: linear-gradient(to right, #add8e6 0%, #add8e6 100%);
+	background-repeat: no-repeat;
+} */
+
+/* input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	color: rgba(255, 255, 255, 0.45);
+	background-image: url('../../../public/images/drag.svg');
+	background-position: center center;
+	background-size: contain;
+	background: #ffffff;
+	opacity: 0.4;
+
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	border-radius: 4px;
+	border: 4px solid black;
+	padding: 10px;
+	border-radius: 50%;
+	box-shadow: -407px 0 0 409px #3586ff;
+} */
+
+.timing-container .form-element,
+.starting-investment-wrapper .form-element {
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 8px;
+	line-height: 0;
+}
+
+.portfolio-calculation-mobile {
+	display: none;
+}
+
+.step-mobile {
+	display: none;
+}
+
+.calculate-again-button {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	border: 1px solid #3586ff;
+	border-radius: 6px;
+	padding: 0.9rem;
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+	.risk-container {
+		width: 100%;
+	}
+	.risk-wrapper {
+		width: 87%;
+	}
+	.current-step {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.calculator-first-part {
+		width: 55%;
+	}
+	.calculator-second-part {
+		width: 45%;
+	}
+	.risk-wrapper {
+		width: 86%;
+	}
+	.risk-desc {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.calculator-first-part {
+		width: 100%;
+	}
+	.calculator-second-part {
+		width: 100%;
+	}
+	.risk-wrapper {
+		width: 91.5%;
+	}
+	.calculator {
+		width: 100%;
+		height: auto;
+		border-bottom: none;
+		border-end-end-radius: none;
+	}
+	.portfolio-calculation-desktop {
+		display: none;
+	}
+	.portfolio-calculation-mobile {
+		display: flex;
+		width: 70%;
+	}
+	.step-mobile {
+		font-family: 'Proxima Nova';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 16px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		color: #212131;
+		width: 80%;
+		padding-top: 15px;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.calculator {
+		width: 100%;
+		background: rgba(255, 255, 255, 0.7);
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(15px);
+		border-radius: 0px;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.calculator-first-part {
+		background: none;
+	}
+	.portfolio-calculation-title {
+		display: flex;
+		justify-content: center;
+	}
+	.portfolio-calculation-desktop {
+		display: none;
+	}
+	.welcome-to-calculator {
+		display: none;
+	}
+	.welcome-to-calculator-desc {
+		display: none;
+	}
+
+	.grape-img-right {
+		display: none;
+	}
+	.grape-img-left {
+		width: 45%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -5;
+	}
+	.portfolio-calculation-mobile {
+		display: flex;
+		width: 70%;
+	}
+	.calculate-button-wrapper {
+		padding-top: 50px;
+	}
+	.back-button-wrapper {
+		padding-right: 0px;
+		padding-bottom: 20px;
+	}
+	.step-mobile {
+		font-family: 'Proxima Nova';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 16px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		color: #212131;
+		width: 80%;
+		padding-top: 15px;
+	}
+	.calculator-second-part {
+		width: 100%;
+	}
+	.risk-container {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.risk-wrapper {
+		width: 86%;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.risk-wrapper {
+		width: 90%;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	.risk-wrapper {
+		width: 91%;
+	}
+}
+
+.line {
+	border: 3px solid #3586ff;
+	width: 100%;
+	height: 0;
+}
+.line-2 {
+	border: 3px solid #3586ff;
+	width: 50%;
+	height: 0;
+}
+
+.line-3 {
+	border: 3px solid rgba(94, 151, 236, 0.27);
+	width: 50%;
+	height: 0;
+}
+
+/* //////////////////////SLIDER//////////////////////// */
+
+:root {
+	--dark-color: #232323;
+	--light-color: #f4f4f4;
+	--text-color: #f4f4f4;
+	--text-border-color: hsl(215, 85%, 65%);
+	--overlay-color: hsla(0, 0%, 14%, 0.7);
+
+	--finn-sword: url('https://i.ibb.co/t8Lj0Y6/Fin-sword.png');
+
+	/*
+			The "adventure range slider" is fully scalable, so feel free to adjust it's size by changing the value of '--slider-size' in order to meet your demands :D
+	*/
+
+	--slider-size: 300px;
+	--slider-height: 40px;
+
+	--text-size: calc(var(--slider-size) * 0.08);
+	--text-border-size: calc(var(--text-size) * 0.055);
+
+	--overlay-size: 100;
+
+	--thumb-size: calc(var(--slider-height) * 0.5);
+	--thumb-ear-size: calc(var(--thumb-size) * 0.35);
+
+	--thumb-face-size: calc(var(--thumb-size) * 0.75);
+	--thumb-skin-color: hsl(18, 81%, 85%);
+
+	--thumb-eye-size: calc(var(--thumb-face-size) * 0.15);
+	--thumb-eye-color: #000;
+
+	--thumb-mouth-width: calc(var(--thumb-face-size) * 0.35);
+	--thumb-mouth-height: calc(var(--thumb-mouth-width) * 0.6);
+	--thumb-mouth-color: hsl(18, 100%, 25%);
+
+	--thumb-tooth-width: calc(var(--thumb-mouth-height) * 0.3);
+	--thumb-tooth-height: calc(var(--thumb-mouth-height) * 0.35);
+
+	--thumb-tongue-width: calc(var(--thumb-mouth-width) * 0.65);
+	--thumb-tongue-height: calc(var(--thumb-mouth-height) * 0.45);
+	--thumb-tongue-color: hsl(357, 85%, 79%);
+}
+
+.align-middle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.slider-container > input[type='range'] {
+	display: none;
+}
+.slider-container > .adventure-slider {
+	position: relative;
+	width: var(--slider-size);
+	height: var(--slider-height);
+	background: var(--finn-sword);
+	background-size: cover;
+	/* overflow: hidden; */
+}
+.slider-container > .adventure-slider::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(var(--slider-size) * var(--overlay-size) / 100);
+	background-color: var(--overlay-color);
+}
+.slider-container > .adventure-slider > .thumb {
+	position: absolute;
+	top: 50%;
+	left: calc(
+		var(--slider-size) * calc(100 - var(--overlay-size)) / 100 -
+			calc(var(--thumb-size) * 0.5)
+	);
+	transform: translateY(-50%);
+	width: var(--thumb-size);
+	height: var(--thumb-size);
+	background-color: var(--light-color);
+	border-radius: 50%;
+	z-index: 2;
+	cursor: grab;
+}
+.slider-container > .adventure-slider > .thumb.active {
+	cursor: grabbing !important;
+}
+.slider-container > .adventure-slider > .thumb::before,
+.slider-container > .adventure-slider > .thumb::after {
+	content: '';
+	position: absolute;
+	width: calc(var(--thumb-ear-size) * 0.75);
+	height: 0;
+	background-color: var(--light-color);
+	bottom: calc(var(--thumb-ear-size) * 2.1);
+	border-radius: calc(var(--thumb-size) / 7) calc(var(--thumb-size) / 7)
+		calc(var(--thumb-size) / 34) calc(var(--thumb-size) / 34);
+	transition: height 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active::before,
+.slider-container > .adventure-slider > .thumb.active::after {
+	height: var(--thumb-ear-size);
+}
+.slider-container > .adventure-slider > .thumb::before {
+	left: calc(var(--thumb-ear-size) * 0.1);
+	transform: rotate(-9deg);
+}
+.slider-container > .adventure-slider > .thumb::after {
+	right: calc(var(--thumb-ear-size) * 0.1);
+	transform: rotate(9deg);
+}
+.slider-container > .adventure-slider > .thumb > .face {
+	position: relative;
+	width: var(--thumb-face-size);
+	height: var(--thumb-face-size);
+	background-color: var(--thumb-skin-color);
+	border-radius: 50%;
+	z-index: 3;
+}
+.slider-container > .adventure-slider > .thumb .eyes::before,
+.slider-container > .adventure-slider > .thumb .eyes::after {
+	content: '';
+	position: absolute;
+	top: calc(var(--thumb-ear-size) * 0.6);
+	width: var(--thumb-eye-size);
+	height: calc(var(--thumb-ear-size) * 0.1);
+	background-color: var(--thumb-eye-color);
+	border-radius: 25%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .eyes::before,
+.slider-container > .adventure-slider > .thumb.active .eyes::after {
+	height: var(--thumb-eye-size);
+	border-radius: 50%;
+}
+.slider-container > .adventure-slider > .thumb .eyes::before {
+	left: calc(var(--thumb-eye-size) * 1.1);
+}
+.slider-container > .adventure-slider > .thumb .eyes::after {
+	right: calc(var(--thumb-eye-size) * 1.1);
+}
+.slider-container > .adventure-slider > .thumb .mouth {
+	position: absolute;
+	left: 50%;
+	bottom: calc(var(--thumb-mouth-height) * 0.9);
+	transform: translateX(-50%);
+	width: calc(var(--thumb-mouth-width) * 0.5);
+	height: calc(var(--thumb-mouth-height) * 0.35);
+	background-color: var(--thumb-mouth-color);
+	border-radius: 35%;
+	overflow: hidden;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .mouth {
+	width: var(--thumb-mouth-width);
+	height: var(--thumb-mouth-height);
+}
+.slider-container > .adventure-slider > .thumb .mouth::before,
+.slider-container > .adventure-slider > .thumb .mouth::after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	background-color: var(--light-color);
+	border-radius: 0 0 15% 15%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .mouth::before,
+.slider-container > .adventure-slider > .thumb.active .mouth::after {
+	width: var(--thumb-tooth-width);
+	height: var(--thumb-tooth-height);
+}
+.slider-container > .adventure-slider > .thumb .mouth::before {
+	left: 20%;
+}
+.slider-container > .adventure-slider > .thumb .mouth::after {
+	right: 20%;
+}
+.slider-container > .adventure-slider > .thumb .tongue {
+	position: absolute;
+	left: 50%;
+	width: 0;
+	height: 0;
+	transform: translateX(-50%);
+	background-color: var(--thumb-tongue-color);
+	bottom: calc(var(--thumb-tongue-height) * -0.55);
+	border-radius: 35%;
+	transition: all 350ms ease;
+}
+.slider-container > .adventure-slider > .thumb.active .tongue {
+	width: var(--thumb-tongue-width);
+	height: var(--thumb-tongue-height);
+}
