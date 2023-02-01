@@ -423,12 +423,13 @@ export default defineComponent({
 			this.showMyWallet = false;
 			transak.init();
 
-			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
+			transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, async (orderData: any) => {
+				// TODO: Notitfy user on balance update
+				this.balance = await this.userStore.getWalletBalance();
 				// console.log(orderData);
 				transak.close();
 			});
 			// This is so that the balance is updated after new funds are imported
-			this.balance = await this.userStore.getWalletBalance();
 		},
 		async connectWallet() {
 			this.showConnectWallet = false;
