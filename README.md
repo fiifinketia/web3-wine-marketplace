@@ -32,6 +32,7 @@ MARKETPLACE_API_URL=http://localhost:8080/api
 RETRIEVE_FILTERS_URL=http://localhost:8080/api/nfts/filters
 RETRIEVE_FILTERED_NFTS_URL=http://localhost:8080/api/nfts
 RETRIEVE_NEWLY_MINTED_NFTS_URL=http://localhost:8080/api/release/newlyMinted
+BURN_NFT_URL=http://localhost:8080/api/market/nft/burn
 
 # Transactions Microservice
 CREATE_ORDER_URL=http://localhost:8080/api/market/order/listing/order.list

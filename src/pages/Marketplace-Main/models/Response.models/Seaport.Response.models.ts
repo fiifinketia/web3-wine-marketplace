@@ -80,14 +80,6 @@ export interface SeaportListingModel {
   network?: string;
 }
 
-export interface NFTWithListingsResponse {
-  token: NewPolygonNFT;
-  listings: ListingsDTO[];
-  offers: ListingsDTO[];
-  transactions: SeaportTransactionsModel[];
-  latestPricing: string;
-}
-
 export interface ListingsDTO {
   orderHash: string;
   listPrice: string;

@@ -1,7 +1,4 @@
-export interface NewPolygonNFT
-	extends TokenProperties,
-		OrderProperties,
-		TokenProperties {
+export interface NewPolygonNFT extends TokenProperties, OrderProperties {
 	tokenID: string;
 	description: string;
 	image: string;
@@ -26,6 +23,21 @@ export interface NewPolygonNFT
 	smartContractAddress: string;
 	network: string;
 	typeID?: string;
+}
+
+export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails{}
+
+interface FavoritesAndOrderDetails {
+	favorited?: null | boolean;
+
+  orderDetails?: {
+    listingPrice: string;
+    currency: string;
+    orderHash: string;
+    transactionStatus: boolean;
+    expTime: string;
+    highestBid: string;
+  };
 }
 
 interface TokenProperties {
