@@ -257,6 +257,7 @@
 										<h2 class="adventure-header"></h2>
 										<input
 											type="range"
+											id="range"
 											min="0"
 											max="100"
 											oninput="updateSlider"
