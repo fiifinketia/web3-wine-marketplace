@@ -1,0 +1,124 @@
+.listings-column-nft {
+  width: 28%;
+}
+
+.listings-column-threshold {
+  width: 16%;
+}
+
+.listings-column-price {
+  width: 16%;
+}
+
+.listings-column-highestOffer {
+  width: 16%;
+}
+
+.listings-column-expire {
+  width: 16%;
+}
+
+.listings-column-action {
+  width: 8%;
+}
+
+.listing-tooltip-container {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #D1E0F7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 218px;
+}
+
+.listing-tooltip-label {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  color: #212131;
+  margin-top: 3px;
+}
+
+.listing-tooltip-price-highest {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  color: #3586FF;
+  margin-top: 4px;
+}
+
+.listing-tooltip-price-threshold {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  color: #9D9D9D;
+  margin-top: 4px;
+}
+
+@media screen and (max-width: 1265px) {
+  .listings-column-nft {
+    width: 35%;
+  }
+  .listings-column-price {
+    width: 18%;
+  }
+  .listings-column-highestOffer {
+    width: 18%;
+  }
+  .listings-column-expire {
+    width: 17%;
+  }
+  .listings-column-action {
+    width: 12%;
+  }
+}
+
+@media screen and (max-width: 1020px) {
+  .listings-column-nft {
+    width: 40%;
+  }
+  .listings-column-price {
+    width: 23%;
+  }
+  .listings-column-expire {
+    width: 23%;
+  }
+  .listings-column-action {
+    width: 14%;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .listings-column-nft {
+    width: 40%;
+  }
+  .listings-column-price {
+    width: 21%;
+  }
+  .listings-column-expire {
+    width: 21%;
+  }
+  .listings-column-action {
+    width: 18%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .listings-column-nft {
+    width: 50%;
+  }
+  .listings-column-yours {
+    width: 25%;
+  }
+  .listings-column-action {
+    width: 25%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .listings-column-nft {
+    width: 40%;
+  }
+  .listings-column-yours {
+    width: 30%;
+  }
+  .listings-column-action {
+    width: 30%;
+  }
+}

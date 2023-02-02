@@ -1,0 +1,162 @@
+.faq-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 32px;
+	line-height: 50px;
+	letter-spacing: 0.03em;
+	color: #212131;
+	text-align: center;
+}
+
+.faq-container {
+	background: linear-gradient(
+		to bottom,
+		rgba(217, 232, 255, 0.3) 70%,
+		white 30%
+	);
+	position: relative;
+}
+
+.rocket {
+	width: 22%;
+	position: absolute;
+	right: 0;
+	top: -4.5rem;
+}
+
+.faq-small-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+
+	color: #212131;
+
+	opacity: 0.6;
+}
+
+.faq-cards-container {
+	width: 80%;
+}
+
+.my-card {
+	background: #ffffff;
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 8px;
+	box-shadow: none;
+	height: 250px;
+}
+
+.faq-image {
+	padding-top: 14px;
+	padding-bottom: 3px;
+}
+
+.faq-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+
+	color: #212131;
+}
+
+.still-have-question {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	color: #212131;
+}
+
+.contact-us {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	letter-spacing: 0.02em;
+	text-decoration: underline;
+	color: #3586ffd1;
+	cursor: pointer;
+}
+
+.bold-text {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+}
+
+@media screen and (max-width: 1400px) {
+	.rocket {
+		width: 25%;
+		top: -3rem;
+	}
+}
+@media screen and (max-width: 1300px) {
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1023px) {
+	.faq-title {
+		font-size: 28px;
+	}
+	.faq-small-text {
+		font-size: 18px;
+	}
+	.faq-cards-container {
+		width: 80%;
+	}
+	.rocket {
+		width: 28%;
+		top: -2rem;
+	}
+	.faq-container {
+		background: linear-gradient(
+			to bottom,
+			rgba(217, 232, 255, 0.3) 50%,
+			white 50%
+		);
+	}
+}
+
+@media screen and (max-width: 772px) {
+	.rocket {
+		display: none;
+	}
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 599px) {
+	.faq-cards-container {
+		width: 80%;
+	}
+	.faq-container {
+		background: linear-gradient(
+			to bottom,
+			rgba(217, 232, 255, 0.3) 20%,
+			white 80%
+		);
+	}
+}
+@media screen and (max-width: 400px) {
+	.faq-cards-container {
+		width: 100%;
+	}
+}
+@media screen and (max-width: 300px) {
+	.my-card {
+		height: 280px;
+	}
+}

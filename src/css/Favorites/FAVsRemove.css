@@ -1,0 +1,28 @@
+.fr-background {
+  position: fixed;
+  height: 90vh;
+  width: 100%;
+  z-index: -200;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.63, 0.02, 0.16, 1.5) 0s,
+    opacity 0.3s ease 0s, z-index 0.3s ease 0s;
+}
+
+.fr-container {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 2rem 3.5rem;
+  gap: 24px;
+  font-family: 'ProximaNova-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  color: #3586ff;
+  transform: scale(0.5);
+  transition: transform 0.3s cubic-bezier(0.63, 0.02, 0.16, 1.5) 0s,
+    opacity 0.3s ease 0s, z-index 0.3s ease 0s;
+}

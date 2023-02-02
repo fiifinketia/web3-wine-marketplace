@@ -1,0 +1,10 @@
+.releases-tab-container {
+  background: #3586FF;
+  padding: 12px;
+  height: 56px;
+  width: 98vw;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color: white;
+  line-height: 0;
+}

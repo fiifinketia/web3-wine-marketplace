@@ -1,111 +1,523 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+	<!-------------------------------------- POPUP MODALS -------------------------------------->
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+	<!---------------------------- CONNECT WALLET ---------------------------->
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+	<q-dialog
+		v-model="showConnectWallet"
+		class="connect-wallet-background row justify-center items-center"
+	>
+		<q-card class="connect-wallet-container column justify-center items-center">
+			<q-card-section>
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+			</q-card-section>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+			<q-card-section>
+				<div class="connect-wallet-title">
+					Connect your Web3 Wallet to signup.
+				</div>
+			</q-card-section>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
+			<q-card-section>
+				<q-btn
+					class="connect-wallet-btns connect-btn"
+					:disable="!isMetaMaskInstalled"
+					@click="connectWallet"
+				>
+					Connect wallet
+				</q-btn>
+				<q-btn
+					class="connect-wallet-btns no-wallet-btn"
+					:disabled="!!isMetaMaskInstalled"
+					@click="setupWallet"
+				>
+					I don't have a wallet
+				</q-btn>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+	<!---------------------------- /CONNECT WALLET ---------------------------->
+
+	<!---------------------------- MY WALLET ---------------------------->
+
+	<q-dialog
+		v-model="showMyWallet"
+		position="right"
+		full-height
+		class="my-wallet-background row justify-end"
+	>
+		<q-card class="my-wallet-container column justify-between items-center">
+			<q-card-section class="my-wallet-header row items-center no-wrap">
+				<div class="my-wallet-header-container row">
+					<div>MY WALLET</div>
+					<img src="../../public/images/metamask-icon.svg" alt="" />
+					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
+				</div>
+				<img
+					class="x-icon"
+					src="../../public/images/x-icon.svg"
+					alt=""
+					@click="showMyWallet = false"
+				/>
+			</q-card-section>
+			<div class="id-mobile">walletID</div>
+
+			<q-card-section
+				class="my-wallet-ballance-container column justify-center items-center"
+			>
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+				<div class="ballance-wrapper column">
+					<div class="my-wallet-title q-pb-sm">Your balance is</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
+				</div>
+				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
+					>Fund wallet</q-btn
+				>
+			</q-card-section>
+
+			<q-card-section class="my-wallet-logout" @click="logout">
+				LOG OUT
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!---------------------------- /MY WALLET ---------------------------->
+
+	<BurgerMenu
+		v-if="showBurgerMenu"
+		@closeBurgerMenu="onBurgerMenu('close')"
+		@openConnectWallet="showConnectWallet = true"
+	/>
+	<SuggestedWines />
+
+	<!-------------------------------------- /POPUP MODALS -------------------------------------->
+
+	<q-layout view="lHh Lpr lFf">
+		<q-header
+			class="nav-bar q-py-xs"
+			:style="(showConnectWallet || showMyWallet) && { 'z-index': '-1' }"
+		>
+			<q-toolbar class="row justify-between items-center">
+				<div
+					class="nav-bar-container-left"
+					@click="
+						{
+						}
+					"
+				>
+					<q-img
+						class="logo"
+						src="../../public/images/WiV-logo.svg"
+						@click="$router.push('/')"
+					/>
+				</div>
+				<div class="nav-bar-container-center row items-center">
+					<q-btn-dropdown
+						class="btn-dropdown-menu dropdown-center"
+						dense
+						flat
+						label="Marketplace"
+					>
+						<div class="q-btn-menu-div">
+							<q-list>
+								<q-item
+									v-close-popup
+									clickable
+									@click="$router.push('/marketplace?tab=nfts')"
+								>
+									<q-item-section>
+										<q-item-label>All NFTs</q-item-label>
+									</q-item-section>
+								</q-item>
+
+								<q-item
+									v-close-popup
+									clickable
+									@click="$router.push('/marketplace?tab=releases')"
+								>
+									<q-item-section>
+										<q-item-label>New Releases</q-item-label>
+									</q-item-section>
+								</q-item>
+
+								<q-item
+									v-close-popup
+									clickable
+									@click="$router.push('/marketplace?tab=recommended')"
+								>
+									<q-item-section>
+										<q-item-label>Recommended</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</q-btn-dropdown>
+					<div
+						@click="
+							{
+							}
+						"
+					>
+						Stats
+					</div>
+					<div
+						@click="
+							{
+							}
+						"
+					>
+						Storefront
+					</div>
+				</div>
+				<div class="nav-bar-container-right row items-center">
+					<img
+						v-if="!!userStore.walletAddress"
+						class="icons"
+						src="../../public/images/favs-icon.svg"
+						@click="$router.push('/favorites')"
+					/>
+					<img
+						v-if="!!userStore.walletAddress"
+						class="icons"
+						src="../../public/images/bell-icon.svg"
+						@click="
+							{
+							}
+						"
+					/>
+					<q-btn-dropdown
+						class="btn-dropdown-menu profile-dropdown"
+						dense
+						flat
+						:to="
+							!!userStore.walletAddress
+								? { path: '/orders' }
+								: { query: { next: $route.fullPath, connect: 'open' } }
+						"
+						split
+						icon="app:profile"
+					>
+						<div class="q-btn-menu-div">
+							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
+								<q-chip
+									v-close-popup
+									clickable
+									color="white"
+									class="text-bold"
+									@click="$router.push('orders')"
+								>
+									<q-avatar size="24px">
+										<img :src="userStore.user?.avatar" />
+									</q-avatar>
+									{{ userStore.walletAddress.slice(0, 10) }}...
+								</q-chip>
+							</q-toolbar>
+							<q-list>
+								<q-item
+									v-if="!!userStore.walletAddress"
+									v-close-popup
+									clickable
+									@click="showMyWallet = true"
+								>
+									<q-item-section>
+										<q-item-label>my wallet</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									v-else
+									v-close-popup
+									clickable
+									@click="showConnectWallet = true"
+								>
+									<q-item-section>
+										<q-item-label>sign up</q-item-label>
+									</q-item-section>
+								</q-item>
+
+								<q-item
+									v-close-popup
+									clickable
+									href="https://dwc.wiv-tech.com/#/"
+								>
+									<q-item-section>
+										<q-item-label>digital wine cellar</q-item-label>
+									</q-item-section>
+								</q-item>
+
+								<q-item
+									v-close-popup
+									clickable
+									@click="
+										{
+										}
+									"
+								>
+									<q-item-section>
+										<q-item-label>settings</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									@click="
+										{
+										}
+									"
+								>
+									<q-item-section>
+										<q-item-label
+											><q-btn-dropdown
+												class="btn-dropdown-help"
+												dense
+												flat
+												disable
+												padding="0"
+												label="help"
+											>
+												<div class="q-btn-menu-div">
+													<q-list>
+														<q-item
+															v-close-popup
+															clickable
+															@click="
+																{
+																}
+															"
+														>
+															<q-item-section>
+																<q-item-label>conctact us</q-item-label>
+															</q-item-section>
+														</q-item>
+
+														<q-item
+															v-close-popup
+															clickable
+															@click="
+																{
+																}
+															"
+														>
+															<q-item-section>
+																<q-item-label>Faqs</q-item-label>
+															</q-item-section>
+														</q-item>
+													</q-list>
+												</div>
+											</q-btn-dropdown></q-item-label
+										>
+									</q-item-section>
+								</q-item>
+								<q-item
+									v-if="!!userStore.walletAddress"
+									v-close-popup
+									clickable
+									@click="logout"
+								>
+									<q-item-section>
+										<q-item-label>log out</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</q-btn-dropdown>
+				</div>
+				<img
+					v-if="!showBurgerMenu"
+					class="burger-menu-icon"
+					src="../../public/images/burger-icon.svg"
+					alt="burger-menu"
+					@click="onBurgerMenu('open')"
+				/>
+				<img
+					v-else
+					class="burger-menu-exit-icon"
+					src="../../public/images/x-burger-icon.svg"
+					alt="burger-menu"
+					@click="onBurgerMenu('close')"
+				/>
+			</q-toolbar>
+		</q-header>
+		<q-page-container>
+			<router-view
+				@open-wallet-sidebar="showMyWallet = !showMyWallet"
+				@openConnectWallet="showConnectWallet = true"
+			/>
+		</q-page-container>
+	</q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
+import MetaMaskOnboarding from '@metamask/onboarding';
+// import transakSDK from '@transak/transak-sdk';
+import transakSDK from '@transak/transak-sdk';
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
+import '../css/MainLayout/MainLayout.scss';
+import '../css/MainLayout/ConnectWallet.css';
+import '../css/MainLayout/MyWallet.css';
+
+import { useUserStore } from 'src/stores/user-store';
+import BurgerMenu from './components/BurgerMenu.vue';
+import SuggestedWines from './components/SuggestedWines.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { ordersStore } from 'src/stores/orders-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
-  name: 'MainLayout',
+	name: 'MainLayout',
+	components: {
+		BurgerMenu,
+		SuggestedWines,
+	},
+	data() {
+		const userStore = useUserStore();
+		const nftStore = useNFTStore();
+		const orderStore = ordersStore();
+		const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+		return {
+			user: true,
+			showBurgerMenu: false,
+			showMyWallet: false,
+			showConnectWallet: false,
+			userStore,
+			nftStore,
+			orderStore,
+			walletAddress: '',
+			isMetaMaskInstalled,
+			balance: 0,
+		};
+	},
+	watch: {
+		$route: {
+			handler: function () {
+				if (
+					this.$route.query?.connect &&
+					this.$route.query?.connect === 'open'
+				) {
+					this.showConnectWallet = true;
+				}
+			},
+			immediate: true,
+		},
+	},
 
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
+	async mounted() {
+		await this.userStore.checkConnection();
+		this.walletAddress = this.userStore.walletAddress;
+		if (!this.walletAddress) {
+			this.ClearStore();
+		}
+	},
+	methods: {
+		async fundWallet() {
+			let transak = new transakSDK({
+				apiKey: process.env.TRANSAK_API_KEY, // Your API Key
+				environment: 'STAGING', // STAGING/PRODUCTION
+				widgetHeight: '625px',
+				widgetWidth: '500px',
+				// Examples of some of the customization parameters you can pass
+				defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+				walletAddress: this.userStore.walletAddress, // Your customer's wallet address
+				themeColor: '#3586ff', // App theme color
+				fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
+				// email: this.userStore.user?.email, // Your customer's email address
+				redirectURL: this.$route.fullPath, // Redirect URL of your app
+			});
+			this.showMyWallet = false;
+			transak.init();
+
+			transak.on(
+				transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
+				async (orderData: any) => {
+					// TODO: Notitfy user on balance update
+					this.balance = await this.userStore.getWalletBalance();
+					// console.log(orderData);
+					transak.close();
+				}
+			);
+			// This is so that the balance is updated after new funds are imported
+		},
+		async connectWallet() {
+			this.showConnectWallet = false;
+			await this.userStore.connectWallet();
+			this.balance = await this.userStore.getWalletBalance();
+			if (this.$route.query?.next) {
+				const next = this.$route.query?.next as string;
+				this.$router.replace({ path: next });
+			}
+		},
+
+		setupWallet() {
+			this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
+			if (!this.isMetaMaskInstalled) {
+				//If it isn't installed we ask the user to click to install it
+				const onboarding = new MetaMaskOnboarding({
+					forwarderOrigin: this.$route.fullPath,
+				});
+				onboarding.startOnboarding();
+			}
+		},
+
+		onBurgerMenu(modal: string) {
+			switch (modal) {
+				case 'open':
+					this.showBurgerMenu = true;
+
+					document.body.classList.add('no-scroll');
+					break;
+				case 'close':
+					this.showBurgerMenu = false;
+					document.body.classList.remove('no-scroll');
+					break;
+			}
+		},
+
+		async logout() {
+			this.userStore.walletAddress = '';
+
+			this.showMyWallet = false;
+
+			if (this.$route.meta.requiresAuth) {
+				this.$router.push('/');
+				return;
+			}
+			window.location.reload();
+			this.ClearStore();
+		},
+		ClearStore() {
+			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+			this.nftStore.fetchNFTsStatus = false;
+			this.orderStore.$reset();
+		},
+		installMetaMask() {
+			this.$q
+				.dialog({
+					dark: false,
+					title: 'Confirm',
+					message:
+						'You need a metamask wallet to make transactions, do you want to install MetaMask now?',
+					cancel: true,
+					persistent: true,
+				})
+				.onOk(() => {
+					const onboarding = new MetaMaskOnboarding({
+						forwarderOrigin: this.$route.fullPath,
+					});
+					onboarding.startOnboarding();
+				})
+				.onOk(() => {
+					// console.log('>>>> second OK catcher')
+				})
+				.onCancel(() => {
+					// console.log('>>>> Cancel')
+				})
+				.onDismiss(() => {
+					// console.log('I am triggered on both OK and Cancel')
+				});
+		},
+	},
 });
 </script>
+
+<style></style>

@@ -1,0 +1,229 @@
+.profile-dropdown-container {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  line-height: 0;
+  border-radius: 4px !important;
+}
+
+.profile-dropdown-container .q-icon > img {
+  width: 50%;
+}
+
+.profile-dropdown-container .q-icon {
+  margin-right: -12px;
+}
+
+.profile-dropdown-container .q-icon {
+	font-size: 38px !important;
+	border-radius: 6px;
+
+	transition: background 0.3s ease;
+}
+.profile-dropdown-container .q-icon:hover {
+	background: rgba(94, 151, 236, 0.27);
+
+	border-radius: 6px;
+}
+
+.profile-dropdown-container .q-btn-item {
+	padding: 0;
+}
+
+.btn-dropdown-menu .q-btn-dropdown__arrow {
+	font-size: 1.2rem !important;
+	margin: 0 !important;
+	margin-top: 5px !important;
+	padding: 0 !important;
+}
+
+.profile-dropdown-container .q-btn-dropdown__arrow {
+	margin-top: 4px !important;
+}
+.profile-dropdown-container .q-btn-dropdown__arrow:hover {
+	background-color: transparent;
+}
+
+.profile-dropdown-menu {
+  top: 115px !important;
+  border-radius: 4px !important;
+}
+
+.profile-tab-title {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  line-height: 0;
+  color: white;
+}
+
+.profile-tab-count {
+  font-family: 'ProximaNova-Bold';
+}
+
+.profile-dropdown-selection {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  align-self: center;
+  line-height: 0;
+}
+
+.profile-main-container {
+  background: #FFFFFF;
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
+  width: 95vw;
+  flex-wrap: nowrap;
+}
+
+.profile-tabs {
+  font-family: 'Obviously-Bold' !important;
+}
+
+.profile-header-offer {
+  color: rgba(33, 33, 49, 1);
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+}
+
+.profile-column-name {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  line-height: 0.5;
+  align-items: center;
+}
+
+.profile-headers-breakline {
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  width: 90vw;
+}
+
+.profile-nft-container>div:nth-of-type(even) {
+  background: rgba(217, 232, 255, 0.3);
+  border-radius: 8px;
+}
+
+.profile-nft-image {
+  width: 60px;
+  border-radius: 2px;
+}
+
+.profile-nft-brand {
+  font-size: 18px;
+  font-family: 'Obviously-Bold';
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.profile-nft-number, .profile-nft-number-highlight  {
+  font-size: 20px;
+  font-family: 'ProximaNova-Bold';
+  line-height: 1;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+.profile-nft-number-highlight {
+  color: rgba(53, 134, 255, 1);
+}
+
+.profile-checkbox {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  line-height: 0;
+}
+
+.profile-checkbox > .q-radio__label {
+  margin-top: 2px;
+}
+
+.profile-searchbox .q-field__control {
+  border-radius: 6px !important;
+}
+
+.profile-searchbox .q-field__label {
+  font-family: 'ProximaNova-Regular' !important; 
+}
+
+.profile-primary-btn {
+  font-family: 'ProximaNova-Regular' !important;
+  font-size: 14px;
+  background: #3586FF;
+  color: white;
+  width: 45px;
+  height: 38px;
+}
+
+.profile-accept-btn {
+  font-family: 'ProximaNova-Bold' !important;
+  font-size: 18px;
+  background: #3586FF;
+  color: white;
+  width: 90px;
+  height: 40px;
+}
+
+.profile-loading-gif {
+  width: 15vw;
+}
+
+.profile-empty {
+  width: 20vw;
+}
+
+.profile-loading-text {
+  font-size: clamp(1.25rem, 0.6667rem + 1.8667vw, 3rem);
+  font-family: 'ProximaNova-Bold';
+  color: #3486FF;
+  text-align: center;
+  align-items: center;
+}
+
+.profile-disconnected-text {
+  font-family: 'ProximaNova-Bold';
+  color: #212131;
+  font-size: 24px;
+  text-align: center;
+  line-height: 29px;
+}
+
+.profile-connect-button {
+  font-family: 'ProximaNova-Bold';
+  color: white;
+  font-size: 20px;
+  line-height: 0;
+  width: 155px;
+  height: 56px;
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+  border-radius: 6px;
+  padding: 16px 32px;
+}
+
+@media screen and (max-width: 800px) {
+  .profile-loading-gif {
+    width: 20vw;
+  }
+  .profile-empty {
+    width: 30vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .profile-searchbox {
+    flex-grow: 1;
+  }
+  .profile-nft-number, .profile-nft-number-highlight {
+    font-size: 16px;
+  }
+  .profile-nft-brand {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .profile-dropdown-container {
+    width: 100% !important;
+  }
+  .profile-dropdown-container .justify-center{
+    justify-content: space-between;
+  }
+}

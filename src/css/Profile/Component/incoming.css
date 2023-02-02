@@ -1,0 +1,87 @@
+.incoming-column-nft {
+  width: 28%;
+}
+
+.incoming-column-price-floor {
+  width: 16%;
+}
+
+.incoming-column-price-offered {
+  width: 16%;
+}
+
+.incoming-column-from {
+  width: 16%;
+}
+
+.incoming-column-expire {
+  width: 16%;
+}
+
+.incoming-column-action {
+  width: 8%;
+}
+
+.incoming-tooltip-container {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #D1E0F7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 218px;
+}
+
+.incoming-tooltip-label {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  color: #212131;
+  margin-top: 3px;
+}
+
+.incoming-tooltip-text {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  color: #212131;
+  margin-top: 4px;
+}
+
+@media screen and (max-width: 1265px) {
+  .incoming-column-nft {
+    width: 30%;
+  }
+  .incoming-column-price-floor {
+    width: 20%;
+  }
+  .incoming-column-price-offered {
+    width: 20%;
+  }
+  .incoming-column-expire {
+    width: 20%;
+  }
+  .incoming-column-action {
+    width: 10%;
+  }
+}
+
+@media screen and (max-width: 1020px) {
+  .incoming-column-nft {
+    width: 44%;
+  }
+  .incoming-column-price-offered {
+    width: 23%;
+  }
+  .incoming-column-expire {
+    width: 23%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .incoming-column-nft {
+    width: 50%;
+  }
+  .incoming-column-price-offered {
+    width: 30%;
+  }
+  .incoming-column-action {
+    width: 20%;
+  }
+}

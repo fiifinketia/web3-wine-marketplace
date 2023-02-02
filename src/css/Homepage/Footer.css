@@ -1,0 +1,27 @@
+.footer-container {
+	background: #212131;
+	min-height: 300px;
+	width: 100%;
+}
+
+.footer-bold {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 19px;
+	cursor: pointer;
+	color: rgba(255, 255, 255, 0.8);
+	text-decoration: none;
+}
+
+.footer-normal {
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 16px;
+	line-height: 19px;
+	cursor: pointer;
+	color: rgba(255, 255, 255, 0.8);
+	text-decoration: none;
+}

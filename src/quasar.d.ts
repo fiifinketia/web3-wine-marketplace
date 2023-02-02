@@ -7,3 +7,8 @@
 //  this declaration also apply `quasar` own
 //  augmentations (eg. adds `$q` into Vue component context)
 /// <reference types="@quasar/app-webpack" />
+interface Window {
+	ethereum: any;
+}
+
+declare module '@transak/transak-sdk';

@@ -1,0 +1,165 @@
+.exclusive-offer-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 32px;
+	line-height: 48px;
+
+	text-align: center;
+	letter-spacing: 0.03em;
+
+	color: #212131;
+}
+
+.card-title-text {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	letter-spacing: 0.02em;
+	color: #212131;
+}
+
+.exclusive-offer-container {
+	width: 75%;
+	margin: 0 auto;
+}
+
+.card-starting-from-title {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
+}
+
+.currency {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.border {
+	border: 1px solid rgba(94, 151, 236, 0.27) !important;
+	border-radius: 6px !important;
+	padding: 8px;
+}
+
+.circle {
+	width: 100%;
+}
+
+.like {
+	width: 20px;
+	margin-right: 6px;
+}
+
+.go-to-marketplace {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
+
+	color: #ffffff;
+
+	width: 230px;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	padding: 1rem 0;
+}
+
+.go-to-marketplace-wrapper {
+	width: 86.5%;
+	margin: 0 auto;
+}
+
+.wine-name {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 18px;
+	line-height: 27px;
+	/* or 150% */
+
+	letter-spacing: 0.02em;
+
+	/* Secondary/dark blue */
+
+	color: #212131;
+	width: 90%;
+}
+
+@media screen and (max-width: 1255px) {
+	.exclusive-offer-container {
+		width: 95%;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.one {
+		display: none;
+	}
+	.exclusive-offer-title {
+		flex-direction: row;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.two {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.exclusive-offer-title {
+		font-size: 28px;
+	}
+	.go-to-marketplace {
+		width: 100%;
+	}
+	.card-starting-from-title {
+		font-size: 14px;
+	}
+	.currency {
+		font-size: 15px;
+	}
+	.usdc {
+		width: 15px;
+		height: 15px;
+	}
+	.like {
+		width: 15px;
+		height: 15px;
+	}
+	.currency {
+		font-size: 18px;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.three {
+		display: none;
+	}
+	.wine-name {
+		font-size: 16px;
+	}
+
+	.currency {
+		font-size: 18px;
+	}
+}
