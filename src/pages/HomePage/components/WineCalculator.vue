@@ -17,10 +17,8 @@
 				invesrment style.
 			</div>
 			<div class="justify-center items-center">
-				<button class="calculate-worth-button">
-					<a href="/calculator" class="calculate-worth-text"
-						>Calculate The Worth</a
-					>
+				<button class="calculate-worth-button calculate-worth-text" @click="$router.push('/calculator')">
+					Calculate The Worth
 				</button>
 			</div>
 		</div>
