@@ -50,13 +50,13 @@
 
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
-					<q-tab-panel class="q-pa-none q-px-md" name="nfts">
+					<q-tab-panel class="q-pa-none q-px-none" name="nfts">
 						<AllNFTsTab />
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="releases">
+					<q-tab-panel class="q-pa-none q-px-none" name="releases">
 						<NewlyReleasedTab />
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="recommended">
+					<q-tab-panel class="q-pa-none q-px-none" name="recommended">
 						<AllNFTsTab />
 					</q-tab-panel>
 				</q-tab-panels>

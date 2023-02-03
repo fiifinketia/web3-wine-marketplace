@@ -1,5 +1,5 @@
 <template>
-	<q-page-container class="row justify-between q-pt-none q-px-sm q-gutter-y-md">
+	<q-page-container class="row justify-start q-pt-none q-px-sm q-gutter-y-md">
 		<div
 			v-for="token in allNFTs"
 			:key="

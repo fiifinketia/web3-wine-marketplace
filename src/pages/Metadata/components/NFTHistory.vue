@@ -88,9 +88,8 @@
 		<div class="flex items-start history-container column">
 			<div class="price-history q-pb-lg">Transaction history</div>
 			<q-table
-				v-model:pagination="pagination"
 				class="price-table"
-				style="height: 400px; width: 100%;"
+				style="height: auto; width: 100%; max-height: 80vh;"
 				title=""
 				hide-header
 				:rows="nftTxnHistory"
@@ -104,8 +103,6 @@
 					},
 				]"
 				row-key="index"
-				virtual-scroll
-				:rows-per-page-options="[0]"
 			>
 				<template v-slot:body="props">
 					<q-tr
@@ -120,33 +117,22 @@
 							colspan="100%"
 						>
 						<div class="row">
-							<div class="col-8 text-left">
+							<p class="col-10 text-left" style="word-wrap: break-word; white-space: initial;">
 								<span class="user-ids-bold">{{ col.value.event }}</span> by
 								<span class="user-ids-bold">{{ col.value.from }}</span>
 								<span v-if="col.value.to"> to </span>
 								<span v-if="col.value.to" class="user-ids-bold">{{
 									col.value.to
 								}}</span>
-							</div>
-							<div class="col-4 text-right date-of-transaction">
+							</p>
+							<p class="col-2 text-right date-of-transaction">
 								{{ timestamptoDate(col.value.timestamp) }}
-							</div>
+							</p>
 						</div>
 						</q-td>
 					</q-tr>
 				</template>
 			</q-table>
-			<!-- <div v class="price-table">
-				<div class="column price-history-rows">
-					<div
-						v-for="txn in nftTxnHistory"
-						:key="txn.timestamp"
-						class="row each-price-row justify-between"
-					>
-
-					</div>
-				</div>
-			</div> -->
 		</div>
 	</div>
 </template>
@@ -182,7 +168,7 @@ export default defineComponent({
 			},
 			currentTimeline: '',
 			pagination: ref({
-				rowsPerPage: 0,
+				rowsPerPage: 10,
 			}),
 			three_months: Number(),
 			six_months: Number(),
@@ -390,10 +376,6 @@ export default defineComponent({
 	methods: {
 		timestamptoDate(timestamp: number) {
 			const date = new Date(timestamp * 1000);
-			console.log(
-				'🚀 ~ file: NFTHistory.vue:349 ~ timestamptoDate ~ date',
-				date
-			);
 			return date.toDateString();
 		},
 		updateData(timeline: string, isMobile: boolean) {
