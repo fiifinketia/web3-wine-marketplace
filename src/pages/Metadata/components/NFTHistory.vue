@@ -86,35 +86,78 @@
 			</div>
 		</div>
 		<div class="flex items-start history-container column">
-			<div class="price-history q-pb-lg">Price history</div>
-			<div v class="price-table">
+			<div class="price-history q-pb-lg">Transaction history</div>
+			<q-table
+				v-model:pagination="pagination"
+				class="price-table"
+				style="height: 400px; width: 100%;"
+				title=""
+				hide-header
+				:rows="nftTxnHistory"
+				:columns="[
+					{
+						name: 'Transactions',
+						required: false,
+						label: '',
+						align: 'left',
+						field: (row) => row,
+					},
+				]"
+				row-key="index"
+				virtual-scroll
+				:rows-per-page-options="[0]"
+			>
+				<template v-slot:body="props">
+					<q-tr
+						:key="`e_${props.row.index}`"
+						:props="props"
+						class="each-price-row price-history-rows"
+					>
+						<q-td
+							v-for="col in props.cols"
+							:key="col.name"
+							:props="props"
+							colspan="100%"
+						>
+						<div class="row">
+							<div class="col-8 text-left">
+								<span class="user-ids-bold">{{ col.value.event }}</span> by
+								<span class="user-ids-bold">{{ col.value.from }}</span>
+								<span v-if="col.value.to"> to </span>
+								<span v-if="col.value.to" class="user-ids-bold">{{
+									col.value.to
+								}}</span>
+							</div>
+							<div class="col-4 text-right date-of-transaction">
+								{{ timestamptoDate(col.value.timestamp) }}
+							</div>
+						</div>
+						</q-td>
+					</q-tr>
+				</template>
+			</q-table>
+			<!-- <div v class="price-table">
 				<div class="column price-history-rows">
 					<div
-						v-for="item in buyers"
-						:key="item.id"
+						v-for="txn in nftTxnHistory"
+						:key="txn.timestamp"
 						class="row each-price-row justify-between"
 					>
-						<div class="">
-							actions done from
-							<span class="user-ids-bold">{{ item.user1 }}</span> to
-							<span class="user-ids-bold">{{ item.user2 }}</span>
-						</div>
-						<div class="date-of-transaction">
-							{{ item.date }}
-						</div>
+
 					</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, createApp } from 'vue-demi';
+import { defineComponent, createApp, PropType, ref } from 'vue-demi';
 import ApexCharts from 'apexcharts';
 import '../../../css/Metadata/NFTHistory.css';
 import App from '../../../App.vue';
 import VueApexCharts from 'vue3-apexcharts';
+import { SeaportTransactionsModel } from '../models/Metadata';
 const app = createApp(App);
 app.config.globalProperties.$apexcharts = ApexCharts;
 declare module '@vue/runtime-core' {
@@ -125,6 +168,12 @@ declare module '@vue/runtime-core' {
 export default defineComponent({
 	name: 'NFTHistory',
 	components: { apexchart: VueApexCharts },
+	props: {
+		nftTxnHistory: {
+			type: [Object] as PropType<SeaportTransactionsModel[]>,
+			required: true,
+		},
+	},
 
 	data() {
 		return {
@@ -132,6 +181,9 @@ export default defineComponent({
 				name: '3 months',
 			},
 			currentTimeline: '',
+			pagination: ref({
+				rowsPerPage: 0,
+			}),
 			three_months: Number(),
 			six_months: Number(),
 			one_year: Number(),
@@ -336,6 +388,14 @@ export default defineComponent({
 		};
 	},
 	methods: {
+		timestamptoDate(timestamp: number) {
+			const date = new Date(timestamp * 1000);
+			console.log(
+				'🚀 ~ file: NFTHistory.vue:349 ~ timestamptoDate ~ date',
+				date
+			);
+			return date.toDateString();
+		},
 		updateData(timeline: string, isMobile: boolean) {
 			this.selection = timeline;
 			this.currentTimeline = timeline;
