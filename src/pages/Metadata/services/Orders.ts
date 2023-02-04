@@ -68,7 +68,7 @@ export async function CreateERC721Listing(
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	await transact();
+	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -80,6 +80,7 @@ export async function CreateERC721Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
+		nonce: txn.nonce
 	};
 	const OrderRequest = {
 		order: db_Order,
