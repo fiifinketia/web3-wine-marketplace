@@ -1,5 +1,5 @@
 import { Seaport } from '@opensea/seaport-js';
-import { ethers, utils } from 'ethers';
+import { ethers, utils, ContractTransaction } from 'ethers';
 import {
 	ChainID,
 	ItemType,
@@ -139,7 +139,7 @@ export async function CreateERC1155Listing(
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	await transact();
+	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -151,6 +151,7 @@ export async function CreateERC1155Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
+		nonce: txn.nonce
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -208,7 +209,7 @@ export async function CreateERC721Offer(
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	await transact();
+	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
 	const db_Order: OrderListingModel = {
 		parameters: order.parameters,
@@ -221,6 +222,7 @@ export async function CreateERC721Offer(
 		brand: brand,
 		image: image,
 		highestBid: offerPrice,
+		nonce: txn.nonce
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -259,7 +261,7 @@ export async function FulfillBasicOrder(
 			},
 		});
 
-	await executeAllFulfillActions();
+	const txn = await executeAllFulfillActions();
 
 	const updateOrder: UpdateListingRequest = {
 		notificationID: RandomIdGenerator(),

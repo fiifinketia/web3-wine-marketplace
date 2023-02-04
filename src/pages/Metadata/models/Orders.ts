@@ -1,6 +1,6 @@
 import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
 import { Seaport } from '@opensea/seaport-js';
-import { Transaction } from 'ethers';
+import { Transaction, ethers } from 'ethers';
 
 export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
 	orderHash: string;
@@ -9,6 +9,7 @@ export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
 	brand: string;
 	image: string;
 	highestBid?: string;
+	nonce?: number;
 }
 
 export interface OrderRequest {
