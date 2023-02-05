@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NewPolygonNFT, NFTWithListingAndFavorites } from './models/Metadata';
+import { NewPolygonNFT, NFTWithListingAndFavorites, TOKENTYPE } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';
 import WineMetadata from './components/WineMetadata.vue';
@@ -98,14 +98,16 @@ export default defineComponent({
 
 		async FetchMetadata(id: string, contractAddress: string, network: string) {
 			try {
-				const res = await GetMetadata({
+				const nft = await GetMetadata({
 					id,
 					contractAddress,
 					network,
 					walletAddress: this.userStore.walletAddress,
 				});
-				console.log(res)
-				this.nft = res;
+				if (!!this.userStore.walletAddress) {
+					nft.isOwner = await this.CheckOwnership(this.userStore.walletAddress, contractAddress, id);
+				}
+				this.nft = nft;
 			} catch (error) {
 				console.log(error);
 			}
@@ -140,6 +142,30 @@ export default defineComponent({
 				}
 			}
 			return exists;
+		},
+
+		async CheckOwnership(walletAddress: string, contractAddress: string, tokenID: string) {
+			let isOwned = false;
+			try {
+				let actualOwner = '';
+				let contract: Contract;
+				switch (contractAddress) {
+					case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+						contract = NewPolygonCollectionContract_MumbaiInstance;
+						actualOwner = await contract.ownerOf(tokenID);
+						isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
+						break;
+					case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+						contract = NewPolygonCollectionContract_PolygonInstance;
+						actualOwner = await contract.ownerOf(tokenID);
+						isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
+						break;
+				}
+			} catch {
+				console.log('Failed to check ownership.')
+			} finally {
+				return isOwned;
+			}
 		},
 
 		openWalletSideBar() {
