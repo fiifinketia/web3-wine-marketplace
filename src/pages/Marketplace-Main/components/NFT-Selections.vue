@@ -127,6 +127,7 @@ import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 export default defineComponent({
+	emits: ['totalTokens'],
 	data() {
 		const userStore = useUserStore();
 
@@ -245,6 +246,7 @@ export default defineComponent({
 			const { result: nfts } = await RetrieveFilteredNFTs(
 				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
+			this.$emit('totalTokens', nfts.length)
 			this.allNFTs = nfts;
 		},
 		ToInt(price: string) {

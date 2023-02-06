@@ -9,7 +9,7 @@
 				Side
 			</button> -->
 			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
-				NFTs <span class="text-weight-bold text-h6 q-pl-sm">{{ 283 }}</span>
+				NFTs <span class="text-weight-bold text-h6 q-pl-sm">{{ totalNFTs || 0 }}</span>
 			</div>
 			<div class="col-sm-7 col-xs-12">
 				<div class="q-mx-xs hidden-a-1023 overflow-hidden">
@@ -85,7 +85,7 @@
 		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
 
 		<!-- List Section -->
-		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
+		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important" @total-tokens="(total: number) => totalNFTs = total"/>
 		<q-page-sticky
 			class="hidden-b-599 q-mr-md"
 			position="bottom-right"
@@ -162,6 +162,7 @@ export default defineComponent({
 			wineFiltersStore,
 			searchQuery: '',
 			openSidebar: false,
+			totalNFTs: ref(0)
 		};
 	},
 
