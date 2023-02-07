@@ -21,7 +21,7 @@
 					no-caps
 				>
 					<span class="col text-white">
-						NFTs <span class="text-h6 text-weight-bolder"> {{ 283 }} </span>
+						NFTs <span class="text-h6 text-weight-bolder"> {{ totalTokens }} </span>
 					</span>
 					<q-btn-dropdown
 						no-caps
@@ -49,15 +49,15 @@
 				</q-tabs>
 
 				<q-separator class="q-ma-none" />
-				<q-tab-panels v-model="tab" animated>
+				<q-tab-panels v-model="tab" animated class="q-pa-none">
 					<q-tab-panel class="q-pa-none q-px-none" name="nfts">
-						<AllNFTsTab />
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-none" name="releases">
-						<NewlyReleasedTab />
+						<NewlyReleasedTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-none" name="recommended">
-						<AllNFTsTab />
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
 				</q-tab-panels>
 			</section>
@@ -81,6 +81,7 @@ export default defineComponent({
 		return {
 			tab: ref(queryT || 'nfts'),
 			tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
+			totalTokens: ref(0)
 		};
 	},
 

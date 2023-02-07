@@ -332,45 +332,7 @@ export default defineComponent({
 					},
 				},
 			},
-			selection: 'three_months',
-			buyers: [
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 0,
-				},
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 1,
-				},
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 2,
-				},
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 3,
-				},
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 4,
-				},
-				{
-					user1: 'UserIdOneHere',
-					user2: 'UserIdTwoHere',
-					date: '00/00/00',
-					id: 5,
-				},
-			],
+			selection: 'three_months'
 		};
 	},
 	methods: {
