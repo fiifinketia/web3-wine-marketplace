@@ -444,21 +444,39 @@
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
-import { ref, reactive, toRefs } from 'vue';
+import { ref, reactive, toRefs, computed } from 'vue';
 
 export default defineComponent({
 	name: 'WineCalculator',
 	setup() {
-		const state = reactive({
+		type State = {
+			selectedMonth: number;
+			selectedYear: number;
+			combined: number;
+		};
+		const state = reactive<State>({
 			selectedMonth: 6,
 			selectedYear: 0,
+			combined: 0,
 		});
+
+		const computeCombined = (state: State) => {
+			return computed(
+				() => (state.selectedYear * 12 + state.selectedMonth) / 12
+			);
+		};
+
+		const combined = computeCombined(state);
+		state.combined = combined.value;
 
 		state.selectedYear = Math.floor(state.selectedMonth / 12);
 
 		function onInput(event: any) {
 			state.selectedMonth = event.target.value;
 			state.selectedYear = Math.floor(state.selectedMonth / 12);
+			state.combined = combined.value;
+
+			console.log(state.combined);
 		}
 
 		return {
@@ -487,6 +505,8 @@ export default defineComponent({
 			secondStepMobile: false,
 			thirdStepMobile: false,
 			value: 15000,
+			month: Number(),
+			year: Number(),
 		};
 	},
 
@@ -531,7 +551,6 @@ export default defineComponent({
 		},
 
 		calculateFinalWorth(type: string) {
-			const time = document.getElementById('timeInput');
 			this.calculateWorth = true;
 
 			setTimeout(() => {
