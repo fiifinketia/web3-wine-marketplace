@@ -1,581 +1,400 @@
 <template>
-	<div class="calculator-header flex full-width items-center">
+	<q-page-container class="fit row wrap justify-center items-center">
 		<q-img class="grape-img-left" src="../../../public/images/Grape-left.svg" />
 		<q-img
 			class="grape-img-right"
 			src="../../../public/images/Grape-right.svg"
 		/>
-		<!-- <q-img class="grape-mobile" src="../../../public/images/Grape-mobile.svg" /> -->
-		<div class="flex column full-width items-center justify-center q-pt-lg">
-			<div class="welcome-to-calculator">
+		<section id="greeting" class="col-6 text-center">
+			<h5 class="text-bold welcome-to-calculator q-ma-none">
 				Welcome to WiV investment calculator!
-			</div>
-			<div class="q-pb-xl q-mb-md welcome-to-calculator-desc q-pt-sm">
-				Let’s count the worth you can get taking into account some factors.
-			</div>
-			<div class="calculator row items-center">
-				<div
-					v-if="
-						calculating === false &&
-						calculateWorth === false &&
-						showPrice === false
+			</h5>
+			<span class="row col-6 text-center welcome-to-calculator-desc"
+				>Let’s count the worth you can get taking into account some
+				factors.</span
+			>
+		</section>
+		<section id="calculator" class="col-xs-12 col-sm-10 col-md-9 col-lg-7">
+			<q-card
+				flat
+				class="fit row wrap justify-center items-center full-height"
+				:bordered="$q.screen.width > 576"
+				style="
+					border-color: rgba(94, 151, 236, 0.27);
+					border-radius: 20px;
+					min-height: 50vh !important;
+				"
+			>
+				<q-card-section
+					:class="
+						$q.screen.width > 576
+							? 'col self-center calculator-first-part'
+							: 'col-12 self-center calculator-first-part'
 					"
-					class="flex column calculator-first-part"
+					style="min-height: 50vh"
 				>
-					<div class="q-pl-lg q-pt-lg portfolio-calculation-title">
-						Portfolio Calculation
-					</div>
-					<div
-						class="flex column justify-between q-pt-lg portfolio-calculation-desktop"
-					>
-						<div class="flex justify-center">
-							<div class="flex items-center column q-pt-lg plant-section">
+					<h6 class="portfolio-calculation-title q-ma-sm">
+						PORTFOLIO CALCULATION
+					</h6>
+					<div v-if="!calculating && !calculated">
+						<div
+							class="fit column wrap justify-start items-center content-center q-pa-md"
+						>
+							<div
+								:class="
+									stepNumber === 1 || stepNumber === 2
+										? 'current-step flex column'
+										: 'next-step flex column'
+								"
+							>
 								<q-img
-									v-if="secondSection === false"
 									src="../../assets/plant.svg"
 									width="50px"
 									height="50px"
 								/>
-								<q-img
-									v-else
-									src="../../../public/images/plantGray.svg"
-									width="50px"
-									height="50px"
-								/>
-								<div
-									:class="
-										secondSection === false
-											? 'current-step full-width'
-											: 'next-step full-width'
-									"
-								>
+								<div class="full-width">
 									1.&nbsp; Please select the amount you would like to invest.
 								</div>
 							</div>
 						</div>
-						<div class="flex justify-center">
-							<div class="flex items-center column q-pt-lg plant-section">
+						<div
+							class="fit column wrap justify-start items-center content-center q-pa-md"
+						>
+							<div
+								:class="
+									stepNumber === 2
+										? 'current-step flex column'
+										: 'next-step flex column'
+								"
+							>
 								<q-img
-									v-if="secondSection === false"
-									src="../../assets/bomb.svg"
-									width="35px"
+									src="../../assets/bombUnselected.svg"
+									width="50px"
 									height="50px"
 								/>
-								<q-img
-									v-else
-									src="../../../public/images/bombGray.svg"
-									width="35px"
-									height="50px"
-								/>
-								<div class="q-pt-sm flex row full-width items-start">
-									<div
-										:class="
-											secondSection === false
-												? 'step-number '
-												: 'next-step-number '
-										"
-									></div>
-									<div
-										:class="
-											secondSection === false
-												? 'current-step'
-												: 'next-step-second-version'
-										"
-									>
-										2.&nbsp; Pick the Risk level you are going to apply to your
-										future portfolio.
-									</div>
+								<div class="full-width">
+									2.&nbsp; Pick the Risk level you are going to apply to your
+									future portfolio.
 								</div>
 							</div>
 						</div>
-						<div class="flex justify-center q-pt-lg">
-							<div class="flex items-center column q-pt-lg plant-section">
+						<div
+							class="fit column wrap justify-start items-center content-center q-pa-md"
+						>
+							<div
+								:class="
+									stepNumber === 3
+										? 'current-step flex column'
+										: 'next-step flex column'
+								"
+							>
 								<q-img
-									v-if="secondSection === false"
 									src="../../assets/hourglass.svg"
-									width="35px"
+									width="40px"
 									height="40px"
 								/>
-								<q-img
-									v-else
-									src="../../../public/images/hourglass2.svg"
-									width="31px"
-									height="40px"
-								/>
-								<div
-									class="q-pt-sm flex row items-start"
-									style="align-self: start"
-								>
-									<div
-										:class="
-											secondSection === true
-												? 'step-number '
-												: 'next-step-number '
-										"
-									></div>
-									<div
-										:class="
-											secondSection === true ? 'current-step' : 'next-step'
-										"
-									>
-										3.&nbsp; Select the time you want to make the investment for
-										to see possible.
-									</div>
+								<div class="full-width">
+									3.&nbsp; Select the time you want to make the investment for
+									to see possible.
 								</div>
 							</div>
+						</div>
+						<div
+							class="fit column wrap justify-end items-end content-end q-mt-md"
+						>
+							<q-btn
+								flat
+								color="primary"
+								label="Help"
+								style="text-decoration: underline"
+								no-caps
+							/>
 						</div>
 					</div>
 					<div
-						class="flex column justify-between q-pt-lg justify-center items-center"
+						v-else-if="calculating"
+						class="flex column justify-center items-center"
 					>
-						<div
-							class="flex row calculation-images-container portfolio-calculation-mobile justify-between"
-						>
-							<q-img src="../../assets/plant.svg" width="50px" height="50px" />
+						<div class="calculating">Calculating...</div>
+						<div>
 							<q-img
-								src="../../assets/bombUnselected.svg"
-								width="50px"
-								height="50px"
-							/>
-							<q-img
-								src="../../assets/hourglassUnselected.svg"
-								width="50px"
-								height="50px"
+								src="../../assets/giffycanvas.png"
+								width="130px"
+								height="190px"
 							/>
 						</div>
-						<div
-							v-if="
-								firstStepMobile === true &&
-								secondStepMobile === false &&
-								thirdStepMobile === false
-							"
-							class="step-mobile flex column"
-						>
-							<div>1.</div>
-							<div>Please select the amount you would like to invest</div>
+						<div class="take-time">It may take a couple of seconds.</div>
+					</div>
+					<div v-else-if="calculated">
+						<div class="q-pb-lg">
+							<q-img
+								src="../../assets/moneyPlant.png"
+								width="55px"
+								height="117px"
+							/>
 						</div>
-						<div
-							v-else-if="
-								firstStepMobile === false &&
-								secondStepMobile === true &&
-								thirdStepMobile === false
-							"
-							class="step-mobile flex column"
-						>
-							<div>2.</div>
-							<div>
-								Pick the Risk level you are going to apply to your future
-								portfolio.
-							</div>
+						<div class="end-amount q-pt-sm">End amount</div>
+						<div class="end-amount-price">
+							${{ investmentReturn.toFixed(2) }}
 						</div>
-						<div
-							v-else-if="
-								firstStepMobile === false &&
-								secondStepMobile === false &&
-								thirdStepMobile === true
-							"
-							class="step-mobile flex column"
-						>
-							<div>3.</div>
-							<div>
-								Select the time you want to make the investment for to see
-								possible.
-							</div>
-						</div>
+						<div class="end-amount-percentage-title q-pt-lg">Percentage</div>
+						<div class="end-amount-percentage">+{{ 20 }}%</div>
 					</div>
-					<div class="full-width flex justify-end q-pr-sm q-pt-lg help-section">
-						Help
-					</div>
-				</div>
-				<div
-					v-else-if="calculating === true && calculateWorth === false"
-					class="flex column justify-center items-center calculator-first-part"
+				</q-card-section>
+				<q-separator v-if="$q.screen.width > 576" color="accent" vertical />
+				<q-card-section
+					:class="$q.screen.width > 576 ? 'q-py-none col' : 'q-py-none col-12'"
 				>
-					<div class="calculating">Calculating...</div>
-					<div>
-						<q-img
-							src="../../assets/giffycanvas.png"
-							width="130px"
-							height="190px"
-						/>
-					</div>
-					<div class="take-time">It may take a couple of seconds.</div>
-				</div>
-				<div
-					v-else-if="calculateWorth === true && calculating === false"
-					class="flex column justify-center items-center calculator-first-part"
-				>
-					<div class="calculating">Calculating the final worth...</div>
-					<div>
-						<q-img
-							src="../../assets/giffycanvas.png"
-							width="130px"
-							height="190px"
-						/>
-					</div>
-					<div class="take-time">It may take several a couple of minutes.</div>
-				</div>
-				<div
-					v-else-if="showPrice === true && calculateWorth === false"
-					class="flex column justify-center items-center calculator-first-part"
-				>
-					<div class="q-pb-lg">
-						<q-img
-							src="../../assets/moneyPlant.png"
-							width="55px"
-							height="117px"
-						/>
-					</div>
-					<div class="end-amount q-pt-sm">End amount</div>
-					<div class="end-amount-price">${{ finalWorth.toFixed(2) }}</div>
-					<div class="end-amount-percentage-title q-pt-lg">Percentage</div>
-					<div class="end-amount-percentage">+{{ percentage.toFixed(2) }}%</div>
-				</div>
-				<div
-					v-if="secondSection === false"
-					class="flex full-height justify-center calculator-second-part"
-				>
-					<div class="calculator-second-part-wrapper column">
-						<div v-if="secondSection === false" class="flex row q-py-lg">
-							<div class="line-2"></div>
-							<div class="line-3"></div>
-						</div>
+					<q-linear-progress
+						:value="progress"
+						class="q-ma-none"
+						track-color="accent"
+					/>
 
-						<div class="starting-investment-wrapper q-pt-lg">
-							<div class="flex row justify-between">
-								<div class="starting-investment-text">
-									Starting investment (USD)
-								</div>
-								<div class="starting-investment-number row">
-									$&nbsp;
-									<div id="rangeValue">15,000</div>
-								</div>
-							</div>
-							<div class="q-pt-md">
-								<div class="center">
-									<label class="slider-container align-middle">
-										<h2 class="adventure-header"></h2>
-										<input
-											type="range"
-											id="range"
-											min="0"
-											max="100"
-											oninput="updateSlider"
-										/>
-										<div class="adventure-slider">
-											<div class="thumb" draggable="true">
-												<div class="face align-middle">
-													<div class="eyes"></div>
-													<div class="mouth">
-														<div class="tongue"></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</label>
-								</div>
-							</div>
+					<div v-if="stepNumber < 3">
+						<div class="row q-ma-none q-pa-none justify-between">
+							<h6 class="col q-ma-none q-pa-none starting-investment-text">
+								Start Investment
+							</h6>
+							<h6
+								class="col q-ma-none text-primary text-right text-bold starting-investment-number"
+							>
+								$ {{ Intl.NumberFormat('en-US').format(startingAmount) }}
+							</h6>
 						</div>
-						<div class="flex column risk-level-container">
-							<div class="risk-level-title">Risk level</div>
-							<div class="flex row risk-container items-center">
-								<div
-									class="flex justify-center items-center unselected-border-wrapper"
+						<q-slider
+							v-model="startingAmount"
+							:min="0"
+							:max="100000"
+							track-color="accent"
+							thumb-color="accent"
+							thumb-size="35px"
+							thumb-path="M5 5 h10 v10 h-10 v-10"
+							track-size="26px"
+						/>
+						<q-list padding>
+							<q-item
+								v-ripple
+								class="risk-container q-pa-none q-ma-xs"
+								tag="label"
+							>
+								<q-item-section avatar>
+									<q-radio v-model="riskLevel" val="low" color="green" />
+								</q-item-section>
+								<q-item-section>
+									<q-item-label>Low Risk</q-item-label>
+									<q-item-label caption
+										>Steadily returning wines with low volatility.</q-item-label
+									>
+								</q-item-section>
+							</q-item>
+
+							<q-item
+								v-ripple
+								class="risk-container q-pa-none q-ma-xs"
+								tag="label"
+							>
+								<q-item-section avatar>
+									<q-radio v-model="riskLevel" val="medium" color="primary" />
+								</q-item-section>
+								<q-item-section>
+									<q-item-label>Medium Risk</q-item-label>
+									<q-item-label caption
+										>Mostly high volume, high liquid investments.
+									</q-item-label>
+								</q-item-section>
+							</q-item>
+
+							<q-item
+								v-ripple
+								class="risk-container q-pa-none q-ma-xs"
+								tag="label"
+							>
+								<q-item-section avatar>
+									<q-radio v-model="riskLevel" val="high" color="red" />
+								</q-item-section>
+								<q-item-section>
+									<q-item-label>High Risk</q-item-label>
+									<q-item-label caption
+										>Very volitile, highly risky wines.</q-item-label
+									>
+								</q-item-section>
+							</q-item>
+						</q-list>
+						<q-btn
+							v-if="stepNumber === 2"
+							label="Continue"
+							class="full-width continue-button continue-text"
+							no-caps
+							@click="stepNumber++"
+						/>
+					</div>
+					<div
+						v-else
+						class="q-ma-none q-mt-lg column justify-between wrap full-height"
+					>
+						<div class="col">
+							<div class="row q-ma-none q-pa-none justify-between">
+								<h6 class="col q-ma-none q-pa-none starting-investment-text">
+									Start Investment
+								</h6>
+								<h6
+									class="col q-ma-none text-primary text-right text-bold starting-investment-number"
 								>
-									<div
-										:class="
-											lowRisk === true ? 'selected-risk' : 'unselected-border'
-										"
-										@click="calculateRisk('low')"
-									></div>
-									<!-- <q-radio v-model="risk" dense val="low" /> -->
-								</div>
-								<div class="flex column q-pl-md risk-wrapper">
-									<div class="flex row justify-between items-center">
-										<div class="risk-title">Low Risk Portfolio</div>
-										<div class="low-risk-border"></div>
-									</div>
-									<div class="risk-desc q-pt-sm">
-										Steadily returning wines with low volatility
-									</div>
-								</div>
+									$ {{ Intl.NumberFormat('en-US').format(startingAmount) }}
+								</h6>
 							</div>
-							<div class="q-pt-sm">
-								<div class="flex row risk-container items-center">
-									<div
-										class="flex justify-center items-center unselected-border-wrapper"
-									>
-										<div
-											:class="
-												mediumRisk === true
-													? 'selected-risk'
-													: 'unselected-border'
-											"
-											@click="calculateRisk('medium')"
-										></div>
-										<!-- <q-radio v-model="risk" dense val="medium" /> -->
-									</div>
-									<div class="flex column q-pl-md risk-wrapper">
-										<div class="flex row justify-between items-center">
-											<div class="risk-title">Medium Risk Portfolio</div>
-											<div class="medium-risk-border"></div>
-										</div>
-										<div class="risk-desc q-pt-sm">
-											Mostly high volume, high liquid investments
-										</div>
-									</div>
-								</div>
+							<div class="row q-ma-none q-pa-none justify-between q-mb-lg">
+								<h6 class="col q-ma-none q-pa-none starting-investment-text">
+									Risk Level
+								</h6>
+								<h6
+									class="col q-ma-none text-primary text-right text-bold starting-investment-number"
+								>
+									{{ riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1) }}
+								</h6>
 							</div>
-							<div class="q-pt-sm">
-								<div class="flex row risk-container items-center">
-									<div
-										class="flex justify-center items-center unselected-border-wrapper"
-									>
-										<div
-											:class="
-												highRisk === true
-													? 'selected-risk'
-													: 'unselected-border'
-											"
-											@click="calculateRisk('high')"
-										></div>
-										<!-- <q-radio v-model="risk" dense val="high" /> -->
-									</div>
-									<div class="flex column q-pl-md risk-wrapper">
-										<div class="flex row justify-between items-center">
-											<div class="risk-title">High Risk Portfolio</div>
-											<div class="high-risk-border"></div>
-										</div>
-										<div class="risk-desc q-pt-sm">
-											Very volitile, highly risky wines
-										</div>
-									</div>
-								</div>
-							</div>
-							<div v-if="showButton">
-								<div class="full-width continue-button-wrapper">
-									<button
-										class="continue-button full-width"
-										@click="openCalculationPage()"
-									>
-										<div class="continue-text">Continue</div>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div
-					v-else
-					class="flex column calculator-second-part full-height items-center"
-				>
-					<div class="calculator-second-part-wrapper column">
-						<div v-if="secondSection === true" class="flex row q-py-lg">
-							<div class="line"></div>
-						</div>
-						<div class="flex row justify-between">
-							<div class="starting-investment-text-bold">
-								Starting investment (USD)
-							</div>
-							<div class="starting-investment-number">
-								{{ money }}
-							</div>
-						</div>
-						<div class="flex row justify-between">
-							<div class="starting-investment-text-bold">Risk level</div>
-							<div class="starting-investment-number">
-								{{ selectedRisk }}
-							</div>
-						</div>
-						<div class="flex column timing-container">
-							<div class="flex row justify-between">
-								<div class="starting-investment-text-bold">Timing</div>
-								<div class="starting-investment-number">
-									<span>{{ timeValue }}</span>
-								</div>
-							</div>
-							<div class="q-pt-lg">
-								<div class="center">
-									<div class="form-element">
-										<input
-											id="timeInput"
-											v-model="timeValue"
-											type="range"
-											min="0.1"
-											max="3.6"
-											@input="updateTimeSlider"
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div
-							class="full-width"
-							:style="[
-								calculationFinished
-									? { paddingTop: '231px' }
-									: { paddingTop: '251px' },
-							]"
-						>
-							<button
-								v-if="calculationFinished === false"
-								class="continue-button full-width"
-								@click="calculateFinalWorth(selectedRisk)"
-							>
-								<div class="continue-text">Calculate</div>
-							</button>
-							<button
-								v-else
-								class="calculate-again-button full-width"
-								@click="$router.go(0)"
-							>
-								Calculate again
-							</button>
-						</div>
-						<div
-							v-if="calculationFinished === false"
-							class="back-button q-py-lg row items-center justify-start"
-							@click="activateBackButton()"
-						>
-							<img src="../../../public/images/back.svg" class="q-pr-xs" /> Back
-						</div>
-						<button v-else class="continue-button full-width q-mt-md">
-							<div class="continue-text">Check the wines</div>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
 
+							<div class="row q-mt-lg q-pa-none q-pt-lg justify-between">
+								<h6 class="col q-ma-none q-pa-none starting-investment-text">
+									Timing
+								</h6>
+								<h6
+									class="col q-ma-none text-primary text-right text-bold starting-investment-number"
+								>
+									{{ getYears(timing) }}
+								</h6>
+							</div>
+							<q-slider
+								v-model="timing"
+								:step="1"
+								:min="0"
+								:max="100"
+								track-color="accent"
+								thumb-color="accent"
+								thumb-size="35px"
+								thumb-path="M5 5 h10 v10 h-10 v-10"
+								track-size="26px"
+							/>
+						</div>
+						<div class="col">
+							<q-btn
+								v-if="stepNumber === 3"
+								label="Calculate"
+								class="q-my-sm full-width continue-button continue-text"
+								no-caps
+								@click="calculate"
+							/>
+							<q-btn
+								v-if="calculated"
+								label="Check the Wines"
+								class="q-my-sm full-width calculate-again-button"
+								no-caps
+							/>
+							<div class="row q-pa-none justify-center">
+								<q-btn
+									v-if="stepNumber === 3 && (!calculating && !calculated)"
+									label="Back"
+									style="text-decoration: underline"
+									no-caps
+									flat
+									icon="app:back"
+									@click="stepNumber--"
+								/>
+								<q-btn
+									v-if="calculating"
+									label="Back"
+									style="text-decoration: underline"
+									no-caps
+									flat
+									icon="app:back"
+									@click="calculating = false;"
+								/>
+								<q-btn
+									v-if="calculated"
+									label="Back"
+									style="text-decoration: underline"
+									no-caps
+									flat
+									icon="app:back"
+									@click="calculated = false;"
+								/>
+							</div>
+						</div>
+					</div>
+				</q-card-section>
+			</q-card>
+		</section>
+	</q-page-container>
+</template>
 <script lang="ts">
+import { defineComponent, ref } from 'vue';
 import '../../css/WineCalculator/WineCalculator.css';
-import { defineComponent } from 'vue-demi';
+import { getYears } from '../../utils';
 
 export default defineComponent({
 	name: 'WineCalculator',
 	data() {
 		return {
-			lowRisk: false,
-			mediumRisk: false,
-			highRisk: false,
+			stepNumber: 1,
+			progress: ref(1 / 3),
+			riskLevel: ref('none'),
+			startingAmount: 0,
+			timing: ref(0),
+			calculated: false,
 			calculating: false,
-			showButton: false,
-			secondSection: false,
-			calculateWorth: false,
-			calculationFinished: false,
-			showPrice: false,
-			money: Number(),
-			time: Number(),
-			moneyInvested: Number(),
-			selectedRisk: String(),
-			finalWorth: Number(),
-			percentage: Number(),
-			firstStepMobile: true,
-			secondStepMobile: false,
-			thirdStepMobile: false,
-			value: 15000,
-			timeValue: String(),
+			investmentReturn: 0,
 		};
 	},
-
-	mounted() {
-		this.updateSlider();
+	watch: {
+		riskLevel: {
+			handler: function (val, prev) {
+				if (val !== 'none' && prev === 'none') {
+					this.stepNumber++;
+					this.setProgress();
+				}
+			},
+		},
 	},
-
 	methods: {
-		updateSlider() {
-			const progress = document.getElementById('range') as any;
-			this.value = progress.value;
-			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${
-				this.value / 500
-			}%, #fff ${this.value / 500}%, white 100%)`;
+		setProgress() {
+			this.progress = this.stepNumber / 3;
 		},
-		handleCalculation() {
-			this.calculating = false;
-		},
-		calculateRisk(type: string) {
-			this.money = document.getElementById('rangeValue')?.innerHTML as any;
-			// this.firstStepMobile = false;
-			// this.secondStepMobile = true;
-
-			if (type === 'low') {
-				this.lowRisk = true;
-				this.mediumRisk = false;
-				this.highRisk = false;
-				this.selectedRisk = 'Low';
-			} else if (type === 'medium') {
-				this.lowRisk = false;
-				this.mediumRisk = true;
-				this.highRisk = false;
-				this.selectedRisk = 'Medium';
-			} else if (type === 'high') {
-				this.lowRisk = false;
-				this.mediumRisk = false;
-				this.highRisk = true;
-				this.selectedRisk = 'High';
-			}
-
+		getYears: getYears,
+		calculate() {
 			this.calculating = true;
-			setInterval(() => {
-				this.calculating = false;
-				this.showButton = true;
-			}, 3000);
-		},
-		openCalculationPage() {
-			this.showButton = false;
-			this.secondSection = true;
-			this.firstStepMobile = false;
-			this.secondStepMobile = false;
-			this.thirdStepMobile = true;
-		},
-
-		updateTimeSlider() {
-			const progress = document.getElementById('timeInput') as any;
-			this.timeValue = progress.value;
-			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${Number(
-				Number(this.timeValue) * 10
-			)}%, #fff ${Number(this.timeValue) * 10}%, white 100%)`;
-			let time = progress.value;
-			// if (time < 12) {
-			// 	this.timeValue = time + ' ' + 'months';
-			// } else if (time > 12 && time < 24) {
-			// 	for (let i: any; time > 12 && time < 24; ) {
-			// 		this.timeValue = '1 year' + ' ' + 1;
-			// 	}
-			// this.timeValue = '1 year' + time;
-			// }
-		},
-
-		calculateFinalWorth(type: string) {
-			this.time = Number(document.getElementById('timeInput'));
-			console.log(this.time);
-
-			this.calculateWorth = true;
-
-			setTimeout(() => {
-				this.calculateWorth = false;
-				this.calculationFinished = true;
-			}, 2000);
-			if (type === 'low') {
-				this.finalWorth = this.money * 1.08 * this.time;
-				this.finalWorth.toFixed(2);
-			} else if (type === 'medium') {
-				this.finalWorth = this.money * 1.11 * this.time;
-				this.finalWorth.toFixed(2);
-			} else if (type === 'high') {
-				this.finalWorth = this.money * 1.15 * this.time;
-				this.finalWorth.toFixed(2);
-			}
-			this.percentage = ((this.finalWorth - this.money) / this.money) * 100;
-			this.showPrice = true;
-		},
-		activateBackButton() {
-			this.secondSection = false;
+			this.investmentReturn = this.startingAmount + 0.2 * this.startingAmount;
+			this.calculating = false;
+			this.calculated = true;
 		},
 	},
 });
 </script>
 
-<style></style>
+<style>
+.current-step {
+	font-family: 'Proxima Nova';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+}
+.current-step > img {
+	color: #3586ff;
+}
+.next-step {
+	font-family: 'Proxima Nova';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	filter: grayscale();
+}
+@media screen and (max-width: 576px) {
+	.next-step {
+		display: none;
+	}
+}
+</style>

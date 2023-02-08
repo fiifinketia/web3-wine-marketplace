@@ -466,6 +466,7 @@
 import { defineComponent, ref } from 'vue';
 import { useWineFilters } from '../../../stores/wine-filters';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
+import { getYears } from '../../../utils'
 
 export default defineComponent({
 	setup() {
@@ -593,20 +594,7 @@ export default defineComponent({
 		applyMaturityFilter() {
 			// console.log(this.wineFiltersStore);
 		},
-
-		getYears(monthCount: number) {
-			function getPlural(number: number, word: { [key: string]: string }) {
-				return (number === 1 && word.one) || word.other;
-			}
-
-			var months = { one: 'mo', other: 'mos' },
-				years = { one: 'yr', other: 'yrs' },
-				m = monthCount % 12,
-				y = Math.floor(monthCount / 12);
-
-			if (y == 0) return m + ' ' + getPlural(m, months);
-			else return y + ' ' + getPlural(y, years);
-		},
+		getYears: getYears,
 	},
 });
 </script>

@@ -10,6 +10,7 @@ const customIcons: { [key: string]: string } = {
 	'app:price': 'img:/icons/price_icon.svg',
 	'app:filter': 'img:/icons/filter_icon.svg',
 	'app:down_arrow': 'img:/icons/down_arrow.svg',
+	'app:back': 'img:/icons/back.svg',
 	'app:profile': 'img:/images/profile-icon.svg',
 	'app:heart': 'img:/images/heart.svg',
 	'app:search': 'img:/images/search.svg',

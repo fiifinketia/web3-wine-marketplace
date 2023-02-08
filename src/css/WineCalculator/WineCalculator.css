@@ -3,7 +3,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: -5;
+z-index: -1000;
+
 }
 
 .grape-img-right {
@@ -11,7 +12,8 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	z-index: -5;
+z-index: -1000;
+
 }
 
 .welcome-to-calculator {
@@ -30,11 +32,13 @@
 	font-style: normal;
 	font-weight: 400;
 	font-size: 24px;
-	line-height: 36px;
-	text-align: center;
-	color: #212131;
-	opacity: 0.6;
-	width: 40%;
+color: #212131;
+
+line-height: 36px;
+
+opacity: 0.6;
+
+
 }
 
 .calculator {
@@ -52,9 +56,9 @@
 }
 
 .calculator-first-part {
-	width: 60%;
-	background: rgba(217, 232, 255, 0.3);
-	height: 100%;
+background: rgba(217, 232, 255, 0.3);
+
+
 }
 
 .plant-section {
@@ -154,7 +158,8 @@
 	font-weight: 450;
 	font-size: 18px;
 	line-height: 28px;
-	text-align: right;
+text-align: left;
+
 	letter-spacing: 0.02em;
 	color: #262626;
 }
@@ -472,7 +477,8 @@
 	text-align: center;
 	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
 	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+-webkit-text-fill-color: #3586ff;
+
 	background-clip: text;
 	border: 1px solid #3586ff;
 	border-radius: 6px;
@@ -559,6 +565,9 @@
 
 	.calculator-first-part {
 		background: none;
+backdrop-filter: blur(100px);
+-webkit-backdrop-filter: blur(100px);
+
 	}
 	.portfolio-calculation-title {
 		display: flex;
@@ -582,7 +591,8 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: -5;
+z-index: -1000;
+
 	}
 	.portfolio-calculation-mobile {
 		display: flex;
