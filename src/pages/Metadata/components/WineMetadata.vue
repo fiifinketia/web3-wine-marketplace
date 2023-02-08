@@ -582,7 +582,8 @@
 									offerExpirationDate === '' ||
 									offerPrice <= 0 ||
 									makeOfferLoading ||
-									falseDate
+									falseDate ||
+									!offerPrice
 								"
 								@click="sendOffer"
 							>
@@ -655,7 +656,10 @@ import {
 	FulfillBasicOrder,
 } from '../services/Orders';
 import CountdownTimer from '../services/CountDownTimer';
-import { NewPolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_PolygonInstance } from 'src/shared/web3.helper';
+import {
+	NewPolygonCollectionContract_MumbaiInstance,
+	NewPolygonCollectionContract_PolygonInstance,
+} from 'src/shared/web3.helper';
 import { Contract } from '@ethersproject/contracts';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
@@ -759,16 +763,18 @@ export default defineComponent({
 					await contract.tokenURI(this.nft.tokenID);
 					break;
 			}
-			console.log('Token:', this.nft.tokenID, 'exists')
+			console.log('Token:', this.nft.tokenID, 'exists');
 		} catch (err: any) {
-			const nonexistentMessage = err.message.toString().includes('URI query for nonexistent token');
+			const nonexistentMessage = err.message
+				.toString()
+				.includes('URI query for nonexistent token');
 			if (nonexistentMessage) {
 				const burntNFT: TokenIdentifier = {
 					contractAddress: this.nft.smartContractAddress,
 					identifierOrCriteria: this.nft.tokenID,
-					network: this.nft.network
-				}
-				this.$axios.post(<string> process.env.BURN_NFT_URL, burntNFT)
+					network: this.nft.network,
+				};
+				this.$axios.post(<string>process.env.BURN_NFT_URL, burntNFT);
 			}
 		}
 	},
@@ -824,13 +830,12 @@ export default defineComponent({
 				this.openOfferFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock meteamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openOfferFailedModal = false;
@@ -866,13 +871,12 @@ export default defineComponent({
 				this.openBuyNowFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock meteamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openBuyNowFailedModal = false;
@@ -925,13 +929,12 @@ export default defineComponent({
 				this.openListingFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock meteamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openListingFailedModal = false;

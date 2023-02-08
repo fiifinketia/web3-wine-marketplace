@@ -116,7 +116,7 @@
 }
 
 .bid-text {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -129,7 +129,7 @@
 }
 
 .bid-price1 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 20px;
@@ -140,7 +140,7 @@
 }
 
 .bid-price2 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -270,7 +270,7 @@
 }
 
 .buy-now-modal {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 18px;
@@ -317,7 +317,7 @@
 
 .timer {
 	margin-left: 340px;
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -328,7 +328,7 @@
 }
 
 .modal-price1 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 20px;
@@ -339,7 +339,7 @@
 }
 
 .modal-price2 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -350,7 +350,7 @@
 }
 
 .modal-price {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -365,7 +365,7 @@
 }
 
 .total {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 18px;
@@ -375,7 +375,7 @@
 }
 
 .modal-total-price1 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 32px;
@@ -386,7 +386,7 @@
 }
 
 .modal-total-price2 {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 19px;
@@ -423,7 +423,7 @@
 }
 
 .payment-text {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 20px;
