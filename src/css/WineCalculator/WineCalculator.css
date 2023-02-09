@@ -121,7 +121,7 @@
 }
 
 .next-step-number {
-	font-family: 'Proxima Nova';
+	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -149,7 +149,7 @@
 }
 
 .starting-investment-text {
-	font-family: 'Obviously';
+	font-family: 'Obviously-Bold';
 	font-style: normal;
 	font-weight: 450;
 	font-size: 18px;
@@ -162,7 +162,7 @@
 .starting-investment-number {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 470;
+	font-weight: 900;
 	font-size: 18px;
 	line-height: 28px;
 	text-align: right;
@@ -215,7 +215,7 @@
 .risk-title {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 460;
+	font-weight: 900;
 	font-size: 16px;
 	line-height: 25px;
 	display: flex;
@@ -233,7 +233,6 @@
 	display: flex;
 	align-items: center;
 	color: #212131;
-	/* width: 95%; */
 }
 
 .selected-risk {
@@ -376,56 +375,17 @@
 	color: #212131;
 }
 
-/* .container {
-	background-color: #ffffff;
-	width: 90vmin;
-	transform: translate(-50%, -50%);
-	top: 50%;
-	left: 50%;
-	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
-	padding: 30px 20px;
-	border-radius: 5px;
-} */
-
-.center {
+/* .center {
 	position: relative;
-	/* top: 50%; */
-	/* left: 60%; */
-	/* transform: translate(-50%, -50%); */
-}
-/* .form-element #rangeValue {
-	margin-bottom: 20px;
-	font-size: 50px;
-	font-family: 'Raleway';
-	text-align: center;
-	color: #ddd;
 } */
 
 .form-element input[type='range'] {
 	-webkit-appearance: none;
-	width: 100%;
+	width: 99.5%;
 	height: 35px;
 	border-radius: 6px;
-	/* background: rgba(217, 232, 255, 0.3); */
-	outline: none;
 	overflow: hidden;
 	margin: 2px;
-
-	/* background: -webkit-gradient(
-		linear,
-		20% 0%,
-		20% 100%,
-		color-stop(0%, #add8e6),
-		color-stop(100%, #add8e6)
-	); */
-	/* background: -webkit-linear-gradient(left, #add8e6 0%, #add8e6 100%);
-	background: -moz-linear-gradient(left, #add8e6 0%, #add8e6 100%);
-	background: -o-linear-gradient(to right, #add8e6 0%, #add8e6 100%);
-	background: linear-gradient(to right, #add8e6 0%, #add8e6 100%);
-	background-repeat: no-repeat; */
 }
 
 .form-element input[type='range']::-webkit-slider-thumb {
@@ -438,7 +398,7 @@
 	height: 30px;
 	cursor: pointer;
 	border-radius: 4px;
-	padding: 0 10px;
+	box-shadow: -407px 0 0 410px #3586ff;
 }
 
 .timing-container .form-element,
@@ -642,4 +602,8 @@
 	border: 3px solid rgba(94, 151, 236, 0.27);
 	width: 50%;
 	height: 0;
+}
+
+#slider {
+	width: 500px;
 }

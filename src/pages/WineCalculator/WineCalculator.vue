@@ -262,7 +262,6 @@
 											min="100"
 											max="50000"
 											oninput="rangeValue.innerText = this.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-											@input="updateSlider"
 										/>
 									</div>
 								</div>
@@ -383,21 +382,22 @@
 							<div class="flex row justify-between">
 								<div class="starting-investment-text-bold">Timing</div>
 								<div class="starting-investment-number">
-									<span>{{ timeValue }}</span>
+									<span id="value"
+										>{{ selectedYear }} Years
+										{{ selectedMonth % 12 }} Months</span
+									>
 								</div>
 							</div>
 							<div class="q-pt-lg">
-								<div class="center">
-									<div class="form-element">
-										<input
-											id="timeInput"
-											v-model="timeValue"
-											type="range"
-											min="1"
-											max="36"
-											@input="updateTimeSlider"
-										/>
-									</div>
+								<div class="form-element">
+									<input
+										id="range"
+										v-model="selectedMonth"
+										type="range"
+										min="6"
+										max="120"
+										@input="onInput"
+									/>
 								</div>
 							</div>
 						</div>
@@ -444,10 +444,46 @@
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
-import { ref } from 'vue';
+import { ref, reactive, toRefs, computed } from 'vue';
 
 export default defineComponent({
 	name: 'WineCalculator',
+	setup() {
+		type State = {
+			selectedMonth: number;
+			selectedYear: number;
+			combined: number;
+		};
+		const state = reactive<State>({
+			selectedMonth: 6,
+			selectedYear: 0,
+			combined: 0,
+		});
+
+		const computeCombined = (state: State) => {
+			return computed(
+				() => (state.selectedYear * 12 + state.selectedMonth) / 12
+			);
+		};
+
+		const combined = computeCombined(state);
+		state.combined = combined.value;
+
+		state.selectedYear = Math.floor(state.selectedMonth / 12);
+
+		function onInput(event: any) {
+			state.selectedMonth = event.target.value;
+			state.selectedYear = Math.floor(state.selectedMonth / 12);
+			state.combined = combined.value;
+
+			console.log(state.combined);
+		}
+
+		return {
+			...toRefs(state),
+			onInput,
+		};
+	},
 	data() {
 		return {
 			lowRisk: false,
@@ -469,22 +505,12 @@ export default defineComponent({
 			secondStepMobile: false,
 			thirdStepMobile: false,
 			value: 15000,
-			timeValue: String(),
+			month: Number(),
+			year: Number(),
 		};
 	},
 
-	mounted() {
-		this.updateSlider();
-	},
-
 	methods: {
-		updateSlider() {
-			const progress = document.getElementById('range') as any;
-			this.value = progress.value;
-			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${
-				this.value / 500
-			}%, #fff ${this.value / 500}%, white 100%)`;
-		},
 		handleCalculation() {
 			this.calculating = false;
 		},
@@ -525,38 +551,7 @@ export default defineComponent({
 			this.thirdStepMobile = true;
 		},
 
-		updateTimeSlider() {
-			const progress = document.getElementById('timeInput') as any;
-			this.timeValue = progress.value;
-			progress.style.background = `linear-gradient(to right, #3586FF 0%, #3586FF ${Number(
-				this.timeValue
-			)}%, #fff ${Number(this.timeValue)}%, white 100%)`;
-			let time = progress.value;
-			if (time < 12) {
-				this.timeValue = time + ' ' + 'months';
-			} else if (time > 12 && time < 24) {
-				for (let i: any; time > 12 && time < 24; ) {
-					this.timeValue = '1 year' + ' ' + 1;
-				}
-				// this.timeValue = '1 year' + time;
-			}
-		},
-
 		calculateFinalWorth(type: string) {
-			const time = document.getElementById('timeInput');
-
-			// const value = time.value;
-			// if(time > 10 && time !== '1year')
-			// if (time === '1year') {
-			// 	this.time = 10;
-			// } else if (time === '2year') {
-			// 	this.time = 20;
-			// } else if (time === '3year') {
-			// 	this.time = 30;
-			// }
-
-			// oninput="this.value < 10 ? timeRange.innerText = this.value + 'mos': this.value == 10 || this.value == 20 || this.value == 30 ? timeRange.innerText = this.value.slice(0,1) + 'year': timeRange.innerText = this.value.split('').join(' year ') +' mos'"
-			// if(time)
 
 			this.calculateWorth = true;
 
