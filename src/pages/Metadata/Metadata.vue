@@ -18,15 +18,15 @@
 				transition-next="jump-left"
 			>
 				<q-tab-panel name="history">
-					<NFTHistory />
+					<NFTHistory :nft-txn-history="nft.nftHistory" />
 				</q-tab-panel>
 
 				<q-tab-panel name="about">
-					<About />
+					<About :nft="nft" />
 				</q-tab-panel>
 
 				<q-tab-panel name="wine-maker">
-					<WineMaker />
+					<WineMaker :nft="nft" />
 				</q-tab-panel>
 			</q-tab-panels>
 		</div>
@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NewPolygonNFT, NFTWithListingAndFavorites } from './models/Metadata';
+import { NFTWithListingAndFavorites, SeaportTransactionsModel } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';
 import WineMetadata from './components/WineMetadata.vue';
@@ -71,7 +71,7 @@ export default defineComponent({
 	data() {
 		const userStore = useUserStore();
 		return {
-			nft: {} as NFTWithListingAndFavorites,
+			nft: {} as NFTWithListingAndFavorites & { nftHistory: SeaportTransactionsModel[] },
 			userStore,
 			tab: ref('history'),
 			tokenExists: false,
@@ -104,7 +104,7 @@ export default defineComponent({
 					network,
 					walletAddress: this.userStore.walletAddress,
 				});
-				console.log(res)
+				console.log(res.nftHistory)
 				this.nft = res;
 			} catch (error) {
 				console.log(error);
