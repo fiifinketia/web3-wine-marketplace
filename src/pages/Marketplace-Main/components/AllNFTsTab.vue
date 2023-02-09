@@ -1,5 +1,12 @@
 <template>
-	<div class="fit row wrap justify-start items-start content-start">
+	<div
+		:class="
+			isMobile()
+				? 'fit row wrap justify-start items-start content-start q-ma-xs'
+				: 'fixed fit row wrap justify-start items-start content-start q-ma-xs'
+		"
+	>
+		<!-- <div class="fit row wrap justify-start items-start content-start q-ma-xs fixed"> -->
 		<!-- Header -->
 		<div class="row col-xs-12 justify-between">
 			<!-- <button
@@ -9,7 +16,10 @@
 				Side
 			</button> -->
 			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
-				NFTs <span class="text-weight-bold text-h6 q-pl-sm">{{ 283 }}</span>
+				NFTs
+				<span class="text-weight-bold text-h6 q-pl-sm">{{
+					totalNFTs || 0
+				}}</span>
 			</div>
 			<div class="col-sm-7 col-xs-12">
 				<div class="q-mx-xs hidden-a-1023 overflow-hidden">
@@ -34,7 +44,7 @@
 						type="search"
 						color="primary"
 						class="col-10"
-						style="width:80%"
+						style="width: 80%"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -81,11 +91,14 @@
 		</div>
 
 		<!-- Sidebar -->
-
 		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
 
 		<!-- List Section -->
-		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
+		<NFTSelections
+			class="col-md-9 col-sm-12"
+			style="padding-top: 0px !important"
+			@total-tokens="updateTokenCount"
+		/>
 		<q-page-sticky
 			class="hidden-b-599 q-mr-md"
 			position="bottom-right"
@@ -154,6 +167,7 @@ export default defineComponent({
 		NFTSelections: NFTSelections,
 		MarketPlaceSidebar: MarketPlaceSidebar,
 	},
+	emits: ['totalTokens'],
 	data() {
 		const wineFiltersStore = useWineFilters();
 
@@ -162,6 +176,7 @@ export default defineComponent({
 			wineFiltersStore,
 			searchQuery: '',
 			openSidebar: false,
+			totalNFTs: ref(0),
 		};
 	},
 
@@ -182,7 +197,11 @@ export default defineComponent({
 		},
 
 		isMobile(breakpoint = 880) {
-			return this.$q.screen.width > breakpoint;
+			return this.$q.screen.width < breakpoint;
+		},
+		updateTokenCount(total: number) {
+			this.totalNFTs = total;
+			this.$emit('totalTokens', total);
 		},
 	},
 });

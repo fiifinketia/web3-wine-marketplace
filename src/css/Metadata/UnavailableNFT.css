@@ -1,0 +1,32 @@
+.unavailable-nft-header {
+  font-family: 'Obviously-Bold';
+  color: #3586FF;
+  font-size: 32px;
+}
+
+.unavailable-nft-subheader {
+  font-family: 'ProximaNova-Bold';
+  color: #212131;
+  font-size: 20px;
+}
+
+.unavailable-nft-icon {
+  width: 40vw;
+  max-width: 350px;
+}
+
+.unavailable-nft-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+}
+
+.unavailable-nft-header, .unavailable-nft-subheader, .unavailable-nft-text {
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+	.unavailable-nft-icon {
+		width: 250px;
+	}
+}

@@ -18,6 +18,7 @@ export default defineComponent({
 	components: {
 		NewlyMintedSection: NewlyMintedVue
 	},
+	emits: [ 'totalTokens' ]
 });
 </script>
 
