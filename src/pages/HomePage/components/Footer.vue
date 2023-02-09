@@ -1,8 +1,11 @@
 <template>
-	<footer class="footer-container">
-		<!-- <div>
-			<img src="./wiv.svg" class="wiv-image" />
-		</div> -->
+	<footer class="footer-container q-pb-xl">
+		<div class="wiv-image-wrapper">
+			<img
+				src="../../../../public/images/wiv-footer-logo.svg"
+				class="wiv-image"
+			/>
+		</div>
 		<div class="footer-wrapper">
 			<div class="footer-item-wrapper">
 				<div class="footer-bold">NFTs</div>
@@ -20,14 +23,14 @@
 
 				<div class="footer-item-wrapper fourth-400-item">
 					<div class="item-title">Contact info:</div>
-					<div class="item-text">email@email.com</div>
-					<div class="item-text">+0 000 000 0000</div>
+					<div class="item-text q-pt-sm">email@email.com</div>
+					<div class="item-text q-pt-sm">+0 000 000 0000</div>
 				</div>
 			</div>
 			<div class="footer-item-wrapper first-item">
 				<div class="item-title">Storefront</div>
-				<div class="item-text">New Commings</div>
-				<div class="item-text">Recommended</div>
+				<div class="item-text q-pt-sm">New Commings</div>
+				<div class="item-text q-pt-sm">Recommended</div>
 			</div>
 			<div class="footer-item-wrapper">
 				<div class="item-title">Profile</div>
@@ -63,18 +66,32 @@
 				</div>
 				<div class="footer-item-wrapper fifth-div-wrapper">
 					<div class="item-title">Integrations</div>
+					<div class="row q-pt-md">
+						<div class="q-pr-sm">
+							<q-img src="../../../../public/images/discord.svg" width="23px" />
+						</div>
+						<div class="q-px-sm">
+							<q-img src="../../../../public/images/twitter.svg" width="23px" />
+						</div>
+						<div class="q-px-sm">
+							<q-img
+								src="../../../../public/images/instagram.svg"
+								width="23px"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="footer-item-wrapper fifth-item">
 				<div class="item-title">Integrations</div>
-				<div class="row q-pt-xs">
-					<div class="q-pr-md">
+				<div class="row q-pt-md">
+					<div class="q-pr-sm">
 						<q-img src="../../../../public/images/discord.svg" width="23px" />
 					</div>
-					<div class="q-px-md">
+					<div class="q-px-sm">
 						<q-img src="../../../../public/images/twitter.svg" width="23px" />
 					</div>
-					<div class="q-px-md">
+					<div class="q-px-sm">
 						<q-img src="../../../../public/images/instagram.svg" width="23px" />
 					</div>
 				</div>
