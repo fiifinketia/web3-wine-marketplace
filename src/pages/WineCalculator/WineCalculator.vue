@@ -269,7 +269,7 @@
 								v-model="timing"
 								:step="1"
 								:min="0"
-								:max="100"
+								:max="120"
 								track-color="accent"
 								thumb-color="accent"
 								thumb-size="35px"
