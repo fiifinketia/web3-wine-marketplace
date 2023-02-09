@@ -13,7 +13,7 @@
 			src="../../../../public/images/Grape-mobile.svg"
 		/>
 		<h1 class="headline-title">WiV Marketplace</h1>
-		<p class="headline-paragraph">We offer the best fine wine NFT in web3</p>
+		<p class="headline-paragraph">We offer the best fine wine investments</p>
 		<div class="headline-buttons-container row">
 			<button class="headline-buttons left-btn">Start collection</button>
 			<button class="headline-buttons right-btn">Learn about WiV</button>

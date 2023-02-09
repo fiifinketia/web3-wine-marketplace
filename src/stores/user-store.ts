@@ -1,13 +1,18 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import axios from 'axios';
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
+import { useNFTStore } from './nft-store';
+import { generateRandomColor } from 'src/utils';
+import { UserModel } from 'src/components/models';
 
 export const useUserStore = defineStore(
 	'userStore',
 	() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const walletAddress = ref('');
+		// const nftStorage = useNFTStore();
+		const user: Ref<UserModel | null> = ref<UserModel | null>(null);
 
 		const connectWallet = async () => {
 			// this.showConnectWallet = true;
@@ -16,14 +21,53 @@ export const useUserStore = defineStore(
 			const accounts = await window.ethereum.request({
 				method: 'eth_requestAccounts',
 			});
-			walletAddress.value = accounts[0];
+			walletAddress.value = utils.getAddress(accounts[0]);
+			// await nftStorage.fetchNFTs(accounts[0]);
 
-			await axios.post(process.env.MKT_API_URL + 'market/users', {
-				walletAddress: walletAddress.value,
+			const getUser = await axios.get(
+				process.env.MARKETPLACE_API_URL + 'market/users/' + walletAddress.value
+			);
+			if (!!getUser.data) return (user.value = getUser.data);
+
+			try {
+				const getColors = [
+					generateRandomColor(),
+					generateRandomColor(),
+					generateRandomColor(),
+				].join(',');
+				const newUser = await axios.post(
+					process.env.MARKETPLACE_API_URL + 'market/users',
+					{
+						walletAddress: walletAddress.value,
+						avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
+					}
+				);
+				user.value = newUser.data;
+			} catch (error: any) {
+				console.log('Failed to upload user!');
+			}
+		};
+
+		const checkConnection = async () => {
+			const connectedAccounts: string[] = await window.ethereum.request({
+				method: 'eth_accounts',
 			});
+			if (connectedAccounts.length == 0) {
+				walletAddress.value = '';
+			}
+		};
+
+		const checkNetwork = async () => {
+			const connectedAccounts: string[] = await window.ethereum.request({
+				method: 'eth_accounts',
+			});
+			if (connectedAccounts.length == 0) {
+				walletAddress.value = '';
+			}
 		};
 
 		const getWalletBalance = async () => {
+			if (!window.ethereum) return 0;
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const balance = await provider.getBalance(walletAddress.value);
 			const balanceInETH = ethers.utils.formatEther(balance);
@@ -41,6 +85,8 @@ export const useUserStore = defineStore(
 			walletAddress,
 			connectWallet,
 			getWalletBalance,
+			checkConnection,
+			user,
 			// isConnected,
 			// walletBalance,
 			// connect,

@@ -10,7 +10,7 @@
 					align="justify"
 					no-caps
 				>
-					<q-tab name="nfts" label="All NFTs" />
+					<q-tab name="nfts" label="Marketplace" />
 					<q-tab name="releases" label="Releases" />
 					<q-tab name="recommended" label="Recommended" />
 				</q-tabs>
@@ -21,7 +21,7 @@
 					no-caps
 				>
 					<span class="col text-white">
-						NFTs <span class="text-h6 text-weight-bolder"> {{ 283 }} </span>
+						NFTs <span class="text-h6 text-weight-bolder"> {{ totalTokens }} </span>
 					</span>
 					<q-btn-dropdown
 						no-caps
@@ -34,8 +34,8 @@
 						:label="tabLabel"
 					>
 						<q-list>
-							<q-item clickable @click="tabLabel = 'All NFTs'">
-								<q-tab name="nfts" label="All NFTs" />
+							<q-item clickable @click="tabLabel = 'Marketplace'">
+								<q-tab name="nfts" label="Marketplace" />
 							</q-item>
 
 							<q-item clickable @click="tabLabel = 'Releases'">
@@ -49,15 +49,15 @@
 				</q-tabs>
 
 				<q-separator class="q-ma-none" />
-				<q-tab-panels v-model="tab" animated>
-					<q-tab-panel class="q-pa-none q-px-md" name="nfts">
-						<AllNFTsTab />
+				<q-tab-panels v-model="tab" animated class="q-pa-none">
+					<q-tab-panel class="q-pa-none q-px-none" name="nfts">
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="releases">
-						<AllNFTsTab />
+					<q-tab-panel class="q-pa-none q-px-none" name="releases">
+						<NewlyReleasedTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="recommended">
-						<AllNFTsTab />
+					<q-tab-panel class="q-pa-none q-px-none" name="recommended">
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
 					</q-tab-panel>
 				</q-tab-panels>
 			</section>
@@ -68,17 +68,20 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import AllNFTsTab from './components/AllNFTsTab.vue';
+import NewReleasedTab from './components/NewReleasedTab.vue';
 
 export default defineComponent({
 	components: {
 		AllNFTsTab: AllNFTsTab,
+		NewlyReleasedTab: NewReleasedTab,
 	},
 
 	data() {
 		const queryT = this.$router.currentRoute.value.query.tab as string;
 		return {
 			tab: ref(queryT || 'nfts'),
-			tabLabel: ref('All NFTs'),
+			tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
+			totalTokens: ref(0)
 		};
 	},
 
@@ -96,7 +99,7 @@ export default defineComponent({
 						this.tab = tabTo;
 						switch (tabTo) {
 							case 'nfts':
-								this.tabLabel = 'All NFTs';
+								this.tabLabel = 'Marketplace';
 								break;
 							case 'releases':
 								this.tabLabel = 'Releases';
@@ -109,6 +112,19 @@ export default defineComponent({
 				}
 			},
 			immediate: true,
+		},
+	},
+
+	methods: {
+		getLabel(query: string) {
+			switch (query) {
+				case 'nfts':
+					return 'Marketplace';
+				case 'releases':
+					return 'Releases';
+				case 'recommended':
+					return 'Recommended';
+			}
 		},
 	},
 });

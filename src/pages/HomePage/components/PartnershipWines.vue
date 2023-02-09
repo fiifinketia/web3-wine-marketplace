@@ -1,47 +1,45 @@
 <template>
-	<div class="flex justify-center">
-		<div class="flex row justify-between items-center partnership-container">
-			<div class="flex column partnership-text-container">
-				<div class="first-text-partnership">
-					Want to try some tasty wines sourced directly from producers?
-				</div>
-				<div class="second-text">
-					Enjoy our specially selected partnership wines are coming soon!
-				</div>
+	<div class="row justify-between items-center partnership-container">
+		<div class="column col-sm col-xs-12">
+			<div class="first-text-partnership">
+				Want to try some tasty wines sourced directly from producers?
 			</div>
-			<div class="q-card-container row q-gutter-lg">
-				<q-card
-					v-for="item in items"
-					:key="item.name"
-					class="partnership-card-container column no-shadow"
-					:class="item.class"
-				>
-					<q-img
-						src="../../../assets/circle.png"
-						class="partnership-wines-image"
-					/>
-					<div class="partnership-wine-name">The full name is in this row</div>
-					<div class="q-pt-sm partnership-wine-desc">Sparkling water</div>
-					<div class="q-pt-sm">
-						<div class="flex column partnership-border q-pa-sm">
-							<div class="partnership-wine-desc">Price</div>
-							<div class="flex row justify-between">
-								<div class="flex row q-pt-sm">
-									<q-img
-										src="../../../assets/usdc.png"
-										width="25px"
-										height="25px"
-									/>
-									<div class="partnership-wine-price q-pl-sm">00.00</div>
-								</div>
-								<div>
-									<q-img src="../../../assets/trash.png" width="30px" />
-								</div>
+			<div class="second-text">
+				Enjoy our specially selected partnership wines are coming soon!
+			</div>
+		</div>
+		<div class="partnership-card-container row col">
+			<q-card
+				v-for="item in items"
+				:key="item.name"
+				class="column no-shadow col q-pa-md"
+				:class="item.class"
+			>
+				<q-img
+					src="../../../assets/circle.png"
+					class="partnership-wines-image"
+				/>
+				<div class="partnership-wine-name">The full name is in this row</div>
+				<div class="q-pt-sm partnership-wine-desc">Sparkling wine</div>
+				<div class="q-pt-md">
+					<div class="flex column partnership-border q-pa-sm">
+						<div class="partnership-wine-desc">Price</div>
+						<div class="flex row justify-between">
+							<div class="flex row q-pt-sm">
+								<q-img
+									src="../../../../public/images/USDT.svg"
+									height="22px"
+									width="22px"
+								/>
+								<div class="partnership-wine-price q-pl-sm">00.00</div>
+							</div>
+							<div>
+								<q-img src="../../../../public/images/trash.svg" width="30px" />
 							</div>
 						</div>
 					</div>
-				</q-card>
-			</div>
+				</div>
+			</q-card>
 		</div>
 	</div>
 </template>

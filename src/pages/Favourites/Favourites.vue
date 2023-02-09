@@ -4,7 +4,7 @@
 		<div class="row justify-between q-pt-sm">
 			<div class="row">
 				<div class="favorites-title">NFTs</div>
-				<div class="favorites-number q-pl-sm">{{ items.length }}</div>
+				<div class="favorites-number q-pl-sm">{{ favNFTs.length }}</div>
 			</div>
 			<div class="row">
 				<q-input
@@ -23,22 +23,20 @@
 			</div>
 		</div>
 		<div
-			v-if="!items.length"
+			v-if="!favNFTs.length"
 			class="no-nfts-container column justify-center items-center"
 		>
 			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
 			<div>You do not have any favorites yet.</div>
 		</div>
-		<div class="row justify-around favs-cards-container">
+		<div class="row favs-cards-container">
 			<q-card
-				v-for="item in items"
-				:key="item.id"
-				class="no-shadow q-ma-md favs-card-individual"
+				v-for="item in favNFTs"
+				:key="item.tokenID"
+				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6"
 			>
-				<div class="favs-card-img"></div>
-				<div class="favs-wine-name q-py-md">
-					The full name of the wine is here and here and here
-				</div>
+				<img class="main-marketplace-card-image" :src="item.nftDetails.image" />
+				<div class="favs-wine-name q-py-md">TokenID: {{ item.tokenID }}</div>
 				<div class="favs-price-container column q-pa-sm">
 					<div class="row justify-between q-pb-md">
 						<div class="starting-from">Price</div>
@@ -48,13 +46,15 @@
 							flat
 							dense
 							padding="0"
-							@click="removeNFT(item.id)"
+							@click="
+								removeNFT(item.tokenID, item.contractAddress, item.network)
+							"
 						/>
 					</div>
 					<div class="row justify-between">
 						<div class="favs-price">
 							<q-img src="../../../public/images/USDT.svg" width="20px" />
-							&nbsp;00.00
+							&nbsp;{{ item.nftDetails?.orderDetails?.listingPrice || '00.00' }}
 						</div>
 						<q-img
 							src="../../../public/images/mini-button.svg"
@@ -73,58 +73,34 @@ import { defineComponent } from 'vue-demi';
 import '../../css/Favorites/Favorites.css';
 
 import FAVsRemove from './FAVsRemove.vue';
+import { FavoritesModel } from './models/Response';
+import {
+	RemoveFavorites,
+	GetAllFavorites,
+} from '../Marketplace-Main/services/FavoritesFunctions';
+import { useUserStore } from 'src/stores/user-store';
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
 		FAVsRemove,
 	},
 	data() {
+		const userStore = useUserStore();
 		return {
-			items: [
-				{
-					id: 1,
-					name: 'Vranac',
-					price: 1111,
-				},
-				{
-					id: 2,
-					name: 'Sauvignon',
-					price: 2222,
-				},
-				{
-					id: 3,
-					name: 'Moje Vino',
-					price: 3333,
-				},
-				{
-					id: 4,
-					name: 'Vranac Pro Corde',
-					price: 4444,
-				},
-				{
-					id: 5,
-					name: 'Vranac',
-					price: 1111,
-				},
-				{
-					id: 6,
-					name: 'Sauvignon',
-					price: 2222,
-				},
-				{
-					id: 7,
-					name: 'Moje Vino',
-					price: 3333,
-				},
-				{
-					id: 8,
-					name: 'Vranac Pro Corde',
-					price: 4444,
-				},
-			],
+			favNFTs: Array<FavoritesModel>(),
+			userStore
 		};
 	},
+	mounted() {
+		this.getAllFavorites();
+	},
 	methods: {
+		async getAllFavorites() {
+			const { result: nfts } = await GetAllFavorites(
+				`?walletAddress=${this.userStore.walletAddress}`
+			);
+			this.favNFTs = nfts;
+		},
 		animation(opacity: string, transform: string, zIndex: string) {
 			const removeNFTBackground = document.querySelector(
 				'.fr-background'
@@ -137,10 +113,14 @@ export default defineComponent({
 			removeNFTBackground.style.opacity = opacity;
 			removeNFTContainer.style.transform = transform;
 		},
-		removeNFT(id: number) {
-			this.items = this.items.filter((item) => {
-				return item.id !== id;
+		async removeNFT(tokenID: string, cAddress: string, network: string) {
+			await RemoveFavorites({
+				walletAddress: this.userStore.walletAddress,
+				tokenID: tokenID,
+				contractAddress: cAddress,
+				network: network,
 			});
+			this.getAllFavorites();
 
 			this.animation('1', 'scale(1)', '200');
 

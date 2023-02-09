@@ -1,60 +1,59 @@
 .table-container {
-  background: #ffffff;
-  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
-  border-radius: 18px;
-  width: 100%;
-  height: 300px;
+	background: #ffffff;
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	border-radius: 18px;
+	width: 100%;
+	height: 300px;
 }
 
 .winemaker-container {
-  width: 80%;
+	width: 80%;
 }
 
 .property-name {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.5px;
-  color: #9d9d9d;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
 }
 
 #border {
-  width: 90%;
-  position: relative;
-  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+	width: 90%;
+	position: relative;
+	border-bottom: 1px solid rgba(94, 151, 236, 0.27);
 }
 
 .winemaker-text {
-  font-family: 'Obviously';
-  font-style: normal;
-  font-weight: 450;
-  font-size: 20px;
-  line-height: 31px;
-  display: flex;
-  align-items: center;
-  color: #212131;
-  padding-top: 40px;
-  padding-bottom: 20px;
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 20px;
+	line-height: 31px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	padding-bottom: 20px;
 }
 
 .column1 {
 }
 
 @media screen and (max-width: 600px) {
-  .column1 {
-    display: none;
-  }
-  .table-container {
-    width: 100%;
-  }
+	.column1 {
+		display: none;
+	}
+	.table-container {
+		width: 100%;
+	}
 }
 
 @media screen and (max-width: 400px) {
-  .winemaker-container {
-    width: 95%;
-  }
+	.winemaker-container {
+		width: 95%;
+	}
 }

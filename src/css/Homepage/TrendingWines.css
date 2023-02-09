@@ -1,158 +1,148 @@
-.table {
-  width: 80%;
-  background: #ffffff;
-  /* border: 1px solid rgba(94, 151, 236, 0.27); */
-  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
-  border-radius: 8px;
-  border-collapse: collapse !important;
+.trending-wines-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 31px;
+	line-height: 46px;
+	text-align: center;
+	color: #212131;
 }
 
-.wine-name-label {
-  font-family: 'Obviously';
-  font-style: normal;
-  font-weight: 450;
-  font-size: 18px;
-  line-height: 28px;
-  letter-spacing: 0.02em;
-  color: #212131;
-  z-index: 1;
+.trending-table {
+	width: 80%;
+	padding: 0.6rem;
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
+	border-radius: 20px;
+}
+
+.trending-header-row {
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 18px;
+	letter-spacing: 0.02em;
+	color: #212131;
+
+	padding: 4px 12px 10px;
+}
+
+.trending-separator {
+	background-color: rgba(94, 151, 236, 0.27);
+	height: 0.8px;
+	margin-bottom: 8px;
+}
+
+.trending-wine-rows {
+	gap: 8px;
+}
+
+.each-trending-row > div,
+.trending-header-row > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+}
+
+.each-trending-row {
+	padding: 10px 12px;
+
+	font-family: 'WorkSans';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 14px;
+}
+
+.each-trending-row:nth-child(even) {
+	background: rgba(217, 232, 255, 0.3);
+	border-radius: 8px;
+}
+
+.trending-wine-name {
+	flex: 2 !important;
+	justify-content: flex-start !important;
+}
+
+.trending-wine-name-label {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	letter-spacing: 0.02em;
+	color: #212131;
+	z-index: 1;
 }
 
 .positive {
-  font-family: 'Work Sans';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  color: #16a672;
-  padding: 15px;
-  z-index: 1;
+	color: #16a672;
 }
 
 .negative {
-  font-family: 'Work Sans';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  color: #e8294c;
-  padding: 15px;
-  z-index: 1;
+	color: #e8294c;
 }
 
-@media screen and (max-width: 992px) {
-  .three-mos {
-    display: none;
-  }
-  .trending-wines-price {
-    display: flex;
-    justify-content: start;
-  }
-}
+.trending-price {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
 
-@media screen and (max-width: 768px) {
-  .twentyFour {
-    display: none;
-  }
-}
+	/* Secondary/dark blue */
 
-@media screen and (max-width: 576px) {
-  .trending-wines-price {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .table {
-    width: 95%;
-  }
+	color: #212131;
 }
 
 .see-market-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 32px;
-  width: 260px;
-  height: 56px;
+	width: 260px;
+	height: 56px;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	outline: 1.3px solid #3586ff;
+	border: none;
+	cursor: pointer;
+	border-radius: 6px;
+	margin-top: 2rem;
 
-  /* $border: 5px; */
-  border-image-source: linear-gradient(
-    102.17deg,
-    #3586ff -1.74%,
-    #83e0b3 139.41%
-  );
-  border-image-slice: 1;
-
-  background-color: transparent;
-  cursor: pointer;
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 }
 
-.see-market-button-text {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center;
-  letter-spacing: 0.02em;
-  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-
-  /* pointer-events:; */
+@media screen and (max-width: 992px) {
+	.trending-three {
+		display: none !important;
+	}
 }
 
-.trending-wines-title {
-  font-family: 'Obviously';
-  font-style: normal;
-  font-weight: 470;
-  font-size: 31px;
-  line-height: 46px;
-  text-align: center;
-  color: #212131;
+@media screen and (max-width: 768px) {
+	.trending-twentyFour {
+		display: none !important;
+	}
+	.trending-table {
+		width: 100%;
+
+		border: none;
+		box-shadow: none;
+	}
 }
 
-.thread-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.thead {
-  position: absolute;
-  border-bottom: 1px solid rgba(94, 151, 236, 0.27);
-  width: 78%;
-  display: flex;
-  justify-content: center;
-
-  /* right: 5px; */
-  /* left: 160px; */
-}
-
-/* .background-tr {
-  position: absolute;
-  background-color: rgba(217, 232, 255, 0.3);
-  width: 78%;
-  border-radius: 8px;
-  z-index: 0;
-  height: 45px;
-} */
-
-tr:nth-child(even) {
-  background: rgba(217, 232, 255, 0.3);
-  border-radius: 8px;
-}
-
-.trending-titles {
-  font-family: 'Proxima Nova';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
-  letter-spacing: 0.02em;
-  color: #212131;
+@media screen and (max-width: 576px) {
+	.trending-wines-price {
+		display: none !important;
+	}
 }

@@ -1,88 +1,103 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-	<ConnectWallet @clicked="onCloseModals($event)" />
-	<MyWallet @clicked="onCloseModals($event)" />
-	<BurgerMenu v-if="showBurgerMenu" />
+	<!-------------------------------------- POPUP MODALS -------------------------------------->
 
-	<q-dialog v-model="suggestedWines" class="suggested-wines-background">
-		<q-card class="suggested-wines column items-center">
+	<!---------------------------- CONNECT WALLET ---------------------------->
+
+	<q-dialog
+		v-model="showConnectWallet"
+		class="connect-wallet-background row justify-center items-center"
+	>
+		<q-card class="connect-wallet-container column justify-center items-center">
 			<q-card-section>
-				<div class="join-wiv-world">
-					We're happy to see you join WiV wine world!
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+			</q-card-section>
+
+			<q-card-section>
+				<div class="connect-wallet-title">
+					Connect your Web3 Wallet to signup.
 				</div>
 			</q-card-section>
-			<q-card-section
-				class="suggest-trending-today row justify-center items-center"
-			>
-				<q-img src="../../public/images/trending.svg" width="22px" />
 
-				<div>&nbsp;&nbsp;Trending today</div>
-			</q-card-section>
-
-			<q-card-section class="suggested-paragraph">
-				<div>Check our special offers for you to start with -</div>
-				<div>most trending at this moment!</div>
-			</q-card-section>
-			<q-card-section class="suggested-wines-section row justify-between">
-				<q-card
-					v-for="item in items"
-					:key="item.id"
-					class="no-shadow q-ma-sm suggest-card-individual"
+			<q-card-section>
+				<q-btn
+					class="connect-wallet-btns connect-btn"
+					:disable="!isMetaMaskInstalled"
+					@click="connectWallet"
 				>
-					<div class="suggest-card-img"></div>
-					<div class="suggest-wine-name q-py-md">
-						The full name of the wine is here and here and here
-					</div>
-					<div class="suggest-price-container column q-pa-sm">
-						<div class="row justify-between q-pb-md">
-							<div class="suggest-starting-from">Price</div>
-							<q-btn
-								class="un-favour-btn"
-								icon="app:heart"
-								flat
-								dense
-								padding="0"
-								@click="
-									{
-									}
-								"
-							/>
-						</div>
-						<div class="row justify-between">
-							<div class="suggest-price">
-								<q-img src="../../public/images/USDT.svg" width="20px" />
-								&nbsp;00.00
-							</div>
-							<q-img
-								src="../../public/images/mini-button.svg"
-								width="24px"
-								height="24px"
-							/>
-						</div>
-					</div>
-				</q-card>
-			</q-card-section>
-
-			<q-card-section class="suggested-buttons-container row">
-				<button
-					class="suggested-buttons suggested-skip-btn"
-					@click="suggestedWines = false"
+					Connect wallet
+				</q-btn>
+				<q-btn
+					class="connect-wallet-btns no-wallet-btn"
+					:disabled="!!isMetaMaskInstalled"
+					@click="setupWallet"
 				>
-					Skip
-				</button>
-				<button
-					class="suggested-buttons suggested-show-btn"
-					@click="suggestedWines = false"
-				>
-					Show more
-				</button>
+					I don't have a wallet
+				</q-btn>
 			</q-card-section>
 		</q-card>
 	</q-dialog>
 
+	<!---------------------------- /CONNECT WALLET ---------------------------->
+
+	<!---------------------------- MY WALLET ---------------------------->
+
+	<q-dialog
+		v-model="showMyWallet"
+		position="right"
+		full-height
+		class="my-wallet-background row justify-end"
+	>
+		<q-card class="my-wallet-container column justify-between items-center">
+			<q-card-section class="my-wallet-header row items-center no-wrap">
+				<div class="my-wallet-header-container row">
+					<div>MY WALLET</div>
+					<img src="../../public/images/metamask-icon.svg" alt="" />
+					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
+				</div>
+				<img
+					class="x-icon"
+					src="../../public/images/x-icon.svg"
+					alt=""
+					@click="showMyWallet = false"
+				/>
+			</q-card-section>
+			<div class="id-mobile">walletID</div>
+
+			<q-card-section
+				class="my-wallet-ballance-container column justify-center items-center"
+			>
+				<img src="../../public/images/wallet.svg" alt="wallet-icon" />
+				<div class="ballance-wrapper column">
+					<div class="my-wallet-title q-pb-sm">Your balance is</div>
+					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
+				</div>
+				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
+					>Fund wallet</q-btn
+				>
+			</q-card-section>
+
+			<q-card-section class="my-wallet-logout" @click="logout">
+				LOG OUT
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!---------------------------- /MY WALLET ---------------------------->
+
+	<BurgerMenu
+		v-if="showBurgerMenu"
+		@closeBurgerMenu="onBurgerMenu('close')"
+		@openConnectWallet="showConnectWallet = true"
+	/>
+	<SuggestedWines />
+
+	<!-------------------------------------- /POPUP MODALS -------------------------------------->
+
 	<q-layout view="lHh Lpr lFf">
 		<q-header
 			class="nav-bar q-py-xs"
-			:style="showModals && { 'z-index': '-1' }"
+			:style="(showConnectWallet || showMyWallet) && { 'z-index': '-1' }"
 		>
 			<q-toolbar class="row justify-between items-center">
 				<div
@@ -133,7 +148,7 @@
 									@click="$router.push('/marketplace?tab=recommended')"
 								>
 									<q-item-section>
-										<q-item-label>Recomended</q-item-label>
+										<q-item-label>Recommended</q-item-label>
 									</q-item-section>
 								</q-item>
 							</q-list>
@@ -158,11 +173,13 @@
 				</div>
 				<div class="nav-bar-container-right row items-center">
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/favs-icon.svg"
 						@click="$router.push('/favorites')"
 					/>
 					<img
+						v-if="!!userStore.walletAddress"
 						class="icons"
 						src="../../public/images/bell-icon.svg"
 						@click="
@@ -174,16 +191,35 @@
 						class="btn-dropdown-menu profile-dropdown"
 						dense
 						flat
+						:to="
+							!!userStore.walletAddress
+								? { path: '/orders' }
+								: { query: { next: $route.fullPath, connect: 'open' } }
+						"
 						split
 						icon="app:profile"
 					>
 						<div class="q-btn-menu-div">
+							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
+								<q-chip
+									v-close-popup
+									clickable
+									color="white"
+									class="text-bold"
+									@click="$router.push('orders')"
+								>
+									<q-avatar size="24px">
+										<img :src="userStore.user?.avatar" />
+									</q-avatar>
+									{{ userStore.walletAddress.slice(0, 10) }}...
+								</q-chip>
+							</q-toolbar>
 							<q-list>
 								<q-item
 									v-if="!!userStore.walletAddress"
 									v-close-popup
 									clickable
-									@click="onOpenModals('myWallet')"
+									@click="showMyWallet = true"
 								>
 									<q-item-section>
 										<q-item-label>my wallet</q-item-label>
@@ -193,21 +229,17 @@
 									v-else
 									v-close-popup
 									clickable
-									@click="onOpenModals('connectWallet')"
+									@click="showConnectWallet = true"
 								>
 									<q-item-section>
 										<q-item-label>sign up</q-item-label>
-
 									</q-item-section>
 								</q-item>
 
 								<q-item
 									v-close-popup
 									clickable
-									@click="
-										{
-										}
-									"
+									href="https://dwc.wiv-tech.com/#/"
 								>
 									<q-item-section>
 										<q-item-label>digital wine cellar</q-item-label>
@@ -294,19 +326,22 @@
 					class="burger-menu-icon"
 					src="../../public/images/burger-icon.svg"
 					alt="burger-menu"
-					@click="onOpenModals('burgerMenu')"
+					@click="onBurgerMenu('open')"
 				/>
 				<img
 					v-else
 					class="burger-menu-exit-icon"
 					src="../../public/images/x-burger-icon.svg"
 					alt="burger-menu"
-					@click="onCloseModals(true)"
+					@click="onBurgerMenu('close')"
 				/>
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
-			<router-view />
+			<router-view
+				@open-wallet-sidebar="showMyWallet = !showMyWallet"
+				@openConnectWallet="showConnectWallet = true"
+			/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -314,121 +349,146 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
+// import transakSDK from '@transak/transak-sdk';
+import transakSDK from '@transak/transak-sdk';
 
 import '../css/MainLayout/MainLayout.scss';
+import '../css/MainLayout/ConnectWallet.css';
+import '../css/MainLayout/MyWallet.css';
 
 import { useUserStore } from 'src/stores/user-store';
-import ConnectWallet from './components/ConnectWallet.vue';
 import BurgerMenu from './components/BurgerMenu.vue';
-import MyWallet from './components/MyWallet.vue';
+import SuggestedWines from './components/SuggestedWines.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { ordersStore } from 'src/stores/orders-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
 	name: 'MainLayout',
 	components: {
-		ConnectWallet,
 		BurgerMenu,
-		MyWallet,
+		SuggestedWines,
 	},
 	data() {
 		const userStore = useUserStore();
+		const nftStore = useNFTStore();
+		const orderStore = ordersStore();
+		const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
 		return {
 			user: true,
-			showModals: false,
 			showBurgerMenu: false,
-			suggestedWines: false,
+			showMyWallet: false,
+			showConnectWallet: false,
 			userStore,
+			nftStore,
+			orderStore,
 			walletAddress: '',
-			items: [
-				{
-					id: 1,
-					name: 'Vranac',
-					price: 1111,
-				},
-				{
-					id: 2,
-					name: 'Sauvignon',
-					price: 2222,
-				},
-				{
-					id: 3,
-					name: 'Moje Vino',
-					price: 3333,
-				},
-				{
-					id: 4,
-					name: 'Vranac Pro Corde',
-					price: 4444,
-				},
-			],
+			isMetaMaskInstalled,
+			balance: 0,
 		};
 	},
-	async mounted() {
-		const userStore = useUserStore();
-
-		this.walletAddress = userStore.walletAddress;
+	watch: {
+		$route: {
+			handler: function () {
+				if (
+					this.$route.query?.connect &&
+					this.$route.query?.connect === 'open'
+				) {
+					this.showConnectWallet = true;
+				}
+			},
+			immediate: true,
+		},
 	},
 
+	async mounted() {
+		await this.userStore.checkConnection();
+		this.walletAddress = this.userStore.walletAddress;
+		if (!this.walletAddress) {
+			this.ClearStore();
+		}
+	},
 	methods: {
-		animation(
-			modal: string,
-			opacity: string,
-			transform: string,
-			zIndex: string
-		) {
-			const connectBackground = document.querySelector(
-				'.connect-wallet-background'
-			) as HTMLElement;
-			const connectContainer = document.querySelector(
-				'.connect-wallet-container'
-			) as HTMLElement;
-			const walletBackground = document.querySelector(
-				'.my-wallet-background'
-			) as HTMLElement;
-			const walletContainer = document.querySelector(
-				'.my-wallet-container'
-			) as HTMLElement;
-			switch (modal) {
-				case 'connectWallet':
-					connectBackground.style.zIndex = zIndex;
-					connectBackground.style.opacity = opacity;
-					connectContainer.style.transform = transform;
-					break;
-				case 'myWallet':
-					walletBackground.style.opacity = opacity;
-					walletBackground.style.zIndex = zIndex;
-					walletContainer.style.transform = transform;
+		async fundWallet() {
+			let transak = new transakSDK({
+				apiKey: process.env.TRANSAK_API_KEY, // Your API Key
+				environment: 'STAGING', // STAGING/PRODUCTION
+				widgetHeight: '625px',
+				widgetWidth: '500px',
+				// Examples of some of the customization parameters you can pass
+				defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+				walletAddress: this.userStore.walletAddress, // Your customer's wallet address
+				themeColor: '#3586ff', // App theme color
+				fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
+				// email: this.userStore.user?.email, // Your customer's email address
+				redirectURL: this.$route.fullPath, // Redirect URL of your app
+			});
+			this.showMyWallet = false;
+			transak.init();
+
+			transak.on(
+				transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
+				async (orderData: any) => {
+					// TODO: Notitfy user on balance update
+					this.balance = await this.userStore.getWalletBalance();
+					// console.log(orderData);
+					transak.close();
+				}
+			);
+			// This is so that the balance is updated after new funds are imported
+		},
+		async connectWallet() {
+			this.showConnectWallet = false;
+			await this.userStore.connectWallet();
+			this.balance = await this.userStore.getWalletBalance();
+			if (this.$route.query?.next) {
+				const next = this.$route.query?.next as string;
+				this.$router.replace({ path: next });
 			}
 		},
 
-		onOpenModals(modal: string) {
+		setupWallet() {
+			this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
+			if (!this.isMetaMaskInstalled) {
+				//If it isn't installed we ask the user to click to install it
+				const onboarding = new MetaMaskOnboarding({
+					forwarderOrigin: this.$route.fullPath,
+				});
+				onboarding.startOnboarding();
+			}
+		},
+
+		onBurgerMenu(modal: string) {
 			switch (modal) {
-				case 'connectWallet':
-					this.showModals = true;
-					this.animation('connectWallet', '1', 'scale(1)', '200');
-					break;
-				case 'myWallet':
-					this.showModals = true;
-					this.animation('myWallet', '1', 'translateX(0%)', '200');
-					break;
-				case 'burgerMenu':
+				case 'open':
 					this.showBurgerMenu = true;
+
+					document.body.classList.add('no-scroll');
+					break;
+				case 'close':
+					this.showBurgerMenu = false;
+					document.body.classList.remove('no-scroll');
 					break;
 			}
-			document.body.classList.add('no-scroll');
 		},
 
-		onCloseModals(title: boolean) {
-			if (title === true) {
-				this.showModals = false;
-				this.showBurgerMenu = false;
-				this.animation('connectWallet', '0', 'scale(0.5)', '-200');
-				this.animation('myWallet', '0', 'translateX(100%)', '-200');
-				document.body.classList.remove('no-scroll');
-			}
-		},
 		async logout() {
 			this.userStore.walletAddress = '';
+
+			this.showMyWallet = false;
+
+			if (this.$route.meta.requiresAuth) {
+				this.$router.push('/');
+				return;
+			}
+			window.location.reload();
+			this.ClearStore();
+		},
+		ClearStore() {
+			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+			this.nftStore.fetchNFTsStatus = false;
+			this.orderStore.$reset();
 		},
 		installMetaMask() {
 			this.$q
@@ -442,7 +502,7 @@ export default defineComponent({
 				})
 				.onOk(() => {
 					const onboarding = new MetaMaskOnboarding({
-						forwarderOrigin: 'http://localhost:8081',
+						forwarderOrigin: this.$route.fullPath,
 					});
 					onboarding.startOnboarding();
 				})

@@ -1,0 +1,17 @@
+.loading-metadata-icon {
+  width: 40vw;
+  max-width: 350px;
+}
+
+.loading-metadata-text {
+  font-family: 'ProximaNova-Bold';
+  color: #3586FF;
+  font-size: 20px;
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+	.loading-metadata-icon {
+		width: 200px;
+	}
+}
