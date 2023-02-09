@@ -30,14 +30,20 @@ export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndO
 interface FavoritesAndOrderDetails {
 	favorited?: null | boolean;
 
-  orderDetails?: {
+  offerDetails?: {
+		highestBidCurrency: string;
+    highestBid: string;
+    highestBidHash: string;
+		highestBidExpTime: number;
+  };
+
+	listingDetails?: {
     listingPrice: string;
     currency: string;
     orderHash: string;
     transactionStatus: boolean;
     expTime: string;
-    highestBid: string;
-  };
+	}
 }
 
 interface TokenProperties {

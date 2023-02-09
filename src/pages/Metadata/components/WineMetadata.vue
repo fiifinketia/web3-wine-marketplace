@@ -48,7 +48,7 @@
 									Processing price
 								</div>
 							</div>
-							<div v-else-if="!!nft.orderDetails?.listingPrice && !!nft.orderDetails.transactionStatus" class="flex row items-center">
+							<div v-else-if="!!nft.listingDetails?.listingPrice && !!nft.listingDetails.transactionStatus" class="flex row items-center">
 								<div>
 									<q-img
 										src="../../../assets/usdc.svg"
@@ -56,10 +56,10 @@
 									/>
 								</div>
 								<div class="price1">
-									{{ nft.orderDetails?.listingPrice }}
+									{{ nft.listingDetails?.listingPrice }}
 								</div>
 							</div>
-							<div v-else-if="nft.orderDetails?.listingPrice == null" class="flex row items-center">
+							<div v-else-if="nft.listingDetails?.listingPrice == null" class="flex row items-center">
 								<div class="price1">
 									Not Available
 								</div>
@@ -73,16 +73,15 @@
 									Processing price
 								</div>
 							</div>
-							
 						</div>
-						<div v-if="nft.orderDetails?.listingPrice" class="flex column">
+						<div class="flex column">
 							<div class="bid-text">Highest bid from</div>
 							<div class="flex row items-center q-pt-sm">
 								<div>
 									<q-img src="../../../assets/usdc.svg" width="20px" />
 								</div>
 								<div class="bid-price1">
-									{{ nft.orderDetails?.highestBid || '--.--' }}
+									{{ nft.offerDetails?.highestBid || '--.--' }}
 								</div>
 							</div>
 						</div>
@@ -92,7 +91,7 @@
 		</div>
 		<div v-if="userStore.walletAddress" class="q-pt-lg row modal-container">
 			<div v-if="nft.isOwner" class="q-pt-lg flex row justify-center modal-container">
-				<div v-if="!nft.orderDetails?.listingPrice" class="q-pr-sm">
+				<div v-if="!nft.listingDetails?.orderHash" class="q-pr-sm">
 					<q-btn
 						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 						no-caps
@@ -119,7 +118,7 @@
 					class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 					no-caps
 					flat
-					:disable="!nft.orderDetails?.listingPrice"
+					:disable="!nft.listingDetails?.orderHash"
 					@click="openBuyNowModal = !openBuyNowModal"
 				>
 					Buy now
@@ -324,7 +323,7 @@
 							<div class="row col-12 justify-between">
 								<div class="col-5 q-pa-sm">
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
-									<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+									<p class="text-h6">{{ nft.listingDetails?.listingPrice }}</p>
 								</div>
 								<div class="col-7 q-pa-none">
 									<!-- // Count down display -->
@@ -377,7 +376,7 @@
 						<q-separator size="2px" color="accent" />
 						<div class="row col-6 q-pa-sm">
 							<p class="text-weight-thin col-12 q-mb-xs">Total</p>
-							<p class="text-h6">{{ nft.orderDetails?.listingPrice }}</p>
+							<p class="text-h6">{{ nft.listingDetails?.listingPrice }}</p>
 						</div>
 						<q-checkbox
 							v-model="buyTokenTOCAccepted"
@@ -483,7 +482,7 @@
 							<div class="row col-12 justify-between">
 								<div class="col-6 q-pa-sm">
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
-									<p class="text-h6">{{ nft.orderDetails?.listingPrice ? nft.orderDetails.listingPrice : 'Not Available'}}</p>
+									<p class="text-h6">{{ nft.listingDetails?.listingPrice ? nft.listingDetails.listingPrice : 'Not Available'}}</p>
 								</div>
 							</div>
 							<div class="row col-12 justify-between">
@@ -725,7 +724,7 @@ export default defineComponent({
 		},
 		openBuyNowModal: function (val) {
 			if (val === true) {
-				const tDate = parseInt(this.nft.orderDetails!.expTime);
+				const tDate = parseInt(this.nft.listingDetails!.expTime);
 				const timer = new CountdownTimer({
 					selector: '#clock1',
 					targetDate: new Date(tDate * 1000),
@@ -757,31 +756,30 @@ export default defineComponent({
 			// 	return;
 			// }
 			try {
-				this.makeOfferLoading = true;
-				if (!!this.nft.orderDetails) {					
-					if (this.nft.tokenType === TOKENTYPE.ERC721) {
-						try {
-							await CreateERC721Offer(
-								this.nft.tokenID,
-								this.nft.smartContractAddress,
-								this.nft.brand,
-								this.nft.image,
-								this.userStore.walletAddress,
-								this.offerPrice.toString(),
-								this.offerExpirationDate
-							);
-						} catch (error) {
-							throw error;
-						}
+				this.makeOfferLoading = true;		
+				if (this.nft.tokenType === TOKENTYPE.ERC721) {
+					try {
+						await CreateERC721Offer(
+							this.nft.tokenID,
+							this.nft.smartContractAddress,
+							this.nft.brand,
+							this.nft.image,
+							this.userStore.walletAddress,
+							this.offerPrice.toString(),
+							this.offerExpirationDate
+						);
+					} catch (error) {
+						throw error;
 					}
-					this.offerPrice = 0;
-					this.openMakeOfferModal = false;
-					this.makeOfferLoading = false;
-					this.openOfferCompletedModal = true;
-					setTimeout(() => {
-						this.openOfferCompletedModal = false;
-					}, this.completedTimeoutModal);
 				}
+				this.offerPrice = 0;
+				this.openMakeOfferModal = false;
+				this.makeOfferLoading = false;
+				this.openOfferCompletedModal = true;
+				setTimeout(() => {
+					this.openOfferCompletedModal = false;
+				}, this.completedTimeoutModal);
+				
 			} catch (error: any) {
 				this.makeOfferLoading = false;
 				this.openOfferFailedModal = true;
@@ -805,14 +803,14 @@ export default defineComponent({
 		async buyNow() {
 			try {
 				// const walletBalance = await this.userStore.getWalletBalance();
-				// if (walletBalance < Number(this.nft.orderDetails?.listingPrice)) {
+				// if (walletBalance < Number(this.nft.listingDetails?.listingPrice)) {
 				// 	this.insufficientFundsToBuy = true;
 				// 	return;
 				// }
-				if (!!this.nft.orderDetails) {
+				if (!!this.nft.listingDetails) {
 					this.buyNowLoading = true;
 					await FulfillBasicOrder(
-						this.nft.orderDetails.orderHash,
+						this.nft.listingDetails.orderHash,
 						this.nft.brand,
 						false,
 						this.userStore.walletAddress,
@@ -905,8 +903,8 @@ export default defineComponent({
 			}
 		},
 		async cancelOrder() {
-			if (!!this.nft.orderDetails) {
-				await CancelSingleOrder(this.nft.orderDetails.orderHash);
+			if (!!this.nft.listingDetails) {
+				await CancelSingleOrder(this.nft.listingDetails.orderHash);
 			}
 		},
 		async openWalletSideBar() {
