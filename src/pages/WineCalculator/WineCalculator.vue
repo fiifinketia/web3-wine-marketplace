@@ -536,6 +536,7 @@ export default defineComponent({
 				this.highRisk = true;
 				this.selectedRisk = 'High';
 			}
+
 			this.calculating = true;
 			setInterval(() => {
 				this.calculating = false;
@@ -551,6 +552,7 @@ export default defineComponent({
 		},
 
 		calculateFinalWorth(type: string) {
+
 			this.calculateWorth = true;
 
 			setTimeout(() => {
