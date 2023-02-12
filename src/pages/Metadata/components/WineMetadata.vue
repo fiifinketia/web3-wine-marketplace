@@ -118,7 +118,7 @@
 					class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 					no-caps
 					flat
-					:disable="!nft.listingDetails?.orderHash"
+					:disable="!nft.listingDetails?.orderHash || !nft.listingDetails.transactionStatus"
 					@click="openBuyNowModal = !openBuyNowModal"
 				>
 					Buy now
@@ -904,7 +904,7 @@ export default defineComponent({
 		},
 		async cancelOrder() {
 			if (!!this.nft.listingDetails) {
-				await CancelSingleOrder(this.nft.listingDetails.orderHash);
+				await CancelSingleOrder(this.nft.listingDetails.orderHash, this.userStore.walletAddress);
 			}
 		},
 		async openWalletSideBar() {
