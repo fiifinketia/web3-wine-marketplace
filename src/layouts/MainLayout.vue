@@ -62,7 +62,7 @@
 					@click="showMyWallet = false"
 				/>
 			</q-card-section>
-			<div class="id-mobile">walletID</div>
+			<div class="id-mobile">{{ walletAddress.slice(0, 15) + '...' }}</div>
 
 			<q-card-section
 				class="my-wallet-ballance-container column justify-center items-center"
@@ -84,6 +84,211 @@
 	</q-dialog>
 
 	<!---------------------------- /MY WALLET ---------------------------->
+
+	<!---------------------------- HELP CENTRE ---------------------------->
+
+	<q-dialog
+		v-model="showHelpCentre"
+		position="left"
+		full-height
+		class="my-wallet-background row justify-end help-centre"
+	>
+		<q-card
+			class="my-wallet-container column justify-between items-center full-width"
+		>
+			<q-card-section
+				class="my-wallet-header row items-center no-wrap justify-between"
+			>
+				<div class="my-wallet-header-container row help-header-container">
+					<div
+						:class="mainHelpWindow && 'help-header-focus'"
+						style="cursor: pointer"
+						@click="
+							mainHelpWindow = true;
+							contactSupport = false;
+						"
+					>
+						HELP CENTRE
+					</div>
+					|
+					<div v-if="contactSupport" class="help-header-focus">
+						CONTACT SUPPORT
+					</div>
+				</div>
+				<img
+					class="x-icon"
+					src="../../public/images/x-icon.svg"
+					alt=""
+					@click="showHelpCentre = false"
+				/>
+			</q-card-section>
+
+			<q-card-section
+				v-if="mainHelpWindow"
+				class="column justify-center items-center"
+			>
+				<div class="help-centre-title">How can we help you?</div>
+				<p class="help-p">
+					Search for a question or topic, or find relevant ones below
+				</p>
+				<div class="row full-width">
+					<q-input
+						v-model="helpSearchBar"
+						dense
+						outlined
+						color="blue-6"
+						placeholder="Search"
+						class="help-search-bar q-pr-xs"
+					>
+						<template #prepend>
+							<q-icon name="app:search" />
+						</template>
+					</q-input>
+					<q-btn flat class="help-search-btn">GO</q-btn>
+				</div>
+			</q-card-section>
+			<q-card-section
+				v-if="mainHelpWindow"
+				class="row justify-center items-center help-card-container"
+			>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">How to start?</div>
+						<div class="help-card-p column">
+							<div>Web3 Wallet</div>
+							<div>Identity verification</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">How to get NFT?</div>
+						<div class="help-card-p column">
+							<div>Buying now</div>
+							<div>Making offers (bidding)</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">Storing my NFTs</div>
+						<div class="help-card-p column">
+							<div>Digital Wine Cellar</div>
+							<div>Portfolio</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">Sell my NFT</div>
+						<div class="help-card-p column">
+							<div>Listing</div>
+							<div>Incoming offers</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">My Profile</div>
+						<div class="help-card-p column">
+							<div>Offers & Listings</div>
+							<div>Trading history</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 q-pa-sm">
+					<div class="help-card">
+						<div class="help-card-title">Policy</div>
+						<div class="help-card-p column">
+							<div>Privacy Policy</div>
+							<div>Terms of service</div>
+						</div>
+					</div>
+				</div>
+			</q-card-section>
+
+			<q-card-section
+				v-if="mainHelpWindow"
+				class="column justify-center items-center"
+			>
+				<div class="help-p q-pb-xs">Can't find the answer?</div>
+				<div class="ask-team q-mb-lg">Ask our team!</div>
+				<q-btn
+					flat
+					class="support-btn"
+					@click="
+						mainHelpWindow = false;
+						contactSupport = true;
+					"
+					>Contact support</q-btn
+				>
+			</q-card-section>
+
+			<q-card-section
+				v-if="contactSupport"
+				class="column justify-center items-center help-p contact-section-wrapper"
+			>
+				We will much appreciate if you add some more info so that
+				<div class="q-py-xs">
+					we could have more productive communication at first
+				</div>
+				message.
+			</q-card-section>
+			<q-card-section
+				v-if="contactSupport"
+				class="row justify-between items-center help-contact-icons contact-section-wrapper"
+			>
+				<div class="column justify-center items-center" style="width: 110px">
+					<img src="../../public/images/call-icon.svg" alt="" /> Request a call
+				</div>
+				<div class="column justify-center items-center" style="width: 110px">
+					<img src="../../public/images/discord-1.svg" alt="" /> Message us
+				</div>
+				<div class="column justify-center items-center" style="width: 110px">
+					<img src="../../public/images/mail-us.svg" alt="" /> Mail us
+				</div>
+			</q-card-section>
+			<q-card-section v-if="contactSupport" class="contact-section-wrapper">
+				<q-form
+					class="column justify-between items-start full-width contact-form"
+					@submit="onSubmit"
+				>
+					<div>Name</div>
+					<q-input
+						v-model="nameInput"
+						outlined
+						placeholder="Please enter your name"
+						class="contact-form-inputs contact-support-form full-width"
+					/>
+					<div>Email <span>*</span></div>
+
+					<q-input
+						v-model="mailInput"
+						type="email"
+						outlined
+						placeholder="Please enter email"
+						class="contact-form-inputs contact-support-form full-width"
+					/>
+					<div>How can we help? <span>*</span></div>
+					<q-input
+						v-model="mailInput"
+						type="textarea"
+						outlined
+						placeholder="Tell us a little about things you're curious about"
+						class="full-width contact-support-form"
+					/>
+					<q-btn
+						flat
+						class="support-btn self-end q-my-lg"
+						type="submit"
+						label="Send the message"
+					/>
+				</q-form>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!---------------------------- /HELP CENTRE ---------------------------->
 
 	<BurgerMenu
 		v-if="showBurgerMenu"
@@ -347,7 +552,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
 // import transakSDK from '@transak/transak-sdk';
 import transakSDK from '@transak/transak-sdk';
@@ -355,6 +560,7 @@ import transakSDK from '@transak/transak-sdk';
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';
 import '../css/MainLayout/MyWallet.css';
+import '../css/MainLayout/HelpCentre.css';
 
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
@@ -380,12 +586,18 @@ export default defineComponent({
 			showBurgerMenu: false,
 			showMyWallet: false,
 			showConnectWallet: false,
+			showHelpCentre: true,
+			mainHelpWindow: true,
+			contactSupport: false,
 			userStore,
 			nftStore,
 			orderStore,
 			walletAddress: '',
 			isMetaMaskInstalled,
 			balance: 0,
+			helpSearchBar: ref(''),
+			nameInput: ref(''),
+			mailInput: ref(''),
 		};
 	},
 	watch: {
@@ -410,6 +622,9 @@ export default defineComponent({
 		}
 	},
 	methods: {
+		onSubmit() {
+			console.log('submit');
+		},
 		async fundWallet() {
 			let transak = new transakSDK({
 				apiKey: process.env.TRANSAK_API_KEY, // Your API Key

@@ -26,12 +26,13 @@
 }
 
 .my-wallet-header {
-	font-family: 'ProximaNova-Regular';
+	font-family: 'ProximaNova-Bold';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 18px;
 	line-height: 26px;
 	letter-spacing: 0.02em;
+	width: 100%;
 }
 
 .my-wallet-header-container {
@@ -39,12 +40,8 @@
 }
 
 .x-icon {
-	padding-left: 5rem;
+	margin-left: 5rem;
 	cursor: pointer;
-}
-
-.my-wallet-ballance-container {
-	gap: 2.5rem;
 }
 
 .my-wallet-ballance-container {
@@ -127,6 +124,7 @@
 .id-mobile {
 	display: none;
 }
+
 @media screen and (max-width: 570px) {
 	.wallet-id {
 		display: none;
@@ -156,9 +154,3 @@
 		width: 100%;
 	}
 }
-
-/* @media screen and (max-width: 450px) {
-  .my-wallet-header {
-    gap: 1rem;
-  }
-} */

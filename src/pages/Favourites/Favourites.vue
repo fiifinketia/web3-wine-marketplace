@@ -8,7 +8,7 @@
 			</div>
 			<div class="row">
 				<q-input
-					v-model="text"
+					v-model="favsSearchBar"
 					dense
 					outlined
 					color="blue-6"
@@ -79,6 +79,7 @@ import {
 	GetAllFavorites,
 } from '../Marketplace-Main/services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
+import { ref } from 'vue';
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
@@ -87,8 +88,9 @@ export default defineComponent({
 	data() {
 		const userStore = useUserStore();
 		return {
+			favsSearchBar: ref(''),
 			favNFTs: Array<FavoritesModel>(),
-			userStore
+			userStore,
 		};
 	},
 	mounted() {
