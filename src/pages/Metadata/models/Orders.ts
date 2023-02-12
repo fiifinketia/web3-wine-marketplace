@@ -64,6 +64,7 @@ export interface UpdateListingRequest extends TokenIdentifier {
 	
 	readonly orderHash: string;
 	readonly isOwner: boolean;
+	readonly nonce: number;
 	readonly walletAddress: string;
 }
 

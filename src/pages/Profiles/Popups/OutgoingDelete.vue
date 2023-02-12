@@ -44,6 +44,7 @@ import 'src/css/Profile/Component/dialog.css'
 import { defineComponent } from 'vue';
 import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
+import { useUserStore } from 'src/stores/user-store';
 export default defineComponent({
   props: {
     orderHash: {
@@ -51,10 +52,16 @@ export default defineComponent({
       required: true
     }
   },
+  data() {
+    const userStore = useUserStore();
+    return {
+      userStore
+    }
+  },
   methods: {
     async CancelOrder() {
       try {
-        await CancelSingleOrder(this.orderHash);
+        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
         this.$emit('remove-offer', this.orderHash);
       } catch (err) {
         this.BuildErrorDialog(err);

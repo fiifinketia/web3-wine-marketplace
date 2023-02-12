@@ -261,7 +261,7 @@ export default defineComponent({
   methods: {
     async CreateNewOrder() {
       try {
-        await CancelSingleOrder(this.orderHash);
+        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
         this.$emit('remove-listing', this.orderHash);
         try {
           await CreateERC721Listing(
