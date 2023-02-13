@@ -25,7 +25,23 @@ export interface NewPolygonNFT extends TokenProperties, OrderProperties {
 	typeID?: string;
 }
 
-export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails{}
+export interface SeaportTransactionsModel {
+	network: string;
+	to?: string;
+	from: string;
+	event: string;
+	transactionHash: string;
+	contractAddress: string;
+	identifierOrCriteria: string;
+	price?: string;
+	timestamp: number;
+	currency: string;
+	image?: string;
+	brand?: string;
+}
+export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails{
+	nftHistory: SeaportTransactionsModel
+}
 
 interface FavoritesAndOrderDetails {
 	favorited?: null | boolean;

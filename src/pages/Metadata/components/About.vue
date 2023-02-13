@@ -3,70 +3,32 @@
 		<div class="about-container flex column">
 			<div class="about-title">About</div>
 			<div class="q-pt-lg paragraph">
-				The highlighted clans used a "RunRig" system to distribute land amogst
-				their clansmen in a series of widely dispersed holdings. The emphasis
-				was not an any one farm but rather the communal element of the whole.
-			</div>
-			<div class="q-pt-lg paragraph">
-				The highlighted clans used a "RunRig" system to distribute land amogst
-				their clansmen in a series of widely dispersed holdings. The emphasis
-				was not an any one farm but rather the communal element of the whole.
-			</div>
-			<div class="q-pt-lg paragraph">
-				The highlighted clans used a "RunRig" system to distribute land amogst
-				their clansmen in a series of widely dispersed holdings. The emphasis
-				was not an any one farm but rather the communal element of the whole.
+				{{ nft.description }}
 			</div>
 		</div>
 		<div class="flex column properties-container">
 			<div class="about-title q-pb-lg">Properties</div>
-			<div class="flex table-container column items-center">
+			<div class="flex row table-container items-center">
 				<div
-					class="flex row justify-between property-container q-pt-lg q-pb-lg"
+					v-for="property in aboutProperties"
+					:key="property"
+					class="col-3 justify-between property-container"
 				>
-					<div class="flex column text-center items-center column1">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
+					<div v-if="property === 'format'" class="flex column text-center items-center">
+						<div class="property-name">Bottle Size</div>
+						<div class="property-value">{{ nft[property] }}</div>
 					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
+					<div v-else-if="property === 'wivVintage'" class="flex column text-center items-center">
+						<div class="property-name">WiV Vintage</div>
+						<div class="property-value">{{ nft[property] }}</div>
 					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
+					<div v-else-if="property === 'productionCountry'" class="flex column text-center items-center">
+						<div class="property-name">Production Country</div>
+						<div class="property-value">{{ nft[property] }}</div>
 					</div>
-				</div>
-				<div id="border" />
-				<div
-					class="flex row justify-between property-container q-pt-lg q-pb-lg"
-				>
-					<div class="flex column text-center items-center column1">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
-					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
-					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
-					</div>
-				</div>
-				<div id="border" />
-				<div class="flex row justify-between property q-pt-lg">
-					<div class="flex column text-center items-center column1">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
-					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
-					</div>
-					<div class="flex column text-center items-center">
-						<div class="property-name">Property name</div>
-						<div class="property-value">Property value</div>
+					<div v-else class="flex column text-center items-center">
+						<div class="property-name"> {{ property.charAt(0).toUpperCase() + property.slice(1) }}</div>
+						<div class="property-value">{{ nft[property as keyof typeof nft] }}</div>
 					</div>
 				</div>
 			</div>
@@ -74,11 +36,40 @@
 	</div>
 </template>
 
-<script>
-import { defineComponent } from 'vue-demi';
+<script lang="ts">
+import { defineComponent, PropType } from 'vue-demi';
+import { NFTWithListingAndFavorites } from '../models/Metadata';
 import '../../../css/Metadata/About.css';
 export default defineComponent({
 	name: 'AboutWine',
+	props: {
+		nft: {
+			type: Object as PropType<NFTWithListingAndFavorites>,
+			required: true,
+		},
+	},
+	data() {
+		return {
+			aboutProperties: [
+				'appellation',
+				'brand',
+				'case',
+				'format',
+				'grape',
+				'heritage',
+				'maturity',
+				'lwin',
+				'origin',
+				'producer',
+				'productionCountry',
+				'region',
+				'source',
+				'type',
+				'vintage',
+				'wivVintage',
+			],
+		};
+	},
 });
 </script>
 

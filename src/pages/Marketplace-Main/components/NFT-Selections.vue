@@ -1,5 +1,5 @@
 <template>
-	<q-page-container class="row justify-between q-pt-none q-px-sm q-gutter-y-md">
+	<div class="row justify-start q-pt-none q-mt-sm q-px-sm q-gutter-y-md" style="overflow-y: scroll; max-height: 90%;">
 		<div
 			v-for="token in allNFTs"
 			:key="
@@ -10,13 +10,7 @@
 		>
 			<div>
 				<q-card class="q-ma-xs main-marketplace-nft-card" flat>
-					<q-btn
-						flat
-						dense
-						:ripple="false"
-						class="btn--no-hover"
-
-					>
+					<q-btn flat dense :ripple="false" class="btn--no-hover">
 						<img
 							:src="token.image"
 							class="main-marketplace-card-image"
@@ -35,11 +29,7 @@
 						class="column items-start main-marketplace-price-container q-py-sm"
 					>
 						<div class="row justify-between" style="width: 100%">
-							<span
-								class="main-marketplace-price-header q-pb-xs"
-							>
-								Price
-							</span>
+							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
 							<q-img
 								v-if="!!userStore.walletAddress && token.favorited === true"
 								src="../../../../public/images/heart.svg"
@@ -71,9 +61,7 @@
 								"
 							/>
 						</div>
-						<div
-							v-if="!!token.orderDetails?.listingPrice"
-						>
+						<div v-if="!!token.orderDetails?.listingPrice">
 							<div class="row items-end q-gutter-x-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
@@ -105,17 +93,21 @@
 							</q-item>
 							<q-separator />
 							<q-item clickable v-close-popup>
-								<q-item-section @click="copyAddress(token)">Copy Link</q-item-section>
+								<q-item-section @click="copyAddress(token)"
+									>Copy Link</q-item-section
+								>
 							</q-item>
 							<q-item clickable v-close-popup>
-								<q-item-section @click="copyToken(token)">Copy Token Details</q-item-section>
+								<q-item-section @click="copyToken(token)"
+									>Copy Token Details</q-item-section
+								>
 							</q-item>
 						</q-list>
 					</q-menu>
 				</q-card>
 			</div>
 		</div>
-	</q-page-container>
+	</div>
 </template>
 
 <script lang="ts">
@@ -127,6 +119,7 @@ import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 export default defineComponent({
+	emits: ['totalTokens'],
 	data() {
 		const userStore = useUserStore();
 
@@ -204,7 +197,11 @@ export default defineComponent({
 					window.open(routeData.href, '_blank');
 					break;
 				case 'new-window':
-					window.open(routeData.href, '_blank', 'location=yes,status=yes,scrollbars=yes,height=auto,width=auto');
+					window.open(
+						routeData.href,
+						'_blank',
+						'location=yes,status=yes,scrollbars=yes,height=auto,width=auto'
+					);
 					break;
 				default:
 					this.$router.push({
@@ -220,7 +217,7 @@ export default defineComponent({
 		},
 
 		copyToken(token: any) {
-			navigator.clipboard.writeText(JSON.stringify(token))
+			navigator.clipboard.writeText(JSON.stringify(token));
 		},
 
 		copyAddress(token: any) {
@@ -232,7 +229,7 @@ export default defineComponent({
 					contractAddress: token.smartContractAddress,
 				},
 			});
-			navigator.clipboard.writeText(window.location.host+routeData.href)
+			navigator.clipboard.writeText(window.location.host + routeData.href);
 		},
 
 		selectCard(tokenID: string) {
@@ -245,6 +242,7 @@ export default defineComponent({
 			const { result: nfts } = await RetrieveFilteredNFTs(
 				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
+			this.$emit('totalTokens', nfts.length);
 			this.allNFTs = nfts;
 		},
 		ToInt(price: string) {
