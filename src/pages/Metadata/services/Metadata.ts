@@ -1,23 +1,17 @@
 import axios from 'axios';
+import { NFTWithListingAndFavorites } from '../models/Metadata';
 
 const timeStamp = new Date().getTime();
 
-export async function GetMetadata({
-	id,
-	contractAddress,
-	network,
-	walletAddress,
-}: {
-	id: string;
-	contractAddress: string;
-	network: string;
-	walletAddress: string;
-}) {
+export async function GetMetadata(
+	req: {id: string, contractAddress: string, network: string, walletAddress: string}
+) : Promise<NFTWithListingAndFavorites> {
 	try {
-		const { data } = await axios.get(
-			`${process.env.MARKETPLACE_API_URL}/market/single/investment/?identifierOrCriteria=${id}&contractAddress=${contractAddress}&network=${network}&walletAddress=${walletAddress}&timestamp=${timeStamp}`
-		);
-		return data;
+		let nft: NFTWithListingAndFavorites = {} as NFTWithListingAndFavorites;
+		nft = await axios.get(
+			`${process.env.MARKETPLACE_API_URL}/market/single/investment/?identifierOrCriteria=${req.id}&contractAddress=${req.contractAddress}&network=${req.network}&walletAddress=${req.walletAddress}&timestamp=${timeStamp}`
+		).then((res) => res.data);
+		return nft;
 	} catch (error) {
 		throw error;
 	}

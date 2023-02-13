@@ -477,13 +477,13 @@ export default defineComponent({
 			this.userStore.walletAddress = '';
 
 			this.showMyWallet = false;
+			this.ClearStore();
 
 			if (this.$route.meta.requiresAuth) {
 				this.$router.push('/');
 				return;
 			}
 			window.location.reload();
-			this.ClearStore();
 		},
 		ClearStore() {
 			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
