@@ -40,7 +40,7 @@ export interface SeaportTransactionsModel {
 	brand?: string;
 }
 export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails{
-	nftHistory: SeaportTransactionsModel
+	nftHistory: SeaportTransactionsModel[]
 }
 
 interface FavoritesAndOrderDetails {
