@@ -1,24 +1,21 @@
 <template>
-	<div class="row justify-start q-pt-none q-mt-sm q-px-sm q-gutter-y-md" style="overflow-y: scroll; max-height: 90%;">
+	<div class="row justify-between q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container">
 		<div
 			v-for="token in allNFTs"
 			:key="
 				token.tokenID + ',' + token.network + ',' + token.smartContractAddress
 			"
-			class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
+			class="main-marketplace-card-container"
 			@click="openNFT(token)"
 		>
 			<div>
 				<q-card class="q-ma-xs main-marketplace-nft-card" flat>
-					<q-btn flat dense :ripple="false" class="btn--no-hover">
-						<img
-							:src="token.image"
-							class="main-marketplace-card-image"
-							style="width: 100%"
-						/>
-					</q-btn>
+					<img
+						:src="token.image"
+						class="main-marketplace-card-image clickable-image"
+					/>
 					<div
-						class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
+						class="q-pb-sm main-marketplace-card-brand column justify-center"
 						style="text-align: left"
 					>
 						<span>
@@ -34,8 +31,8 @@
 								v-if="!!userStore.walletAddress && token.favorited === true"
 								src="../../../../public/images/heart.svg"
 								class="clickable-image"
-								width="20px"
-								height="20px"
+								:width="$q.screen.width > 350 ? '20px' : '16px'"
+								:height="$q.screen.width > 350 ? '20px' : '16px'"
 								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
@@ -49,8 +46,8 @@
 								v-else-if="!!userStore.walletAddress"
 								src="../../../../public/images/empty-heart.svg"
 								class="clickable-image"
-								width="20px"
-								height="20px"
+								:width="$q.screen.width > 350 ? '20px' : '16px'"
+								:height="$q.screen.width > 350 ? '20px' : '16px'"
 								@click.stop="
 									addRemoveFavorites(
 										token.tokenID,
@@ -61,19 +58,19 @@
 								"
 							/>
 						</div>
-						<div v-if="!!token.orderDetails?.listingPrice">
-							<div class="row items-end q-gutter-x-xs">
+						<div v-if="!!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus">
+							<div class="row items-center q-gutter-x-xs q-pt-xs">
 								<q-img
 									src="../../../assets/icons/currencies/USDC-Icon.svg"
-									style="height: 20px; width: 20px"
+									:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
 								/>
-								<span class="main-marketplace-price-text-b">
+								<span class="main-marketplace-price-text-b-active">
 									{{ ToInt(token.orderDetails.listingPrice) }}
 								</span>
 							</div>
 						</div>
-						<div v-else>
-							<span class="main-marketplace-price-text-b"> Not available </span>
+						<div v-else class="q-pt-sm" style="display: flex">
+							<span class="main-marketplace-price-text-b-inactive"> Not available </span>
 						</div>
 					</q-card-section>
 					<q-menu touch-position context-menu>
@@ -138,10 +135,6 @@ export default defineComponent({
 			wineFiltersStore,
 			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
 		};
-	},
-
-	async mounted() {
-		await this.RetrieveTokens();
 	},
 
 	methods: {
@@ -242,6 +235,7 @@ export default defineComponent({
 			const { result: nfts } = await RetrieveFilteredNFTs(
 				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
+			console.log(nfts)
 			this.$emit('totalTokens', nfts.length);
 			this.allNFTs = nfts;
 		},

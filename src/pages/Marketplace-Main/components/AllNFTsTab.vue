@@ -6,15 +6,7 @@
 				: 'fixed fit row wrap justify-start items-start content-start q-ma-xs'
 		"
 	>
-		<!-- <div class="fit row wrap justify-start items-start content-start q-ma-xs fixed"> -->
-		<!-- Header -->
 		<div class="row col-xs-12 justify-between">
-			<!-- <button
-				:style="showToogleButton ? 'display: none;' : 'display : block;'"
-				@click="toggleSidebar()"
-			>
-				Side
-			</button> -->
 			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
 				NFTs
 				<span class="text-weight-bold text-h6 q-pl-sm">{{
