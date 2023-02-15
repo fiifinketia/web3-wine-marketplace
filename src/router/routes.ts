@@ -45,7 +45,6 @@ const routes: RouteRecordRaw[] = [
 		],
 	},
 	{
-
 		path: '/orders',
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
@@ -53,6 +52,17 @@ const routes: RouteRecordRaw[] = [
 				path: '',
 
 				component: () => import('pages/Profiles/ProfileOrders.vue'),
+				meta: { requiresAuth: true },
+			},
+		],
+	},
+	{
+		path: '/calculator',
+		component: () => import('layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('pages/WineCalculator/WineCalculator.vue'),
 				meta: { requiresAuth: true },
 			},
 		],
@@ -77,7 +87,6 @@ const routes: RouteRecordRaw[] = [
 			}
 		},
 	},
-
 
 	// Always leave this as last one,
 	// but you can also remove it
