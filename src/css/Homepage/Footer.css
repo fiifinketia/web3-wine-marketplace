@@ -150,6 +150,10 @@
 		display: none;
 	}
 
+	.fifth-item {
+		display: none;
+	}
+
 	.footer-wrapper {
 		width: 95%;
 		display: flex;

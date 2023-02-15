@@ -80,20 +80,6 @@
 							/>
 						</div>
 					</div>
-					<div class="row q-pt-md">
-						<div class="q-pr-sm">
-							<q-img src="../../../../public/images/discord.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
-							<q-img src="../../../../public/images/twitter.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
-							<q-img
-								src="../../../../public/images/instagram.svg"
-								width="23px"
-							/>
-						</div>
-					</div>
 				</div>
 			</div>
 			<div class="footer-item-wrapper fifth-item">
