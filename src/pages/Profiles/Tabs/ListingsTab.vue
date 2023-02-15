@@ -31,12 +31,6 @@
             NFT
           </span>
           <span 
-            v-if="$q.screen.width > 1265"
-            class="listings-column-threshold"
-          >
-            Threshold
-          </span>
-          <span 
             v-if="$q.screen.width > 600"
             class="listings-column-price"
           >
@@ -49,7 +43,7 @@
             Yours
           </span>
           <span 
-            v-if="$q.screen.width > 1020"
+            v-if="$q.screen.width > 1265"
             class="listings-column-highestOffer"
           >
             Highest Offer
@@ -84,13 +78,6 @@
             <img v-if="$q.screen.width > 1265" :src="listing.image" class="profile-nft-image q-mr-md"/>
             <span class="profile-nft-brand"> {{ listing.brand }}</span>
           </q-btn>
-          <div
-            v-if="$q.screen.width > 1265"
-            class="row items-center listings-column-threshold"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number"> 0.00 </span>
-          </div>
           <div 
             v-if="$q.screen.width > 600"
             class="row items-center listings-column-price"
@@ -105,11 +92,10 @@
               anchor="top start" 
               self="center start"
               class="listing-tooltip-container" 
-              :offset="$q.screen.width > 1020 ? [70, 30] : [70, 40]"
+              :offset="[70, 30]"
             >
               <div class="column">
                 <div 
-                  v-if="$q.screen.width <= 1020"
                   class="row items-center justify-between"
                 >
                   <span class="listing-tooltip-label">
@@ -120,20 +106,11 @@
                     <span class="listing-tooltip-price-highest q-pl-xs"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
                   </div>
                 </div>
-                <div class="row items-center justify-between">
-                  <span class="listing-tooltip-label">
-                    Threshold
-                  </span>
-                  <div class="row items-center">
-                    <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-                    <span class="listing-tooltip-price-threshold q-pl-xs"> {{ '0.00' }} </span>
-                  </div>
-                </div>
               </div>
             </q-tooltip>
           </div>
           <div 
-            v-if="$q.screen.width > 1020"
+            v-if="$q.screen.width > 1265"
             class="row items-center listings-column-highestOffer"
           >
             <img src="../../../assets/icons/currencies/USDC-Icon.svg" />

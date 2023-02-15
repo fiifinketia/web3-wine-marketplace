@@ -1,25 +1,21 @@
 .listings-column-nft {
-  width: 28%;
-}
-
-.listings-column-threshold {
-  width: 16%;
+  width: 30%;
 }
 
 .listings-column-price {
-  width: 16%;
+  width: 24%;
 }
 
 .listings-column-highestOffer {
-  width: 16%;
+  width: 24%;
 }
 
 .listings-column-expire {
-  width: 16%;
+  width: 12%;
 }
 
 .listings-column-action {
-  width: 8%;
+  width: 10%;
 }
 
 .listing-tooltip-container {
@@ -53,34 +49,25 @@
 
 @media screen and (max-width: 1265px) {
   .listings-column-nft {
-    width: 35%;
-  }
-  .listings-column-price {
-    width: 18%;
-  }
-  .listings-column-highestOffer {
-    width: 18%;
-  }
-  .listings-column-expire {
-    width: 17%;
+    width: 40%;
   }
   .listings-column-action {
     width: 12%;
   }
+  .listings-column-expire {
+    width: 24%;
+  }
 }
 
 @media screen and (max-width: 1020px) {
-  .listings-column-nft {
-    width: 40%;
-  }
   .listings-column-price {
-    width: 23%;
+    width: 20%;
   }
   .listings-column-expire {
-    width: 23%;
+    width: 22%;
   }
   .listings-column-action {
-    width: 14%;
+    width: 18%;
   }
 }
 
