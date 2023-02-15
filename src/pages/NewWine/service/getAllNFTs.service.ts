@@ -8,3 +8,8 @@ export async function getAllNFTs(lwin: string) {
 		});
 	return result;
 }
+
+export async function getListCount() {
+	const getCount = await axios.get('http://localhost:3600/suggestion/count');
+	return getCount.data;
+}

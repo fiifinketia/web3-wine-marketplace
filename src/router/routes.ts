@@ -65,14 +65,12 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 		beforeEnter: async (from, to) => {
-			const mainAccount = '0xAdE82F372e70f8032f675b80E3C6A7D31E3A5269';
+			const mainAccount = process.env.OWNER_OF_NFTS;
 			const accounts = await window.ethereum.request({
 				method: 'eth_requestAccounts',
 			});
 			const account = accounts[0];
-			if (account != '0xade82f372e70f8032f675b80e3c6a7d31e3a5269') {
-				return false;
-			}
+			if (account != String(mainAccount).toLocaleLowerCase()) return false;
 		},
 	},
 

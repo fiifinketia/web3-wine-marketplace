@@ -1,6 +1,9 @@
 <template>
 	<div class="flex column">
 		<div class="flex column justify-center items-start q-pt-lg q-pl-lg">
+			<div class="q-pb-lg">
+				Number of NFTs currently on list(in database): {{ count }}
+			</div>
 			<div class="flex row">
 				<input v-model="lwin" placeholder="Input Lwin" class="lwin-search" />
 				<div class="q-pl-sm">
@@ -72,7 +75,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue-demi';
 import '../../css/NewWine/NewWine.css';
-import { getAllNFTs } from './service/getAllNFTs.service';
+import { getAllNFTs, getListCount } from './service/getAllNFTs.service';
 import { sendWineToList } from './service/sendWineToList.service';
 import { SuggestedWinesResponseModel } from './models/Response/ResponseModel.model';
 export default defineComponent({
@@ -93,12 +96,16 @@ export default defineComponent({
 			name: '',
 			bottleSize: '',
 			packSize: '',
-			tokenID: Number() || '',
+			tokenID: Number(),
 			smartContract: '',
 			price: Number() || '',
 			status: '',
 			showTable: false,
+			count: Number(),
 		};
+	},
+	mounted() {
+		this.getCount();
 	},
 	methods: {
 		async getNFTs(lwin: string) {
@@ -114,10 +121,10 @@ export default defineComponent({
 			this.selected.filter((item: any) => {
 				this.lwin = item.lwin;
 				this.name = item.name;
-				this.bottleSize = item.bottleSize;
-				this.packSize = item.packSize;
+				this.bottleSize = item.format;
+				this.packSize = item.case;
 				this.tokenID = item.tokenID;
-				this.smartContract = item.smartContract;
+				this.smartContract = item.smartContractAddress;
 			});
 		},
 		async sendWine(
@@ -146,6 +153,10 @@ export default defineComponent({
 				this.status = 'Wine is successfully added in the database';
 				this.showTable = false;
 			}
+		},
+		async getCount() {
+			const number = await getListCount();
+			this.count = number;
 		},
 	},
 });
