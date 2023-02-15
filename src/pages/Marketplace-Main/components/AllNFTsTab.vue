@@ -34,7 +34,7 @@
 						type="search"
 						color="primary"
 						class="col-10"
-						style="width:80%"
+						style="width: 80%"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -46,7 +46,7 @@
 						label="GO"
 						unelevated
 						class="col-2"
-						@click="wineFiltersStore.searchQuery = searchQuery"
+						@click="updateSearchTerm(searchQuery)"
 					/>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 					color="primary"
 					no-caps
 					flat
-					@click="wineFiltersStore.$reset()"
+					@click="wineFiltersStore.$reset(), updateSearchTerm('')"
 				/>
 				<div class="hidden-b-1023 q-pr-md">
 					<span
@@ -82,10 +82,17 @@
 
 		<!-- Sidebar -->
 
-		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
+		<MarketPlaceSidebar
+			class="col-sm-3 hidden-a-1023"
+			@search="updateSearchTerm"
+		/>
 
 		<!-- List Section -->
-		<NFTSelections  class="col-md-9 col-sm-12"  style="overflow: auto; padding-top: 0px !important"/>
+		<NFTSelections
+			:search-term="searchTerm"
+			class="col-md-9 col-sm-12"
+			style="overflow: auto; padding-top: 0px !important"
+		/>
 		<q-page-sticky
 			class="hidden-b-599 q-mr-md"
 			position="bottom-right"
@@ -119,6 +126,7 @@
 				<MarketPlaceSidebar
 					class="hidden-b-1023 all-pointer-events scroll"
 					style="height: 85%; min-width: 200px"
+					@search="updateSearchTerm"
 				/>
 				<q-card
 					flat
@@ -133,7 +141,7 @@
 							color="primary"
 							no-caps
 							flat
-							@click="wineFiltersStore.$reset()"
+							@click="wineFiltersStore.$reset(), updateSearchTerm('')"
 						/>
 						<q-btn v-close-popup label="Apply" color="primary" no-caps />
 					</q-card-section>
@@ -162,6 +170,7 @@ export default defineComponent({
 			wineFiltersStore,
 			searchQuery: '',
 			openSidebar: false,
+			searchTerm: '',
 		};
 	},
 
@@ -177,6 +186,9 @@ export default defineComponent({
 	// },
 
 	methods: {
+		updateSearchTerm(newSearchTerm: string) {
+			this.searchTerm = newSearchTerm;
+		},
 		toggleSidebar() {
 			this.openSidebar = !this.openSidebar;
 		},

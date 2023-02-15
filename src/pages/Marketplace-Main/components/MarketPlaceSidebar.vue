@@ -24,7 +24,7 @@
 				outlined
 				label="GO"
 				dense
-				@click="wineFiltersStore.searchQuery = searchQuery"
+				@click="searchForTerm"
 			/>
 		</q-card-section>
 		<q-list class="rounded-borders">
@@ -473,7 +473,7 @@ export default defineComponent({
 
 		return {
 			wineFiltersStore,
-			searchQuery: ref(''),
+			searchQuery: '',
 			brandQuery: ref(''),
 			regionQuery: ref(''),
 			producerQuery: ref(''),
@@ -590,6 +590,9 @@ export default defineComponent({
 	},
 
 	methods: {
+		searchForTerm() {
+			this.$emit('search', this.searchQuery);
+		},
 		applyMaturityFilter() {
 			// console.log(this.wineFiltersStore);
 		},
