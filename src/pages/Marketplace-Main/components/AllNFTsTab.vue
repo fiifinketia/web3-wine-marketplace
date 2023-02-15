@@ -6,7 +6,7 @@
 				: 'fixed fit row wrap justify-start items-start content-start q-ma-xs'
 		"
 	>
-		<div class="row col-xs-12 justify-between">
+		<div class="row col-xs-12 justify-between q-pb-sm">
 			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
 				NFTs
 				<span class="text-weight-bold text-h6 q-pl-sm">{{
@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- Sidebar -->
-		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023" />
+		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023 q-mt-sm" />
 
 		<!-- List Section -->
 		<NFTSelections
