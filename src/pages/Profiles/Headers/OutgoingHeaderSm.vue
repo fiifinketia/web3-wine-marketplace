@@ -6,7 +6,6 @@
         <span class="profile-nft-number"> {{ outgoingAmount }} </span>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-        <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
           v-model="outgoingBrandFilter"
           color="grey"

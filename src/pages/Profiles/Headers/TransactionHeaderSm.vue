@@ -6,7 +6,6 @@
         <span class="profile-nft-number"> {{ transactionsAmount }} </span>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-        <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
           v-model="transactionBrandFilter"
           color="grey"
