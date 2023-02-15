@@ -475,8 +475,6 @@ export default defineComponent({
 			state.selectedMonth = event.target.value;
 			state.selectedYear = Math.floor(state.selectedMonth / 12);
 			state.combined = combined.value;
-
-			console.log(state.combined);
 		}
 
 		return {
@@ -552,7 +550,6 @@ export default defineComponent({
 		},
 
 		calculateFinalWorth(type: string) {
-
 			this.calculateWorth = true;
 
 			setTimeout(() => {
