@@ -1,5 +1,9 @@
 <template>
-	<div class="row justify-between q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container">
+	<div class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
+		:class="allNFTs.length >= 4
+		? 'justify-between': allNFTs.length == 3
+		? 'justify-evenly' : 'justify-start q-gutter-x-md'"
+	>
 		<div
 			v-for="token in allNFTs"
 			:key="

@@ -81,6 +81,9 @@
   .main-marketplace-overall-container {
     margin-top: 20px;
   }
+}
+
+@media screen and (min-width: 601px) {
   .main-marketplace-card-container:nth-child(-n+3) {
     margin-top: -8px;
   }
@@ -89,6 +92,12 @@
 @media screen and (max-width: 600px) {
   .main-marketplace-card-container {
     width: 48%;
+  }
+}
+
+@media screen and (min-width: 0px) {
+  .main-marketplace-card-container:nth-child(-n+2) {
+    margin-top: -8px;
   }
 }
 
