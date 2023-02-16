@@ -30,7 +30,7 @@
 					placeholder="Search"
 					type="search"
 					color="primary"
-					class="col-9"
+					class="col-9 sidebar-search sidebar-search-stretch"
 					dense
 				>
 					<template #prepend>
@@ -38,7 +38,7 @@
 					</template>
 				</q-input>
 				<q-btn
-					class="col-2"
+					class="sidebar-go"
 					color="primary"
 					outlined
 					label="GO"
@@ -50,13 +50,14 @@
 				<!-- Listed Only filter -->
 				<q-expansion-item
 					label="Listed Only"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-list class="dark-blue-border rounded-borders q-my-sm">
 						<q-option-group
 							v-model="wineFiltersStore.listedOnly"
 							:options="wineFiltersStore.listedOnlyOptions"
 							type="radio"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -64,13 +65,14 @@
 				<!-- Sort A to Z filter -->
 				<q-expansion-item
 					label="Sort A-Z"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-list class="dark-blue-border rounded-borders q-my-sm">
 						<q-option-group
 							v-model="wineFiltersStore.sortedAtoZ"
 							:options="wineFiltersStore.sortedAtoZOptions"
 							type="radio"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -78,13 +80,14 @@
 				<!-- Type filter -->
 				<q-expansion-item
 					label="Type"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-list class="dark-blue-border rounded-borders q-my-sm">
 						<q-option-group
 							v-model="wineFiltersStore.type"
 							:options="wineFiltersStore.typeOptions"
 							type="checkbox"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -92,7 +95,7 @@
 				<!-- brand filter -->
 				<q-expansion-item
 					label="Brand"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="brandQuery"
@@ -101,6 +104,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -112,6 +116,7 @@
 							:options="brandOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -119,7 +124,7 @@
 				<!-- Origin Filter -->
 				<q-expansion-item
 					label="Origin"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="originQuery"
@@ -128,6 +133,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -139,6 +145,7 @@
 							:options="originOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -146,7 +153,7 @@
 				<!-- Producer Filter -->
 				<q-expansion-item
 					label="Producer"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="producerQuery"
@@ -155,6 +162,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -166,6 +174,7 @@
 							:options="producerOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -173,7 +182,7 @@
 				<!-- Country Filter -->
 				<q-expansion-item
 					label="Country"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="countryQuery"
@@ -182,6 +191,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -193,6 +203,7 @@
 							:options="countryOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -200,7 +211,7 @@
 				<!-- Region Filter -->
 				<q-expansion-item
 					label="Region"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="regionQuery"
@@ -209,6 +220,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -220,14 +232,15 @@
 							:options="regionOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
 
-				<!-- Appelation Filter -->
+				<!-- Appellation Filter -->
 				<q-expansion-item
 					label="Appelation"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="appellationQuery"
@@ -236,6 +249,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -247,14 +261,15 @@
 							:options="appellationOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
 
-				<!-- Price Filter -->
+				<!-- Price Filter edit-->
 				<q-expansion-item
 					label="Price"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-card class="dark-blue-border rounded-borders q-my-sm q-pa-sm">
 						<q-card-section class="row col-12">
@@ -302,10 +317,10 @@
 					</q-card>
 				</q-expansion-item>
 
-				<!-- Maturity Filter -->
+				<!-- Maturity Filter edit-->
 				<q-expansion-item
 					label="Maturity"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-card class="dark-blue-border rounded-borders q-my-sm q-pa-sm">
 						<q-card-section class="row col-12">
@@ -346,7 +361,7 @@
 				<!-- Case Filter -->
 				<q-expansion-item
 					label="Case"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="caseQuery"
@@ -355,6 +370,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -366,6 +382,7 @@
 							:options="caseOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -373,7 +390,7 @@
 				<!-- Format Filter -->
 				<q-expansion-item
 					label="Format"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="formatQuery"
@@ -382,6 +399,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -393,14 +411,15 @@
 							:options="formatOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
 
-				<!-- Inverstment Grade Filter -->
+				<!-- Investment Grade Filter -->
 				<q-expansion-item
 					label="Investment Grade"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="investmentGradeQuery"
@@ -409,6 +428,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -420,6 +440,7 @@
 							:options="investmentGradeOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -427,7 +448,7 @@
 				<!-- LWIN Filter -->
 				<q-expansion-item
 					label="LWIN"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="lwinQuery"
@@ -436,6 +457,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -447,6 +469,7 @@
 							:options="LWINOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -454,7 +477,7 @@
 				<!-- Heritage Filter -->
 				<q-expansion-item
 					label="Heritage"
-					header-class="dark-blue-border rounded-borders q-my-sm"
+					header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
 				>
 					<q-input
 						v-model="heritageQuery"
@@ -463,6 +486,7 @@
 						round
 						placeholder="Search"
 						type="search"
+						class="sidebar-search"
 					>
 						<template #prepend>
 							<q-icon name="search" />
@@ -474,6 +498,7 @@
 							:options="heritageOptions"
 							type="checkbox"
 							:style="{ maxHeight: '200px', overflowY: 'scroll' }"
+							class="sidebar-options"
 						/>
 					</q-list>
 				</q-expansion-item>
@@ -486,6 +511,7 @@
 import { defineComponent, ref } from 'vue';
 import { useWineFilters } from '../../../stores/wine-filters';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
+import 'src/css/Marketplace/sidebar.css'
 
 export default defineComponent({
 	setup() {

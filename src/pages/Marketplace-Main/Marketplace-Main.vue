@@ -4,7 +4,7 @@
 			<section class="q-gutter-y-md">
 				<q-tabs
 					v-model="tab"
-					class="text-grey hidden-a-599"
+					class="text-grey hidden-a-599 marketplace_tab-label"
 					active-color="primary"
 					indicator-color="primary"
 					align="justify"
@@ -133,5 +133,9 @@ export default defineComponent({
 <style>
 .marketplace_tab-drowpdown .q-icon {
 	width: 0.7rem;
+}
+.marketplace_tab-label {
+	font-family: 'Obviously-Bold';
+	font-size: 18px;
 }
 </style>

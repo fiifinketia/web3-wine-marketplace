@@ -8,57 +8,66 @@
 		"
 	>
 		<div class="row col-xs-12 justify-between q-pb-sm">
-			<div class="flex col-sm-2 hidden-a-599 q-pl-lg-none q-pl-md items-center">
-				NFTs
-				<span class="text-weight-bold text-h6 q-pl-sm">{{
-					totalNFTs || 0
-				}}</span>
-			</div>
-			<div class="col-sm-7 col-xs-12">
-				<div class="q-mx-xs hidden-a-1023 overflow-hidden">
-					<q-chip
-						v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
-						:key="filter"
-						removable
-						color="secondary"
-						text-color="white"
-						@remove="wineFiltersStore.removeFilter(filter)"
-					>
-						{{ filter }}
-					</q-chip>
+			<div class="row col-10">
+				<div 
+					class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4"
+				>
+					<span class="header-nfts-title">
+						NFTs
+					</span>
+					<span class="q-pl-sm header-nfts-count">{{
+						totalNFTs || 0
+					}}</span>
 				</div>
-				<div class="row hidden-b-1023 justify-between q-px-sm">
-					<q-input
-						v-model="searchQuery"
-						outlined
-						round
-						dense
-						placeholder="Search"
-						type="search"
-						color="primary"
-						class="col-10"
-						style="width: 80%"
-					>
-						<template #prepend>
-							<q-icon name="search" />
-						</template>
-					</q-input>
-					<q-btn
-						color="primary"
-						text-color="white"
-						label="GO"
-						unelevated
-						class="col-2"
-						@click="wineFiltersStore.searchQuery = searchQuery"
-					/>
+				<div class="col-8">
+					<div class="q-mx-xs hidden-a-1023 overflow-hidden">
+						<q-chip
+							v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
+							:key="filter"
+							removable
+							dense
+							color="secondary"
+							class="header-filter-chip q-px-sm"
+							text-color="white"
+							@remove="wineFiltersStore.removeFilter(filter)"
+						>
+							{{ filter }}
+						</q-chip>
+					</div>
+					<div class="row hidden-b-1023 justify-between q-px-sm">
+						<q-input
+							v-model="searchQuery"
+							outlined
+							round
+							dense
+							placeholder="Search"
+							type="search"
+							color="primary"
+							class="col-10"
+							style="width: 80%"
+						>
+							<template #prepend>
+								<q-icon name="search" />
+							</template>
+						</q-input>
+						<q-btn
+							color="primary"
+							text-color="white"
+							label="GO"
+							unelevated
+							class="col-2"
+							@click="wineFiltersStore.searchQuery = searchQuery"
+						/>
+					</div>
 				</div>
 			</div>
-			<div class="row justify-end col-sm-2 hidden-a-599">
+			<div class="row justify-end hidden-a-599 col-2 q-pr-sm">
 				<q-btn
 					style="text-decoration: underline"
-					class="row hidden-a-1023"
+					class="row hidden-a-1023 header-clear-btn"
 					label="Clear All"
 					color="primary"
+					dense
 					no-caps
 					flat
 					@click="wineFiltersStore.$reset()"
@@ -154,6 +163,7 @@ import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
 import MarketPlaceSidebar from './MarketPlaceSidebar.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
+import 'src/css/Marketplace/header.css';
 
 export default defineComponent({
 	components: {

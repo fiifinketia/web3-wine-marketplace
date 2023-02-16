@@ -1,0 +1,26 @@
+.header-nfts-title {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.header-nfts-count {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  color: #212131;
+}
+
+.header-clear-btn {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #3586FF;
+  line-height: 0;
+}
+
+.header-filter-chip {
+  color: white;
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  border-radius: 6px;
+}

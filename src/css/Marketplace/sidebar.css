@@ -1,0 +1,32 @@
+.sidebar-title {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+}
+
+.sidebar-options {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+}
+
+.sidebar-search .q-field__control {
+  border-radius: 6px !important;
+}
+
+.sidebar-search .q-icon {
+  color: rgba(157, 157, 157, 1);
+}
+
+.sidebar-search-stretch {
+  flex-grow: 1;
+}
+
+.sidebar-search .q-field__native {
+  font-family: 'ProximaNova-Regular' !important;
+  color: rgba(157, 157, 157, 1);
+}
+
+.sidebar-go {
+  border-radius: 6px;
+  font-family: 'ProximaNova-Regular';
+  width: 45px;
+}

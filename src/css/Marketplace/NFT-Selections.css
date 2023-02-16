@@ -37,6 +37,8 @@
   border: 1px solid rgba(94, 151, 236, 0.27) !important;
   backdrop-filter: blur(20px);
   border-radius: 6px !important;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .main-marketplace-price-header {
@@ -60,12 +62,6 @@
   line-height: 1;
 }
 
-@media screen and (max-width: 1920px) {
-  .main-marketplace-card-container {
-    width: 23%;
-  }
-}
-
 @media screen and (min-width: 1025px) {
   .main-marketplace-card-container:nth-child(-n+4) {
     margin-top: -8px;
@@ -73,6 +69,9 @@
   .main-marketplace-overall-container {
     padding-left: 32px;
     padding-right: 16px;
+  }
+  .main-marketplace-card-container {
+    width: 23%;
   }
 }
 
