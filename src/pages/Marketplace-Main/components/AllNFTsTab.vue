@@ -7,7 +7,10 @@
 				: 'fixed fit row wrap justify-start items-start content-start'
 		"
 	>
-		<div class="row col-xs-12 justify-between q-pb-sm">
+		<div 
+			class="row q-pb-sm col-xs-12" 
+			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
+		>
 			<div class="row col-10">
 				<div 
 					class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4"
@@ -19,7 +22,7 @@
 						totalNFTs || 0
 					}}</span>
 				</div>
-				<div class="col-8">
+				<div class="col-sm-8 col-xs-12">
 					<div class="q-mx-xs hidden-a-1023 overflow-hidden">
 						<q-chip
 							v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
@@ -34,7 +37,7 @@
 							{{ filter }}
 						</q-chip>
 					</div>
-					<div class="row hidden-b-1023 justify-between q-px-sm">
+					<div class="row hidden-b-1023 justify-center q-gutter-x-sm">
 						<q-input
 							v-model="searchQuery"
 							outlined
@@ -43,7 +46,7 @@
 							placeholder="Search"
 							type="search"
 							color="primary"
-							class="col-10"
+							class="col-10 header-search"
 							style="width: 80%"
 						>
 							<template #prepend>
@@ -55,7 +58,7 @@
 							text-color="white"
 							label="GO"
 							unelevated
-							class="col-2"
+							class="header-go"
 							@click="wineFiltersStore.searchQuery = searchQuery"
 						/>
 					</div>
@@ -133,7 +136,7 @@
 			<div class="column no-box-shadow q-mr-md">
 				<MarketPlaceSidebar
 					class="hidden-b-1023 all-pointer-events scroll"
-					style="height: 85%; min-width: 200px"
+					style="height: 85%; min-width: 300px"
 				/>
 				<q-card
 					flat
@@ -143,14 +146,22 @@
 					<q-card-section class="row justify-between q-pa-md">
 						<q-btn
 							v-close-popup
+							class="header-clear-btn"
 							style="text-decoration: underline"
 							label="Clear All"
 							color="primary"
 							no-caps
 							flat
+							dense
 							@click="wineFiltersStore.$reset()"
 						/>
-						<q-btn v-close-popup label="Apply" color="primary" no-caps />
+						<q-btn 
+							v-close-popup
+							class="header-apply"
+							label="Apply"
+							color="primary"
+							no-caps
+						/>
 					</q-card-section>
 				</q-card>
 			</div>

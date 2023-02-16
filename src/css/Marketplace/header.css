@@ -24,3 +24,24 @@
   font-size: 16px;
   border-radius: 6px;
 }
+
+.header-go {
+  border-radius: 6px;
+  font-family: 'ProximaNova-Regular';
+  width: 45px;
+}
+
+.header-search .q-field__native {
+  font-family: 'ProximaNova-Regular' !important;
+  color: rgba(157, 157, 157, 1);
+}
+
+.header-search .q-field__control {
+  border-radius: 6px !important;
+}
+
+.header-apply {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  border-radius: 6px;
+}
