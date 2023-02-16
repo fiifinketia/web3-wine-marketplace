@@ -1,8 +1,10 @@
 <template>
 	<div class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
-		:class="allNFTs.length >= 4
-		? 'justify-between': allNFTs.length == 3
-		? 'justify-evenly' : 'justify-start q-gutter-x-md'"
+		:class="allNFTs.length >= 4 && $q.screen.width > 600
+		? 'justify-between': allNFTs.length == 3 && $q.screen.width > 600
+		? 'justify-evenly' : $q.screen.width > 600
+		? 'justify-start q-gutter-x-md' : allNFTs.length >= 2
+		? 'justify-around' : 'justify-start q-ml-xs'"
 	>
 		<div
 			v-for="token in allNFTs"

@@ -3,7 +3,7 @@
 	<q-scroll-area
 		bordered
 		class="main-filter-box dark-blue-border q-px-md"
-		style="height: 80%; max-width: 100%"
+		style="height: 650px; max-width: 100%"
 		:thumb-style="{
 			right: '4px',
 			borderRadius: '5px',

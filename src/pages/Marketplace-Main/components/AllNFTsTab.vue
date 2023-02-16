@@ -2,8 +2,9 @@
 	<div
 		:class="
 			isMobile()
-				? 'fit row wrap justify-start items-start content-start q-ma-xs'
-				: 'fixed fit row wrap justify-start items-start content-start q-ma-xs'
+				? 'fit row wrap justify-start items-start content-start'
+				: $q.screen.width > 1025 ? 'fixed fit row wrap justify-start items-start content-start q-pl-md'
+				: 'fixed fit row wrap justify-start items-start content-start'
 		"
 	>
 		<div class="row col-xs-12 justify-between q-pb-sm">

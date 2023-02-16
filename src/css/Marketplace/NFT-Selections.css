@@ -7,8 +7,6 @@
 .main-marketplace-overall-container {
   overflow-y: scroll;
   max-height: 90%;
-  padding-left: 32px;
-  padding-right: 16px;
   margin-top: 8px;
 } 
 
@@ -72,6 +70,10 @@
   .main-marketplace-card-container:nth-child(-n+4) {
     margin-top: -8px;
   }
+  .main-marketplace-overall-container {
+    padding-left: 32px;
+    padding-right: 16px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -97,7 +99,7 @@
 
 @media screen and (min-width: 0px) {
   .main-marketplace-card-container:nth-child(-n+2) {
-    margin-top: -8px;
+    margin-top: -6px;
   }
 }
 
