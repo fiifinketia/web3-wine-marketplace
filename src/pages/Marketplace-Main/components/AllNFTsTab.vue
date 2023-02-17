@@ -137,7 +137,8 @@
 			<div class="column no-box-shadow q-mr-md">
 				<MarketPlaceSidebar
 					class="hidden-b-1023 all-pointer-events scroll"
-					style="height: 85%; min-width: 300px"
+					:style="$q.screen.height < 700 ? 'max-height: 475px' : ''"
+					style="height: 85%; min-width: 275px"
 				/>
 				<q-card
 					flat
