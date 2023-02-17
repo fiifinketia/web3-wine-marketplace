@@ -46,8 +46,9 @@
 							placeholder="Search"
 							type="search"
 							color="primary"
-							class="col-10 header-search"
-							style="width: 80%"
+							:class="$q.screen.width > 600 ? 'col-10' : ''"
+							:style="$q.screen.width > 600 ? 'width: 80%' : ''"
+							class="header-search"
 						>
 							<template #prepend>
 								<q-icon name="search" />

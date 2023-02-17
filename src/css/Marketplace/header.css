@@ -40,6 +40,12 @@
   border-radius: 6px !important;
 }
 
+@media screen and (max-width: 600px) {
+  .header-search {
+    flex-grow: 1;
+  }
+}
+
 .header-apply {
   font-family: 'ProximaNova-Bold';
   font-size: 18px;

@@ -25,7 +25,7 @@
 						style="text-align: left"
 					>
 						<span>
-							{{ token.brand }}
+							{{ truncateText(token.brand) }}
 						</span>
 					</div>
 					<q-card-section
@@ -248,6 +248,21 @@ export default defineComponent({
 		ToInt(price: string) {
 			return parseInt(price);
 		},
+		truncateText(text: string) {
+			if (this.$q.screen.width > 1350) {
+				if (text.length > 50) {
+					return text.trim().substring(0, 50).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else if (this.$q.screen.width <= 600) {
+				if (text.length > 35) {
+					return text.trim().substring(0, 35).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else {
+				if (text.length > 40) {
+					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
+				} else return text
+			}
+		}
 	},
 });
 </script>
