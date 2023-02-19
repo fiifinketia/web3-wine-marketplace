@@ -1,5 +1,7 @@
 <template>
-	<div class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
+	<div 
+		v-if="!isLoading"
+		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
 		:class="allNFTs.length >= 4 && $q.screen.width > 600
 		? 'justify-between': allNFTs.length == 3 && $q.screen.width > 600
 		? 'justify-evenly' : $q.screen.width > 600
@@ -111,6 +113,38 @@
 			</div>
 		</div>
 	</div>
+	<div 
+		v-else 
+		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container"
+		:class="$q.screen.width > 600
+			? 'justify-between' : 'justify-around'"
+	>
+		<div
+			v-for="loading in loadingNFTs"
+			:key="loading"
+			class="main-marketplace-loading-card-container"
+		>
+			<div>
+				<q-card
+					class="q-ma-xs main-marketplace-loading-qcard"
+					flat
+				>
+					<img
+						src="../../../../src/assets/loading-card.svg"
+						class="main-marketplace-card-image"
+					/>
+					<img
+						src="../../../../src/assets/loading-brand.svg"
+						:style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
+						class="q-my-md"
+					/>
+					<img
+						src="../../../../src/assets/loading-pricebox.svg"
+					/>
+				</q-card>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -134,6 +168,8 @@ export default defineComponent({
 
 		return {
 			allNFTs: new Array<ListingWithPricingAndImage>(),
+			loadingNFTs: [0,1,2,3,4,5,6,7],
+			isLoading: true,
 			card: ref(false),
 			stars: ref(3),
 			selected: ref(),
@@ -238,12 +274,14 @@ export default defineComponent({
 		},
 
 		async RetrieveTokens() {
+			this.isLoading = true;
 			const { result: nfts } = await RetrieveFilteredNFTs(
 				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 			);
 			console.log(nfts)
 			this.$emit('totalTokens', nfts.length);
 			this.allNFTs = nfts;
+			this.isLoading = false;
 		},
 		ToInt(price: string) {
 			return parseInt(price);
