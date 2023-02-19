@@ -1,5 +1,5 @@
 <template>
-	<q-page class="q-mb-sm">
+	<q-page class="q-mb-sm" style="min-height: 0">
 		<div>
 			<section class="q-gutter-y-md">
 				<q-tabs

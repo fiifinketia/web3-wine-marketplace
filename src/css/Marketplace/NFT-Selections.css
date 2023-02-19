@@ -6,7 +6,7 @@
 
 .main-marketplace-overall-container {
   overflow-y: scroll;
-  max-height: 90%;
+  max-height: calc(95% - 150px);
   margin-top: 8px;
 } 
 
