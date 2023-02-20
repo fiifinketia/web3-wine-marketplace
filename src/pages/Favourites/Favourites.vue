@@ -30,14 +30,12 @@
 					</div>
 					<div class="favorites-price-container column q-pa-sm">
 						<div class="row justify-between">
-							<span class="favorites-starting-from">Price</span>
-							<q-btn
-								class="un-favour-btn"
-								icon="app:heart"
-								flat
-								dense
-								padding="0"
-								@click="
+							<span class="favorites-price-text">Price</span>
+							<q-img
+								:width="$q.screen.width > 350 ? '20px' : '16px'"
+								:height="$q.screen.width > 350 ? '20px' : '16px'"
+								src="../../../public/images/heart.svg"
+								@click.stop="
 									removeNFT(nft.tokenID, nft.contractAddress, nft.network)
 								"
 							/>
