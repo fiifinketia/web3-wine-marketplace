@@ -27,6 +27,22 @@
   line-height: 0.8;
 }
 
+.clickable-image {
+  cursor: pointer;
+}
+
+.favorites-empty-text {
+  font-size: clamp(1.25rem, 0.6667rem + 1.8667vw, 3rem);
+  font-family: 'ProximaNova-Bold';
+  color: #3486FF;
+  text-align: center;
+  align-items: center;
+}
+
+.favorites-empty {
+  width: clamp(200px, 20vw, 30vw);
+}
+
 .favorites-card-container:hover {
   box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.1);
   border-radius: 14px;

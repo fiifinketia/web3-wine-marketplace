@@ -1,8 +1,20 @@
 <template>
-<q-page-container class="column items-center q-gutter-y-lg q-px-lg">
-  <q-img class="" src="../../../assets/NoNFTs.svg" />
-  <span class="">
-    You do not have any favorites yet.   
-  </span>
-</q-page-container>
+  <div class="column items-center q-gutter-y-xl">
+    <img class="favorites-empty" src="../../../src/assets/NoNFTs.svg" />
+    <span class="favorites-empty-text">
+      You do not have any favorites yet.
+    </span>
+  </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+
+});
+</script>
+
+<style>
+
+</style>

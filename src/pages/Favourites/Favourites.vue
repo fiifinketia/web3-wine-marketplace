@@ -1,8 +1,11 @@
 <template>
-	<q-page class="column items-center here" style="margin-bottom: 10px; min-height: 0">
+	<q-page 
+		class="column items-center" 
+		style="margin-bottom: 10px; min-height: 0"
+	>
 		<FavsHeader />
 		<div 
-			v-if="!isLoading"
+			v-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"
 			:class="favNFTs.length >= 4 && $q.screen.width > 600
 				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
@@ -36,6 +39,7 @@
 								:width="$q.screen.width > 350 ? '20px' : '16px'"
 								:height="$q.screen.width > 350 ? '20px' : '16px'"
 								src="../../../public/images/heart.svg"
+								class="clickable-image"
 								@click.stop="
 									removeNFT(nft.tokenID, nft.contractAddress, nft.network)
 								"
@@ -58,6 +62,13 @@
 					</div>
 				</q-card>
 			</div>
+		</div>
+		<div
+			v-else-if="!isLoading && emptyRequest"
+			style="min-height: calc(100vh - 200px); width: 80%"
+			class="column items-center justify-center"
+		>
+			<FavsEmpty />
 		</div>
 		<div 
 			v-else
@@ -103,12 +114,14 @@ import {
 } from '../Marketplace-Main/services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
 import FavoritesHeader from './FavoritesHeader.vue';
+import EmptyFavorites from './EmptyFavorites.vue';
 
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
 		// FavsPopup: FAVsRemove,
-		FavsHeader: FavoritesHeader
+		FavsHeader: FavoritesHeader,
+		FavsEmpty: EmptyFavorites
 	},
 	data() {
 		const userStore = useUserStore();
@@ -116,6 +129,7 @@ export default defineComponent({
 			favNFTs: Array<FavoritesModel>(),
 			loadingFavNFTs: [0,1,2,3,4,5,6,7],
 			isLoading: true,
+			emptyRequest: false,
 			userStore
 		};
 	},
@@ -129,6 +143,7 @@ export default defineComponent({
 				`?walletAddress=${this.userStore.walletAddress}`
 			);
 			this.favNFTs = nfts;
+			this.CheckForEmptiness(this.favNFTs);
 			this.isLoading = false;
 		},
 		animation(opacity: string, transform: string, zIndex: string) {
@@ -151,7 +166,15 @@ export default defineComponent({
 					contractAddress: cAddress,
 					network: network,
 				});
-				this.favNFTs = this.favNFTs.filter(nft => nft.contractAddress !== cAddress && nft.tokenID !== tokenID && nft.network !== network);
+				const nftIndex = this.favNFTs.findIndex((nft => 
+					nft.contractAddress == cAddress && 
+					nft.tokenID == tokenID &&
+					nft.network == network
+				))
+				if (nftIndex > -1) {
+					this.favNFTs.splice(nftIndex, 1)
+				}
+				this.CheckForEmptiness(this.favNFTs);
 				this.animation('1', 'scale(1)', '200');
 	
 				setTimeout(() => {
@@ -177,6 +200,11 @@ export default defineComponent({
 				if (text.length > 40) {
 					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
 				} else return text
+			}
+		},
+		CheckForEmptiness(favNFTs: FavoritesModel[]) {
+			if (favNFTs.length == 0) {
+				this.emptyRequest = true;
 			}
 		}
 	},
