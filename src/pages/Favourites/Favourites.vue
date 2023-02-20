@@ -1,77 +1,71 @@
 <template>
-	<FAVsRemove />
-	<div class="column q-pa-md">
-		<div class="row justify-between q-pt-sm">
-			<div class="row">
-				<div class="favorites-title">NFTs</div>
-				<div class="favorites-number q-pl-sm">{{ favNFTs.length }}</div>
-			</div>
-			<div class="row">
-				<q-input
-					v-model="text"
-					dense
-					outlined
-					color="blue-6"
-					placeholder="Search"
-					class="search-bar"
-				>
-					<template #prepend>
-						<q-icon name="app:search" />
-					</template>
-				</q-input>
-				<q-btn flat class="search-btn q-ml-sm">GO</q-btn>
-			</div>
-		</div>
-		<div
-			v-if="!favNFTs.length"
-			class="no-nfts-container column justify-center items-center"
+	<q-page class="column items-center">
+		<FavsHeader />
+		<div 
+			class="row q-gutter-y-md"
+			:class="favNFTs.length >= 4 && $q.screen.width > 600
+				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
+				? 'justify-evenly q-px-md' : $q.screen.width > 600
+				? 'justify-start q-gutter-x-lg' : favNFTs.length >= 2
+				? 'justify-around q-px-sm' : 'justify-start q-px-sm'"
+			style="width: 100%"
 		>
-			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
-			<div>You do not have any favorites yet.</div>
-		</div>
-		<div class="row favs-cards-container">
-			<q-card
-				v-for="item in favNFTs"
-				:key="item.tokenID"
-				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6"
+			<div
+				v-for="nft in favNFTs"
+				:key="nft.tokenID"
+				class="favorites-card-container"
 			>
-				<img class="main-marketplace-card-image" :src="item.nftDetails.image" />
-				<div class="favs-wine-name q-py-md">TokenID: {{ item.tokenID }}</div>
-				<div class="favs-price-container column q-pa-sm">
-					<div class="row justify-between q-pb-md">
-						<div class="starting-from">Price</div>
-						<q-btn
-							class="un-favour-btn"
-							icon="app:heart"
-							flat
-							dense
-							padding="0"
-							@click="
-								removeNFT(item.tokenID, item.contractAddress, item.network)
-							"
-						/>
+				<q-card
+					class="q-ma-xs"
+					flat
+				>
+					<img class="favorites-card-image" :src="nft.nftDetails.image" />
+					<div
+						class="q-pb-sm favorites-brand column justify-center"
+						style="text-align: left"
+					>
+						<span>
+							{{ truncateText(nft.nftDetails.brand) }}
+						</span>
 					</div>
-					<div class="row justify-between">
-						<div class="favs-price">
-							<q-img src="../../../public/images/USDT.svg" width="20px" />
-							&nbsp;{{ item.nftDetails?.orderDetails?.listingPrice || '00.00' }}
+					<div class="favorites-price-container column q-pa-sm">
+						<div class="row justify-between">
+							<span class="favorites-starting-from">Price</span>
+							<q-btn
+								class="un-favour-btn"
+								icon="app:heart"
+								flat
+								dense
+								padding="0"
+								@click="
+									removeNFT(nft.tokenID, nft.contractAddress, nft.network)
+								"
+							/>
 						</div>
-						<q-img
-							src="../../../public/images/mini-button.svg"
-							width="24px"
-							height="24px"
-						/>
+						<div v-if="!!nft.nftDetails.orderDetails?.listingPrice && !!nft.nftDetails.orderDetails?.transactionStatus">
+							<div class="row items-center q-gutter-x-xs q-pt-xs">
+								<q-img
+									src="../../assets/icons/currencies/USDC-Icon.svg"
+									:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
+								/>
+								<span class="favorites-b-text-active">
+									{{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
+								</span>
+							</div>
+						</div>
+						<div v-else class="q-pt-sm" style="display: flex">
+							<span class="favorites-b-text-inactive"> Not available </span>
+						</div>
 					</div>
-				</div>
-			</q-card>
+				</q-card>
+			</div>
 		</div>
-	</div>
+	</q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../css/Favorites/Favorites.css';
-
 import FAVsRemove from './FAVsRemove.vue';
 import { FavoritesModel } from './models/Response';
 import {
@@ -79,10 +73,13 @@ import {
 	GetAllFavorites,
 } from '../Marketplace-Main/services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
+import FavoritesHeader from './FavoritesHeader.vue';
+
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
-		FAVsRemove,
+		// FavsPopup: FAVsRemove,
+		FavsHeader: FavoritesHeader
 	},
 	data() {
 		const userStore = useUserStore();
@@ -99,6 +96,7 @@ export default defineComponent({
 			const { result: nfts } = await GetAllFavorites(
 				`?walletAddress=${this.userStore.walletAddress}`
 			);
+			console.log(nfts)
 			this.favNFTs = nfts;
 		},
 		animation(opacity: string, transform: string, zIndex: string) {
@@ -128,6 +126,24 @@ export default defineComponent({
 				this.animation('0', 'scale(0.5)', '-200');
 			}, 1500);
 		},
+		ToInt(price: string) {
+			return parseInt(price);
+		},
+		truncateText(text: string) {
+			if (this.$q.screen.width > 1350) {
+				if (text.length > 50) {
+					return text.trim().substring(0, 50).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else if (this.$q.screen.width <= 600) {
+				if (text.length > 35) {
+					return text.trim().substring(0, 35).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else {
+				if (text.length > 40) {
+					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
+				} else return text
+			}
+		}
 	},
 });
 </script>

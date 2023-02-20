@@ -5,6 +5,7 @@ interface FavoritesModel {
 	walletAddress: string;
 	nftDetails: {
 		image: string;
+		brand: string;
 		orderDetails?: {
 			listingPrice?: string;
 			currency?: string;
