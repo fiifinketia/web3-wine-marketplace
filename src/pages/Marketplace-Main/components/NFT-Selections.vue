@@ -188,24 +188,42 @@ export default defineComponent({
 		) {
 			switch (objective) {
 				case 'add':
-					await AddFavorites({
-						walletAddress: this.userStore.walletAddress,
-						tokenID: tokenID,
-						contractAddress: cAddress,
-						network: network,
-					});
+					try {
+						await AddFavorites({
+							walletAddress: this.userStore.walletAddress,
+							tokenID: tokenID,
+							contractAddress: cAddress,
+							network: network,
+						});
+						const nftIndex = this.allNFTs.findIndex((nft => 
+							nft.smartContractAddress == cAddress && 
+							nft.tokenID == tokenID &&
+							nft.network == network
+						))
+						this.allNFTs[nftIndex].favorited = true;
+					} catch {
+						return 0
+					}
 					break;
-
 				case 'remove':
-					await RemoveFavorites({
-						walletAddress: this.userStore.walletAddress,
-						tokenID: tokenID,
-						contractAddress: cAddress,
-						network: network,
-					});
+					try {
+						await RemoveFavorites({
+							walletAddress: this.userStore.walletAddress,
+							tokenID: tokenID,
+							contractAddress: cAddress,
+							network: network,
+						});
+						const nftIndex = this.allNFTs.findIndex((nft => 
+							nft.smartContractAddress == cAddress && 
+							nft.tokenID == tokenID &&
+							nft.network == network
+						))
+						this.allNFTs[nftIndex].favorited = false;
+					} catch {
+						return 0
+					}
 					break;
 			}
-			await this.RetrieveTokens();
 		},
 
 		openNFT(token: any, where?: string) {

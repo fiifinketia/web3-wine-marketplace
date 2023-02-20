@@ -1,24 +1,22 @@
 import axios from 'axios';
 import { FavoritesModel } from '../../Favourites/models/Response';
-const marketPlaceAPI = process.env.MARKETPLACE_API_URL;
+
 async function AddFavorites(body: object) {
-	const url = marketPlaceAPI + 'favorite/add';
-	await axios.post(url, body);
+	const addFavoriteURL = <string> process.env.ADD_FAVORITE_URL;
+	await axios.post(addFavoriteURL, body);
 }
+
 async function RemoveFavorites(body: object) {
-	const url = marketPlaceAPI + 'favorite/delete';
-
-	await axios.post(url, body);
+	const deleteFavoriteURL = <string> process.env.DELETE_FAVORITE_URL;
+	await axios.post(deleteFavoriteURL, body);
 }
 
-async function GetAllFavorites(queryParams: string) {
+async function GetAllFavorites(walletAddress: string) {
 	let nfts: FavoritesModel[] = [];
-	const url = marketPlaceAPI + '/favorite/getAll';
-
-	await axios.get(url + queryParams).then((res) => {
+	const retrieveFavoritesURL = <string> process.env.RETRIEVE_FAVORITES_URL;
+	await axios.get(retrieveFavoritesURL + walletAddress).then((res) => {
 		nfts = res.data;
 	});
-
 	return {
 		result: nfts,
 	};
