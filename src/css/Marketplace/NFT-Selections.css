@@ -1,5 +1,5 @@
 .main-marketplace-nft-card {
-  font-family: 'Obviously-Bold';
+  font-family: 'Obviously-Bolder';
   font-size: 18px;
   font-weight: 460;
 }
@@ -28,8 +28,8 @@
 }
 
 .main-marketplace-card-brand {
-  height: 54px;
-  line-height: 1;
+  height: 57px;
+  line-height: 1.2;
 }
 
 .main-marketplace-loading-card-brand {

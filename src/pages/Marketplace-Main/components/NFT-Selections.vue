@@ -16,101 +16,99 @@
 			class="main-marketplace-card-container"
 			@click="openNFT(token)"
 		>
-			<div>
-				<q-card class="q-ma-xs main-marketplace-nft-card" flat>
-					<img
-						:src="token.image"
-						class="main-marketplace-card-image clickable-image"
-					/>
-					<div
-						class="q-pb-sm main-marketplace-card-brand column justify-center"
-						style="text-align: left"
-					>
-						<span>
-							{{ truncateText(token.brand) }}
-						</span>
+			<q-card class="q-ma-xs main-marketplace-nft-card" flat>
+				<img
+					:src="token.image"
+					class="main-marketplace-card-image clickable-image"
+				/>
+				<div
+					class="q-pb-sm main-marketplace-card-brand column justify-center"
+					style="text-align: left"
+				>
+					<span>
+						{{ truncateText(token.brand) }}
+					</span>
+				</div>
+				<q-card-section
+					class="column items-start main-marketplace-price-container q-py-sm"
+				>
+					<div class="row justify-between" style="width: 100%">
+						<span class="main-marketplace-price-header q-pb-xs"> Price </span>
+						<q-img
+							v-if="!!userStore.walletAddress && token.favorited === true"
+							src="../../../../public/images/heart.svg"
+							class="clickable-image"
+							:width="$q.screen.width > 350 ? '20px' : '16px'"
+							:height="$q.screen.width > 350 ? '20px' : '16px'"
+							@click.stop="
+								addRemoveFavorites(
+									token.tokenID,
+									token.smartContractAddress,
+									token.network,
+									'remove'
+								)
+							"
+						/>
+						<q-img
+							v-else-if="!!userStore.walletAddress"
+							src="../../../../public/images/empty-heart.svg"
+							class="clickable-image"
+							:width="$q.screen.width > 350 ? '20px' : '16px'"
+							:height="$q.screen.width > 350 ? '20px' : '16px'"
+							@click.stop="
+								addRemoveFavorites(
+									token.tokenID,
+									token.smartContractAddress,
+									token.network,
+									'add'
+								)
+							"
+						/>
 					</div>
-					<q-card-section
-						class="column items-start main-marketplace-price-container q-py-sm"
-					>
-						<div class="row justify-between" style="width: 100%">
-							<span class="main-marketplace-price-header q-pb-xs"> Price </span>
+					<div v-if="!!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus">
+						<div class="row items-center q-gutter-x-xs q-pt-xs">
 							<q-img
-								v-if="!!userStore.walletAddress && token.favorited === true"
-								src="../../../../public/images/heart.svg"
-								class="clickable-image"
-								:width="$q.screen.width > 350 ? '20px' : '16px'"
-								:height="$q.screen.width > 350 ? '20px' : '16px'"
-								@click.stop="
-									addRemoveFavorites(
-										token.tokenID,
-										token.smartContractAddress,
-										token.network,
-										'remove'
-									)
-								"
+								src="../../../assets/icons/currencies/USDC-Icon.svg"
+								:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
 							/>
-							<q-img
-								v-else-if="!!userStore.walletAddress"
-								src="../../../../public/images/empty-heart.svg"
-								class="clickable-image"
-								:width="$q.screen.width > 350 ? '20px' : '16px'"
-								:height="$q.screen.width > 350 ? '20px' : '16px'"
-								@click.stop="
-									addRemoveFavorites(
-										token.tokenID,
-										token.smartContractAddress,
-										token.network,
-										'add'
-									)
-								"
-							/>
+							<span class="main-marketplace-price-text-b-active">
+								{{ ToInt(token.orderDetails.listingPrice) }}
+							</span>
 						</div>
-						<div v-if="!!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus">
-							<div class="row items-center q-gutter-x-xs q-pt-xs">
-								<q-img
-									src="../../../assets/icons/currencies/USDC-Icon.svg"
-									:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
-								/>
-								<span class="main-marketplace-price-text-b-active">
-									{{ ToInt(token.orderDetails.listingPrice) }}
-								</span>
-							</div>
-						</div>
-						<div v-else class="q-pt-sm" style="display: flex">
-							<span class="main-marketplace-price-text-b-inactive"> Not available </span>
-						</div>
-					</q-card-section>
-					<q-menu touch-position context-menu>
-						<q-list dense style="min-width: 100px">
-							<q-item clickable v-close-popup>
-								<q-item-section @click="openNFT(token)">Open</q-item-section>
-							</q-item>
-							<q-item clickable v-close-popup>
-								<q-item-section @click="openNFT(token, 'new-tab')"
-									>Open link in New Tab</q-item-section
-								>
-							</q-item>
-							<q-item clickable v-close-popup>
-								<q-item-section @click="openNFT(token, 'new-window')"
-									>Open link in New Window</q-item-section
-								>
-							</q-item>
-							<q-separator />
-							<q-item clickable v-close-popup>
-								<q-item-section @click="copyAddress(token)"
-									>Copy Link</q-item-section
-								>
-							</q-item>
-							<q-item clickable v-close-popup>
-								<q-item-section @click="copyToken(token)"
-									>Copy Token Details</q-item-section
-								>
-							</q-item>
-						</q-list>
-					</q-menu>
-				</q-card>
-			</div>
+					</div>
+					<div v-else class="q-pt-sm" style="display: flex">
+						<span class="main-marketplace-price-text-b-inactive"> Not available </span>
+					</div>
+				</q-card-section>
+				<q-menu touch-position context-menu>
+					<q-list dense style="min-width: 100px">
+						<q-item clickable v-close-popup>
+							<q-item-section @click="openNFT(token)">Open</q-item-section>
+						</q-item>
+						<q-item clickable v-close-popup>
+							<q-item-section @click="openNFT(token, 'new-tab')"
+								>Open link in New Tab</q-item-section
+							>
+						</q-item>
+						<q-item clickable v-close-popup>
+							<q-item-section @click="openNFT(token, 'new-window')"
+								>Open link in New Window</q-item-section
+							>
+						</q-item>
+						<q-separator />
+						<q-item clickable v-close-popup>
+							<q-item-section @click="copyAddress(token)"
+								>Copy Link</q-item-section
+							>
+						</q-item>
+						<q-item clickable v-close-popup>
+							<q-item-section @click="copyToken(token)"
+								>Copy Token Details</q-item-section
+							>
+						</q-item>
+					</q-list>
+				</q-menu>
+			</q-card>
 		</div>
 	</div>
 	<div 
@@ -174,8 +172,7 @@ export default defineComponent({
 			stars: ref(3),
 			selected: ref(),
 			userStore,
-			wineFiltersStore,
-			// walletAddressTemporary: '0xA3873a019aC68824907A3aD99D3e3542376573D0',
+			wineFiltersStore
 		};
 	},
 

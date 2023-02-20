@@ -9,6 +9,11 @@
 }
 
 @font-face {
+  font-family: Obviously-Bolder;
+  src: url(../assets/fonts/Obviously-Bolder.otf);
+}
+
+@font-face {
   font-family: ProximaNova-Bold;
   src: url(../assets/fonts/ProximaNova-Bold.otf);
 }
