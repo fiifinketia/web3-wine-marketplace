@@ -1,7 +1,8 @@
 <template>
-	<q-page class="column items-center">
+	<q-page class="column items-center here" style="margin-bottom: 10px; min-height: 0">
 		<FavsHeader />
 		<div 
+			v-if="!isLoading"
 			class="row q-gutter-y-md"
 			:class="favNFTs.length >= 4 && $q.screen.width > 600
 				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
@@ -58,6 +59,36 @@
 				</q-card>
 			</div>
 		</div>
+		<div 
+			v-else
+			class="row q-px-md q-pt-sm q-gutter-y-md"
+			:class="$q.screen.width > 600
+				? 'justify-between' : 'justify-around'"
+		>
+			<div
+				v-for="loading in loadingFavNFTs"
+				:key="loading"
+				class="favorites-loading-card-container"
+			>
+				<q-card
+					class="q-ma-xs"
+					flat
+				>
+					<img
+						src="../../../src/assets/loading-card.svg"
+						class="favorites-card-image"
+					/>
+					<img
+						src="../../../src/assets/loading-brand.svg"
+						style="height: 35px"
+						class="q-my-md"
+					/>
+					<img
+						src="../../../src/assets/loading-pricebox.svg"
+					/>
+				</q-card>
+		</div>
+		</div>
 	</q-page>
 </template>
 
@@ -83,6 +114,8 @@ export default defineComponent({
 		const userStore = useUserStore();
 		return {
 			favNFTs: Array<FavoritesModel>(),
+			loadingFavNFTs: [0,1,2,3,4,5,6,7],
+			isLoading: true,
 			userStore
 		};
 	},
@@ -91,11 +124,12 @@ export default defineComponent({
 	},
 	methods: {
 		async getAllFavorites() {
+			this.isLoading = true;
 			const { result: nfts } = await GetAllFavorites(
 				`?walletAddress=${this.userStore.walletAddress}`
 			);
-			console.log(nfts)
 			this.favNFTs = nfts;
+			this.isLoading = false;
 		},
 		animation(opacity: string, transform: string, zIndex: string) {
 			const removeNFTBackground = document.querySelector(
@@ -110,19 +144,22 @@ export default defineComponent({
 			removeNFTContainer.style.transform = transform;
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
-			await RemoveFavorites({
-				walletAddress: this.userStore.walletAddress,
-				tokenID: tokenID,
-				contractAddress: cAddress,
-				network: network,
-			});
-			this.getAllFavorites();
-
-			this.animation('1', 'scale(1)', '200');
-
-			setTimeout(() => {
-				this.animation('0', 'scale(0.5)', '-200');
-			}, 1500);
+			try {
+				await RemoveFavorites({
+					walletAddress: this.userStore.walletAddress,
+					tokenID: tokenID,
+					contractAddress: cAddress,
+					network: network,
+				});
+				this.favNFTs = this.favNFTs.filter(nft => nft.contractAddress !== cAddress && nft.tokenID !== tokenID && nft.network !== network);
+				this.animation('1', 'scale(1)', '200');
+	
+				setTimeout(() => {
+					this.animation('0', 'scale(0.5)', '-200');
+				}, 1500);
+			} catch {
+				return 0
+			}
 		},
 		ToInt(price: string) {
 			return parseInt(price);

@@ -33,19 +33,19 @@
 }
 
 @media screen and (min-width: 1025px) {
-  .favorites-card-container {
+  .favorites-card-container, .favorites-loading-card-container {
     width: 23.5%;
   }
 }
 
 @media screen and (max-width: 1024px) {
-  .favorites-card-container {
+  .favorites-card-container, .favorites-loading-card-container {
     width: 32%;
   }
 }
 
 @media screen and (max-width: 600px) {
-  .favorites-card-container {
+  .favorites-card-container, .favorites-loading-card-container {
     width: 48%;
   }
 }
