@@ -14,6 +14,8 @@ interface FavoritesModel {
 			expTime?: number;
 		};
 	};
+
+	favoriteLoading: null | boolean;
 }
 
 export { FavoritesModel };

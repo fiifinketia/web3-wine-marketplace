@@ -39,6 +39,14 @@
 						<div class="row justify-between">
 							<span class="favorites-price-text">Price</span>
 							<q-img
+								v-if="!!nft.favoriteLoading"
+								src="../../assets/loading-heart.gif"
+								:style="$q.screen.width > 350 
+									? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px' 
+									: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'"
+							/>
+							<q-img
+								v-else
 								:width="$q.screen.width > 350 ? '20px' : '16px'"
 								:height="$q.screen.width > 350 ? '20px' : '16px'"
 								src="../../../public/images/heart.svg"
@@ -177,40 +185,24 @@ export default defineComponent({
 			this.CheckForEmptiness(this.favNFTs);
 			this.isLoading = false;
 		},
-		animation(opacity: string, transform: string, zIndex: string) {
-			const removeNFTBackground = document.querySelector(
-				'.fr-background'
-			) as HTMLElement;
-			const removeNFTContainer = document.querySelector(
-				'.fr-container'
-			) as HTMLElement;
-
-			removeNFTBackground.style.zIndex = zIndex;
-			removeNFTBackground.style.opacity = opacity;
-			removeNFTContainer.style.transform = transform;
-		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
 			try {
-				await RemoveFavorites({
-					walletAddress: this.userStore.walletAddress,
-					tokenID: tokenID,
-					contractAddress: cAddress,
-					network: network,
-				});
 				const nftIndex = this.favNFTs.findIndex((nft => 
 					nft.contractAddress == cAddress && 
 					nft.tokenID == tokenID &&
 					nft.network == network
 				))
 				if (nftIndex > -1) {
+					this.favNFTs[nftIndex].favoriteLoading = true;
+					await RemoveFavorites({
+						walletAddress: this.userStore.walletAddress,
+						tokenID: tokenID,
+						contractAddress: cAddress,
+						network: network,
+					});
 					this.favNFTs.splice(nftIndex, 1)
 				}
 				this.CheckForEmptiness(this.favNFTs);
-				this.animation('1', 'scale(1)', '200');
-	
-				setTimeout(() => {
-					this.animation('0', 'scale(0.5)', '-200');
-				}, 1500);
 			} catch {
 				return 0
 			}

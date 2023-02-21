@@ -35,7 +35,14 @@
 					<div class="row justify-between" style="width: 100%">
 						<span class="main-marketplace-price-header q-pb-xs"> Price </span>
 						<q-img
-							v-if="!!userStore.walletAddress && token.favorited === true"
+							v-if="!!userStore.walletAddress && !!token.favoriteLoading"
+							src="../../../assets/loading-heart.gif"
+							:style="$q.screen.width > 350 
+								? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px' 
+								: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'"
+						/>
+						<q-img
+							v-else-if="!!userStore.walletAddress && token.favorited === true"
 							src="../../../../public/images/heart.svg"
 							class="clickable-image"
 							:width="$q.screen.width > 350 ? '20px' : '16px'"
@@ -197,36 +204,40 @@ export default defineComponent({
 			switch (objective) {
 				case 'add':
 					try {
+						const nftIndex = this.allNFTs.findIndex((nft => 
+							nft.smartContractAddress == cAddress && 
+							nft.tokenID == tokenID &&
+							nft.network == network
+						))
+						this.allNFTs[nftIndex].favoriteLoading = true;
 						await AddFavorites({
 							walletAddress: this.userStore.walletAddress,
 							tokenID: tokenID,
 							contractAddress: cAddress,
 							network: network,
 						});
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favorited = true;
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
 					}
 					break;
 				case 'remove':
 					try {
+						const nftIndex = this.allNFTs.findIndex((nft => 
+							nft.smartContractAddress == cAddress && 
+							nft.tokenID == tokenID &&
+							nft.network == network
+						))
+						this.allNFTs[nftIndex].favoriteLoading = true;
 						await RemoveFavorites({
 							walletAddress: this.userStore.walletAddress,
 							tokenID: tokenID,
 							contractAddress: cAddress,
 							network: network,
 						});
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favorited = false;
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
 					}

@@ -7,6 +7,7 @@ interface ListingWithPricingAndImage {
 	brand: string;
 
 	favorited?: null | boolean;
+	favoriteLoading?: null | boolean;
 
 	orderDetails?: {
 		listingPrice: string;
