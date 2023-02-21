@@ -1,5 +1,8 @@
 body {
 	position: relative;
+	:focus {
+		outline: none;
+	}
 }
 .q-page-container {
 	height: 100%;
