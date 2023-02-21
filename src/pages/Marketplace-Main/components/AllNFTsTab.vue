@@ -96,8 +96,18 @@
 			</div>
 		</div>
 
-		<!-- Sidebar -->
-		<MarketPlaceSidebar class="col-sm-3 hidden-a-1023 q-mt-sm" />
+		<SidebarDesktop
+			v-if="$q.screen.width > 1023"
+		 	class="col-sm-3 q-mt-sm" 
+		 />
+		<SidebarTablet
+			v-else-if="$q.screen.width > 768"
+			v-model="openSidebar"
+		/>
+		<SidebarMobile
+			v-else
+			v-model="openSidebar"
+		/>
 
 		<!-- List Section -->
 		<NFTSelections
@@ -127,61 +137,24 @@
 				/>
 			</q-card>
 		</q-page-sticky>
-
-		<q-dialog
-			v-model="openSidebar"
-			full-height
-			position="right"
-			class="filter-modal-bg"
-		>
-			<div class="column no-box-shadow q-mr-md">
-				<MarketPlaceSidebar
-					class="hidden-b-1023 all-pointer-events scroll"
-					:style="$q.screen.height < 700 ? 'max-height: 475px' : ''"
-					style="height: 85%; min-width: 275px"
-				/>
-				<q-card
-					flat
-					bordered
-					class="main-filter-box hidden-b-1023 dark-blue-border q-mt-md"
-				>
-					<q-card-section class="row justify-between q-pa-md">
-						<q-btn
-							v-close-popup
-							class="header-clear-btn"
-							style="text-decoration: underline"
-							label="Clear All"
-							color="primary"
-							no-caps
-							flat
-							dense
-							@click="wineFiltersStore.$reset()"
-						/>
-						<q-btn 
-							v-close-popup
-							class="header-apply"
-							label="Apply"
-							color="primary"
-							no-caps
-						/>
-					</q-card-section>
-				</q-card>
-			</div>
-		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
-import MarketPlaceSidebar from './MarketPlaceSidebar.vue';
+import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
 import 'src/css/Marketplace/header.css';
+import SidebarTablet from './SidebarTablet.vue';
+import SidebarMobile from './SidebarMobile.vue';
 
 export default defineComponent({
 	components: {
 		NFTSelections: NFTSelections,
-		MarketPlaceSidebar: MarketPlaceSidebar,
+		SidebarDesktop: SidebarDesktop,
+		SidebarTablet: SidebarTablet,
+		SidebarMobile: SidebarMobile
 	},
 	emits: ['totalTokens'],
 	data() {

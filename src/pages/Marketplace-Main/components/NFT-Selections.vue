@@ -153,16 +153,13 @@ import { ListingWithPricingAndImage } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
+import { RetrieveFilterDetails } from '../services/FilterOptions';
 export default defineComponent({
 	emits: ['totalTokens'],
 	data() {
 		const userStore = useUserStore();
 
 		const wineFiltersStore = useWineFilters();
-
-		wineFiltersStore.$subscribe(async () => {
-			await this.RetrieveTokens();
-		});
 
 		return {
 			allNFTs: new Array<ListingWithPricingAndImage>(),
@@ -172,8 +169,22 @@ export default defineComponent({
 			stars: ref(3),
 			selected: ref(),
 			userStore,
-			wineFiltersStore
+			wineFiltersStore,
+			subscription: Function()
 		};
+	},
+	async mounted() {
+		await this.RetrieveTokens();
+
+		const filterOptions = await RetrieveFilterDetails();
+		this.wineFiltersStore.setAllFilters(filterOptions);
+
+		this.subscription = this.wineFiltersStore.$subscribe(async (mutation, state) => {
+			await this.RetrieveTokens();
+		})
+	},
+	unmounted () {
+		this.subscription()
 	},
 
 	methods: {

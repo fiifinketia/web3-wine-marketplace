@@ -30,3 +30,23 @@
   font-family: 'ProximaNova-Regular';
   width: 45px;
 }
+
+.sidebar-header-container {
+  height: 50px;
+}
+
+.main-filter-box {
+	box-sizing: border-box;
+	overflow-y: scroll;
+	background: #ffffff;
+	border-radius: 18px;
+}
+
+.main-filter-box::-webkit-scrollbar {
+	display: none;
+}
+#filter_price .q-slider__thumb,
+#filter_maturity .q-slider__thumb {
+	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
+	border-radius: 100px;
+}
