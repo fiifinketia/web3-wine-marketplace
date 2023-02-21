@@ -23,7 +23,10 @@
 					class="q-ma-xs"
 					flat
 				>
-					<img class="favorites-card-image" :src="nft.nftDetails.image" />
+					<img 
+						class="favorites-card-image clickable-image"
+						:src="nft.nftDetails.image"
+					/>
 					<div
 						class="q-pb-sm favorites-brand column justify-center"
 						style="text-align: left"
@@ -60,6 +63,34 @@
 							<span class="favorites-b-text-inactive"> Not available </span>
 						</div>
 					</div>
+					<q-menu touch-position context-menu>
+						<q-list dense style="min-width: 100px">
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft)">Open</q-item-section>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft, 'new-tab')"
+									>Open link in New Tab</q-item-section
+								>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft, 'new-window')"
+									>Open link in New Window</q-item-section
+								>
+							</q-item>
+							<q-separator />
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyAddress(nft)"
+									>Copy Link</q-item-section
+								>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyToken(nft)"
+									>Copy Token Details</q-item-section
+								>
+							</q-item>
+						</q-list>
+					</q-menu>
 				</q-card>
 			</div>
 		</div>
@@ -206,7 +237,63 @@ export default defineComponent({
 			if (favNFTs.length == 0) {
 				this.emptyRequest = true;
 			}
-		}
+		},
+		openNFT(token: FavoritesModel, where?: string) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.contractAddress,
+				},
+			});
+			switch (where) {
+				case 'here':
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.contractAddress,
+						},
+					});
+					break;
+				case 'new-tab':
+					window.open(routeData.href, '_blank');
+					break;
+				case 'new-window':
+					window.open(
+						routeData.href,
+						'_blank',
+						'location=yes,status=yes,scrollbars=yes,height=auto,width=auto'
+					);
+					break;
+				default:
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.contractAddress,
+						},
+					});
+					break;
+			}
+		},
+		copyToken(token: FavoritesModel) {
+			navigator.clipboard.writeText(JSON.stringify(token));
+		},
+		copyAddress(token: FavoritesModel) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.contractAddress,
+				},
+			});
+			navigator.clipboard.writeText(window.location.host + routeData.href);
+		},
 	},
 });
 </script>
