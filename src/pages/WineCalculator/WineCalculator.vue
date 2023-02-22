@@ -268,7 +268,7 @@
 						</div>
 						<div class="flex column risk-level-container">
 							<div class="risk-level-title">Risk level</div>
-							<div class="flex row risk-container items-center">
+							<div class="flex row risk-container items-center cursor-pointer" @click="riskType = 'low'">
 								<div
 									class="flex justify-center items-center unselected-border-wrapper"
 								>
@@ -276,7 +276,6 @@
 										:class="
 											riskType === 'low' ? 'selected-risk' : 'unselected-border'
 										"
-										@click="riskType = 'low'"
 									></div>
 									<!-- <q-radio v-model="risk" dense val="low" /> -->
 								</div>
@@ -290,7 +289,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="q-pt-sm">
+							<div class="q-pt-sm cursor-pointer" @click="riskType = 'medium'">
 								<div class="flex row risk-container items-center">
 									<div
 										class="flex justify-center items-center unselected-border-wrapper"
@@ -301,7 +300,6 @@
 													? 'selected-risk'
 													: 'unselected-border'
 											"
-											@click="riskType = 'medium'"
 										></div>
 										<!-- <q-radio v-model="risk" dense val="medium" /> -->
 									</div>
@@ -316,7 +314,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="q-pt-sm">
+							<div class="q-pt-sm cursor-pointer" @click="riskType = 'high'">
 								<div class="flex row risk-container items-center">
 									<div
 										class="flex justify-center items-center unselected-border-wrapper"
@@ -327,7 +325,6 @@
 													? 'selected-risk'
 													: 'unselected-border'
 											"
-											@click="riskType = 'high'"
 										></div>
 										<!-- <q-radio v-model="risk" dense val="high" /> -->
 									</div>
