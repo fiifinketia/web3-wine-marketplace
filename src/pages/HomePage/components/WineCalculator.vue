@@ -18,7 +18,7 @@
 			</div>
 			<div class="justify-center items-center">
 				<button class="calculate-worth-button">
-					<a href="/calculator" class="calculate-worth-text"
+					<a class="calculate-worth-text" @click="$router.push('/calculator')"
 						>Calculate The Worth</a
 					>
 				</button>
