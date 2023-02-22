@@ -59,6 +59,9 @@ export const useWineFilters = defineStore('wineFilters', {
 		LWIN: [''],
 		LWINOptions: [] as { label: string; value: string }[],
 		searchQuery: '',
+
+		filterMode: 'automatic',
+		filterKey: 0
 	}),
 	getters: {
 		getType: (state) => state.type,
@@ -276,6 +279,12 @@ export const useWineFilters = defineStore('wineFilters', {
 		setSearchQuery(searchQuery: string) {
 			this.searchQuery = searchQuery;
 		},
+		setFilterMode(mode: string) {
+			this.filterMode = mode;
+		},
+		indexFilterKey() {
+			this.filterKey = this.filterKey + 1;
+		},
 		removeFilter(value: string) {
 			this.type = this.type.filter((i) => i !== value);
 			this.brand = this.brand.filter((i) => i !== value);
@@ -293,6 +302,22 @@ export const useWineFilters = defineStore('wineFilters', {
 				value === 'Listed' || value === 'Unlisted' ? '' : this.listedOnly;
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
+		},
+		removeAllFilters() {
+			this.type = [];
+			this.brand = [];
+			this.origin = [];
+			this.producer = [];
+			this.country = [];
+			this.region = [];
+			this.appellation = [];
+			this.LWIN = [];
+			this.wineCase = [];
+			this.heritage = [];
+			this.format = [];
+			this.investmentGrade = [];
+			this.listedOnly = '';
+			this.sortedAtoZ = '';
 		},
 		setAllFilters(options: FilterOptionsResponse) {
 			for (const key in options) {

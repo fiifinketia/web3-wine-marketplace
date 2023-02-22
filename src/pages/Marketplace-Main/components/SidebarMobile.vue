@@ -58,7 +58,6 @@
           style="padding-left: 0; padding-right: 0"
         >
           <q-btn
-            v-close-popup
             class="header-clear-btn"
             style="text-decoration: underline"
             label="Clear All"
@@ -66,15 +65,24 @@
             no-caps
             flat
             dense
-            @click="wineFiltersStore.$reset()"
+            @click="wineFiltersStore.removeAllFilters()"
           />
-          <q-btn 
-            v-close-popup
-            class="header-apply"
-            label="Apply"
-            color="primary"
-            no-caps
-          />
+          <div class="row items-center">
+            <span
+              class="q-pa-sm text-weight-bolder text-h6 q-mr-xs"
+              style="vertical-align: middle"
+            >
+						  {{ wineFiltersStore.getAllFiltersArray.length }}
+            </span>
+            <q-btn 
+              v-close-popup
+              @click="ApplyFilter()"
+              class="header-apply"
+              label="Apply"
+              color="primary"
+              no-caps
+            />
+          </div>
         </q-card-section>
       </q-card>
     </div>
@@ -97,6 +105,11 @@ export default defineComponent({
       wineFiltersStore
     }
   },
+  methods: {
+    ApplyFilter() {
+      this.wineFiltersStore.indexFilterKey();
+    }
+  }
 });
 
 </script>

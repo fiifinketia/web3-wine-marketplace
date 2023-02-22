@@ -74,7 +74,7 @@
 					dense
 					no-caps
 					flat
-					@click="wineFiltersStore.$reset()"
+					@click="wineFiltersStore.removeAllFilters()"
 				/>
 				<div class="hidden-b-1023 q-pr-md">
 					<span
@@ -173,12 +173,13 @@ export default defineComponent({
 		'$q.screen.width': {
 			handler() {
 				this.showToogleButton = this.isMobile() ? true : false;
+				this.CheckFilterMode();
 			},
 		},
 	},
-	// mounted() {
-
-	// },
+	mounted() {
+		this.CheckFilterMode()
+	},
 
 	methods: {
 		toggleSidebar() {
@@ -192,6 +193,13 @@ export default defineComponent({
 			this.totalNFTs = total;
 			this.$emit('totalTokens', total);
 		},
+		CheckFilterMode() {
+			if (this.$q.screen.width > 1023) {
+				this.wineFiltersStore.setFilterMode('automatic');
+			} else {
+				this.wineFiltersStore.setFilterMode('manual');
+			}
+		}
 	},
 });
 </script>

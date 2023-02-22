@@ -177,6 +177,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
+			filterKey: wineFiltersStore.filterKey,
 			subscription: Function()
 		};
 	},
@@ -187,11 +188,22 @@ export default defineComponent({
 		this.wineFiltersStore.setAllFilters(filterOptions);
 
 		this.subscription = this.wineFiltersStore.$subscribe(async (mutation, state) => {
-			await this.RetrieveTokens();
+			if (this.wineFiltersStore.filterMode == 'automatic') {
+				await this.RetrieveTokens();
+			}
 		})
 	},
 	unmounted () {
 		this.subscription()
+	},
+	watch: {
+		'wineFiltersStore.filterKey': {
+			handler(val) {
+				if (val != 0) {
+					this.RetrieveTokens();
+				}
+			}
+		}
 	},
 
 	methods: {
