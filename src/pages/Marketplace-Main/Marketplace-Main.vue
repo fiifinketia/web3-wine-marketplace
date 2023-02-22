@@ -16,33 +16,35 @@
 				</q-tabs>
 				<q-tabs
 					v-model="tab"
-					class="row justify-between text-grey hidden-b-599 q-pa-sm q-px-lg bg-gradient_blue-green"
+					class="row justify-between items-center text-grey hidden-b-599 q-pa-sm q-px-md bg-gradient_blue-green"
 					indicator-color="primary"
 					no-caps
 				>
-					<span class="col text-white">
-						NFTs <span class="text-h6 text-weight-bolder"> {{ totalTokens }} </span>
+					<span v-if="$q.screen.width > 350" class="col profile-tab-title">
+						NFTs <span class="profile-tab-count"> {{ totalTokens }} </span>
 					</span>
 					<q-btn-dropdown
+						style="height: 42px;"
 						no-caps
 						color="white"
 						text-color="secondary"
 						dropdown-icon="none"
 						icon-right="app:down_arrow"
 						auto-close
-						class="col-auto marketplace_tab-drowpdown"
+						class="col-auto profile-dropdown-container"
+						content-class="profile-dropdown-menu"
 						:label="tabLabel"
 					>
 						<q-list>
-							<q-item clickable @click="tabLabel = 'Marketplace'">
-								<q-tab name="nfts" label="Marketplace" />
+							<q-item clickable @click="tabLabel = 'Marketplace'; tab = 'nfts'">
+								<span class="profile-dropdown-selection"> Marketplace </span>
 							</q-item>
 
-							<q-item clickable @click="tabLabel = 'Releases'">
-								<q-tab name="releases" label="Releases" />
+							<q-item clickable @click="tabLabel = 'Releases'; tab = 'releases'">
+								<span class="profile-dropdown-selection"> Releases </span>
 							</q-item>
-							<q-item clickable @click="tabLabel = 'Recommended'">
-								<q-tab name="recommended" label="Recommended" />
+							<q-item clickable @click="tabLabel = 'Recommended'; tab = 'recommended'">
+								<span class="profile-dropdown-selection"> Recommended </span>
 							</q-item>
 						</q-list>
 					</q-btn-dropdown>
@@ -67,6 +69,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import 'src/css/Profile/shared.css';
 import AllNFTsTab from './components/AllNFTsTab.vue';
 import NewReleasedTab from './components/NewReleasedTab.vue';
 
