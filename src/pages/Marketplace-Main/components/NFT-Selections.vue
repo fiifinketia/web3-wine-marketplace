@@ -1,6 +1,6 @@
 <template>
 	<div 
-		v-if="!isLoading"
+		v-if="!isLoading && allNFTs.length > 0 && !erroredOut"
 		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
 		:class="allNFTs.length >= 4 && $q.screen.width > 600
 		? 'justify-between': allNFTs.length == 3 && $q.screen.width > 600
@@ -118,6 +118,9 @@
 			</q-card>
 		</div>
 	</div>
+	<div v-else-if="!isLoading && !!erroredOut">
+		<ErrorView @retrieve-again="this.RetrieveTokens()"/>
+	</div>
 	<div 
 		v-else 
 		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container"
@@ -161,7 +164,11 @@ import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
+import ErrorViewVue from './ErrorView.vue';
 export default defineComponent({
+	components: {
+		ErrorView: ErrorViewVue
+	},
 	emits: ['totalTokens'],
 	data() {
 		const userStore = useUserStore();
@@ -177,6 +184,7 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
+			erroredOut: false,
 			filterKey: wineFiltersStore.filterKey,
 			subscription: Function()
 		};
@@ -323,14 +331,20 @@ export default defineComponent({
 		},
 
 		async RetrieveTokens() {
-			this.isLoading = true;
-			const { result: nfts } = await RetrieveFilteredNFTs(
-				`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
-			);
-			console.log(nfts)
-			this.$emit('totalTokens', nfts.length);
-			this.allNFTs = nfts;
-			this.isLoading = false;
+			try {
+				this.isLoading = true;
+				const { result: nfts } = await RetrieveFilteredNFTs(
+					`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
+				);
+				console.log(nfts)
+				this.$emit('totalTokens', nfts.length);
+				this.allNFTs = nfts;
+				this.erroredOut = false;
+			} catch {
+				this.erroredOut = true;
+			} finally {
+				this.isLoading = false;
+			}
 		},
 		ToInt(price: string) {
 			return parseInt(price);

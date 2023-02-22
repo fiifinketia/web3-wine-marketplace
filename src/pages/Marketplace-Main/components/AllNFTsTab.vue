@@ -2,7 +2,7 @@
 	<div
 		:class="
 			isMobile()
-				? 'fit row wrap justify-start items-start content-start'
+				? 'fit row wrap justify-center items-start content-start'
 				: $q.screen.width > 1025 ? 'fixed fit row wrap justify-start items-start content-start q-pl-md'
 				: 'fixed fit row wrap justify-start items-start content-start'
 		"
