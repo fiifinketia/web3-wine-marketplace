@@ -1,12 +1,18 @@
 <template>
-  <div class="row justify-between items-center q-pt-sm q-pb-md q-pa-md" style="width: 100%">
-    <div class="row items-center">
+  <div 
+    class="row items-center favorites-search-container"
+    :class="$q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'"
+  >
+    <div class="row items-center" :style="$q.screen.width > 600 ? '' : 'display: none'">
       <span class="favorites-nfts-title">NFTs</span>
       <span class="favorites-nfts-count q-pl-sm">
         {{ nftsLength > 0 ? nftsLength : 0 }}
       </span>
     </div>
-    <div class="row">
+    <div 
+      class="row justify-center q-gutter-x-sm" 
+      :style="$q.screen.width > 600 ? '' : 'width:100%; flex-wrap: nowrap'"
+    >
       <q-input
         v-model="searchText"
         dense
@@ -19,7 +25,13 @@
           <q-icon name="app:search" />
         </template>
       </q-input>
-      <q-btn flat class="favorites-search-btn q-ml-sm">GO</q-btn>
+      <q-btn 
+        dense
+        flat
+        class="favorites-search-btn"
+      >
+        GO
+      </q-btn>
     </div>
   </div>
 </template>

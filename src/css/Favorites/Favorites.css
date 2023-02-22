@@ -52,18 +52,30 @@
   .favorites-card-container, .favorites-loading-card-container {
     width: 23.5%;
   }
+	.favorites-search-bar {
+		width: 300px;
+	}
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1024px) and (min-width: 601px) {
   .favorites-card-container, .favorites-loading-card-container {
     width: 32%;
   }
+	.favorites-search-bar {
+		width: 400px;
+	}
 }
 
 @media screen and (max-width: 600px) {
   .favorites-card-container, .favorites-loading-card-container {
     width: 48%;
   }
+	.favorites-search-container {
+		width: 83.33333%;
+	}
+	.favorites-search-bar {
+		flex-grow: 1;
+	}
 }
 
 @media screen and (max-width: 350px) {
@@ -96,19 +108,14 @@
 }
 
 .favorites-search-btn {
-	padding: 8px 12px;
 	background: #3586ff;
 	border-radius: 6px;
-
-	font-family: 'ProximaNova-All';
-	font-style: normal;
-	font-weight: 400;
+	font-family: 'ProximaNova-Regular';
 	font-size: 14px;
-	line-height: 17px;
-
 	text-align: center;
-
 	color: #ffffff;
+	min-width: 45px;
+	height: 40px;
 	transition: background 0.3s ease;
 }
 
