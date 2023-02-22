@@ -28,8 +28,9 @@
       </q-card>
       <q-scroll-area
         bordered
+        class="q-pr-md"
         style="height: 80%;"
-        :style="$q.screen.width > 600 ? 'width: 70%' : 'width: 95%'"
+        :style="$q.screen.width > 600 ? 'width: 70%; max-width: 400px;' : 'width: 95%'"
         :thumb-style="{
           right: '4px',
           borderRadius: '5px',
