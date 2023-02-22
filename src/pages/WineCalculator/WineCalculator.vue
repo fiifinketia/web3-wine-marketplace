@@ -227,7 +227,7 @@
 						/>
 					</div>
 					<div class="end-amount q-pt-sm">End amount</div>
-					<div class="end-amount-price">${{ finalWorth.toFixed(2) }}</div>
+					<div class="end-amount-price">${{ potentialReturn.toFixed(2) }}</div>
 					<div class="end-amount-percentage-title q-pt-lg">Percentage</div>
 					<div class="end-amount-percentage">+{{ percentage.toFixed(2) }}%</div>
 				</div>
@@ -247,21 +247,20 @@
 									Starting investment (USD)
 								</div>
 								<div class="starting-investment-number row">
-									$&nbsp;
-									<div id="rangeValue">15,000</div>
+									<div> $ {{ investmentPrincipal.toFixed(2) }}</div>
 								</div>
 							</div>
 							<div class="q-pt-md">
 								<div class="center">
 									<div class="form-element">
-										<input
-											id="range"
-											v-model="value"
-											type="range"
-											class="range"
-											min="100"
-											max="50000"
-											oninput="rangeValue.innerText = this.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+										<q-slider
+											v-model="investmentPrincipal"
+											thumb-path="0"
+											:step="100"
+      								snap
+											:inner-min="100"
+											:min="0"
+											:max="50000"
 										/>
 									</div>
 								</div>
@@ -275,9 +274,9 @@
 								>
 									<div
 										:class="
-											lowRisk === true ? 'selected-risk' : 'unselected-border'
+											riskType === 'low' ? 'selected-risk' : 'unselected-border'
 										"
-										@click="calculateRisk('low')"
+										@click="riskType = 'low'"
 									></div>
 									<!-- <q-radio v-model="risk" dense val="low" /> -->
 								</div>
@@ -298,11 +297,11 @@
 									>
 										<div
 											:class="
-												mediumRisk === true
+												riskType === 'medium'
 													? 'selected-risk'
 													: 'unselected-border'
 											"
-											@click="calculateRisk('medium')"
+											@click="riskType = 'medium'"
 										></div>
 										<!-- <q-radio v-model="risk" dense val="medium" /> -->
 									</div>
@@ -324,11 +323,11 @@
 									>
 										<div
 											:class="
-												highRisk === true
+												riskType === 'high'
 													? 'selected-risk'
 													: 'unselected-border'
 											"
-											@click="calculateRisk('high')"
+											@click="riskType = 'high'"
 										></div>
 										<!-- <q-radio v-model="risk" dense val="high" /> -->
 									</div>
@@ -369,13 +368,13 @@
 								Starting investment (USD)
 							</div>
 							<div class="starting-investment-number">
-								{{ money }}
+								{{ investmentPrincipal }}
 							</div>
 						</div>
 						<div class="flex row justify-between">
 							<div class="starting-investment-text-bold">Risk level</div>
 							<div class="starting-investment-number">
-								{{ selectedRisk }}
+								{{ riskType }}
 							</div>
 						</div>
 						<div class="flex column timing-container">
@@ -383,21 +382,24 @@
 								<div class="starting-investment-text-bold">Timing</div>
 								<div class="starting-investment-number">
 									<span id="value"
-										>{{ selectedYear }} Years
-										{{ selectedMonth % 12 }} Months</span
+										>
+										{{ Math.floor(investmentAge / 12) ? `${Math.floor(investmentAge / 12)} Years` : ' ' }}
+										{{ investmentAge % 12 ? `${investmentAge % 12} Months` : '' }}</span
 									>
 								</div>
 							</div>
 							<div class="q-pt-lg">
 								<div class="form-element">
-									<input
-										id="range"
-										v-model="selectedMonth"
-										type="range"
-										min="6"
-										max="120"
-										@input="onInput"
-									/>
+									<q-slider
+											v-model="investmentAge"
+											thumb-path="0"
+      								snap
+											:inner-min="3"
+											:step="1"
+											:min="0"
+											:max="120"
+											:debounce="500"
+										/>
 								</div>
 							</div>
 						</div>
@@ -412,7 +414,7 @@
 							<button
 								v-if="calculationFinished === false"
 								class="continue-button full-width"
-								@click="calculateFinalWorth(selectedRisk)"
+								@click="calculateFinalWorth(riskType)"
 							>
 								<div class="continue-text">Calculate</div>
 							</button>
@@ -444,102 +446,33 @@
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
-import { ref, reactive, toRefs, computed } from 'vue';
+import { ref } from 'vue';
 
 export default defineComponent({
 	name: 'WineCalculator',
-	setup() {
-		type State = {
-			selectedMonth: number;
-			selectedYear: number;
-			combined: number;
-		};
-		const state = reactive<State>({
-			selectedMonth: 6,
-			selectedYear: 0,
-			combined: 0,
-		});
-
-		const computeCombined = (state: State) => {
-			return computed(
-				() => (state.selectedYear * 12 + state.selectedMonth) / 12
-			);
-		};
-
-		const combined = computeCombined(state);
-		state.combined = combined.value;
-
-		state.selectedYear = Math.floor(state.selectedMonth / 12);
-
-		function onInput(event: any) {
-			state.selectedMonth = event.target.value;
-			state.selectedYear = Math.floor(state.selectedMonth / 12);
-			state.combined = combined.value;
-		}
-
-		return {
-			...toRefs(state),
-			onInput,
-		};
-	},
 	data() {
 		return {
-			lowRisk: false,
-			mediumRisk: false,
-			highRisk: false,
+			riskType: 'low',
 			calculating: false,
-			showButton: false,
+			showButton: true,
 			secondSection: false,
 			calculateWorth: false,
 			calculationFinished: false,
 			showPrice: false,
-			money: Number(),
-			time: Number(),
-			moneyInvested: Number(),
-			selectedRisk: String(),
-			finalWorth: Number(),
-			percentage: Number(),
+			potentialGain: ref(0),
+			potentialReturn: ref(0),
+			percentage: ref(0),
 			firstStepMobile: true,
 			secondStepMobile: false,
 			thirdStepMobile: false,
-			value: 15000,
-			month: Number(),
-			year: Number(),
+			investmentPrincipal: 15000,
+			investmentAge: 3,
 		};
 	},
 
 	methods: {
 		handleCalculation() {
 			this.calculating = false;
-		},
-		calculateRisk(type: string) {
-			this.money = document.getElementById('rangeValue')?.innerHTML as any;
-
-			// this.firstStepMobile = false;
-			// this.secondStepMobile = true;
-
-			if (type === 'low') {
-				this.lowRisk = true;
-				this.mediumRisk = false;
-				this.highRisk = false;
-				this.selectedRisk = 'Low';
-			} else if (type === 'medium') {
-				this.lowRisk = false;
-				this.mediumRisk = true;
-				this.highRisk = false;
-				this.selectedRisk = 'Medium';
-			} else if (type === 'high') {
-				this.lowRisk = false;
-				this.mediumRisk = false;
-				this.highRisk = true;
-				this.selectedRisk = 'High';
-			}
-
-			this.calculating = true;
-			setInterval(() => {
-				this.calculating = false;
-				this.showButton = true;
-			}, 3000);
 		},
 		openCalculationPage() {
 			this.showButton = false;
@@ -556,17 +489,22 @@ export default defineComponent({
 				this.calculateWorth = false;
 				this.calculationFinished = true;
 			}, 2000);
-			if (type === 'low') {
-				this.finalWorth = this.money * 1.08 * this.time;
-				this.finalWorth.toFixed(2);
-			} else if (type === 'medium') {
-				this.finalWorth = this.money * 1.11 * this.time;
-				this.finalWorth.toFixed(2);
-			} else if (type === 'high') {
-				this.finalWorth = this.money * 1.15 * this.time;
-				this.finalWorth.toFixed(2);
+			switch (type) {
+				case 'low':
+					this.potentialGain = (this.investmentPrincipal * 1.08 * this.investmentAge) / 1200;
+					break;
+				case 'medium':
+					this.potentialGain = (this.investmentPrincipal * 2.28 * this.investmentAge) / 1200;
+					break;
+				case 'high':
+					this.potentialGain = (this.investmentPrincipal * 3.55 * this.investmentAge) / 1200;
+					break;
+				default:
+					this.potentialGain = 0.00;
+					break;
 			}
-			this.percentage = ((this.finalWorth - this.money) / this.money) * 100;
+			this.potentialReturn = this.investmentPrincipal + this.potentialGain;
+			this.percentage = ((this.potentialReturn - this.investmentPrincipal) / this.investmentPrincipal) * 100;
 			this.showPrice = true;
 		},
 		activateBackButton() {
