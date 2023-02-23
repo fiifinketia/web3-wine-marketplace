@@ -4,7 +4,7 @@
       class="hidden-a-1023 row justify-between q-px-none q-pt-md q-pb-sm q-gutter-xs"
     >
       <q-input
-        v-model="searchQuery"
+        v-model="generalSearch"
         outlined
         round
         placeholder="Search"
@@ -18,12 +18,13 @@
         </template>
       </q-input>
       <q-btn
+        :disable="!generalSearch"
         class="sidebar-go"
         color="primary"
         outlined
         label="GO"
         dense
-        @click="wineFiltersStore.searchQuery = searchQuery"
+        @click="this.emitGeneralSearch()"
       />
     </q-card-section>
     <q-list class="rounded-borders">
@@ -488,14 +489,17 @@
 
 <script lang="ts">
 import { useWineFilters } from "src/stores/wine-filters";
+import { useGeneralSearch } from 'src/stores/general-search-filter';
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   setup() {
     const wineFiltersStore = useWineFilters();
+    const generalSearchStore = useGeneralSearch();
 
 		return {
 			wineFiltersStore,
+      generalSearchStore,
 			searchQuery: ref(''),
 			brandQuery: ref(''),
 			regionQuery: ref(''),
@@ -523,6 +527,11 @@ export default defineComponent({
 			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
+  },
+  data() {
+    return {
+      generalSearch: ''
+    }
   },
   watch: {
 		brandQuery: {
@@ -622,6 +631,11 @@ export default defineComponent({
 			if (y == 0) return m + ' ' + getPlural(m, months);
 			else return y + ' ' + getPlural(y, years);
 		},
+    emitGeneralSearch() {
+      this.generalSearchStore.setGeneralSearch(this.generalSearch);
+      this.generalSearchStore.indexGeneralSearchKey();
+      this.generalSearch = '';
+    }
   }
 })
 </script>

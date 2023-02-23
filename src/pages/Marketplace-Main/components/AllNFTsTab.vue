@@ -39,7 +39,7 @@
 					</div>
 					<div class="row hidden-b-1023 justify-center q-gutter-x-sm">
 						<q-input
-							v-model="searchQuery"
+							v-model="generalSearch"
 							outlined
 							round
 							dense
@@ -55,12 +55,13 @@
 							</template>
 						</q-input>
 						<q-btn
+							:disable="!generalSearch"
 							color="primary"
 							text-color="white"
 							label="GO"
 							unelevated
 							class="header-go"
-							@click="wineFiltersStore.searchQuery = searchQuery"
+							@click="this.emitGeneralSearch()"
 						/>
 					</div>
 				</div>
@@ -145,6 +146,7 @@ import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
 import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
+import { useGeneralSearch } from 'src/stores/general-search-filter';
 import 'src/css/Marketplace/header.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
@@ -159,13 +161,16 @@ export default defineComponent({
 	emits: ['totalTokens'],
 	data() {
 		const wineFiltersStore = useWineFilters();
+		const generalSearchStore = useGeneralSearch();
 
 		return {
 			showToogleButton: this.isMobile() ? ref(true) : ref(false),
 			wineFiltersStore,
+			generalSearchStore,
 			searchQuery: '',
 			openSidebar: false,
 			totalNFTs: ref(0),
+			generalSearch: ''
 		};
 	},
 
@@ -199,7 +204,12 @@ export default defineComponent({
 			} else {
 				this.wineFiltersStore.setFilterMode('manual');
 			}
-		}
+		},
+		emitGeneralSearch() {
+      this.generalSearchStore.setGeneralSearch(this.generalSearch);
+      this.generalSearchStore.indexGeneralSearchKey();
+      this.generalSearch = '';
+    }
 	},
 });
 </script>
