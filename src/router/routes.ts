@@ -50,8 +50,19 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
+
 				component: () => import('pages/Profiles/ProfileOrders.vue'),
 				meta: { requiresAuth: true },
+			},
+		],
+	},
+	{
+		path: '/calculator',
+		component: () => import('layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('pages/WineCalculator/WineCalculator.vue'),
 			},
 		],
 	},
