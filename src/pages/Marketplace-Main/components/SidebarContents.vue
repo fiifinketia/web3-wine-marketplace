@@ -103,35 +103,6 @@
         </q-list>
       </q-expansion-item>
 
-      <!-- Origin Filter -->
-      <q-expansion-item
-        label="Origin"
-        header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
-      >
-        <q-input
-          v-model="originQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
-          <q-option-group
-            v-model="wineFiltersStore.origin"
-            :options="originOptions"
-            type="checkbox"
-            :style="{ maxHeight: '200px', overflowY: 'scroll' }"
-            class="sidebar-options"
-          />
-        </q-list>
-      </q-expansion-item>
-
       <!-- Producer Filter -->
       <q-expansion-item
         label="Producer"
@@ -291,47 +262,6 @@
               thumb-color="white"
               class="col-8 q-px-lg"
               :step="1"
-              :min="0"
-              :max="100"
-              :debounce="500"
-            />
-          </q-item-section>
-        </q-card>
-      </q-expansion-item>
-
-      <!-- Maturity Filter edit-->
-      <q-expansion-item
-        label="Maturity"
-        header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
-      >
-        <q-card class="dark-blue-border rounded-borders q-my-sm q-pa-sm">
-          <q-card-section class="row col-12">
-            <div class="col-8">
-              <div class="row">
-                <span class="q-pa-none q-ma-xs">
-                  {{ getYears(maturity.min) || 0 }} -
-                  {{ getYears(maturity.max) }}
-                </span>
-              </div>
-            </div>
-            <div class="col-4">
-              <q-btn
-                class="q-ma-none"
-                type="button"
-                label="Ok"
-                outlined
-                color="primary"
-                @click="applyMaturityFilter"
-              />
-            </div>
-          </q-card-section>
-          <q-item-section class="row col-12">
-            <q-range
-              id="filter_maturity"
-              v-model="maturity"
-              thumb-color="white"
-              class="col-8 q-px-lg"
-              :step="6"
               :min="0"
               :max="100"
               :debounce="500"
