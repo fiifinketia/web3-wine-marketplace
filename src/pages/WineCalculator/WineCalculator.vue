@@ -247,7 +247,7 @@
 									Starting investment (USD)
 								</div>
 								<div class="starting-investment-number row">
-									<div> $ {{ investmentPrincipal.toFixed(2) }}</div>
+									<div>$ {{ investmentPrincipal.toFixed(2) }}</div>
 								</div>
 							</div>
 							<div class="q-pt-md">
@@ -257,7 +257,7 @@
 											v-model="investmentPrincipal"
 											thumb-path="0"
 											:step="100"
-      								snap
+											snap
 											:inner-min="100"
 											:min="0"
 											:max="50000"
@@ -268,7 +268,10 @@
 						</div>
 						<div class="flex column risk-level-container">
 							<div class="risk-level-title">Risk level</div>
-							<div class="flex row risk-container items-center cursor-pointer" @click="riskType = 'low'">
+							<div
+								class="flex row risk-container items-center cursor-pointer"
+								@click="riskType = 'low'"
+							>
 								<div
 									class="flex justify-center items-center unselected-border-wrapper"
 								>
@@ -378,25 +381,31 @@
 							<div class="flex row justify-between">
 								<div class="starting-investment-text-bold">Timing</div>
 								<div class="starting-investment-number">
-									<span id="value"
-										>
-										{{ Math.floor(investmentAge / 12) ? `${Math.floor(investmentAge / 12)} Years` : ' ' }}
-										{{ investmentAge % 12 ? `${investmentAge % 12} Months` : '' }}</span
+									<span id="value">
+										{{
+											Math.floor(investmentAge / 12)
+												? `${Math.floor(investmentAge / 12)} Years`
+												: ' '
+										}}
+										{{
+											investmentAge % 12 ? `${investmentAge % 12} Months` : ''
+										}}</span
 									>
 								</div>
 							</div>
 							<div class="q-pt-lg">
 								<div class="form-element">
 									<q-slider
-											v-model="investmentAge"
-											thumb-path="0"
-      								snap
-											:inner-min="3"
-											:step="1"
-											:min="0"
-											:max="120"
-											:debounce="500"
-										/>
+										v-model="investmentAge"
+										thumb-path="0"
+										snap
+										:disable="showPrice"
+										:inner-min="3"
+										:step="1"
+										:min="0"
+										:max="120"
+										:debounce="500"
+									/>
 								</div>
 							</div>
 						</div>
@@ -418,7 +427,7 @@
 							<button
 								v-else
 								class="calculate-again-button full-width"
-								@click="$router.go(0)"
+								@click="resetWindow()"
 							>
 								Calculate again
 							</button>
@@ -445,26 +454,29 @@ import '../../css/WineCalculator/WineCalculator.css';
 import { defineComponent } from 'vue-demi';
 import { ref } from 'vue';
 
+function initialData() {
+			return {
+				riskType: 'low',
+				calculating: false,
+				showButton: true,
+				secondSection: false,
+				calculateWorth: false,
+				calculationFinished: false,
+				showPrice: false,
+				potentialGain: ref(0),
+				potentialReturn: ref(0),
+				percentage: ref(0),
+				firstStepMobile: true,
+				secondStepMobile: false,
+				thirdStepMobile: false,
+				investmentPrincipal: 15000,
+				investmentAge: 12,
+			};
+		}
 export default defineComponent({
 	name: 'WineCalculator',
 	data() {
-		return {
-			riskType: 'low',
-			calculating: false,
-			showButton: true,
-			secondSection: false,
-			calculateWorth: false,
-			calculationFinished: false,
-			showPrice: false,
-			potentialGain: ref(0),
-			potentialReturn: ref(0),
-			percentage: ref(0),
-			firstStepMobile: true,
-			secondStepMobile: false,
-			thirdStepMobile: false,
-			investmentPrincipal: 15000,
-			investmentAge: 3,
-		};
+		return initialData();
 	},
 
 	methods: {
@@ -485,28 +497,42 @@ export default defineComponent({
 			setTimeout(() => {
 				this.calculateWorth = false;
 				this.calculationFinished = true;
-			}, 2000);
+			}, 500);
+
 			switch (type) {
 				case 'low':
-					this.potentialGain = (this.investmentPrincipal * 1.08 * this.investmentAge) / 1200;
+					this.potentialGain =
+						(this.investmentPrincipal * 1.08 * this.investmentAge) / 1200;
 					break;
 				case 'medium':
-					this.potentialGain = (this.investmentPrincipal * 2.28 * this.investmentAge) / 1200;
+					this.potentialGain =
+						(this.investmentPrincipal * 2.28 * this.investmentAge) / 1200;
 					break;
 				case 'high':
-					this.potentialGain = (this.investmentPrincipal * 3.55 * this.investmentAge) / 1200;
+					this.potentialGain =
+						(this.investmentPrincipal * 3.55 * this.investmentAge) / 1200;
 					break;
 				default:
-					this.potentialGain = 0.00;
+					this.potentialGain = 0.0;
 					break;
 			}
 			this.potentialReturn = this.investmentPrincipal + this.potentialGain;
-			this.percentage = ((this.potentialReturn - this.investmentPrincipal) / this.investmentPrincipal) * 100;
+			this.percentage =
+				((this.potentialReturn - this.investmentPrincipal) /
+					this.investmentPrincipal) *
+				100;
 			this.showPrice = true;
 		},
 		activateBackButton() {
 			this.secondSection = false;
+			this.thirdStepMobile = false;
+			this.firstStepMobile = true;
+			this.showButton = true;
 		},
+
+		resetWindow() {
+        Object.assign(this.$data, initialData());
+    }
 	},
 });
 </script>

@@ -63,7 +63,6 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				component: () => import('pages/WineCalculator/WineCalculator.vue'),
-				meta: { requiresAuth: true },
 			},
 		],
 	},
