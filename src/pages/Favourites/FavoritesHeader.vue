@@ -20,6 +20,7 @@
         color="blue-6"
         placeholder="Search"
         class="favorites-search-bar"
+        :input-style="!!searchText ? 'color: #212131' : ''"
       >
         <template #prepend>
           <q-icon name="app:search" />

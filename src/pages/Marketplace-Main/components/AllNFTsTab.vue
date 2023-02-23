@@ -49,6 +49,7 @@
 							:class="$q.screen.width > 600 ? 'col-10' : ''"
 							:style="$q.screen.width > 600 ? 'width: 80%' : ''"
 							class="header-search"
+							:input-style="!!generalSearch ? 'color: #212131' : ''"
 						>
 							<template #prepend>
 								<q-icon name="search" />

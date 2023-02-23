@@ -11,6 +11,7 @@
         type="search"
         color="primary"
         class="col-9 sidebar-search sidebar-search-stretch"
+        :input-style="!!generalSearch ? 'color: #212131' : ''"
         dense
       >
         <template #prepend>
