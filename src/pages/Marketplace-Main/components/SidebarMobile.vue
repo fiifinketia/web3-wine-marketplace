@@ -65,7 +65,7 @@
             no-caps
             flat
             dense
-            @click="wineFiltersStore.removeAllFilters()"
+            @click="ClearAllAndApply()"
           />
           <div class="row items-center">
             <span
@@ -107,6 +107,10 @@ export default defineComponent({
   },
   methods: {
     ApplyFilter() {
+      this.wineFiltersStore.indexFilterKey();
+    },
+    async ClearAllAndApply() {
+      await this.wineFiltersStore.removeAllFilters();
       this.wineFiltersStore.indexFilterKey();
     }
   }

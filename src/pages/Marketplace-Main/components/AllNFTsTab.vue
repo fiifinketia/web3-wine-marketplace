@@ -122,9 +122,9 @@
 			position="bottom-right"
 			:offset="[18, 18]"
 		>
-			<q-card rounded class="row q-pa-xs rounded-borders">
+			<q-card rounded class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container">
 				<span
-					class="text-weight-bold text-h6 q-px-sm"
+					class="text-weight-bold text-h6 sidebar-sticky-filter-icon q-pr-xs"
 					clickable
 					@click="toggleSidebar()"
 				>
@@ -132,6 +132,7 @@
 				>
 				<q-btn
 					dense
+					class="sidebar-sticky-filter-icon"
 					color="secondary"
 					text-color="white"
 					icon="app:filter"
@@ -149,6 +150,7 @@ import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { useGeneralSearch } from 'src/stores/general-search-filter';
 import 'src/css/Marketplace/header.css';
+import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
 
