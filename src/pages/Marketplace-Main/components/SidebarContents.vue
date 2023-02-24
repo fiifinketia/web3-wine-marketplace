@@ -232,18 +232,16 @@
         <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
           <q-card-section class="row items-center col-12 q-py-sm">
             <div class="col-8">
-              <div class="row">
-                <div class="col-9 column">
-                  <div class="row items-center q-gutter-x-xs">
-                    <span class="q-pa-none sidebar-label-light">from</span>
-                    <q-icon name="app:price" size="sm"></q-icon>
-                    <span class="sidebar-label-bold"> {{ price.min.toFixed(2) }} </span>
-                  </div>
-                  <div class="row items-center q-gutter-x-xs">
-                    <span class="q-pa-none sidebar-label-light">to</span>
-                    <q-icon name="app:price" size="sm"></q-icon>
-                    <span class="sidebar-label-bold"> {{ price.max.toFixed(2) }} </span>
-                  </div>
+              <div class="col-12 column">
+                <div class="row items-center q-gutter-x-xs">
+                  <span class="q-pa-none sidebar-label-light">from</span>
+                  <q-icon name="app:price" size="sm"></q-icon>
+                  <span class="sidebar-label-bold"> {{ price.min.toFixed(2) }} </span>
+                </div>
+                <div class="row items-center q-gutter-x-xs">
+                  <span class="q-pa-none sidebar-label-light">to</span>
+                  <q-icon name="app:price" size="sm"></q-icon>
+                  <span class="sidebar-label-bold"> {{ price.max.toFixed(2) }} </span>
                 </div>
               </div>
             </div>
@@ -264,9 +262,10 @@
               v-model="price"
               thumb-color="white"
               class="col-8 q-px-lg"
-              :step="1"
+              track-color="light-blue-2"
+              :step="100"
               :min="0"
-              :max="100"
+              :max="10000"
               :debounce="500"
             />
           </q-item-section>
