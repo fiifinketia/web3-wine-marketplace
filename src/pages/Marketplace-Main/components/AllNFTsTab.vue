@@ -34,7 +34,7 @@
 							text-color="white"
 							@remove="wineFiltersStore.removeFilter(filter)"
 						>
-							{{ filter }}
+							{{ truncateChipText(filter) }}
 						</q-chip>
 					</div>
 					<div class="row hidden-b-1023 justify-center q-gutter-x-sm">
@@ -212,7 +212,20 @@ export default defineComponent({
       this.generalSearchStore.setGeneralSearch(this.generalSearch);
       this.generalSearchStore.indexGeneralSearchKey();
       this.generalSearch = '';
-    }
+    },
+		truncateChipText(filter: string) {
+			const splitText = filter.split(',');
+			const newSplitText = splitText[0].split(' ');
+			if (newSplitText.length > 2) {
+				filter = `${newSplitText[0]} ${newSplitText[1]} ${newSplitText[2].slice(0,2)}...`
+			} else {
+				if (splitText.length > 1) {
+					splitText[1] = splitText[1].replace(/\s/g, '');
+					filter = `${splitText[0]}, ${splitText[1].slice(0,2)}...`
+				}
+			}
+			return filter
+		}
 	},
 });
 </script>
