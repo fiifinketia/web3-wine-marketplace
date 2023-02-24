@@ -29,12 +29,12 @@
       />
     </q-card-section>
     <q-list class="rounded-borders">
-      <!-- Listed Only filter -->
+      <!-- Status filter -->
       <q-expansion-item
-        label="Listed Only"
+        label="Status"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.listedOnly"
             :options="wineFiltersStore.listedOnlyOptions"
@@ -49,7 +49,7 @@
         label="Sort A-Z"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.sortedAtoZ"
             :options="wineFiltersStore.sortedAtoZOptions"
@@ -64,7 +64,7 @@
         label="Type"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.type"
             :options="wineFiltersStore.typeOptions"
@@ -87,12 +87,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!brandQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.brand"
             :options="brandOptions"
@@ -116,12 +117,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!producerQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.producer"
             :options="producerOptions"
@@ -145,12 +147,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!countryQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.country"
             :options="countryOptions"
@@ -174,12 +177,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!regionQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.region"
             :options="regionOptions"
@@ -203,12 +207,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!appellationQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.appellation"
             :options="appellationOptions"
@@ -224,7 +229,7 @@
         label="Price"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-card class="dark-blue-border rounded-borders q-my-sm q-pa-sm">
+        <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
           <q-card-section class="row col-12">
             <div class="col-8">
               <div class="row">
@@ -283,12 +288,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!caseQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.wineCase"
             :options="caseOptions"
@@ -312,12 +318,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!formatQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.format"
             :options="formatOptions"
@@ -341,12 +348,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!investmentGradeQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.investmentGrade"
             :options="investmentGradeOptions"
@@ -370,12 +378,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!lwinQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.LWIN"
             :options="LWINOptions"
@@ -399,12 +408,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!heritageQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.heritage"
             :options="heritageOptions"
@@ -422,6 +432,7 @@
 import { useWineFilters } from "src/stores/wine-filters";
 import { useGeneralSearch } from 'src/stores/general-search-filter';
 import { defineComponent, ref } from "vue";
+import 'src/css/Marketplace/sidebar.css';
 
 export default defineComponent({
   setup() {
