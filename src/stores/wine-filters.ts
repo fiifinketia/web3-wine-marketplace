@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { DynamicKeyWithCount } from 'src/pages/Marketplace-Main/models/Response.models';
 import { FilterOptionsResponse } from 'src/pages/Marketplace-Main/models/Response.models/FilterOptions.response';
 
 export const useWineFilters = defineStore('wineFilters', {
@@ -302,6 +303,15 @@ export const useWineFilters = defineStore('wineFilters', {
 				value === 'Listed' || value === 'Unlisted' ? '' : this.listedOnly;
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
+		},
+		setBrandFiltersAfterGenSearch(counts: DynamicKeyWithCount) {
+			if (!!counts) {
+				if (!!counts.brand) {
+					counts.brand.forEach(f => {
+						this.brand.push(f._id);
+					})
+				}
+			}
 		},
 		removeAllFilters() {
 			this.type = [];

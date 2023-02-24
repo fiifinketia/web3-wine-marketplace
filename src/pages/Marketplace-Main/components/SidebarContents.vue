@@ -192,7 +192,7 @@
 
       <!-- Appellation Filter -->
       <q-expansion-item
-        label="Appelation"
+        label="Appellation"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
         <q-input

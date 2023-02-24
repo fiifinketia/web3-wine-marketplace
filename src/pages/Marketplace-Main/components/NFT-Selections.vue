@@ -160,7 +160,7 @@ import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { useGeneralSearch } from 'src/stores/general-search-filter';
-import { ListingWithPricingAndImage } from '../models/Response.models';
+import { DynamicKeyWithCount, ListingWithPricingAndImage } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
@@ -190,6 +190,7 @@ export default defineComponent({
 			filterListenersEnabled: true,
 			erroredOut: false,
 			filterKey: wineFiltersStore.filterKey,
+			nftEnums: {} as DynamicKeyWithCount,
 			subscription: Function()
 		};
 	},
@@ -209,6 +210,7 @@ export default defineComponent({
 		})
 	},
 	unmounted () {
+		// cancels subscription once changing to another tab (e.g. releases, recommended)
 		this.subscription()
 	},
 	watch: {
@@ -225,10 +227,17 @@ export default defineComponent({
 					// temporarily disable listeners so that removing the filters won't trigger the 2nd if statement in the subscription
 					this.filterListenersEnabled = false;
 					// await so that the filters are properly removed and won't "leak" to the subscriber
-					await this.wineFiltersStore.removeAllFilters();
-					// after removing filters, bring back listeners for the filter
-					this.filterListenersEnabled = true;
-					this.RetrieveTokens(this.generalSearchStore.generalSearch);
+					try {
+						await this.RetrieveTokens(this.generalSearchStore.generalSearch);
+						await this.wineFiltersStore.removeAllFilters();
+						// tick the brand options related to the NFTs retrieved from general search key
+						await this.wineFiltersStore.setBrandFiltersAfterGenSearch(this.nftEnums);
+					} catch {
+						return 
+					} finally {
+						// after removing filters, bring back listeners for the filter
+						this.filterListenersEnabled = true;
+					}
 				}
 			}
 		}
@@ -366,13 +375,14 @@ export default defineComponent({
 				} 
 			} else {
 				try {
-					const { result: nfts } = await RetrieveFilteredNFTs(
+					const { result: nfts, counts: nftEnums } = await RetrieveFilteredNFTs(
 						`generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
 					);
 					console.log(nfts)
 					this.$emit('totalTokens', nfts.length);
 					this.allNFTs = nfts;
 					this.erroredOut = false;
+					this.nftEnums = nftEnums;
 				} catch {
 					this.erroredOut = true;
 				}
