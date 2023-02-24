@@ -118,6 +118,9 @@
 			</q-card>
 		</div>
 	</div>
+	<div v-else-if="!isLoading && allNFTs.length == 0">
+		<EmptyView />
+	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
 		<ErrorView @retrieve-again="this.RetrieveTokens()"/>
 	</div>
@@ -166,9 +169,11 @@ import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
+import EmptyView from './EmptyView.vue';
 export default defineComponent({
 	components: {
-		ErrorView: ErrorViewVue
+		ErrorView: ErrorViewVue,
+		EmptyView: EmptyView
 	},
 	emits: ['totalTokens'],
 	data() {
