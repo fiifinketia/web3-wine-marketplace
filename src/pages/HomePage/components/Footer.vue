@@ -63,7 +63,7 @@
 			<div
 				class="column col-lg-2 col-md-3 col-sm-4 col-xs-6 q-gutter-md q-pa-md"
 			>
-				<div class="footer-bold">Contact info:</div>
+				<div class="footer-bold no-underline">Contact info:</div>
 				<div class="footer-normal">email@email.com</div>
 				<div class="footer-normal">+ 0 000 000 0000</div>
 			</div>

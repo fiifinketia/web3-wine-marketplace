@@ -15,6 +15,7 @@
 	text-decoration: none;
 }
 
+
 .footer-normal {
 	font-family: 'ProximaNova-All';
 	font-style: normal;
@@ -24,4 +25,14 @@
 	cursor: pointer;
 	color: rgba(255, 255, 255, 0.8);
 	text-decoration: none;
+}
+
+.footer-bold:hover,
+.footer-normal:hover
+{
+	text-decoration: underline;
+}
+
+.no-underline {
+	text-decoration: none !important;
 }

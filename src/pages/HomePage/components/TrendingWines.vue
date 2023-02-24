@@ -78,7 +78,7 @@
 				</div>
 			</div>
 
-			<button class="see-market-button">See market statistics</button>
+			<q-btn class="see-market-button" color="primary" outline>See market statistics</q-btn>
 		</div>
 	</div>
 </template>
