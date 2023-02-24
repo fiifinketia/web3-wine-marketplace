@@ -277,20 +277,6 @@
         label="Case"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="caseQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-          :input-style="!!caseQuery ? 'color: #212131' : ''"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.wineCase"
@@ -307,20 +293,6 @@
         label="Format"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="formatQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-          :input-style="!!formatQuery ? 'color: #212131' : ''"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.format"
@@ -337,20 +309,6 @@
         label="Investment Grade"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="investmentGradeQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-          :input-style="!!investmentGradeQuery ? 'color: #212131' : ''"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.investmentGrade"
@@ -397,20 +355,6 @@
         label="Heritage"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="heritageQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-          :input-style="!!heritageQuery ? 'color: #212131' : ''"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.heritage"
