@@ -43,7 +43,7 @@ export const useWineFilters = defineStore('wineFilters', {
 		appellationOptions: [] as { label: string; value: string }[],
 		price: {
 			min: 0,
-			max: 1000000,
+			max: 10000,
 		},
 		maturity: {
 			min: 0,

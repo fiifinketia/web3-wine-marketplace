@@ -230,28 +230,26 @@
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
         <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
-          <q-card-section class="row col-12">
+          <q-card-section class="row items-center col-12 q-py-sm">
             <div class="col-8">
               <div class="row">
-                <div class="col-3">
-                  <p class="q-pa-none q-ma-xs">from</p>
-                  <p class="q-pa-none q-ma-xs">to</p>
-                </div>
-                <div class="col-6">
-                  <p class="q-pa-none q-ma-xs">
+                <div class="col-9 column">
+                  <div class="row items-center q-gutter-x-xs">
+                    <span class="q-pa-none sidebar-label-light">from</span>
                     <q-icon name="app:price" size="sm"></q-icon>
-                    {{ price.min.toFixed(2) }}
-                  </p>
-                  <p class="q-pa-none q-ma-xs">
+                    <span class="sidebar-label-bold"> {{ price.min.toFixed(2) }} </span>
+                  </div>
+                  <div class="row items-center q-gutter-x-xs">
+                    <span class="q-pa-none sidebar-label-light">to</span>
                     <q-icon name="app:price" size="sm"></q-icon>
-                    {{ price.max.toFixed(2) }}
-                  </p>
+                    <span class="sidebar-label-bold"> {{ price.max.toFixed(2) }} </span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 row justify-end">
               <q-btn
-                class="q-ma-md"
+                class="sidebar-ok"
                 type="button"
                 label="Ok"
                 outlined

@@ -18,7 +18,20 @@
 
 .sidebar-active-border {
   border: 1px solid #8CBAFF;
-  border-radius: 6px;
+  border-radius: 6px !important;
+}
+
+.sidebar-label-light {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  color: #9D9D9D;
+  width: 28px;
+}
+
+.sidebar-label-bold {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  color: #212131;
 }
 
 .sidebar-search .q-field__control {
@@ -42,6 +55,13 @@
   border-radius: 6px;
   font-family: 'ProximaNova-Regular';
   width: 45px;
+}
+
+.sidebar-ok {
+  border-radius: 6px;
+  font-family: 'ProximaNova-Regular';
+  width: 44px;
+  height: 34px;
 }
 
 .sidebar-header-container {
