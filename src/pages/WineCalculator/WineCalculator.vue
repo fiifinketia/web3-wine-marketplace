@@ -344,12 +344,13 @@
 							</div>
 							<div v-if="showButton">
 								<div class="full-width continue-button-wrapper">
-									<button
+									<q-btn
 										class="continue-button full-width"
+										no-caps
 										@click="openCalculationPage()"
 									>
 										<div class="continue-text">Continue</div>
-									</button>
+									</q-btn>
 								</div>
 							</div>
 						</div>
@@ -417,20 +418,24 @@
 									: { paddingTop: '251px' },
 							]"
 						>
-							<button
+							<q-btn
 								v-if="calculationFinished === false"
 								class="continue-button full-width"
+								no-caps
 								@click="calculateFinalWorth(riskType)"
 							>
 								<div class="continue-text">Calculate</div>
-							</button>
-							<button
+							</q-btn>
+							<q-btn
 								v-else
 								class="calculate-again-button full-width"
+								color="primary"
+								no-caps
+								outline
 								@click="resetWindow()"
 							>
 								Calculate again
-							</button>
+							</q-btn>
 						</div>
 						<div
 							v-if="calculationFinished === false"
@@ -439,9 +444,9 @@
 						>
 							<img src="../../../public/images/back.svg" class="q-pr-xs" /> Back
 						</div>
-						<button v-else class="continue-button full-width q-mt-md">
+						<q-btn v-else class="continue-button full-width q-mt-md" no-caps>
 							<div class="continue-text">Check the wines</div>
-						</button>
+						</q-btn>
 					</div>
 				</div>
 			</div>

@@ -429,11 +429,7 @@
 	font-size: 20px;
 	line-height: 24px;
 	text-align: center;
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
 	background-clip: text;
-	border: 1px solid #3586ff;
 	border-radius: 6px;
 	padding: 0.9rem;
 	cursor: pointer;
