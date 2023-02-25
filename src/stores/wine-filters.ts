@@ -225,7 +225,7 @@ export const useWineFilters = defineStore('wineFilters', {
 						}
 				}
 			});
-			if (state.searchQuery) filters.push('q=' + state.searchQuery);
+			if (state.searchQuery) filters.push('search=' + state.searchQuery);
 			return filters.join('&');
 		},
 		getAllFiltersArray: (state) => {

@@ -194,7 +194,7 @@
 						:to="
 							!!userStore.walletAddress
 								? { path: '/orders' }
-								: { query: { next: $route.fullPath, connect: 'open' } }
+								: { query: {...$route.query, connect: 'open'} }
 						"
 						split
 						icon="app:profile"
@@ -439,12 +439,14 @@ export default defineComponent({
 			// This is so that the balance is updated after new funds are imported
 		},
 		async connectWallet() {
-			this.showConnectWallet = false;
-			await this.userStore.connectWallet();
-			this.balance = await this.userStore.getWalletBalance();
-			if (this.$route.query?.next) {
+			try {
+				this.showConnectWallet = false;
+				await this.userStore.connectWallet();
+				this.balance = await this.userStore.getWalletBalance();
+			} finally {
 				const next = this.$route.query?.next as string;
-				this.$router.replace({ path: next });
+				if(!!next) await this.$router.replace({path: next})
+				else this.$router.back();
 			}
 		},
 
