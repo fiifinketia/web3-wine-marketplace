@@ -157,7 +157,7 @@ export const useWineFilters = defineStore('wineFilters', {
 						}
 						break;
 					case 'price':
-						if (state.price.min !== 0 || state.price.max !== 1000000) {
+						if (state.price.min !== 0 || state.price.max !== 10000) {
 							filters.push('minPrice=' + state.price.min);
 							filters.push('maxPrice=' + state.price.max);
 						}
@@ -328,6 +328,10 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.investmentGrade = [];
 			this.listedOnly = '';
 			this.sortedAtoZ = '';
+			this.price = {
+				min: 0,
+				max: 10000,
+			}
 		},
 		setAllFilters(options: FilterOptionsResponse) {
 			for (const key in options) {
