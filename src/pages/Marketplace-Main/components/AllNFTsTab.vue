@@ -73,7 +73,7 @@
 			<div class="row justify-end hidden-a-599 col-2 q-pr-sm">
 				<q-btn
 					style="text-decoration: underline"
-					class="row hidden-a-1023 header-clear-btn"
+					class="row hidden-a-1023 header-clear-btn btn--no-hover"
 					label="Clear All"
 					color="primary"
 					dense
@@ -89,7 +89,7 @@
 						{{ wineFiltersStore.getAllFiltersArray.length }}</span
 					>
 					<q-btn
-						class="col-10 q-pa-sm"
+						class="col-10 q-pa-sm filter-btn btn--no-hover"
 						dense
 						unelevated
 						color="secondary"
@@ -137,7 +137,7 @@
 				>
 				<q-btn
 					dense
-					class="sidebar-sticky-filter-icon"
+					class="sidebar-sticky-filter-icon btn--no-hover"
 					color="secondary"
 					text-color="white"
 					icon="app:filter"
@@ -242,13 +242,14 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.filter-modal-bg {
-	background: linear-gradient(
-		289.94deg,
-		rgba(33, 33, 49, 0.4) 58.61%,
-		rgba(131, 224, 179, 0.4) 108.36%
-	);
-	backdrop-filter: blur(5px);
+<style scoped>
+:deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.sidebar-sticky-filter-icon.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.filter-btn.btn--no-hover .q-focus-helper) {
+	display: none;
 }
 </style>

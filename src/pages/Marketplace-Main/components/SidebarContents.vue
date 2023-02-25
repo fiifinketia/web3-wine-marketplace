@@ -23,6 +23,7 @@
         class="sidebar-go"
         color="primary"
         outlined
+        unelevated
         label="GO"
         dense
         @click="this.emitGeneralSearch()"

@@ -34,7 +34,7 @@
       >
         <q-card-section class="row justify-between q-pa-md">
           <q-btn
-            class="header-clear-btn"
+            class="header-clear-btn btn--no-hover"
             style="text-decoration: underline"
             label="Clear All"
             color="primary"
@@ -52,6 +52,7 @@
             </span>
             <q-btn 
               v-close-popup
+              :disable="wineFiltersStore.getAllFiltersArray.length == 0"
               @click="this.ApplyFilter()"
               class="header-apply"
               label="Apply"
@@ -94,6 +95,8 @@ export default defineComponent({
 
 </script>
 
-<style>
-
+<style scoped>
+:deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>
