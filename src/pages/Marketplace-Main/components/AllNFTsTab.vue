@@ -24,6 +24,9 @@
 				</div>
 				<div class="col-sm-8 col-xs-12">
 					<div class="q-mx-xs hidden-a-1023 overflow-hidden">
+						<q-resize-observer
+							@resize="onResize"
+						/>
 						<q-chip
 							v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
 							:key="filter"
@@ -100,6 +103,7 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
+			:style="qChipRows > 1 ? 'max-height: calc(100% - 232px)' : ''"
 		 	class="col-sm-3 q-mt-sm" 
 		 />
 		<SidebarTablet
@@ -114,6 +118,7 @@
 		<!-- List Section -->
 		<NFTSelections
 			class="col-md-9 col-sm-12"
+			:style="qChipRows > 1 ? 'max-height: calc(95% - 182px)' : ''"
 			style="padding-top: 0px !important"
 			@total-tokens="updateTokenCount"
 		/>
@@ -173,7 +178,8 @@ export default defineComponent({
 			searchQuery: '',
 			openSidebar: false,
 			totalNFTs: ref(0),
-			generalSearch: ''
+			generalSearch: '',
+			qChipRows: 0
 		};
 	},
 
@@ -225,6 +231,12 @@ export default defineComponent({
 				}
 			}
 			return filter
+		},
+		onResize (size: { width: number, height: number }) {
+			if (this.$q.screen.width > 1023) {
+				const rows = size.height / 32;
+				this.qChipRows = rows;
+			}
 		}
 	},
 });
