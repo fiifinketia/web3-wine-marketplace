@@ -72,6 +72,14 @@
   height: 34px;
 }
 
+.sidebar-ok:hover {
+  background: #8CBAFF !important;
+}
+
+.sidebar-ok.disabled {
+  background: #C0C0C0 !important;
+}
+
 .sidebar-header-container {
   height: 50px;
 }

@@ -225,7 +225,7 @@
         </q-list>
       </q-expansion-item>
 
-      <!-- Price Filter edit-->
+      <!-- Price Filter-->
       <q-expansion-item
         label="Price"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
@@ -248,8 +248,9 @@
             </div>
             <div class="col-4 row justify-end">
               <q-btn
-                class="sidebar-ok"
+                class="sidebar-ok btn--no-hover"
                 type="button"
+                unelevated
                 label="Ok"
                 outlined
                 color="primary"

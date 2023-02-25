@@ -158,8 +158,8 @@ export const useWineFilters = defineStore('wineFilters', {
 						break;
 					case 'price':
 						if (state.price.min !== 0 || state.price.max !== 1000000) {
-							filters.push('priceMin=' + state.price.min);
-							filters.push('priceMax=' + state.price.max);
+							filters.push('minPrice=' + state.price.min);
+							filters.push('maxPrice=' + state.price.max);
 						}
 						break;
 					case 'maturity':
