@@ -103,7 +103,7 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
-			:style="qChipRows > 1 ? 'max-height: calc(100% - 232px)' : ''"
+			:style="qChipRows > 1 ? calculateExtraHeightSidebar(qChipRows) : ''"
 		 	class="col-sm-3 q-mt-sm" 
 		 />
 		<SidebarTablet
@@ -118,7 +118,7 @@
 		<!-- List Section -->
 		<NFTSelections
 			class="col-md-9 col-sm-12"
-			:style="qChipRows > 1 ? 'max-height: calc(95% - 182px)' : ''"
+			:style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
 			style="padding-top: 0px !important"
 			@total-tokens="updateTokenCount"
 		/>
@@ -241,6 +241,14 @@ export default defineComponent({
 				const rows = size.height / 32;
 				this.qChipRows = rows;
 			}
+		},
+		calculateExtraHeightNFTs(rows: number) {
+			const extraHeight = (rows*32)-32;
+			return `max-height: calc(95% - ${(-150 - extraHeight)*-1}px)`
+		},
+		calculateExtraHeightSidebar(rows: number) {
+			const extraHeight = (rows*32)-32;
+			return `max-height: calc(100% - ${(-200 - extraHeight)*-1}px)`
 		}
 	},
 });
