@@ -22,9 +22,9 @@
         :disable="!generalSearch"
         class="sidebar-go"
         color="primary"
-        outlined
         label="GO"
         dense
+				unelevated
         @click="this.emitGeneralSearch()"
       />
     </q-card-section>
