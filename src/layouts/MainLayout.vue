@@ -54,7 +54,9 @@
 			<q-card-section class="my-wallet-header row items-center no-wrap">
 				<div class="my-wallet-header-container row">
 					<div>MY WALLET</div>
+					<q-separator spaced="md" size="2px" vertical color="accent" />
 					<img src="../../public/images/metamask-icon.svg" alt="" />
+					<q-separator class="wallet-id" spaced="sm" size="2px" vertical color="accent" />
 					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
 				</div>
 				<img
@@ -64,7 +66,7 @@
 					@click="showMyWallet = false"
 				/>
 			</q-card-section>
-			<div class="id-mobile">walletID</div>
+			<div class="id-mobile">{{ walletAddress.slice(0,20) + '...' }}</div>
 
 			<q-card-section
 				class="my-wallet-ballance-container column justify-center items-center"
