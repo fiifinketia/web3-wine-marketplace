@@ -141,6 +141,9 @@
 		display: block;
 		margin: 0 auto;
 	}
+	.my-wallet-container {
+		width: 100vw;
+	}
 }
 @media screen and (max-width: 470px) {
 	.x-icon {
