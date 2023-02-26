@@ -115,7 +115,7 @@
 				</q-card>
 			</div>
 		</div>
-		<div class="flex row items-center justify-center">
+		<div class="flex row items-center justify-center q-mt-lg">
 			<div class="still-have-question">Still have questions?</div>
 			<div class="still-have-question q-pl-sm">
 				<a class="contact-us">Contact us</a> or find answer in
