@@ -246,6 +246,15 @@ export const useWineFilters = defineStore('wineFilters', {
 				...state.investmentGrade,
 				state.listedOnly,
 			];
+			if (state.price.min !== 0 || state.price.max !== 10000) {
+				let priceFilter = '';
+				if (state.price.min !== 0) {
+					priceFilter = `from ${(state.price.min).toFixed(2)} to ${(state.price.max).toFixed(2)}`
+				} else {
+					priceFilter = `to ${(state.price.max).toFixed(2)}`
+				}
+				filters.push(priceFilter);
+			}
 			return filters.filter((i) => i !== '');
 		},
 	},
@@ -287,6 +296,13 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.filterKey = this.filterKey + 1;
 		},
 		removeFilter(value: string) {
+			const checkForPriceFilter = value.split(' ')[0];
+			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
+				this.price = {
+					min: 0,
+					max: 10000
+				}
+			}
 			this.type = this.type.filter((i) => i !== value);
 			this.brand = this.brand.filter((i) => i !== value);
 			this.origin = this.origin.filter((i) => i !== value);

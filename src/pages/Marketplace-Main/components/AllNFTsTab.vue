@@ -220,6 +220,10 @@ export default defineComponent({
       this.generalSearch = '';
     },
 		truncateChipText(filter: string) {
+			const checkForPriceFilter = filter.split(' ')[0]
+			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
+				return filter;
+			}
 			const splitText = filter.split(',');
 			const newSplitText = splitText[0].split(' ');
 			if (newSplitText.length > 2) {
