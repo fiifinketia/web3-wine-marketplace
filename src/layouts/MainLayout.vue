@@ -175,13 +175,13 @@
 				</div>
 				<div class="nav-bar-container-right row items-center">
 					<img
-						v-if="!!userStore.walletAddress"
+						v-if="!!walletAddress"
 						class="icons"
 						src="../../public/images/favs-icon.svg"
 						@click="$router.push('/favorites')"
 					/>
 					<img
-						v-if="!!userStore.walletAddress"
+						v-if="!!walletAddress"
 						class="icons"
 						src="../../public/images/bell-icon.svg"
 						@click="
@@ -194,7 +194,7 @@
 						dense
 						flat
 						:to="
-							!!userStore.walletAddress
+							!!walletAddress
 								? { path: '/orders' }
 								: { query: { next: $route.fullPath, connect: 'open' } }
 						"
@@ -202,7 +202,7 @@
 						icon="app:profile"
 					>
 						<div class="q-btn-menu-div">
-							<q-toolbar v-if="!!userStore.walletAddress" class="text-white">
+							<q-toolbar v-if="!!walletAddress" class="text-white">
 								<q-chip
 									v-close-popup
 									clickable
@@ -213,12 +213,12 @@
 									<q-avatar size="24px">
 										<img :src="userStore.user?.avatar" />
 									</q-avatar>
-									{{ userStore.walletAddress.slice(0, 10) }}...
+									{{ walletAddress.slice(0, 10) }}...
 								</q-chip>
 							</q-toolbar>
 							<q-list>
 								<q-item
-									v-if="!!userStore.walletAddress"
+									v-if="!!walletAddress"
 									v-close-popup
 									clickable
 									@click="showMyWallet = true"
@@ -310,7 +310,7 @@
 									</q-item-section>
 								</q-item>
 								<q-item
-									v-if="!!userStore.walletAddress"
+									v-if="!!walletAddress"
 									v-close-popup
 									clickable
 									@click="logout"
@@ -407,6 +407,7 @@ export default defineComponent({
 	async mounted() {
 		await this.userStore.checkConnection();
 		this.walletAddress = this.userStore.walletAddress;
+		this.balance = await this.userStore.getWalletBalance();
 		if (!this.walletAddress) {
 			this.ClearStore();
 		}
@@ -443,8 +444,10 @@ export default defineComponent({
 		async connectWallet() {
 			this.showConnectWallet = false;
 			await this.userStore.connectWallet();
-			this.balance = await this.userStore.getWalletBalance();
-			if (this.$route.query?.next) {
+			if (!this.$route.query?.next) {
+				this.$router.go(0);
+			}
+			else {
 				const next = this.$route.query?.next as string;
 				this.$router.replace({ path: next });
 			}
@@ -476,7 +479,6 @@ export default defineComponent({
 		},
 
 		async logout() {
-			this.userStore.walletAddress = '';
 
 			this.showMyWallet = false;
 			this.ClearStore();
@@ -491,6 +493,7 @@ export default defineComponent({
 			this.nftStore.ownedNFTs = [] as TokenIdentifier[];
 			this.nftStore.fetchNFTsStatus = false;
 			this.orderStore.$reset();
+			this.userStore.$reset();
 		},
 		installMetaMask() {
 			this.$q

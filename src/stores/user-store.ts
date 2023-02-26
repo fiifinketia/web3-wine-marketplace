@@ -10,7 +10,7 @@ export const useUserStore = defineStore(
 	'userStore',
 	() => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const walletAddress = ref('');
+		const walletAddress: Ref<string> = ref('');
 		// const nftStorage = useNFTStore();
 		const user: Ref<UserModel | null> = ref<UserModel | null>(null);
 
@@ -25,7 +25,7 @@ export const useUserStore = defineStore(
 			// await nftStorage.fetchNFTs(accounts[0]);
 
 			const getUser = await axios.get(
-				process.env.MARKETPLACE_API_URL + 'market/users/' + walletAddress.value
+				process.env.MARKETPLACE_API_URL + '/market/users/' + walletAddress.value
 			);
 			if (!!getUser.data) return (user.value = getUser.data);
 
@@ -80,6 +80,11 @@ export const useUserStore = defineStore(
 			return Number(balanceInETH) * maticToUsdcRate;
 		};
 
+		const $reset = () => {
+			walletAddress.value = '',
+			user.value = null
+		}
+
 		return {
 			// provider,
 			walletAddress,
@@ -91,6 +96,7 @@ export const useUserStore = defineStore(
 			// walletBalance,
 			// connect,
 			// logout,
+			$reset
 		};
 	},
 	{ persist: true }
