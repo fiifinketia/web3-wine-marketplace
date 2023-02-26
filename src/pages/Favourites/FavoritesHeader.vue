@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="row items-center favorites-search-container"
     :class="$q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'"
   >
@@ -9,8 +9,8 @@
         {{ nftsLength > 0 ? nftsLength : 0 }}
       </span>
     </div>
-    <div 
-      class="row justify-center q-gutter-x-sm" 
+    <div
+      class="row justify-center q-gutter-x-sm"
       :style="$q.screen.width > 600 ? '' : 'width:100%; flex-wrap: nowrap'"
     >
       <q-input
@@ -26,10 +26,11 @@
           <q-icon name="app:search" />
         </template>
       </q-input>
-      <q-btn 
+      <q-btn
         dense
         flat
         class="favorites-search-btn"
+				unelevated
       >
         GO
       </q-btn>

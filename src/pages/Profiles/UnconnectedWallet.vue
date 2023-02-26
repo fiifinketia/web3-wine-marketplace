@@ -4,9 +4,10 @@
     <q-btn
       no-caps
       class="profile-connect-button"
+			unelevated
       @click="ConnectWallet()"
     >
-      Start Now 
+      Start Now
     </q-btn>
   </q-page>
 </template>

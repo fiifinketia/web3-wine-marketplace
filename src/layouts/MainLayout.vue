@@ -23,6 +23,7 @@
 				<q-btn
 					class="connect-wallet-btns connect-btn"
 					:disable="!isMetaMaskInstalled"
+					unelevated
 					@click="connectWallet"
 				>
 					Connect wallet
@@ -30,6 +31,7 @@
 				<q-btn
 					class="connect-wallet-btns no-wallet-btn"
 					:disabled="!!isMetaMaskInstalled"
+					unelevated
 					@click="setupWallet"
 				>
 					I don't have a wallet
@@ -72,7 +74,7 @@
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
 					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
 				</div>
-				<q-btn class="my-wallet-btn no-box-shadow" @click="fundWallet"
+				<q-btn class="my-wallet-btn no-box-shadow" unelevated @click="fundWallet"
 					>Fund wallet</q-btn
 				>
 			</q-card-section>

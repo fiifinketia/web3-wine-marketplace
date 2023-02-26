@@ -11,11 +11,11 @@
         <q-separator v-if="$q.screen.width > 600" spaced="md" size="2px" inset vertical color="accent" />
         <q-space />
         <q-btn
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
@@ -56,12 +56,12 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!listingPrice 
+            <span class="dialog-total">
+              {{
+                !!listingPrice
                   ? parseInt(listingPrice)
                   : '0.00'
-              }} 
+              }}
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
@@ -82,6 +82,7 @@
           no-caps
           outline
           style="color: #3586FF;"
+					unelevated
           @click="ResetData()"
         >
           <span> Reset </span>
@@ -124,12 +125,12 @@
         <q-separator spaced="md" size="2px" inset vertical color="accent" />
         <div class="dialog-subtitle">{{ brand }}</div>
         <q-space />
-        <q-btn 
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
@@ -168,12 +169,12 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!listingPrice 
+            <span class="dialog-total">
+              {{
+                !!listingPrice
                   ? parseInt(listingPrice)
                   : '0.00'
-              }} 
+              }}
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
@@ -189,6 +190,7 @@
               no-caps
               outline
               style="color: #3586FF;"
+							unelevated
               @click="ResetData()"
             >
               <span> Reset </span>

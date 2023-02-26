@@ -45,6 +45,7 @@
 			<q-btn
 				class="go-to-marketplace q-mt-lg"
 				@click="$router.push('marketplace?tab=nfts')"
+				unelevated
 			>
 				Go to Marketplace
 			</q-btn>

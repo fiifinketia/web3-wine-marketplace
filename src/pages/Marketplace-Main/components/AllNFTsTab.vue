@@ -7,12 +7,12 @@
 				: 'fixed fit row wrap justify-start items-start content-start'
 		"
 	>
-		<div 
-			class="row q-pb-sm col-xs-12" 
+		<div
+			class="row q-pb-sm col-xs-12"
 			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
 		>
 			<div class="row col-10">
-				<div 
+				<div
 					class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4"
 				>
 					<span class="header-nfts-title">
@@ -100,7 +100,7 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
-		 	class="col-sm-3 q-mt-sm" 
+		 	class="col-sm-3 q-mt-sm"
 		 />
 		<SidebarTablet
 			v-else-if="$q.screen.width > 768"
@@ -135,6 +135,7 @@
 					color="secondary"
 					text-color="white"
 					icon="app:filter"
+					unelevated
 					@click="toggleSidebar()"
 				/>
 			</q-card>
