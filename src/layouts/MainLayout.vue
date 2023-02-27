@@ -213,7 +213,7 @@
 							icon="app:profile"
 						/>
 					</div>
-					<q-btn icon="arrow_drop_down" flat class="q-pa-none more-menu nav-bar-container-right">
+					<q-btn icon="menu" flat class="q-pa-none q-my-auto more-menu nav-bar-container-right">
 						<q-menu class="q-btn-menu-div">
 							<q-toolbar v-if="!!walletAddress" class="text-white">
 								<q-chip
