@@ -255,14 +255,14 @@ export default defineComponent({
 			network: string,
 			objective: string
 		) {
+			const nftIndex = this.allNFTs.findIndex((nft => 
+				nft.smartContractAddress == cAddress && 
+				nft.tokenID == tokenID &&
+				nft.network == network
+			))
 			switch (objective) {
 				case 'add':
 					try {
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favoriteLoading = true;
 						await AddFavorites({
 							walletAddress: this.userStore.walletAddress,
@@ -271,18 +271,14 @@ export default defineComponent({
 							network: network,
 						});
 						this.allNFTs[nftIndex].favorited = true;
-						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
+					} finally {
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
 					break;
 				case 'remove':
 					try {
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favoriteLoading = true;
 						await RemoveFavorites({
 							walletAddress: this.userStore.walletAddress,
@@ -291,9 +287,10 @@ export default defineComponent({
 							network: network,
 						});
 						this.allNFTs[nftIndex].favorited = false;
-						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
+					} finally {
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
 					break;
 			}
