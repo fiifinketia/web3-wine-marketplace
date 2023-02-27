@@ -80,6 +80,18 @@ body {
 	display: none;
 }
 
+.q-btn-menu-div hr{
+	display: none;
+}
+
+#mainlayout-expansion-item .q-item {
+	border: none;
+}
+
+#mainlayout-expansion-item .q-expansion-item__container .q-item {
+	right: 15px;
+}
+
 .btn-dropdown-help {
 	padding-left: 0;
 }

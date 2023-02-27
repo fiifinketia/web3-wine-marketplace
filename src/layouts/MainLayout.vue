@@ -56,7 +56,13 @@
 					<div>MY WALLET</div>
 					<q-separator spaced="md" size="2px" vertical color="accent" />
 					<img src="../../public/images/metamask-icon.svg" alt="" />
-					<q-separator class="wallet-id" spaced="sm" size="2px" vertical color="accent" />
+					<q-separator
+						class="wallet-id"
+						spaced="sm"
+						size="2px"
+						vertical
+						color="accent"
+					/>
 					<div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
 				</div>
 				<img
@@ -66,7 +72,7 @@
 					@click="showMyWallet = false"
 				/>
 			</q-card-section>
-			<div class="id-mobile">{{ walletAddress.slice(0,20) + '...' }}</div>
+			<div class="id-mobile">{{ walletAddress.slice(0, 20) + '...' }}</div>
 
 			<q-card-section
 				class="my-wallet-ballance-container column justify-center items-center"
@@ -76,7 +82,10 @@
 					<div class="my-wallet-title q-pb-sm">Your balance is</div>
 					<div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
 				</div>
-				<q-btn class="my-wallet-btn no-box-shadow" unelevated @click="fundWallet"
+				<q-btn
+					class="my-wallet-btn no-box-shadow"
+					unelevated
+					@click="fundWallet"
 					>Fund wallet</q-btn
 				>
 			</q-card-section>
@@ -175,35 +184,37 @@
 						Storefront
 					</div>
 				</div>
-				<div class="nav-bar-container-right row items-center">
-					<img
-						v-if="!!walletAddress"
-						class="icons"
-						src="../../public/images/favs-icon.svg"
-						@click="$router.push('/favorites')"
-					/>
-					<img
-						v-if="!!walletAddress"
-						class="icons"
-						src="../../public/images/bell-icon.svg"
-						@click="
-							{
-							}
-						"
-					/>
-					<q-btn-dropdown
-						class="btn-dropdown-menu profile-dropdown"
-						dense
-						flat
-						:to="
-							!!walletAddress
-								? { path: '/orders' }
-								: { query: { next: $route.fullPath, connect: 'open' } }
-						"
-						split
-						icon="app:profile"
-					>
-						<div class="q-btn-menu-div">
+				<div class="row">
+					<div class="row items-center">
+						<img
+							v-if="!!walletAddress"
+							class="icons q-mx-xs"
+							src="../../public/images/favs-icon.svg"
+							@click="$router.push('/favorites')"
+						/>
+						<img
+							v-if="!!walletAddress"
+							class="icons q-mx-xs"
+							src="../../public/images/bell-icon.svg"
+							@click="
+								{
+								}
+							"
+						/>
+						<q-btn
+							class="btn-dropdown-menu profile-dropdown q-mx-xs"
+							dense
+							flat
+							:to="
+								!!walletAddress
+									? { path: '/orders' }
+									: { query: { next: $route.fullPath, connect: 'open' } }
+							"
+							icon="app:profile"
+						/>
+					</div>
+					<q-btn icon="arrow_drop_down" flat class="q-pa-none more-menu">
+						<q-menu class="q-btn-menu-div">
 							<q-toolbar v-if="!!walletAddress" class="text-white">
 								<q-chip
 									v-close-popup
@@ -262,54 +273,44 @@
 										<q-item-label>settings</q-item-label>
 									</q-item-section>
 								</q-item>
-								<q-item
-									@click="
-										{
-										}
-									"
-								>
-									<q-item-section>
-										<q-item-label
-											><q-btn-dropdown
-												class="btn-dropdown-help"
-												dense
-												flat
-												disable
-												padding="0"
-												label="help"
-											>
-												<div class="q-btn-menu-div">
-													<q-list>
-														<q-item
-															v-close-popup
-															clickable
-															@click="
-																{
-																}
-															"
-														>
-															<q-item-section>
-																<q-item-label>conctact us</q-item-label>
-															</q-item-section>
-														</q-item>
+								<q-item clickable>
+									<q-expansion-item
+										id="mainlayout-expansion-item"
+										dense
+										dense-toggle
+										expand-separator
+										label="help"
+									>
+										<div>
+											<q-list>
+												<q-item
+													v-close-popup
+													clickable
+													@click="
+														{
+														}
+													"
+												>
+													<q-item-section>
+														<q-item-label>conctact us</q-item-label>
+													</q-item-section>
+												</q-item>
 
-														<q-item
-															v-close-popup
-															clickable
-															@click="
-																{
-																}
-															"
-														>
-															<q-item-section>
-																<q-item-label>Faqs</q-item-label>
-															</q-item-section>
-														</q-item>
-													</q-list>
-												</div>
-											</q-btn-dropdown></q-item-label
-										>
-									</q-item-section>
+												<q-item
+													v-close-popup
+													clickable
+													@click="
+														{
+														}
+													"
+												>
+													<q-item-section>
+														<q-item-label>Faqs</q-item-label>
+													</q-item-section>
+												</q-item>
+											</q-list>
+										</div>
+									</q-expansion-item>
 								</q-item>
 								<q-item
 									v-if="!!walletAddress"
@@ -322,8 +323,8 @@
 									</q-item-section>
 								</q-item>
 							</q-list>
-						</div>
-					</q-btn-dropdown>
+						</q-menu>
+					</q-btn>
 				</div>
 				<img
 					v-if="!showBurgerMenu"
@@ -448,8 +449,7 @@ export default defineComponent({
 			await this.userStore.connectWallet();
 			if (!this.$route.query?.next) {
 				this.$router.go(0);
-			}
-			else {
+			} else {
 				const next = this.$route.query?.next as string;
 				this.$router.replace({ path: next });
 			}
@@ -481,7 +481,6 @@ export default defineComponent({
 		},
 
 		async logout() {
-
 			this.showMyWallet = false;
 			this.ClearStore();
 
