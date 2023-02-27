@@ -76,6 +76,14 @@
 	.favorites-search-bar {
 		flex-grow: 1;
 	}
+	.favorites-nfts-title, .favorites-nfts-count {
+		opacity: 1;
+		color: white;
+	}
+	.favorites-nfts-count {
+		font-size: 18px;
+		line-height: 0;
+	}
 }
 
 @media screen and (max-width: 350px) {

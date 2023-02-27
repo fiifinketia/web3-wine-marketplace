@@ -118,6 +118,9 @@
 			</q-card>
 		</div>
 	</div>
+	<div v-else-if="!isLoading && allNFTs.length == 0">
+		<EmptyView />
+	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
 		<ErrorView @retrieve-again="this.RetrieveTokens()"/>
 	</div>
@@ -159,21 +162,25 @@
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
-import { ListingWithPricingAndImage } from '../models/Response.models';
+import { useGeneralSearch } from 'src/stores/general-search-filter';
+import { DynamicKeyWithCount, ListingWithPricingAndImage } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
+import EmptyView from './EmptyView.vue';
 export default defineComponent({
 	components: {
-		ErrorView: ErrorViewVue
+		ErrorView: ErrorViewVue,
+		EmptyView: EmptyView
 	},
 	emits: ['totalTokens'],
 	data() {
 		const userStore = useUserStore();
 
 		const wineFiltersStore = useWineFilters();
+		const generalSearchStore = useGeneralSearch();
 
 		return {
 			allNFTs: new Array<ListingWithPricingAndImage>(),
@@ -184,31 +191,58 @@ export default defineComponent({
 			selected: ref(),
 			userStore,
 			wineFiltersStore,
+			generalSearchStore,
+			filterListenersEnabled: true,
 			erroredOut: false,
 			filterKey: wineFiltersStore.filterKey,
+			nftEnums: {} as DynamicKeyWithCount,
 			subscription: Function()
 		};
 	},
 	async mounted() {
-		await this.RetrieveTokens();
+		await this.RetrieveTokens(null);
 
 		const filterOptions = await RetrieveFilterDetails();
 		this.wineFiltersStore.setAllFilters(filterOptions);
 
 		this.subscription = this.wineFiltersStore.$subscribe(async (mutation, state) => {
+			if (!this.filterListenersEnabled) {
+				return
+			}
 			if (this.wineFiltersStore.filterMode == 'automatic') {
-				await this.RetrieveTokens();
+				await this.RetrieveTokens(null);
 			}
 		})
 	},
 	unmounted () {
+		// cancels subscription once changing to another tab (e.g. releases, recommended)
 		this.subscription()
 	},
 	watch: {
 		'wineFiltersStore.filterKey': {
 			handler(val) {
 				if (val != 0) {
-					this.RetrieveTokens();
+					this.RetrieveTokens(null);
+				}
+			}
+		},
+		'generalSearchStore.generalSearchKey': {
+			async handler(val) {
+				if (val != 0) {
+					// temporarily disable listeners so that removing the filters won't trigger the 2nd if statement in the subscription
+					this.filterListenersEnabled = false;
+					// await so that the filters are properly removed and won't "leak" to the subscriber
+					try {
+						await this.RetrieveTokens(this.generalSearchStore.generalSearch);
+						await this.wineFiltersStore.removeAllFilters();
+						// tick the brand options related to the NFTs retrieved from general search key
+						await this.wineFiltersStore.setBrandFiltersAfterGenSearch(this.nftEnums);
+					} catch {
+						return 
+					} finally {
+						// after removing filters, bring back listeners for the filter
+						this.filterListenersEnabled = true;
+					}
 				}
 			}
 		}
@@ -330,21 +364,35 @@ export default defineComponent({
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 
-		async RetrieveTokens() {
-			try {
-				this.isLoading = true;
-				const { result: nfts } = await RetrieveFilteredNFTs(
-					`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
-				);
-				console.log(nfts)
-				this.$emit('totalTokens', nfts.length);
-				this.allNFTs = nfts;
-				this.erroredOut = false;
-			} catch {
-				this.erroredOut = true;
-			} finally {
-				this.isLoading = false;
+		async RetrieveTokens(genSearch: string | null) {
+			this.isLoading = true;
+			if (!genSearch) {
+				try {
+					const { result: nfts } = await RetrieveFilteredNFTs(
+						`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
+					);
+					console.log(nfts)
+					this.$emit('totalTokens', nfts.length);
+					this.allNFTs = nfts;
+					this.erroredOut = false;
+				} catch {
+					this.erroredOut = true;
+				} 
+			} else {
+				try {
+					const { result: nfts, counts: nftEnums } = await RetrieveFilteredNFTs(
+						`generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
+					);
+					console.log(nfts)
+					this.$emit('totalTokens', nfts.length);
+					this.allNFTs = nfts;
+					this.erroredOut = false;
+					this.nftEnums = nftEnums;
+				} catch {
+					this.erroredOut = true;
+				}
 			}
+			this.isLoading = false;
 		},
 		ToInt(price: string) {
 			return parseInt(price);

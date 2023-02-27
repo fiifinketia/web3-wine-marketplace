@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { DynamicKeyWithCount } from 'src/pages/Marketplace-Main/models/Response.models';
 import { FilterOptionsResponse } from 'src/pages/Marketplace-Main/models/Response.models/FilterOptions.response';
 
 export const useWineFilters = defineStore('wineFilters', {
@@ -42,7 +43,7 @@ export const useWineFilters = defineStore('wineFilters', {
 		appellationOptions: [] as { label: string; value: string }[],
 		price: {
 			min: 0,
-			max: 1000000,
+			max: 10000,
 		},
 		maturity: {
 			min: 0,
@@ -156,9 +157,9 @@ export const useWineFilters = defineStore('wineFilters', {
 						}
 						break;
 					case 'price':
-						if (state.price.min !== 0 || state.price.max !== 1000000) {
-							filters.push('priceMin=' + state.price.min);
-							filters.push('priceMax=' + state.price.max);
+						if (state.price.min !== 0 || state.price.max !== 10000) {
+							filters.push('minPrice=' + state.price.min);
+							filters.push('maxPrice=' + state.price.max);
 						}
 						break;
 					case 'maturity':
@@ -245,6 +246,15 @@ export const useWineFilters = defineStore('wineFilters', {
 				...state.investmentGrade,
 				state.listedOnly,
 			];
+			if (state.price.min !== 0 || state.price.max !== 10000) {
+				let priceFilter = '';
+				if (state.price.min !== 0) {
+					priceFilter = `from ${(state.price.min).toFixed(2)} to ${(state.price.max).toFixed(2)}`
+				} else {
+					priceFilter = `to ${(state.price.max).toFixed(2)}`
+				}
+				filters.push(priceFilter);
+			}
 			return filters.filter((i) => i !== '');
 		},
 	},
@@ -286,6 +296,13 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.filterKey = this.filterKey + 1;
 		},
 		removeFilter(value: string) {
+			const checkForPriceFilter = value.split(' ')[0];
+			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
+				this.price = {
+					min: 0,
+					max: 10000
+				}
+			}
 			this.type = this.type.filter((i) => i !== value);
 			this.brand = this.brand.filter((i) => i !== value);
 			this.origin = this.origin.filter((i) => i !== value);
@@ -303,6 +320,15 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.sortedAtoZ =
 				value === 'Ascending' || value === 'Descending' ? '' : this.sortedAtoZ;
 		},
+		setBrandFiltersAfterGenSearch(counts: DynamicKeyWithCount) {
+			if (!!counts) {
+				if (!!counts.brand) {
+					counts.brand.forEach(f => {
+						this.brand.push(f._id);
+					})
+				}
+			}
+		},
 		removeAllFilters() {
 			this.type = [];
 			this.brand = [];
@@ -318,6 +344,10 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.investmentGrade = [];
 			this.listedOnly = '';
 			this.sortedAtoZ = '';
+			this.price = {
+				min: 0,
+				max: 10000,
+			}
 		},
 		setAllFilters(options: FilterOptionsResponse) {
 			for (const key in options) {

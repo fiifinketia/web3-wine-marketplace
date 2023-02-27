@@ -1,5 +1,9 @@
 <template>
-	<q-page class="q-mb-sm" style="min-height: 0">
+	<q-page 
+		v-scroll.self="$q.screen.width > 600 ? '' : onScroll"
+		class="q-mb-sm"
+		style="min-height: 0"
+	>
 		<div>
 			<section class="q-gutter-y-md">
 				<q-tabs
@@ -24,6 +28,7 @@
 						NFTs <span class="profile-tab-count"> {{ totalTokens }} </span>
 					</span>
 					<q-btn-dropdown
+						v-model="marketplaceDropdown"
 						style="height: 42px;"
 						no-caps
 						color="white"
@@ -84,7 +89,8 @@ export default defineComponent({
 		return {
 			tab: ref(queryT || 'nfts'),
 			tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
-			totalTokens: ref(0)
+			totalTokens: ref(0),
+			marketplaceDropdown: false
 		};
 	},
 
@@ -129,6 +135,11 @@ export default defineComponent({
 					return 'Recommended';
 			}
 		},
+		onScroll() {
+			if (!!this.marketplaceDropdown) {
+				this.marketplaceDropdown = false;
+			}
+		}
 	},
 });
 </script>

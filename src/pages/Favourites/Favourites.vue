@@ -3,13 +3,7 @@
 		class="column items-center" 
 		style="margin-bottom: 10px; min-height: 0"
 	>
-		<div 
-			class="q-py-md q-pt-lg"
-			style="width: 100%;" 
-			:style="$q.screen.width > 600 ? '' : 'display: flex; justify-content: center;'"
-		>
-			<FavsHeader :nftsLength="favNFTs.length"/>
-		</div>
+		<FavsHeader :nftsLength="favNFTs.length"/>
 		<div 
 			v-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"

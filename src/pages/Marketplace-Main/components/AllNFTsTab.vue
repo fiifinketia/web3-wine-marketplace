@@ -24,6 +24,9 @@
 				</div>
 				<div class="col-sm-8 col-xs-12">
 					<div class="q-mx-xs hidden-a-1023 overflow-hidden">
+						<q-resize-observer
+							@resize="onResize"
+						/>
 						<q-chip
 							v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
 							:key="filter"
@@ -34,12 +37,12 @@
 							text-color="white"
 							@remove="wineFiltersStore.removeFilter(filter)"
 						>
-							{{ filter }}
+							{{ truncateChipText(filter) }}
 						</q-chip>
 					</div>
 					<div class="row hidden-b-1023 justify-center q-gutter-x-sm">
 						<q-input
-							v-model="searchQuery"
+							v-model="generalSearch"
 							outlined
 							round
 							dense
@@ -49,18 +52,20 @@
 							:class="$q.screen.width > 600 ? 'col-10' : ''"
 							:style="$q.screen.width > 600 ? 'width: 80%' : ''"
 							class="header-search"
+							:input-style="!!generalSearch ? 'color: #212131' : ''"
 						>
 							<template #prepend>
 								<q-icon name="search" />
 							</template>
 						</q-input>
 						<q-btn
+							:disable="!generalSearch"
 							color="primary"
 							text-color="white"
 							label="GO"
 							unelevated
 							class="header-go"
-							@click="wineFiltersStore.searchQuery = searchQuery"
+							@click="this.emitGeneralSearch()"
 						/>
 					</div>
 				</div>
@@ -68,7 +73,7 @@
 			<div class="row justify-end hidden-a-599 col-2 q-pr-sm">
 				<q-btn
 					style="text-decoration: underline"
-					class="row hidden-a-1023 header-clear-btn"
+					class="row hidden-a-1023 header-clear-btn btn--no-hover"
 					label="Clear All"
 					color="primary"
 					dense
@@ -84,7 +89,7 @@
 						{{ wineFiltersStore.getAllFiltersArray.length }}</span
 					>
 					<q-btn
-						class="col-10 q-pa-sm"
+						class="col-10 q-pa-sm filter-btn btn--no-hover"
 						dense
 						unelevated
 						color="secondary"
@@ -98,6 +103,7 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
+			:style="qChipRows > 1 ? calculateExtraHeightSidebar(qChipRows) : ''"
 		 	class="col-sm-3 q-mt-sm" 
 		 />
 		<SidebarTablet
@@ -112,6 +118,7 @@
 		<!-- List Section -->
 		<NFTSelections
 			class="col-md-9 col-sm-12"
+			:style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
 			style="padding-top: 0px !important"
 			@total-tokens="updateTokenCount"
 		/>
@@ -120,9 +127,9 @@
 			position="bottom-right"
 			:offset="[18, 18]"
 		>
-			<q-card rounded class="row q-pa-xs rounded-borders">
+			<q-card rounded class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container">
 				<span
-					class="text-weight-bold text-h6 q-px-sm"
+					class="text-weight-bold text-h6 sidebar-sticky-filter-icon q-pr-xs"
 					clickable
 					@click="toggleSidebar()"
 				>
@@ -130,6 +137,7 @@
 				>
 				<q-btn
 					dense
+					class="sidebar-sticky-filter-icon btn--no-hover"
 					color="secondary"
 					text-color="white"
 					icon="app:filter"
@@ -145,7 +153,9 @@ import { defineComponent, ref } from 'vue';
 import NFTSelections from './NFT-Selections.vue';
 import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
+import { useGeneralSearch } from 'src/stores/general-search-filter';
 import 'src/css/Marketplace/header.css';
+import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
 
@@ -159,13 +169,17 @@ export default defineComponent({
 	emits: ['totalTokens'],
 	data() {
 		const wineFiltersStore = useWineFilters();
+		const generalSearchStore = useGeneralSearch();
 
 		return {
 			showToogleButton: this.isMobile() ? ref(true) : ref(false),
 			wineFiltersStore,
+			generalSearchStore,
 			searchQuery: '',
 			openSidebar: false,
 			totalNFTs: ref(0),
+			generalSearch: '',
+			qChipRows: 0
 		};
 	},
 
@@ -199,18 +213,55 @@ export default defineComponent({
 			} else {
 				this.wineFiltersStore.setFilterMode('manual');
 			}
+		},
+		emitGeneralSearch() {
+      this.generalSearchStore.setGeneralSearch(this.generalSearch);
+      this.generalSearchStore.indexGeneralSearchKey();
+      this.generalSearch = '';
+    },
+		truncateChipText(filter: string) {
+			const checkForPriceFilter = filter.split(' ')[0]
+			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
+				return filter;
+			}
+			const splitText = filter.split(',');
+			const newSplitText = splitText[0].split(' ');
+			if (newSplitText.length > 2) {
+				filter = `${newSplitText[0]} ${newSplitText[1]} ${newSplitText[2].slice(0,2)}...`
+			} else {
+				if (splitText.length > 1) {
+					splitText[1] = splitText[1].replace(/\s/g, '');
+					filter = `${splitText[0]}, ${splitText[1].slice(0,2)}...`
+				}
+			}
+			return filter
+		},
+		onResize (size: { width: number, height: number }) {
+			if (this.$q.screen.width > 1023) {
+				const rows = size.height / 32;
+				this.qChipRows = rows;
+			}
+		},
+		calculateExtraHeightNFTs(rows: number) {
+			const extraHeight = (rows*32)-32;
+			return `max-height: calc(95% - ${(-150 - extraHeight)*-1}px)`
+		},
+		calculateExtraHeightSidebar(rows: number) {
+			const extraHeight = (rows*32)-32;
+			return `max-height: calc(100% - ${(-200 - extraHeight)*-1}px)`
 		}
 	},
 });
 </script>
 
-<style>
-.filter-modal-bg {
-	background: linear-gradient(
-		289.94deg,
-		rgba(33, 33, 49, 0.4) 58.61%,
-		rgba(131, 224, 179, 0.4) 108.36%
-	);
-	backdrop-filter: blur(5px);
+<style scoped>
+:deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.sidebar-sticky-filter-icon.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.filter-btn.btn--no-hover .q-focus-helper) {
+	display: none;
 }
 </style>
