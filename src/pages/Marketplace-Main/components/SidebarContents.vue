@@ -231,46 +231,44 @@
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
         <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
-          <q-card-section class="row items-center col-12 q-py-sm">
-            <div class="col-8">
-              <div class="col-12 column">
-                <div class="row items-center q-gutter-x-xs">
-                  <span class="q-pa-none sidebar-label-light">from</span>
-                  <q-icon name="app:price" size="sm"></q-icon>
-                  <span class="sidebar-label-bold"> {{ price.min.toFixed(2) }} </span>
+          <q-card-section class="column items-center col-12 q-pa-xs q-gutter-y-md">
+            <div class="full-width">
+              <div class="col-12 row justify-between">
+                <div class="column q-gutter-y-xs sidebar-price-column">
+                  <span class="q-pa-none sidebar-label-light">From</span>
+                  <q-input
+                    v-model="minPrice"
+                    type="number"
+                    dense
+                    class="sidebar-price-text-field"
+                    input-style="color: #212131"
+                    outlined
+                  />
                 </div>
-                <div class="row items-center q-gutter-x-xs">
-                  <span class="q-pa-none sidebar-label-light">to</span>
-                  <q-icon name="app:price" size="sm"></q-icon>
-                  <span class="sidebar-label-bold"> {{ price.max.toFixed(2) }} </span>
+                <div class="column q-gutter-y-xs sidebar-price-column">
+                  <span class="q-pa-none sidebar-label-light">To</span>
+                  <q-input
+                    v-model="maxPrice"
+                    type="number"
+                    dense
+                    class="sidebar-price-text-field"
+                    input-style="color: #212131"
+                    outlined
+                  />
                 </div>
               </div>
             </div>
-            <div class="col-4 row justify-end">
-              <q-btn
-                class="sidebar-ok btn--no-hover"
-                type="button"
-                unelevated
-                label="Ok"
-                outlined
-                color="primary"
-                @click="wineFiltersStore.setPrice(price)"
-              />
-            </div>
-          </q-card-section>
-          <q-item-section class="row col-12">
-            <q-range
-              id="filter_price"
-              v-model="price"
-              thumb-color="white"
-              class="col-8 q-px-lg"
-              track-color="light-blue-2"
-              :step="100"
-              :min="0"
-              :max="10000"
-              :debounce="500"
+            <q-btn
+              class="sidebar-apply btn--no-hover full-width"
+              :disable="!minPrice && !maxPrice"
+              unelevated
+              no-caps
+              label="Apply price range"
+              outlined
+              color="primary"
+              @click="wineFiltersStore.setPrice({min: minPrice, max: maxPrice})"
             />
-          </q-item-section>
+          </q-card-section>
         </q-card>
       </q-expansion-item>
 
@@ -409,13 +407,14 @@ export default defineComponent({
 			caseOptions: wineFiltersStore.wineCaseOptions,
 			originOptions: wineFiltersStore.originOptions,
 			countryOptions: wineFiltersStore.countryOptions,
-			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
   },
   data() {
     return {
-      generalSearch: ''
+      generalSearch: '',
+      minPrice: null,
+      maxPrice: null
     }
   },
   watch: {

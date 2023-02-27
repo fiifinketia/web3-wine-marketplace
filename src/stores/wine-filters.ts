@@ -41,9 +41,9 @@ export const useWineFilters = defineStore('wineFilters', {
 		regionOptions: [] as { label: string; value: string }[],
 		appellation: [''],
 		appellationOptions: [] as { label: string; value: string }[],
-		price: {
-			min: 0,
-			max: 10000,
+		price: {} as {
+			min: number | null,
+			max: number | null,
 		},
 		maturity: {
 			min: 0,
@@ -157,9 +157,16 @@ export const useWineFilters = defineStore('wineFilters', {
 						}
 						break;
 					case 'price':
-						if (state.price.min !== 0 || state.price.max !== 10000) {
-							filters.push('minPrice=' + state.price.min);
-							filters.push('maxPrice=' + state.price.max);
+						if (!!state.price.min || !!state.price.max) {
+							const price = state.price;
+							if (!!price.min && !price.max) {
+								filters.push('minPrice=' + state.price.min);
+							} else if (!price.min && !!price.max) {
+								filters.push('maxPrice=' + state.price.max);
+							} else {
+								filters.push('minPrice=' + state.price.min);
+								filters.push('maxPrice=' + state.price.max);
+							}
 						}
 						break;
 					case 'maturity':
@@ -246,12 +253,22 @@ export const useWineFilters = defineStore('wineFilters', {
 				...state.investmentGrade,
 				state.listedOnly,
 			];
-			if (state.price.min !== 0 || state.price.max !== 10000) {
+			if (!!state.price.min || !!state.price.max) {
 				let priceFilter = '';
-				if (state.price.min !== 0) {
-					priceFilter = `from ${(state.price.min).toFixed(2)} to ${(state.price.max).toFixed(2)}`
-				} else {
-					priceFilter = `to ${(state.price.max).toFixed(2)}`
+				let min = null;
+				let max = null;
+				if (!!state.price.min) {
+					min = Number(state.price.min)
+				}
+				if (!!state.price.max) {
+					max = Number(state.price.max)
+				}
+				if ((!!min || min == 0) && !max) {
+					priceFilter = `from ${(min).toFixed(2)}`
+				} else if (!min && !!max) {
+					priceFilter = `from 0.00 to ${(max).toFixed(2)}`
+				} else if ((!!min || min == 0) && !!max) {
+					priceFilter = `from ${(min).toFixed(2)} to ${(max).toFixed(2)}`
 				}
 				filters.push(priceFilter);
 			}
@@ -299,8 +316,8 @@ export const useWineFilters = defineStore('wineFilters', {
 			const checkForPriceFilter = value.split(' ')[0];
 			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
 				this.price = {
-					min: 0,
-					max: 10000
+					min: null,
+					max: null
 				}
 			}
 			this.type = this.type.filter((i) => i !== value);
@@ -345,8 +362,8 @@ export const useWineFilters = defineStore('wineFilters', {
 			this.listedOnly = '';
 			this.sortedAtoZ = '';
 			this.price = {
-				min: 0,
-				max: 10000,
+				min: null,
+				max: null,
 			}
 		},
 		setAllFilters(options: FilterOptionsResponse) {
