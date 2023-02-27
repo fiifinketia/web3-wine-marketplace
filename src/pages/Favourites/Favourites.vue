@@ -3,7 +3,10 @@
 		class="column items-center" 
 		style="margin-bottom: 10px; min-height: 0"
 	>
-		<FavsHeader :nftsLength="favNFTs.length"/>
+		<FavsHeader 
+			:nftsLength="favNFTs.length"
+			@brand-search="(val) => getAllFavoritesWithBrand(val)"
+		/>
 		<div 
 			v-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"
@@ -169,17 +172,19 @@ export default defineComponent({
 			loadingFavNFTs: [0,1,2,3,4,5,6,7],
 			isLoading: true,
 			emptyRequest: false,
+			brandSearch: '',
 			userStore
 		};
 	},
 	mounted() {
-		this.getAllFavorites();
+		this.getAllFavorites(this.userStore.walletAddress, '');
 	},
 	methods: {
-		async getAllFavorites() {
+		async getAllFavorites(walletAddress: string, brand: string) {
 			this.isLoading = true;
 			const { result: nfts } = await GetAllFavorites(
-				`?walletAddress=${this.userStore.walletAddress}`
+				walletAddress,
+				brand
 			);
 			this.favNFTs = nfts;
 			this.CheckForEmptiness(this.favNFTs);
@@ -206,6 +211,9 @@ export default defineComponent({
 			} catch {
 				return 0
 			}
+		},
+		getAllFavoritesWithBrand(brand: string) {
+			this.getAllFavorites(this.userStore.walletAddress, brand);
 		},
 		ToInt(price: string) {
 			return parseInt(price);

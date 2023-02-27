@@ -11,10 +11,14 @@ async function RemoveFavorites(body: object) {
 	await axios.post(deleteFavoriteURL, body);
 }
 
-async function GetAllFavorites(walletAddress: string) {
+async function GetAllFavorites(walletAddress: string, brand: string) {
 	let nfts: FavoritesModel[] = [];
+	let queryParams = `?walletAddress=${walletAddress}`;
+	if (!!brand) {
+		queryParams += `&brand=${brand}`
+	}
 	const retrieveFavoritesURL = <string> process.env.RETRIEVE_FAVORITES_URL;
-	await axios.get(retrieveFavoritesURL + walletAddress).then((res) => {
+	await axios.get(retrieveFavoritesURL + queryParams).then((res) => {
 		nfts = res.data;
 	});
 	return {

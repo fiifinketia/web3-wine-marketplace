@@ -131,6 +131,10 @@
 	background: #8cbaff;
 }
 
+.favorites-search-btn.disabled {
+	background: #C0C0C0 !important;
+}
+
 .no-nfts-container {
 	font-family: 'ProximaNova-Bold';
 	font-style: normal;

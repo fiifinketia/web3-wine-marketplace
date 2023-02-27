@@ -45,7 +45,9 @@
         </q-input>
         <q-btn 
           dense
+          :disable="!searchText"
           flat
+          @click="submitBrand()"
           class="favorites-search-btn"
         >
           GO
@@ -67,7 +69,10 @@ export default defineComponent({
     }
   },
   methods: {
-
+    submitBrand() {
+      this.$emit('brand-search', this.searchText);
+      this.searchText = '';
+    }
   }
 })
 </script>
