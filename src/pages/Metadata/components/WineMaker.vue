@@ -7,7 +7,7 @@
 				<div
 					v-for="property in wineMakerProperties"
 					:key="property"
-					class="col-3 justify-between property-container"
+					class="col-xs-6 col-sm-4 col-md-3 justify-between property-container q-my-sm"
 				>
 					<div v-if="property === 'format'" class="flex column text-center items-center">
 						<div class="property-name">Bottle Size</div>
