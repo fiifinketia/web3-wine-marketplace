@@ -75,6 +75,7 @@
           </template>
         </q-input>
         <q-btn 
+          unelevated
           dense
           :disable="!searchText"
           flat

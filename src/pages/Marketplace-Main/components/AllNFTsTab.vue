@@ -11,10 +11,8 @@
 			class="row q-pb-sm col-xs-12" 
 			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
 		>
-			<div class="row col-10">
-				<div 
-					class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4"
-				>
+			<div class="row col-12 q-px-md">
+				<div class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4">
 					<span class="header-nfts-title">
 						NFTs
 					</span>
@@ -55,7 +53,7 @@
 							:input-style="!!generalSearch ? 'color: #212131' : ''"
 						>
 							<template #prepend>
-								<q-icon name="search" />
+								<q-icon name="app:search" />
 							</template>
 						</q-input>
 						<q-btn

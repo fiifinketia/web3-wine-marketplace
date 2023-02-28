@@ -71,7 +71,9 @@
     width: 48%;
   }
 	.favorites-search-container {
-		width: 83.33333%;
+		width: 100%;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 	.favorites-search-bar {
 		flex-grow: 1;
