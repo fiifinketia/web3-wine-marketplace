@@ -102,7 +102,7 @@
 		v-if="showBurgerMenu"
 		@closeBurgerMenu="onBurgerMenu('close')"
 		@openConnectWallet="showConnectWallet = true"
-		@openMyWallet="showMyWallet = true;"
+		@openMyWallet="showMyWallet = true"
 	/>
 	<SuggestedWines />
 
@@ -206,126 +206,165 @@
 							class="btn-dropdown-menu profile-dropdown q-mx-xs"
 							dense
 							flat
-							:to="
-								!!walletAddress
-									? { path: '/orders' }
-									: { query: { next: $route.fullPath, connect: 'open' } }
-							"
 							icon="app:profile"
-						/>
-					</div>
-					<q-btn icon="menu" flat class="q-pa-none q-my-auto more-menu nav-bar-container-right">
-						<q-menu class="q-btn-menu-div">
-							<q-toolbar v-if="!!walletAddress" class="text-white">
-								<q-chip
-									v-close-popup
-									clickable
-									color="white"
-									class="text-bold"
-									@click="$router.push('orders')"
-								>
-									<q-avatar size="24px">
-										<img :src="userStore.user?.avatar" />
-									</q-avatar>
-									{{ walletAddress.slice(0, 10) }}...
-								</q-chip>
-							</q-toolbar>
-							<q-list>
-								<q-item
-									v-if="!!walletAddress"
-									v-close-popup
-									clickable
-									@click="showMyWallet = true"
-								>
-									<q-item-section>
-										<q-item-label>my wallet</q-item-label>
-									</q-item-section>
-								</q-item>
-								<q-item
-									v-else
-									v-close-popup
-									clickable
-									@click="showConnectWallet = true"
-								>
-									<q-item-section>
-										<q-item-label>sign up</q-item-label>
-									</q-item-section>
-								</q-item>
-
-								<q-item
-									v-close-popup
-									clickable
-									href="https://dwc.wiv-tech.com/#/"
-								>
-									<q-item-section>
-										<q-item-label>digital wine cellar</q-item-label>
-									</q-item-section>
-								</q-item>
-
-								<q-item
-									v-close-popup
-									clickable
-									@click="
-										{
-										}
-									"
-								>
-									<q-item-section>
-										<q-item-label>settings</q-item-label>
-									</q-item-section>
-								</q-item>
-								<q-item clickable>
-									<q-expansion-item
-										id="mainlayout-expansion-item"
-										dense
-										dense-toggle
-										expand-separator
-										label="help"
+						>
+							<q-menu class="q-btn-menu-div no-scroll" max-width="300px" max-height="100vh">
+								<q-toolbar v-if="!!walletAddress" class="text-white">
+									<q-chip
+										v-close-popup
+										clickable
+										color="white"
+										class="text-bold"
+										@click="showMyWallet = true"
 									>
-										<div>
-											<q-list>
-												<q-item
-													v-close-popup
-													clickable
-													@click="
-														{
-														}
-													"
-												>
-													<q-item-section>
-														<q-item-label>conctact us</q-item-label>
-													</q-item-section>
-												</q-item>
+										<q-avatar size="24px">
+											<img :src="userStore.user?.avatar" />
+										</q-avatar>
+										{{ walletAddress.slice(0, 10) }}...
+									</q-chip>
+								</q-toolbar>
+								<q-list>
+									<q-item v-if="!!walletAddress" clickable>
+										<q-expansion-item
+											id="mainlayout-expansion-item"
+											dense
+											dense-toggle
+											expand-separator
+											label="profile"
+											group="menu-expansion"
+										>
+											<div>
+												<q-list class="q-ml-md">
+													<q-item
+														v-close-popup
+														clickable
+														@click="$router.push({ path: 'orders', query: { tab: 'listings' }})"
+													>
+														<q-item-section>
+															<q-item-label class="text-no-wrap">listings</q-item-label>
+														</q-item-section>
+													</q-item>
 
-												<q-item
-													v-close-popup
-													clickable
-													@click="
-														{
-														}
-													"
-												>
-													<q-item-section>
-														<q-item-label>Faqs</q-item-label>
-													</q-item-section>
-												</q-item>
-											</q-list>
-										</div>
-									</q-expansion-item>
-								</q-item>
-								<q-item
-									v-if="!!walletAddress"
-									v-close-popup
-									clickable
-									@click="logout"
-								>
-									<q-item-section>
-										<q-item-label>log out</q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
-						</q-menu>
-					</q-btn>
+													<q-item
+														v-close-popup
+														clickable
+														@click="$router.push({ path: 'orders', query: { tab: 'incoming' }})"
+													>
+														<q-item-section>
+															<q-item-label class="text-no-wrap">incoming offers</q-item-label>
+														</q-item-section>
+													</q-item>
+
+													<q-item
+														v-close-popup
+														clickable
+														@click="$router.push({ path: 'orders', query: { tab: 'outgoing' }})"
+													>
+														<q-item-section>
+															<q-item-label class="text-no-wrap">outgoing offers</q-item-label>
+														</q-item-section>
+													</q-item>
+
+													<q-item
+														v-close-popup
+														clickable
+														@click="$router.push({ path: 'orders', query: { tab: 'transactions' }})"
+													>
+														<q-item-section>
+															<q-item-label class="text-no-wrap">trading history</q-item-label>
+														</q-item-section>
+													</q-item>
+												</q-list>
+											</div>
+										</q-expansion-item>
+									</q-item>
+									<q-item
+										v-else
+										v-close-popup
+										clickable
+										@click="showConnectWallet = true"
+									>
+										<q-item-section>
+											<q-item-label>sign up</q-item-label>
+										</q-item-section>
+									</q-item>
+
+									<q-item
+										v-close-popup
+										clickable
+										href="https://dwc.wiv-tech.com/#/"
+									>
+										<q-item-section>
+											<q-item-label class="text-no-wrap">digital wine cellar</q-item-label>
+										</q-item-section>
+									</q-item>
+
+									<q-item
+										v-close-popup
+										clickable
+										@click="
+											{
+											}
+										"
+									>
+										<q-item-section>
+											<q-item-label>settings</q-item-label>
+										</q-item-section>
+									</q-item>
+									<q-item clickable>
+										<q-expansion-item
+											id="mainlayout-expansion-item"
+											dense
+											dense-toggle
+											expand-separator
+											label="help"
+											group="menu-expansion"
+										>
+											<div>
+												<q-list class="q-ml-md">
+													<q-item
+														v-close-popup
+														clickable
+														@click="
+															{
+															}
+														"
+													>
+														<q-item-section>
+															<q-item-label>conctact us</q-item-label>
+														</q-item-section>
+													</q-item>
+
+													<q-item
+														v-close-popup
+														clickable
+														@click="
+															{
+															}
+														"
+													>
+														<q-item-section>
+															<q-item-label>Faqs</q-item-label>
+														</q-item-section>
+													</q-item>
+												</q-list>
+											</div>
+										</q-expansion-item>
+									</q-item>
+									<q-item
+										v-if="!!walletAddress"
+										v-close-popup
+										clickable
+										@click="logout"
+									>
+										<q-item-section>
+											<q-item-label>log out</q-item-label>
+										</q-item-section>
+									</q-item>
+								</q-list>
+							</q-menu>
+						</q-btn>
+					</div>
 				</div>
 				<img
 					v-if="!showBurgerMenu"
@@ -452,7 +491,7 @@ export default defineComponent({
 				this.$router.go(0);
 			} else {
 				const next = this.$route.query?.next as string;
-				await this.$router.replace({ path: next, replace: true, });
+				await this.$router.replace({ path: next, replace: true });
 				window.location.reload();
 			}
 		},
