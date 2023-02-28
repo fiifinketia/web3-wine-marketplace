@@ -102,6 +102,7 @@
 		v-if="showBurgerMenu"
 		@closeBurgerMenu="onBurgerMenu('close')"
 		@openConnectWallet="showConnectWallet = true"
+		@openMyWallet="showMyWallet = true;"
 	/>
 	<SuggestedWines />
 
