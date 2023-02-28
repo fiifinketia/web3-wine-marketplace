@@ -169,18 +169,12 @@
 						</div>
 					</q-btn-dropdown>
 					<div
-						@click="
-							{
-							}
-						"
+						clickable
 					>
 						Stats
 					</div>
 					<div
-						@click="
-							{
-							}
-						"
+						clickable
 					>
 						Storefront
 					</div>
@@ -197,10 +191,7 @@
 							v-if="!!walletAddress"
 							class="icons q-mx-xs"
 							src="../../public/images/bell-icon.svg"
-							@click="
-								{
-								}
-							"
+							clickable
 						/>
 						<q-btn
 							class="btn-dropdown-menu profile-dropdown q-mx-xs"
@@ -302,10 +293,6 @@
 									<q-item
 										v-close-popup
 										clickable
-										@click="
-											{
-											}
-										"
 									>
 										<q-item-section>
 											<q-item-label>settings</q-item-label>
@@ -325,10 +312,7 @@
 													<q-item
 														v-close-popup
 														clickable
-														@click="
-															{
-															}
-														"
+														clickable
 													>
 														<q-item-section>
 															<q-item-label>conctact us</q-item-label>
@@ -338,10 +322,6 @@
 													<q-item
 														v-close-popup
 														clickable
-														@click="
-															{
-															}
-														"
 													>
 														<q-item-section>
 															<q-item-label>Faqs</q-item-label>
@@ -486,6 +466,7 @@ export default defineComponent({
 		},
 		async connectWallet() {
 			this.showConnectWallet = false;
+			//TODO: Catch errors
 			await this.userStore.connectWallet();
 			if (!this.$route.query?.next) {
 				this.$router.go(0);
@@ -494,6 +475,7 @@ export default defineComponent({
 				await this.$router.replace({ path: next, replace: true });
 				window.location.reload();
 			}
+
 		},
 
 		setupWallet() {
