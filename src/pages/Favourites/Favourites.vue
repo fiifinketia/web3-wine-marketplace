@@ -9,9 +9,11 @@
 			@reset-search="getAllFavoritesWithoutBrand()"
 		/>
 		<FavsError 
-			v-if="!isLoading &&
-			!!erroredOut"
+			v-if="!isLoading && !!erroredOut"
 			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
+		<FavsMissing 
+			v-else-if="!isLoading && !!emptySearch"
 		/>
 		<div 
 			v-else-if="!isLoading && !emptyRequest"
@@ -165,6 +167,7 @@ import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
 import RemoveDialog from './RemoveDialog.vue';
 import ErrorFavorites from './ErrorFavorites.vue';
+import MissingFavorites from './MissingFavorites.vue';
 
 export default defineComponent({
 	name: 'FavouritesPage',
@@ -172,7 +175,8 @@ export default defineComponent({
 		FavsRemoved: RemoveDialog,
 		FavsHeader: FavoritesHeader,
 		FavsEmpty: EmptyFavorites,
-		FavsError: ErrorFavorites
+		FavsError: ErrorFavorites,
+		FavsMissing: MissingFavorites
 	},
 	data() {
 		const userStore = useUserStore();
@@ -181,6 +185,7 @@ export default defineComponent({
 			loadingFavNFTs: [0,1,2,3,4,5,6,7],
 			isLoading: true,
 			emptyRequest: false,
+			emptySearch: false,
 			brandSearch: '',
 			userStore,
 			removeDialog: false,
@@ -199,7 +204,7 @@ export default defineComponent({
 					brand
 				);
 				this.favNFTs = nfts;
-				this.CheckForEmptiness(this.favNFTs);
+				this.CheckForEmptiness(this.favNFTs, brand);
 				this.erroredOut = false;
 			} catch {
 				this.erroredOut = true;
@@ -240,7 +245,7 @@ export default defineComponent({
 				this.favNFTs[index].favoriteLoading = false;
 			}
 			this.removeDialog = false;
-			this.CheckForEmptiness(this.favNFTs);
+			this.CheckForEmptiness(this.favNFTs, '');
 		},
 		getAllFavoritesWithBrand(brand: string) {
 			this.getAllFavorites(this.userStore.walletAddress, brand);
@@ -266,10 +271,15 @@ export default defineComponent({
 				} else return text
 			}
 		},
-		CheckForEmptiness(favNFTs: FavoritesModel[]) {
+		CheckForEmptiness(favNFTs: FavoritesModel[], brand: string) {
 			if (favNFTs.length == 0) {
-				this.emptyRequest = true;
+				if (!!brand) {
+					this.emptySearch = true;
+				} else {
+					this.emptyRequest = true;
+				}
 			} else {
+				this.emptySearch = false;
 				this.emptyRequest = false;
 			}
 		},
