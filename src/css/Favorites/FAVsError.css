@@ -17,6 +17,11 @@
   color: #FFFFFF;
 }
 
+.error-try-favorites-btn:hover {
+  background: #212131;
+  opacity: 0.8;
+}
+
 .error-favorites-container {
   width: 100%;
   padding-left: 15px;
