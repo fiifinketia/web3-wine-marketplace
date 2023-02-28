@@ -10,21 +10,52 @@
       style="width: 100%"
     >
       <div class="row items-center" style="height: 46.28px">
-        <span class="favorites-nfts-title">NFTs</span>
-        <span class="favorites-nfts-count q-pl-xs">
-          {{ nftsLength > 0 ? nftsLength : 0 }}
-        </span>
+        <div v-if="!usingFilter">
+          <span class="favorites-nfts-title">NFTs</span>
+          <span class="favorites-nfts-count q-pl-xs">
+            {{ nftsLength > 0 ? nftsLength : 0 }}
+          </span>
+        </div>
+        <div v-else>
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            @click="resetSearch()"
+            class="favorites-back btn--no-hover"
+          >
+            <img src="../../assets/back-left-white.svg" style="height: 20px; width: 11.5px" />
+            <span class="favorites-back-text q-pl-md" style="color: white;"> All Fav...s </span>
+          </q-btn>
+        </div>
       </div>
     </div>
     <div 
       class="row items-center favorites-search-container"
       :class="$q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'"
     >
-      <div class="row items-center" :style="$q.screen.width > 600 ? '' : 'display: none'">
-        <span class="favorites-nfts-title">NFTs</span>
-        <span class="favorites-nfts-count q-pl-sm">
-          {{ nftsLength > 0 ? nftsLength : 0 }}
-        </span>
+      <div v-if="$q.screen.width > 600" class="row items-center">
+        <div v-if="!usingFilter">
+          <span class="favorites-nfts-title">NFTs</span>
+          <span class="favorites-nfts-count q-pl-sm">
+            {{ nftsLength > 0 ? nftsLength : 0 }}
+          </span>
+        </div>
+        <div v-else>
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            @click="resetSearch()"
+            class="favorites-back btn--no-hover"
+          >
+            <img src="../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+            <span v-if="$q.screen.width > 1200" class="favorites-back-text q-pl-md"> All Favorites </span>
+            <span v-else class="favorites-back-text q-pl-md"> All Fav...s </span>
+          </q-btn>
+        </div>
       </div>
       <div 
         class="row justify-center q-gutter-x-sm" 
@@ -65,18 +96,26 @@ export default defineComponent({
   },
   data () {
     return {
-      searchText: ''
+      searchText: '',
+      usingFilter: false
     }
   },
   methods: {
     submitBrand() {
       this.$emit('brand-search', this.searchText);
+      this.usingFilter = true;
+    },
+    resetSearch() {
+      this.$emit('reset-search');
       this.searchText = '';
+      this.usingFilter = false;
     }
   }
 })
 </script>
 
-<style>
-
+<style scoped>
+:deep(.favorites-back.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

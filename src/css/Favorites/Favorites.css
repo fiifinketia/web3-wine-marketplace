@@ -62,7 +62,7 @@
     width: 32%;
   }
 	.favorites-search-bar {
-		width: 400px;
+		width: 380px;
 	}
 }
 
@@ -113,6 +113,56 @@
 	font-family: 'ProximaNova-Regular';
 	font-size: 16px;
 	color: #9d9d9d;
+}
+
+.favorites-back-text, .favorites-remove-text {
+	font-family: 'ProximaNova-Bold';
+	color: rgba(53, 134, 255, 1);
+	font-size: 20px;
+}
+
+.favorites-back-text {
+	line-height: 0;
+}
+
+.favorites-remove-text {
+	text-align: center;
+}
+
+.favorites-remove-container {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 16px !important;
+  width: 95vw;
+  max-width: 435px !important;
+}
+
+.favorites-remove-icon {
+	width: 100px;
+	height: 100px;
+}
+
+.favorites-remove-btn {
+	width: 129px;
+	height: 56px;
+}
+
+.favorites-remove-gr-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	background: -webkit-linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.favorites-remove-btn::before {
+	border-radius: 6px;
+  border: 1px solid transparent;
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; 
+	mask-composite: exclude;
 }
 
 .favorites-search-btn {

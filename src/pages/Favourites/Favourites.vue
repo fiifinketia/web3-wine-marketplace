@@ -6,6 +6,7 @@
 		<FavsHeader 
 			:nftsLength="favNFTs.length"
 			@brand-search="(val) => getAllFavoritesWithBrand(val)"
+			@reset-search="getAllFavoritesWithoutBrand()"
 		/>
 		<div 
 			v-if="!isLoading && !emptyRequest"
@@ -142,13 +143,13 @@
 				</q-card>
 		</div>
 		</div>
+		<FavsRemoved v-model="removeDialog"/>
 	</q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import '../../css/Favorites/Favorites.css';
-import FAVsRemove from './FAVsRemove.vue';
 import { FavoritesModel } from './models/Response';
 import {
 	RemoveFavorites,
@@ -157,11 +158,12 @@ import {
 import { useUserStore } from 'src/stores/user-store';
 import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
+import RemoveDialog from './RemoveDialog.vue';
 
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
-		// FavsPopup: FAVsRemove,
+		FavsRemoved: RemoveDialog,
 		FavsHeader: FavoritesHeader,
 		FavsEmpty: EmptyFavorites
 	},
@@ -173,11 +175,12 @@ export default defineComponent({
 			isLoading: true,
 			emptyRequest: false,
 			brandSearch: '',
-			userStore
+			userStore,
+			removeDialog: true
 		};
 	},
 	mounted() {
-		this.getAllFavorites(this.userStore.walletAddress, '');
+		this.getAllFavoritesWithoutBrand();
 	},
 	methods: {
 		async getAllFavorites(walletAddress: string, brand: string) {
@@ -214,6 +217,9 @@ export default defineComponent({
 		},
 		getAllFavoritesWithBrand(brand: string) {
 			this.getAllFavorites(this.userStore.walletAddress, brand);
+		},
+		getAllFavoritesWithoutBrand() {
+			this.getAllFavorites(this.userStore.walletAddress, '');
 		},
 		ToInt(price: string) {
 			return parseInt(price);
