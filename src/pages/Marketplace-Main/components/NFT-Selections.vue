@@ -118,7 +118,7 @@
 			</q-card>
 		</div>
 	</div>
-	<div v-else-if="!isLoading && allNFTs.length == 0">
+	<div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
 		<EmptyView />
 	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
