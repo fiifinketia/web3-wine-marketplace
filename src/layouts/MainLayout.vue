@@ -312,7 +312,6 @@
 													<q-item
 														v-close-popup
 														clickable
-														clickable
 													>
 														<q-item-section>
 															<q-item-label>conctact us</q-item-label>

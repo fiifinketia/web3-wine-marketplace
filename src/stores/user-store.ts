@@ -36,7 +36,7 @@ export const useUserStore = defineStore(
 					generateRandomColor(),
 				].join(',');
 				const newUser = await axios.post(
-					process.env.MARKETPLACE_API_URL + 'market/users',
+					process.env.MARKETPLACE_API_URL + '/market/users',
 					{
 						walletAddress: walletAddress.value,
 						avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,

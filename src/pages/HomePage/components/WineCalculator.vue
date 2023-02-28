@@ -17,7 +17,7 @@
 				invesrment style.
 			</div>
 			<div class="justify-center items-center">
-				<q-btn class="calculate-worth-button calculate-worth-text" no-caps @click="$router.push('/calculator')">
+				<q-btn class="calculate-worth-button calculate-worth-text" unelevated no-caps @click="$router.push('/calculator')">
 					Calculate The Worth
 				</q-btn>
 			</div>
