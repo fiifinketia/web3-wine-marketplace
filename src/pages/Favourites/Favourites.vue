@@ -8,8 +8,13 @@
 			@brand-search="(val) => getAllFavoritesWithBrand(val)"
 			@reset-search="getAllFavoritesWithoutBrand()"
 		/>
+		<FavsError 
+			v-if="!isLoading &&
+			!!erroredOut"
+			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
 		<div 
-			v-if="!isLoading && !emptyRequest"
+			v-else-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"
 			:class="favNFTs.length >= 4 && $q.screen.width > 600
 				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
@@ -159,13 +164,15 @@ import { useUserStore } from 'src/stores/user-store';
 import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
 import RemoveDialog from './RemoveDialog.vue';
+import ErrorFavorites from './ErrorFavorites.vue';
 
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
 		FavsRemoved: RemoveDialog,
 		FavsHeader: FavoritesHeader,
-		FavsEmpty: EmptyFavorites
+		FavsEmpty: EmptyFavorites,
+		FavsError: ErrorFavorites
 	},
 	data() {
 		const userStore = useUserStore();
@@ -176,7 +183,8 @@ export default defineComponent({
 			emptyRequest: false,
 			brandSearch: '',
 			userStore,
-			removeDialog: false
+			removeDialog: false,
+			erroredOut: false
 		};
 	},
 	mounted() {
@@ -185,13 +193,19 @@ export default defineComponent({
 	methods: {
 		async getAllFavorites(walletAddress: string, brand: string) {
 			this.isLoading = true;
-			const { result: nfts } = await GetAllFavorites(
-				walletAddress,
-				brand
-			);
-			this.favNFTs = nfts;
-			this.CheckForEmptiness(this.favNFTs);
-			this.isLoading = false;
+			try {
+				const { result: nfts } = await GetAllFavorites(
+					walletAddress,
+					brand
+				);
+				this.favNFTs = nfts;
+				this.CheckForEmptiness(this.favNFTs);
+				this.erroredOut = false;
+			} catch {
+				this.erroredOut = true;
+			} finally {
+				this.isLoading = false;
+			}
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
 			const nftIndex = this.favNFTs.findIndex((nft => 
@@ -255,6 +269,8 @@ export default defineComponent({
 		CheckForEmptiness(favNFTs: FavoritesModel[]) {
 			if (favNFTs.length == 0) {
 				this.emptyRequest = true;
+			} else {
+				this.emptyRequest = false;
 			}
 		},
 		openNFT(token: FavoritesModel, where?: string) {

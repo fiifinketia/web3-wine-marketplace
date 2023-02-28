@@ -1,0 +1,30 @@
+.error-favorites-icon {
+  width: 35vw;
+  min-width: 200px;
+  max-width: 350px;
+}
+
+.error-try-favorites-btn {
+  justify-content: center;
+  align-items: center;
+  width: 147px;
+  height: 48px;
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
+  border-radius: 6px;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.error-favorites-container {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media screen and (max-width: 600px) {
+  .error-try-favorites-btn {
+    width: 100%;
+  }
+}
