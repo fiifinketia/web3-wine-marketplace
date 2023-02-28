@@ -451,7 +451,8 @@ export default defineComponent({
 				this.$router.go(0);
 			} else {
 				const next = this.$route.query?.next as string;
-				this.$router.replace({ path: next });
+				await this.$router.replace({ path: next, replace: true, });
+				window.location.reload();
 			}
 		},
 
