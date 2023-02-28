@@ -11,7 +11,10 @@
 			class="row q-pb-sm col-xs-12" 
 			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
 		>
-			<div class="row col-12 q-px-md">
+			<div 
+				class="row"
+				:class="$q.screen.width >= 600 ? 'col 10' : 'col-12 q-px-md'"
+			>
 				<div class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4">
 					<span class="header-nfts-title">
 						NFTs
