@@ -3,15 +3,20 @@
 		class="column items-center" 
 		style="margin-bottom: 10px; min-height: 0"
 	>
+		<FavsHeader 
+			:nftsLength="favNFTs.length"
+			@brand-search="(val) => getAllFavoritesWithBrand(val)"
+			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
+		<FavsError 
+			v-if="!isLoading && !!erroredOut"
+			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
+		<FavsMissing 
+			v-else-if="!isLoading && !!emptySearch"
+		/>
 		<div 
-			class="q-py-md q-pt-lg"
-			style="width: 100%;" 
-			:style="$q.screen.width > 600 ? '' : 'display: flex; justify-content: center;'"
-		>
-			<FavsHeader :nftsLength="favNFTs.length"/>
-		</div>
-		<div 
-			v-if="!isLoading && !emptyRequest"
+			v-else-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"
 			:class="favNFTs.length >= 4 && $q.screen.width > 600
 				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
@@ -145,13 +150,13 @@
 				</q-card>
 		</div>
 		</div>
+		<FavsRemoved v-model="removeDialog"/>
 	</q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import '../../css/Favorites/Favorites.css';
-import FAVsRemove from './FAVsRemove.vue';
 import { FavoritesModel } from './models/Response';
 import {
 	RemoveFavorites,
@@ -160,13 +165,18 @@ import {
 import { useUserStore } from 'src/stores/user-store';
 import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
+import RemoveDialog from './RemoveDialog.vue';
+import ErrorFavorites from './ErrorFavorites.vue';
+import MissingFavorites from './MissingFavorites.vue';
 
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
-		// FavsPopup: FAVsRemove,
+		FavsRemoved: RemoveDialog,
 		FavsHeader: FavoritesHeader,
-		FavsEmpty: EmptyFavorites
+		FavsEmpty: EmptyFavorites,
+		FavsError: ErrorFavorites,
+		FavsMissing: MissingFavorites
 	},
 	data() {
 		const userStore = useUserStore();
@@ -175,43 +185,73 @@ export default defineComponent({
 			loadingFavNFTs: [0,1,2,3,4,5,6,7],
 			isLoading: true,
 			emptyRequest: false,
-			userStore
+			emptySearch: false,
+			brandSearch: '',
+			userStore,
+			removeDialog: false,
+			erroredOut: false
 		};
 	},
 	mounted() {
-		this.getAllFavorites();
+		this.getAllFavoritesWithoutBrand();
 	},
 	methods: {
-		async getAllFavorites() {
+		async getAllFavorites(walletAddress: string, brand: string) {
 			this.isLoading = true;
-			const { result: nfts } = await GetAllFavorites(
-				`?walletAddress=${this.userStore.walletAddress}`
-			);
-			this.favNFTs = nfts;
-			this.CheckForEmptiness(this.favNFTs);
-			this.isLoading = false;
+			try {
+				const { result: nfts } = await GetAllFavorites(
+					walletAddress,
+					brand
+				);
+				this.favNFTs = nfts;
+				this.CheckForEmptiness(this.favNFTs, brand);
+				this.erroredOut = false;
+			} catch {
+				this.erroredOut = true;
+			} finally {
+				this.isLoading = false;
+			}
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
+			const nftIndex = this.favNFTs.findIndex((nft => 
+				nft.contractAddress == cAddress && 
+				nft.tokenID == tokenID &&
+				nft.network == network
+			))
 			try {
-				const nftIndex = this.favNFTs.findIndex((nft => 
-					nft.contractAddress == cAddress && 
-					nft.tokenID == tokenID &&
-					nft.network == network
-				))
 				if (nftIndex > -1) {
 					this.favNFTs[nftIndex].favoriteLoading = true;
-					await RemoveFavorites({
-						walletAddress: this.userStore.walletAddress,
-						tokenID: tokenID,
-						contractAddress: cAddress,
-						network: network,
-					});
-					this.favNFTs.splice(nftIndex, 1)
+					this.removeDialog = true;
+      		setTimeout(() => { 
+						this.removeFavoritesCountdown(nftIndex, {tokenID, cAddress, network})
+					}, 2000);
 				}
-				this.CheckForEmptiness(this.favNFTs);
 			} catch {
 				return 0
+			} finally {
+				this.favNFTs[nftIndex].favoriteLoading = false;
 			}
+		},
+		async removeFavoritesCountdown(index: number, favorite: { tokenID: string, cAddress: string, network: string }) {
+			if (!!this.removeDialog) {
+				await RemoveFavorites({
+					walletAddress: this.userStore.walletAddress,
+					tokenID: favorite.tokenID,
+					contractAddress: favorite.cAddress,
+					network: favorite.network,
+				});
+				this.favNFTs.splice(index, 1);
+			} else {
+				this.favNFTs[index].favoriteLoading = false;
+			}
+			this.removeDialog = false;
+			this.CheckForEmptiness(this.favNFTs, '');
+		},
+		getAllFavoritesWithBrand(brand: string) {
+			this.getAllFavorites(this.userStore.walletAddress, brand);
+		},
+		getAllFavoritesWithoutBrand() {
+			this.getAllFavorites(this.userStore.walletAddress, '');
 		},
 		ToInt(price: string) {
 			return parseInt(price);
@@ -231,9 +271,16 @@ export default defineComponent({
 				} else return text
 			}
 		},
-		CheckForEmptiness(favNFTs: FavoritesModel[]) {
+		CheckForEmptiness(favNFTs: FavoritesModel[], brand: string) {
 			if (favNFTs.length == 0) {
-				this.emptyRequest = true;
+				if (!!brand) {
+					this.emptySearch = true;
+				} else {
+					this.emptyRequest = true;
+				}
+			} else {
+				this.emptySearch = false;
+				this.emptyRequest = false;
 			}
 		},
 		openNFT(token: FavoritesModel, where?: string) {

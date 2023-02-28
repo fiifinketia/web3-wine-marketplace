@@ -20,6 +20,7 @@
           flat
           dense
           unelevated
+          class="exit-btn btn--no-hover"
         >
           <img
             src="../../../assets/exit.svg"
@@ -58,14 +59,14 @@
           style="padding-left: 0; padding-right: 0"
         >
           <q-btn
-            class="header-clear-btn"
+            class="header-clear-btn btn--no-hover"
             style="text-decoration: underline"
             label="Clear All"
             color="primary"
             no-caps
             flat
             dense
-            @click="wineFiltersStore.removeAllFilters()"
+            @click="ClearAllAndApply()"
           />
           <div class="row items-center">
             <span
@@ -76,6 +77,7 @@
             </span>
             <q-btn 
               v-close-popup
+              :disable="wineFiltersStore.getAllFiltersArray.length == 0"
               @click="ApplyFilter()"
               class="header-apply"
               label="Apply"
@@ -108,12 +110,21 @@ export default defineComponent({
   methods: {
     ApplyFilter() {
       this.wineFiltersStore.indexFilterKey();
+    },
+    async ClearAllAndApply() {
+      await this.wineFiltersStore.removeAllFilters();
+      this.wineFiltersStore.indexFilterKey();
     }
   }
 });
 
 </script>
 
-<style>
-
+<style scoped>
+:deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.exit-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

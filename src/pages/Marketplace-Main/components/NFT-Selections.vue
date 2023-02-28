@@ -118,6 +118,9 @@
 			</q-card>
 		</div>
 	</div>
+	<div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
+		<EmptyView />
+	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
 		<ErrorView @retrieve-again="this.RetrieveTokens()"/>
 	</div>
@@ -166,9 +169,11 @@ import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
+import EmptyView from './EmptyView.vue';
 export default defineComponent({
 	components: {
-		ErrorView: ErrorViewVue
+		ErrorView: ErrorViewVue,
+		EmptyView: EmptyView
 	},
 	emits: ['totalTokens'],
 	data() {
@@ -250,14 +255,14 @@ export default defineComponent({
 			network: string,
 			objective: string
 		) {
+			const nftIndex = this.allNFTs.findIndex((nft => 
+				nft.smartContractAddress == cAddress && 
+				nft.tokenID == tokenID &&
+				nft.network == network
+			))
 			switch (objective) {
 				case 'add':
 					try {
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favoriteLoading = true;
 						await AddFavorites({
 							walletAddress: this.userStore.walletAddress,
@@ -266,18 +271,14 @@ export default defineComponent({
 							network: network,
 						});
 						this.allNFTs[nftIndex].favorited = true;
-						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
+					} finally {
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
 					break;
 				case 'remove':
 					try {
-						const nftIndex = this.allNFTs.findIndex((nft => 
-							nft.smartContractAddress == cAddress && 
-							nft.tokenID == tokenID &&
-							nft.network == network
-						))
 						this.allNFTs[nftIndex].favoriteLoading = true;
 						await RemoveFavorites({
 							walletAddress: this.userStore.walletAddress,
@@ -286,9 +287,10 @@ export default defineComponent({
 							network: network,
 						});
 						this.allNFTs[nftIndex].favorited = false;
-						this.allNFTs[nftIndex].favoriteLoading = false;
 					} catch {
 						return 0
+					} finally {
+						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
 					break;
 			}

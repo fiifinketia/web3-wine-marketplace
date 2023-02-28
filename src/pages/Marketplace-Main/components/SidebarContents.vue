@@ -22,19 +22,20 @@
         :disable="!generalSearch"
         class="sidebar-go"
         color="primary"
+        outlined
+        unelevated
         label="GO"
         dense
-				unelevated
         @click="this.emitGeneralSearch()"
       />
     </q-card-section>
     <q-list class="rounded-borders">
-      <!-- Listed Only filter -->
+      <!-- Status filter -->
       <q-expansion-item
-        label="Listed Only"
+        label="Status"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.listedOnly"
             :options="wineFiltersStore.listedOnlyOptions"
@@ -49,7 +50,7 @@
         label="Sort A-Z"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.sortedAtoZ"
             :options="wineFiltersStore.sortedAtoZOptions"
@@ -64,7 +65,7 @@
         label="Type"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.type"
             :options="wineFiltersStore.typeOptions"
@@ -87,12 +88,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!brandQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.brand"
             :options="brandOptions"
@@ -116,12 +118,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!producerQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.producer"
             :options="producerOptions"
@@ -145,12 +148,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!countryQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.country"
             :options="countryOptions"
@@ -174,12 +178,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!regionQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.region"
             :options="regionOptions"
@@ -203,12 +208,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!appellationQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.appellation"
             :options="appellationOptions"
@@ -219,54 +225,50 @@
         </q-list>
       </q-expansion-item>
 
-      <!-- Price Filter edit-->
+      <!-- Price Filter-->
       <q-expansion-item
         label="Price"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-card class="dark-blue-border rounded-borders q-my-sm q-pa-sm">
-          <q-card-section class="row col-12">
-            <div class="col-8">
-              <div class="row">
-                <div class="col-3">
-                  <p class="q-pa-none q-ma-xs">from</p>
-                  <p class="q-pa-none q-ma-xs">to</p>
+        <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
+          <q-card-section class="column items-center col-12 q-pa-xs q-gutter-y-md">
+            <div class="full-width">
+              <div class="col-12 row justify-between">
+                <div class="column q-gutter-y-xs sidebar-price-column">
+                  <span class="q-pa-none sidebar-label-light">From</span>
+                  <q-input
+                    v-model="minPrice"
+                    type="number"
+                    dense
+                    class="sidebar-price-text-field"
+                    input-style="color: #212131"
+                    outlined
+                  />
                 </div>
-                <div class="col-6">
-                  <p class="q-pa-none q-ma-xs">
-                    <q-icon name="app:price" size="sm"></q-icon>
-                    {{ price.min.toFixed(2) }}
-                  </p>
-                  <p class="q-pa-none q-ma-xs">
-                    <q-icon name="app:price" size="sm"></q-icon>
-                    {{ price.max.toFixed(2) }}
-                  </p>
+                <div class="column q-gutter-y-xs sidebar-price-column">
+                  <span class="q-pa-none sidebar-label-light">To</span>
+                  <q-input
+                    v-model="maxPrice"
+                    type="number"
+                    dense
+                    class="sidebar-price-text-field"
+                    input-style="color: #212131"
+                    outlined
+                  />
                 </div>
               </div>
             </div>
-            <div class="col-4">
-              <q-btn
-                class="q-ma-md"
-                type="button"
-                label="Ok"
-                outlined
-                color="primary"
-                @click="wineFiltersStore.setPrice(price)"
-              />
-            </div>
-          </q-card-section>
-          <q-item-section class="row col-12">
-            <q-range
-              id="filter_price"
-              v-model="price"
-              thumb-color="white"
-              class="col-8 q-px-lg"
-              :step="1"
-              :min="0"
-              :max="100"
-              :debounce="500"
+            <q-btn
+              class="sidebar-apply btn--no-hover full-width"
+              :disable="!minPrice && !maxPrice"
+              unelevated
+              no-caps
+              label="Apply price range"
+              outlined
+              color="primary"
+              @click="wineFiltersStore.setPrice({min: minPrice, max: maxPrice})"
             />
-          </q-item-section>
+          </q-card-section>
         </q-card>
       </q-expansion-item>
 
@@ -275,20 +277,7 @@
         label="Case"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="caseQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.wineCase"
             :options="caseOptions"
@@ -304,20 +293,7 @@
         label="Format"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="formatQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.format"
             :options="formatOptions"
@@ -333,20 +309,7 @@
         label="Investment Grade"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="investmentGradeQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.investmentGrade"
             :options="investmentGradeOptions"
@@ -370,12 +333,13 @@
           placeholder="Search"
           type="search"
           class="sidebar-search"
+          :input-style="!!lwinQuery ? 'color: #212131' : ''"
         >
           <template #prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.LWIN"
             :options="LWINOptions"
@@ -391,20 +355,7 @@
         label="Heritage"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-input
-          v-model="heritageQuery"
-          outlined
-          dense
-          round
-          placeholder="Search"
-          type="search"
-          class="sidebar-search"
-        >
-          <template #prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-list class="dark-blue-border rounded-borders q-my-sm">
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="wineFiltersStore.heritage"
             :options="heritageOptions"
@@ -422,6 +373,7 @@
 import { useWineFilters } from "src/stores/wine-filters";
 import { useGeneralSearch } from 'src/stores/general-search-filter';
 import { defineComponent, ref } from "vue";
+import 'src/css/Marketplace/sidebar.css';
 
 export default defineComponent({
   setup() {
@@ -455,13 +407,14 @@ export default defineComponent({
 			caseOptions: wineFiltersStore.wineCaseOptions,
 			originOptions: wineFiltersStore.originOptions,
 			countryOptions: wineFiltersStore.countryOptions,
-			price: ref(wineFiltersStore.price),
 			maturity: ref(wineFiltersStore.maturity),
 		};
   },
   data() {
     return {
-      generalSearch: ''
+      generalSearch: '',
+      minPrice: null,
+      maxPrice: null
     }
   },
   watch: {

@@ -31,8 +31,29 @@
   width: 45px;
 }
 
+.header-go:hover {
+  background: #8CBAFF !important;
+}
+
+.header-go.disabled {
+  background: #C0C0C0 !important;
+}
+
+.header-apply:hover {
+  background: #8CBAFF !important;
+}
+
+.header-apply.disabled {
+  background: #C0C0C0 !important;
+}
+
+.header-clear-btn:hover {
+  background: none !important;
+}
+
 .header-search .q-field__native {
   font-family: 'ProximaNova-Regular' !important;
+  font-size: 16px;
   color: rgba(157, 157, 157, 1);
 }
 
