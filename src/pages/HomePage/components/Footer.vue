@@ -8,11 +8,11 @@
 		</div>
 		<div class="footer-wrapper">
 			<div class="footer-item-wrapper">
-				<div class="footer-bold">NFTs</div>
-				<div class="item-text q-pt-sm">New Releases</div>
-				<div class="item-text q-pt-sm">Recommended</div>
+				<div class="footer-bold" @click="$router.push('/marketplace?tab=nfts')">NFTs</div>
+				<div class="item-text q-pt-sm" @click="$router.push('/marketplace?tab=releases')">New Releases</div>
+				<div class="item-text q-pt-sm" @click="$router.push('/marketplace?tab=recommended')">Recommended</div>
 				<div class="item-title q-pt-md">Favourites</div>
-				<div class="item-title q-pt-md">Stats</div>
+				<div class="item-title q-pt-md"  @click="$router.push('/favorites')">Stats</div>
 				<div class="item-text q-pt-sm">Wine Statisctics</div>
 
 				<div class="first-div-appear">
@@ -23,7 +23,7 @@
 
 				<div class="footer-item-wrapper fourth-400-item">
 					<div class="item-title">Contact info:</div>
-					<div class="item-text q-pt-sm">email@email.com</div>
+					<div class="item-text q-pt-sm">info@wiv.io</div>
 					<div class="item-text q-pt-sm">+0 000 000 0000</div>
 				</div>
 			</div>
@@ -33,10 +33,10 @@
 				<div class="item-text q-pt-sm">Recommended</div>
 			</div>
 			<div class="footer-item-wrapper">
-				<div class="item-title">Profile</div>
+				<div class="item-title" @click="$router.push('/orders')">Profile</div>
 				<div class="item-text q-pt-sm">Digital Wine Cellar</div>
-				<div class="item-text q-pt-sm">Offers</div>
-				<div class="item-text q-pt-sm">Trading History</div>
+				<div class="item-text q-pt-sm" @click="$router.push('/orders?tab=incoming')">Offers</div>
+				<div class="item-text q-pt-sm" @click="$router.push('/orders?tab=transactions')">Trading History</div>
 				<div class="item-text q-pt-sm">Notifications</div>
 				<div class="item-title q-pt-md">Settings</div>
 
@@ -50,18 +50,18 @@
 				<div class="footer-item-wrapper fifth-item-400">
 					<div class="item-title">Integrations</div>
 					<div class="row q-pt-md">
-						<div class="q-pr-sm">
+						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
 							<q-img src="../../../../public/images/discord.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
+						</a>
+						<a href="https://twitter.com/wivteam" target="_blank" class="q-px-sm">
 							<q-img src="../../../../public/images/twitter.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
+						</a>
+						<a href="https://www.instagram.com/wiv.io/" target="_blank" class="q-px-sm">
 							<q-img
 								src="../../../../public/images/instagram.svg"
 								width="23px"
 							/>
-						</div>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -75,40 +75,43 @@
 			<div class="footer-item-wrapper">
 				<div class="footer-nft-400-disappear">
 					<div class="item-title">Contract info:</div>
-					<div class="item-text q-pt-sm">email@email.com</div>
+					<div class="item-text q-pt-sm">info@wiv.io</div>
 					<div class="item-text q-pt-sm">+0 000 000 0000</div>
 				</div>
 				<div class="footer-item-wrapper fifth-div-wrapper">
 					<div class="item-title">Integrations</div>
 					<div class="row q-pt-md">
-						<div class="q-pr-sm">
+						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
 							<q-img src="../../../../public/images/discord.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
+						</a>
+						<a href="https://twitter.com/wivteam" target="_blank" class="q-px-sm">
 							<q-img src="../../../../public/images/twitter.svg" width="23px" />
-						</div>
-						<div class="q-px-sm">
+						</a>
+						<a href="https://www.instagram.com/wiv.io/" target="_blank" class="q-px-sm">
 							<q-img
 								src="../../../../public/images/instagram.svg"
 								width="23px"
 							/>
-						</div>
+						</a>
 					</div>
 				</div>
 			</div>
 			<div class="footer-item-wrapper fifth-item">
 				<div class="item-title">Integrations</div>
 				<div class="row q-pt-md">
-					<div class="q-pr-sm">
-						<q-img src="../../../../public/images/discord.svg" width="23px" />
+						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
+							<q-img src="../../../../public/images/discord.svg" width="23px" />
+						</a>
+						<a href="https://twitter.com/wivteam" target="_blank" class="q-px-sm">
+							<q-img src="../../../../public/images/twitter.svg" width="23px" />
+						</a>
+						<a href="https://www.instagram.com/wiv.io/" target="_blank" class="q-px-sm">
+							<q-img
+								src="../../../../public/images/instagram.svg"
+								width="23px"
+							/>
+						</a>
 					</div>
-					<div class="q-px-sm">
-						<q-img src="../../../../public/images/twitter.svg" width="23px" />
-					</div>
-					<div class="q-px-sm">
-						<q-img src="../../../../public/images/instagram.svg" width="23px" />
-					</div>
-				</div>
 			</div>
 		</div>
 	</footer>
