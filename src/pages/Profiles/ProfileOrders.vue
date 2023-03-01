@@ -144,15 +144,19 @@ export default defineComponent({
 			handler(val) {
 				switch (val) {
 					case 'listings':
+						this.$router.push({ path: 'orders', query: { tab: 'listings' }});
 						this.tabLabel = 'Listings';
 						break;
 					case 'outgoing':
+						this.$router.push({ path: 'orders', query: { tab: 'outgoing' }});
 						this.tabLabel = 'Outgoing Offers';
 						break;
 					case 'incoming':
+						this.$router.push({ path: 'orders', query: { tab: 'incoming' }});
 						this.tabLabel = 'Incoming Offers';
 						break;
 					case 'transactions':
+						this.$router.push({ path: 'orders', query: { tab: 'transactions' }});
 						this.tabLabel = 'Trading History';
 						break;
 				}

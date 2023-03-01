@@ -9,17 +9,18 @@
         <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
           v-model="listingBrandFilter"
-          color="grey"
           outlined 
           dense
-          label="Search"
+          placeholder="Search"
           class="profile-searchbox"
+          :input-style="!!listingBrandFilter ? 'color: #212131' : ''"
         >
           <template #prepend>
-            <q-icon name="search" color="grey"></q-icon>
+            <q-icon name="app:search" />
           </template>
         </q-input>
         <q-btn
+          :disable="!listingBrandFilter"
           flat
           unelevated
           dense
@@ -41,17 +42,18 @@
   <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 100%">
     <q-input 
       v-model="listingBrandFilter"
-      color="grey"
       outlined 
       dense
-      label="Search"
+      placeholder="Search"
       class="profile-searchbox"
+      :input-style="!!listingBrandFilter ? 'color: #212131' : ''"
     >
       <template #prepend>
-        <q-icon name="search" color="grey"></q-icon>
+        <q-icon name="app:search" />
       </template>
     </q-input>
     <q-btn
+      :disable="!listingBrandFilter"
       flat
       unelevated
       dense

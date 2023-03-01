@@ -152,7 +152,7 @@
               dense
               no-caps
               class="profile-accept-btn"
-              @click="AcceptOffer(
+              @click="OpenConfirmDialog(
                 offer.orderHash,
                 offer.brand,
                 offer.image,
@@ -171,7 +171,7 @@
               unelevated
               dense
               no-caps
-              @click="AcceptOffer(
+              @click="OpenConfirmDialog(
                 offer.orderHash,
                 offer.brand,
                 offer.image,
@@ -193,6 +193,14 @@
         :errorType="errorType"
         :errorTitle="errorTitle"
         :errorMessage="errorMessage"
+      />
+      <ConfirmView 
+        v-model="openConfirmDialog"
+        :orderHash="orderHash"
+        :brand="brand"
+        :image="image"
+        :token="token"
+        @accept-offer="(req) => AcceptOffer(req.orderHash, req.brand, req.image, req.token)"
       />
     </div>
     <div v-else class="column items-center">
@@ -218,6 +226,7 @@ import { IncomingOffersResponse } from '../models/response.models';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import ProfileErrors from '../Popups/ProfileErrors.vue';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
+import AcceptOffer from '../Popups/AcceptOffer.vue';
 
 const nftStore = useNFTStore();
 
@@ -227,7 +236,8 @@ export default defineComponent({
     IncomingHeaderSm: IncomingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: Empty,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    ConfirmView: AcceptOffer
   },
 
   data() {
@@ -249,7 +259,13 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+      openConfirmDialog: false,
+
+      orderHash: '',
+      brand: '',
+      image: '',
+      token: {} as TokenIdentifier
     }
   },
 
@@ -274,19 +290,22 @@ export default defineComponent({
   },
 
   async mounted() {
-    // if (incomingOffersRequestStatus == false) {
     await this.FetchIncomingOffers('', '');
-    // } else {
-    //   this.$emit('incomingAmount', this.incomingOffers.length);
-    //   this.CheckForEmptyRequest();
-    // }
   },
 
   methods: {
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`
     },
+    OpenConfirmDialog(orderHash: string, brand: string, image: string, token: TokenIdentifier) {
+      this.orderHash = orderHash;
+      this.brand = brand;
+      this.image = image;
+      this.token = token;
+      this.openConfirmDialog = true;
+    },
     async AcceptOffer(orderHash: string, brand: string, image: string, token: TokenIdentifier) {
+      console.log(orderHash, brand, image, token);
       const address = this.userStore.walletAddress;
       try {
         await FulfillBasicOrder(
@@ -300,6 +319,8 @@ export default defineComponent({
         this.CheckForEmptyRequest();
       } catch (err: any) {
         this.HandleError(err);
+      } finally {
+        this.openConfirmDialog = false;
       }
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {

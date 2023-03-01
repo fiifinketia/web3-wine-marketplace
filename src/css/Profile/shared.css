@@ -144,6 +144,16 @@
   font-family: 'ProximaNova-Regular' !important; 
 }
 
+.profile-searchbox .q-icon {
+	width: 20px;
+}
+
+.profile-searchbox .q-field__native {
+	font-family: 'ProximaNova-Regular';
+	font-size: 16px;
+	color: #9d9d9d;
+}
+
 .profile-primary-btn {
   font-family: 'ProximaNova-Regular' !important;
   font-size: 14px;
@@ -151,6 +161,15 @@
   color: white;
   width: 45px;
   height: 38px;
+  border-radius: 6px;
+}
+
+.profile-primary-btn:hover {
+	background: #8cbaff;
+}
+
+.profile-primary-btn.disabled {
+	background: #C0C0C0 !important;
 }
 
 .profile-accept-btn {
