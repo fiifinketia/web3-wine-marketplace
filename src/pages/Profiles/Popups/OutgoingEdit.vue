@@ -86,7 +86,7 @@
           style="color: #3586FF;"
           @click="ResetData()"
         >
-          <span> Reset </span>
+          <span class="dialog-cancel-gr-text"> Reset </span>
         </q-btn>
         <q-btn
           class="dialog-confirm-small"
@@ -194,7 +194,7 @@
               style="color: #3586FF;"
               @click="ResetData()"
             >
-              <span> Reset </span>
+              <span class="dialog-cancel-gr-text"> Reset </span>
             </q-btn>
             <q-btn
               class="dialog-confirm"
