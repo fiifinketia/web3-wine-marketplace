@@ -37,7 +37,7 @@
       </div>
     </div>
   </div>
-  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 100%">
+  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm q-px-sm" style="width: 100%">
     <q-input 
       v-model="transactionBrandFilter"
       outlined 
