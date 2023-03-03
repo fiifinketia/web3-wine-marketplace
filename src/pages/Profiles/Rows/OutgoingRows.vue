@@ -13,7 +13,7 @@
         align="left"
         padding="0px"
         class="outgoing-column-nft btn--no-hover"
-        :to="{ path: '/nft', query: { id: offer.identifierOrCriteria, network: offer.network, contractAddress: offer.contractAddress} }"
+        @click="$q.screen.width > 600 ? ClickBrandAction(offer, 'new tab') : ClickBrandAction(offer, 'nft dialog')"
       >
         <img v-if="$q.screen.width > 1265" :src="offer.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ offer.brand }}</span>
@@ -86,6 +86,14 @@
         </q-btn>
       </div>
     </div>
+    <NFTDialog 
+      v-model="showNFTPopup"
+      :brand="brand"
+      :image="image"
+      :offerEndTime="offerEndTime"
+      :highestOffer="highestOffer"
+      :tab="tab"
+    />
   </div>
 </template>
 
@@ -93,12 +101,23 @@
 import { ordersStore } from 'src/stores/orders-store';
 import { defineComponent } from 'vue'
 import { OutgoingOffersResponse } from '../models/response.models';
+import NFTDetails from '../Popups/NFTDetails.vue';
 export default defineComponent({
+  components: {
+    NFTDialog: NFTDetails
+  },
   data() {
     const store = ordersStore();
     return {
       store,
-      outgoingOffers: store.outgoingOffers
+      outgoingOffers: store.outgoingOffers,
+
+      showNFTPopup: false,
+      image: '',
+      brand: '',
+      offerEndTime: '',
+      highestOffer: '',
+      tab: 'outgoing'
     }
   },
   methods: {
@@ -106,7 +125,32 @@ export default defineComponent({
       this.$emit('delete-offer', offer);
     },
     OpenEditDialog(offer: OutgoingOffersResponse) {
-      this.$emit('edit-offer', offer)
+      this.$emit('edit-offer', offer);
+    },
+    OpenNFTDialog(offer: OutgoingOffersResponse) {
+      this.image = offer.image;
+      this.brand = offer.brand;
+      this.highestOffer = !!offer.highestOffer ? offer.highestOffer : '0.00';
+      this.offerEndTime = offer.endTime;
+      this.showNFTPopup = true;
+    },
+    OpenMetadataPage(offer: OutgoingOffersResponse) {
+      const routeData = this.$router.resolve({
+        path: '/nft',
+        query: {
+          id: offer.identifierOrCriteria,
+          network: offer.network,
+          contractAddress: offer.contractAddress,
+        },
+      });
+      window.open(routeData.href, '_blank');
+    },
+    ClickBrandAction(offer: OutgoingOffersResponse, action: string) {
+      if (action == 'new tab') {
+        this.OpenMetadataPage(offer);
+      } else {
+        this.OpenNFTDialog(offer);
+      }
     }
   }
 })

@@ -14,7 +14,7 @@
         align="left"
         padding="0px"
         class="listings-column-nft btn--no-hover"
-        :to="{ path: '/nft', query: { id: listing.identifierOrCriteria, network: listing.network, contractAddress: listing.contractAddress} }"
+        @click="$q.screen.width > 600 ? ClickBrandAction(listing, 'new tab') : ClickBrandAction(listing, 'nft dialog')"
       >
         <img v-if="$q.screen.width > 1265" :src="listing.image" class="profile-nft-image q-mr-md"/>
         <span class="profile-nft-brand"> {{ listing.brand }}</span>
@@ -92,6 +92,13 @@
         </q-btn>
       </div>
     </div>
+    <NFTDialog 
+      v-model="showNFTPopup"
+      :brand="brand"
+      :image="image"
+      :highestOffer="highestOffer"
+      :tab="tab"
+    />
   </div>
 </template>
 
@@ -101,13 +108,23 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
 import { ordersStore } from 'src/stores/orders-store';
+import NFTDetails from '../Popups/NFTDetails.vue';
 
 export default defineComponent({
+  components: {
+    NFTDialog: NFTDetails
+  },
   data() {
     const store = ordersStore();
     return {
       store,
-      listings: store.listings
+      listings: store.listings,
+
+      showNFTPopup: false,
+      image: '',
+      brand: '',
+      highestOffer: '',
+      tab: 'listings'
     }
   },
   methods: {
@@ -116,6 +133,30 @@ export default defineComponent({
     },
     OpenEditDialog(listing: ListingsResponse) {
       this.$emit('edit-listing', listing);
+    },
+    OpenNFTDialog(listing: ListingsResponse) {
+      this.image = listing.image;
+      this.brand = listing.brand;
+      this.highestOffer = !!listing.highestOffer ? listing.highestOffer : '0.00';
+      this.showNFTPopup = true;
+    },
+    OpenMetadataPage(listing: ListingsResponse) {
+      const routeData = this.$router.resolve({
+        path: '/nft',
+        query: {
+          id: listing.identifierOrCriteria,
+          network: listing.network,
+          contractAddress: listing.contractAddress,
+        },
+      });
+      window.open(routeData.href, '_blank');
+    },
+    ClickBrandAction(listing: ListingsResponse, action: string) {
+      if (action == 'new tab') {
+        this.OpenMetadataPage(listing);
+      } else {
+        this.OpenNFTDialog(listing);
+      }
     }
   }
 })
