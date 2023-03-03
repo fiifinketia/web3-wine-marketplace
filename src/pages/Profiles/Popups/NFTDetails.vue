@@ -58,6 +58,17 @@
           </div>
         </div>
       </div>
+
+      <div v-else-if="tab == 'transactions'" class="column nft-dialog-custom-padding q-py-sm q-gutter-y-xs">
+        <div class="row items-center justify-between">
+          <span class="nft-dialog-label">
+            Transaction ID
+          </span>
+          <div class="row items-center q-gutter-x-xs q-pb-xs">
+            <span class="nft-dialog-text-default"> {{ txnHash }} </span>
+          </div>
+        </div>
+      </div>
     </q-card>
   </q-dialog>
 </template>
@@ -73,7 +84,8 @@ export default defineComponent({
     highestOffer: { type: String, default: '' },
     floorPrice: { type: String, default: '' },
     from: { type: String, default: '' },
-    offerEndTime: { type: String, default: '' }
+    offerEndTime: { type: String, default: '' },
+    txnHash: { type: String, default: '' }
   }
 })
 </script>

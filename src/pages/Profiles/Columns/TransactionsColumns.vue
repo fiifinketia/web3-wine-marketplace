@@ -13,7 +13,7 @@
       v-if="$q.screen.width > 1020"
       class="transaction-column-source"
     >
-      From/To
+      Transaction ID
     </span>
     <span class="transaction-column-date">
       Date
