@@ -9,13 +9,15 @@
     <span class="transaction-column-price">
       Price
     </span>
-    <span 
-      v-if="$q.screen.width > 1020"
-      class="transaction-column-source"
-    >
+    <span v-if="$q.screen.width > 1020" class="transaction-column-source">
       Transaction ID
     </span>
-    <span class="transaction-column-date">
+    <span v-if="$q.screen.width <= 1020" class="transaction-column-source">
+      TXN ID
+    </span>
+    <span 
+      v-if="$q.screen.width > 1020"
+      class="transaction-column-date">
       Date
     </span>
   </div>

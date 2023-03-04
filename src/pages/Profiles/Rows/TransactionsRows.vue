@@ -31,6 +31,21 @@
       <div class="row items-center transaction-column-price">
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="transaction-number-text" :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"> {{ txn.price }} </span>
+      </div>
+      <div class="row items-center transaction-column-source">
+        <a
+          v-if="$q.screen.width > 600"
+          target="_blank"
+          :href="txnLinkPrepend+txn.txnHash"
+        > 
+          {{ ReduceAddress(txn.txnHash) }} 
+        </a>
+        <div
+          v-else
+          class="transaction-hash-text-mobile"
+        > 
+          {{ ReduceAddress(txn.txnHash) }} 
+        </div>
         <q-tooltip 
           v-if="
             $q.screen.width <= 1020
@@ -39,36 +54,34 @@
           anchor="top start" 
           self="center start"
           class="transaction-tooltip-container"
-          :offset="[70, 30]"
+          :offset="[35, 30]"
         >
-            <div class="column">
-            <div 
-              v-if="$q.screen.width <= 1020"
-              class="row items-center justify-between"
-            >
+          <div class="column">
+            <div class="row items-center justify-between">
               <span class="transaction-tooltip-label">
-                TXN ID
+                Date
               </span>
               <span class="transaction-tooltip-text">
-                {{ ReduceAddress(txn.txnHash) }}
+                {{ txn.date }}
+              </span>
+            </div>
+            <div  class="row items-center justify-between">
+              <span class="transaction-tooltip-label">
+                Time
+              </span>
+              <span class="transaction-tooltip-text">
+                {{ txn.time }}
               </span>
             </div>
           </div>
         </q-tooltip>
       </div>
       <div 
-        v-if="$q.screen.width > 1020"
-        class="row items-center transaction-column-source"
+        v-if="$q.screen.width > 1020" 
+        class="transaction-column-date row items-center"
       >
-        <span class="transaction-number-text"> {{ ReduceAddress(txn.txnHash) }} </span>
-      </div>
-      <div v-if="$q.screen.width > 600" class="transaction-column-date row items-center">
         <span class="transaction-date-text"> {{ txn.date }} </span>
         <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-sm" vertical/>
-        <span class="transaction-time-text"> {{ txn.time }} </span>
-      </div>
-      <div v-if="$q.screen.width <= 600" class="transaction-column-date column">
-        <span class="transaction-date-text"> {{ txn.date }} </span>
         <span class="transaction-time-text"> {{ txn.time }} </span>
       </div>
     </div>
@@ -76,7 +89,10 @@
       v-model="showNFTPopup"
       :brand="brand"
       :image="image"
-      :txnHash="ReduceAddress(txnHash)"
+      :date="date"
+      :time="time"
+      :txnHash="txnHash"
+      :txnLinkPrepend="txnLinkPrepend"
       :tab="tab"
     />
   </div>
@@ -101,17 +117,28 @@ export default defineComponent({
       image: '',
       brand: '',
       txnHash: '',
-      tab: 'transactions'
+      date: '',
+      time: '',
+      tab: 'transactions',
+      txnLinkPrepend: <string> process.env.POLYGON_SCAN_TXN_LINK
     }
   },
   methods: {
     ReduceAddress(walletAddress: string) {
-      return `${walletAddress.slice(0, 11)}...`
+      if (this.$q.screen.width > 600) {
+        return `${walletAddress.slice(0, 11)}...`
+      } else if (this.$q.screen.width > 470) {
+        return `${walletAddress.slice(0, 8)}...`
+      } else {
+        return `${walletAddress.slice(0, 6)}...`
+      }
     },
     OpenNFTDialog(txn: TransactionResponse) {
       this.image = txn.image;
       this.brand = txn.brand;
       this.txnHash = txn.txnHash;
+      this.date = txn.date;
+      this.time = txn.time;
       this.showNFTPopup = true;
     },
     OpenMetadataPage(txn: TransactionResponse) {
