@@ -7,7 +7,6 @@ export const ordersStore = defineStore('ordersStore', {
 	state: () => ({
 		listings: [] as ListingsResponse[],
     previousListings: [] as ListingsResponse[],
-    listableNFTs: [] as ListingsResponse[],
 
 		outgoingOffers: [] as OutgoingOffersResponse[],
     previousOutgoingOffers: [] as OutgoingOffersResponse[],
