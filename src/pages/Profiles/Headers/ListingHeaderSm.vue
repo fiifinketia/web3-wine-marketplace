@@ -6,7 +6,17 @@
         <span class="profile-nft-number"> {{ listingsAmount }} </span>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-        <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
+        <q-btn 
+          @click="OpenCreateNewListing()"
+          :ripple="false"
+          :disable="listableNFTs.length == 0"
+          unelevated
+          dense
+          flat
+          class="new-listing-btn btn--no-hover"
+        >
+          <img src="../../../assets/sell.svg">
+        </q-btn>
         <q-input 
           v-model="listingBrandFilter"
           outlined 
@@ -39,13 +49,24 @@
       </div>
     </div>
   </div>
-  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm q-px-sm" style="width: 100%">
+  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm q-px-sm" style="width: 100%; flex-wrap: nowrap;">
+    <q-btn 
+      @click="OpenCreateNewListing()"
+      :ripple="false"
+      :disable="listableNFTs.length == 0"
+      unelevated
+      dense
+      flat
+      class="new-listing-btn btn--no-hover"
+    >
+      <img src="../../../assets/sell.svg">
+    </q-btn>
     <q-input 
       v-model="listingBrandFilter"
       outlined 
       dense
       placeholder="Search"
-      class="profile-searchbox"
+      class="profile-searchbox q-ml-xs"
       :input-style="!!listingBrandFilter ? 'color: #212131' : ''"
     >
       <template #prepend>
@@ -66,9 +87,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { ordersStore } from 'src/stores/orders-store';
 import 'src/css/Profile/shared.css';
+import { TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
   props: {
@@ -83,6 +105,10 @@ export default defineComponent({
     updatedListingBrandFilter: {
       type: String,
       required: true
+    },
+    listableNFTs: {
+      type: [] as PropType<TokenWithBrandImage[]>,
+      default: []
     }
   },
   data() {
@@ -120,13 +146,17 @@ export default defineComponent({
     FetchListingsWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setListingBrandFilterStatus(true);
       this.$emit('fetchListingsWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    OpenCreateNewListing() {
+      this.$emit('create-new-listing')
     }
   }
 })
 
 </script>
 
-<style>
-
-
+<style scoped>
+:deep(.new-listing-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

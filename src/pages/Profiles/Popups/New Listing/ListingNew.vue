@@ -2,8 +2,12 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
+    :maximized="$q.screen.width > 600 ? false : true"
   >
-    <q-card class="new-list-container column items-center q-px-md q-pt-md">
+    <q-card
+      class="new-list-container q-py-md"
+      :class="$q.screen.width > 600 ? 'q-px-md' : ''"
+    >
       <div class="full-width row items-start justify-center q-pb-sm">
         <div class="column items-center q-gutter-y-sm">
           <span class="new-list-header-text"> Listing NFT </span>
@@ -21,19 +25,32 @@
           />
         </q-btn>
       </div>
-      <NewListingHeader />
+      <NewListingHeader 
+        v-if="$q.screen.width > 600"
+        :listableNFTsLength="listableNFTs.length"
+      />
+      <NewListingNFTs 
+        class="scroll"
+        :listableNFTs="listableNFTs"
+      />
     </q-card>
   </q-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/newListing.css';
 import ListingNewHeader from './ListingNewHeader.vue';
+import ListingNewNFTs from './ListingNewNFTs.vue';
+import { TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
   components: {
-    NewListingHeader: ListingNewHeader
+    NewListingHeader: ListingNewHeader,
+    NewListingNFTs: ListingNewNFTs
+  },
+  props: {
+    listableNFTs: { type: [] as PropType<TokenWithBrandImage[]>, default: [] }
   }
 })
 </script>

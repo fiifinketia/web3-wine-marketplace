@@ -4,6 +4,12 @@ interface TokenIdentifier {
   readonly network: string;
 }
 
+interface TokenWithBrandImage extends TokenIdentifier {
+  image: string;
+  brand: string;
+}
+
 export {
-  TokenIdentifier
+  TokenIdentifier,
+  TokenWithBrandImage
 }

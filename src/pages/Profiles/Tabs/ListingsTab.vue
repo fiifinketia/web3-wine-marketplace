@@ -27,8 +27,10 @@
         :listingsAmount="listings.length"
         :selectedListingSortKey="listingSortKey"
         :updatedListingBrandFilter="listingBrandFilter"
+        :listableNFTs="listableNFTs"
         @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
         @listingSortKeySelected="(val) => listingSortKey = val"
+        @create-new-listing="openNewListingDialog = true"
         @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
       />
       <div 
@@ -78,8 +80,9 @@
         :errorTitle="errorTitle"
         :errorMessage="errorMessage"
       />
-      <CreateListing 
+      <CreateListing
         v-model="openNewListingDialog"
+        :listableNFTs="listableNFTs"
       />
     </div>
     <div v-else class="column items-center">
@@ -108,7 +111,8 @@ import ListingsColumns from '../Columns/ListingsColumns.vue';
 import ListingsRows from '../Rows/ListingsRows.vue';
 import ListingNew from '../Popups/New Listing/ListingNew.vue';
 import { useNFTStore } from 'src/stores/nft-store';
-import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { TokenIdentifier, TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
+import { ReturnMissingNFTDetails } from '../orders.requests';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -150,7 +154,7 @@ export default defineComponent({
       enableListingDialog: false,
 
       singleListing: {} as ListingsResponse,
-      listableNFTs: [] as TokenIdentifier[],
+      listableNFTs: [] as TokenWithBrandImage[],
 
       errorType: '',
       errorTitle: '',
@@ -164,9 +168,11 @@ export default defineComponent({
       handler: async function (sortKey) {
         this.store.setListingSortKey(sortKey);
         if (!this.store.listingBrandFilterStatus) {
-          await this.FetchListings(sortKey, '');  
+          await this.FetchListings(sortKey, '');
+          this.loadingRequest = true;
         } else {
           await this.FetchListings(sortKey, this.listingBrandFilter);
+          this.loadingRequest = true;
         }
         this.loadingRequest = true
       }
@@ -184,7 +190,8 @@ export default defineComponent({
     if (listingsRequestStatus == false) {
       await this.RefetchNFTs();
       await this.FetchListings('', '');
-      this.SetListableNFTs();
+      await this.SetListableNFTs();
+      this.loadingRequest = true;
     } else {
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
@@ -203,7 +210,6 @@ export default defineComponent({
         this.listings = this.store.getListings;
         this.$emit('listingsAmount', this.listings.length);
         this.CheckForEmptyRequest();
-        this.loadingRequest = true
       }
     },
     OpenDeleteDialog(listing: ListingsResponse) {
@@ -251,7 +257,7 @@ export default defineComponent({
       this.nftStore.ownedNFTs = [] as TokenIdentifier[];
       await this.nftStore.fetchNFTs(this.userStore.walletAddress);
     },
-    SetListableNFTs() {
+    async SetListableNFTs() {
       const currentListings = this.listings;
       const ownedNFTs = this.nftStore.ownedNFTs;
 
@@ -277,9 +283,14 @@ export default defineComponent({
         });
 
         if (ownedNFTsMap.size > 0) {
-          this.listableNFTs = Array.from(ownedNFTsMap.values());
+          const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
+          this.listableNFTs = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
+          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
+          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
         }
       }
+      // console.log('Listable NFTs Set', this.listableNFTs)
     }
   }
 });
