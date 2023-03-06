@@ -128,6 +128,14 @@
 .id-mobile {
 	display: none;
 }
+
+@media screen and (min-width: 1512px) {
+	.my-wallet-container {
+		margin: 0 auto;
+		max-width: 785px;
+	}
+}
+
 @media screen and (max-width: 570px) {
 	.wallet-id {
 		display: none;
