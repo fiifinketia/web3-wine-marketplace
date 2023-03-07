@@ -114,18 +114,31 @@
 			:style="(showConnectWallet || showMyWallet) && { 'z-index': '-1' }"
 		>
 			<q-toolbar class="row justify-between items-center">
-				<div
-					class="nav-bar-container-left"
-					@click="
-						{
-						}
-					"
-				>
+				<div class="nav-bar-container-left row items-center">
 					<q-img
+						v-if="$q.screen.width > 600"
 						class="logo"
 						src="../../public/images/WiV-logo.svg"
 						@click="$router.push('/')"
 					/>
+					<span 
+						v-else-if="$router.currentRoute.value.path === '/orders'"
+						class="logo-replacement-text"
+					>
+						Profile
+					</span>
+					<span 
+						v-else-if="$router.currentRoute.value.path === '/marketplace'"
+						class="logo-replacement-text"
+					>
+						Marketplace
+					</span>
+					<span 
+						v-else-if="$router.currentRoute.value.path === '/favorites'"
+						class="logo-replacement-text"
+					>
+						Favorites
+					</span>
 				</div>
 				<div class="nav-bar-container-center row items-center">
 					<q-btn-dropdown

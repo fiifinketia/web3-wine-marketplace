@@ -177,6 +177,13 @@ body {
 	cursor: pointer;
 }
 
+.logo-replacement-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 18px;
+	color: #3586FF;
+	height: 22px;
+}
+
 @media screen and (max-width: 992px) {
 	.nav-bar-container-center {
 		gap: 2rem;

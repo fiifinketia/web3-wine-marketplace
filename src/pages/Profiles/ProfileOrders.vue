@@ -3,8 +3,9 @@
 		<div>
 			<section class="q-gutter-y-md">
 				<q-tabs
+					v-if="$q.screen.width > 600"
 					v-model="tab"
-					class="text-grey hidden-a-599 profile-tabs"
+					class="text-grey profile-tabs"
 					active-color="primary"
 					indicator-color="primary"
 					align="justify"
@@ -16,8 +17,9 @@
 					<q-tab name="transactions" label="Trading History" />
 				</q-tabs>
 				<q-tabs
+					v-else
 					v-model="tab"
-					class="row justify-between items-center text-grey hidden-b-599 q-py-sm q-px-md bg-gradient_blue-green"
+					class="row justify-between items-center text-grey q-py-sm q-px-md bg-gradient_blue-green"
 					indicator-color="primary"
 					no-caps
 				>
