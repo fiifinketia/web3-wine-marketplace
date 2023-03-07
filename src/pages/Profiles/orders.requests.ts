@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { TokenIdentifier, TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
+import { TokenIdentifier, ListableToken } from 'src/shared/models/entities/NFT.model';
 import { IncomingOffersResponse, ListingsResponse, OrdersResponse, OutgoingOffersResponse, TransactionResponse } from './models/response.models';
 
 async function ReturnListings(walletAddress: string, sortKey: string, brandFilter: string) : Promise<ListingsResponse[]> {
@@ -37,9 +37,9 @@ async function ReturnTransactions(walletAddress: string, sortKey: string, brandF
 }
 
 async function ReturnMissingNFTDetails(ownedTokens: TokenIdentifier[]) {
-  let updatedOwnedNFTs: TokenWithBrandImage[] = [];
+  let updatedOwnedNFTs: ListableToken[] = [];
   const url = <string> process.env.RETRIEVE_MISSING_DETAILS;
-  await axios.post(url, ownedTokens).then((f: AxiosResponse<TokenWithBrandImage[]>) => updatedOwnedNFTs = f.data);
+  await axios.post(url, ownedTokens).then((f: AxiosResponse<ListableToken[]>) => updatedOwnedNFTs = f.data);
   return updatedOwnedNFTs;
 }
 

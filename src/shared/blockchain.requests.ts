@@ -20,7 +20,7 @@ async function FetchOwnedNFTs (walletAddress: string) {
       FinalERC721Map = ERC721Map;
     })
   }
-  ownedTokens = [...Array.from(FinalERC721Map.values()), ...Array.from(FinalERC1155Map.values())];
+  ownedTokens = [...Array.from(FinalERC721Map.values())];
   return ownedTokens;
 }
 

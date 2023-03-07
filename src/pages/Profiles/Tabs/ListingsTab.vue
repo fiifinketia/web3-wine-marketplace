@@ -63,6 +63,7 @@
         :network="singleListing.network"
         :smartContractAddress="singleListing.contractAddress"
         :tokenID="singleListing.identifierOrCriteria"
+        :isEdit="true"
         @listing-edit-close="openEditDialog = false"
         @remove-listing="(val) => RemoveRow(val)"
         @listing-error-dialog="HandleError"
@@ -83,6 +84,7 @@
       <CreateListing
         v-model="openNewListingDialog"
         :listableNFTs="listableNFTs"
+        @listable-nft-listed="(listed) => RemoveListableNFT(listed)"
       />
     </div>
     <div v-else class="column items-center">
@@ -111,7 +113,7 @@ import ListingsColumns from '../Columns/ListingsColumns.vue';
 import ListingsRows from '../Rows/ListingsRows.vue';
 import ListingNew from '../Popups/New Listing/ListingNew.vue';
 import { useNFTStore } from 'src/stores/nft-store';
-import { TokenIdentifier, TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
+import { TokenIdentifier, ListableToken } from 'src/shared/models/entities/NFT.model';
 import { ReturnMissingNFTDetails } from '../orders.requests';
 
 setCssVar('custom', '#5e97ec45');
@@ -154,7 +156,7 @@ export default defineComponent({
       enableListingDialog: false,
 
       singleListing: {} as ListingsResponse,
-      listableNFTs: [] as TokenWithBrandImage[],
+      listableNFTs: [] as ListableToken[],
 
       errorType: '',
       errorTitle: '',
@@ -291,6 +293,14 @@ export default defineComponent({
         }
       }
       // console.log('Listable NFTs Set', this.listableNFTs)
+    },
+    RemoveListableNFT(listed: ListableToken) {
+      const listedIndex = this.listableNFTs.findIndex((nft => 
+				nft.contractAddress == listed.contractAddress && 
+				nft.identifierOrCriteria == listed.identifierOrCriteria &&
+				nft.network == listed.network
+			))
+      this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
     }
   }
 });

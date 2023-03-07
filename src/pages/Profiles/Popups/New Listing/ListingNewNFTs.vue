@@ -16,28 +16,66 @@
       class="new-list-card-container"
     >
       <q-card flat>
-        <img
-          :src="token.image"
-          class="new-list-card-image"
-        />
-        <div
-          class="q-pb-sm new-list-card-brand column justify-center"
-          style="text-align: left"
+        <q-btn
+          :disable="!!token.listingPrice"
+          @click="OpenListingDialog(token)"
+          flat
+          unelevated
+          dense
+          :ripple="false"
+          no-caps
+          class="q-pa-none list-btn btn--no-hover"
+          align="left"
         >
-          <span class="new-list-brand-text">
-            {{ truncateText(token.brand) }}
-          </span>
-        </div>
+          <div class="new-list-card-image">
+            <img 
+              :src="token.image"
+              class="full-width"
+              :style="!!token.listingPrice ? 'filter: brightness(0.5);' : ''"
+            />
+            <img 
+              v-if="!!token.listingPrice"
+              src="../../../../assets/listing-process.svg"
+              class="new-list-card-process-logo"
+            />
+          </div>
+          <div
+            class="q-pb-sm new-list-card-brand column justify-center"
+            style="text-align: left"
+          >
+            <span class="new-list-brand-text">
+              {{ truncateText(token.brand) }}
+            </span>
+          </div>
+        </q-btn>
         <div class="new-list-history-container row justify-between items-center q-px-sm">
-          <span class="new-list-history-text"> Price history </span>
+          <span v-if="!token.listingPrice" class="new-list-history-text"> Price history </span>
+          <div v-else class="row items-center q-gutter-x-xs">
+            <q-img
+              src="../../../../assets/processing.svg" 
+              :style="$q.screen.width > 350 ? 'height: 34px; width: 23px' : 'height: 15px; width: 16px'"  
+            />
+            <span class="new-list-history-text"> Loading: </span>
+          </div>
           <q-btn
+            v-if="!token.listingPrice"
             unelevated
             flat
             dense
+            :ripple="false"
             class="open-link btn--no-hover"
           >
             <img src="../../../../assets/button-right.svg" />
           </q-btn>
+          <div v-else class="row items-center q-gutter-x-xs">
+            <q-img
+              src="../../../../assets/icons/currencies/USDC-Icon.svg"
+              :style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
+            />
+            <span class="new-list-price"> 
+              {{ token.listingPrice }}
+            </span>
+          </div>
         </div>
       </q-card>
     </div>
@@ -45,12 +83,12 @@
 </template>
 
 <script lang="ts">
-import { TokenWithBrandImage } from "src/shared/models/entities/NFT.model";
+import { ListableToken } from "src/shared/models/entities/NFT.model";
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   props: {
-    listableNFTs: { type: [] as PropType<TokenWithBrandImage[]>, required: true }
+    listableNFTs: { type: [] as PropType<ListableToken[]>, required: true }
   },
   methods: {
     truncateText(text: string) {
@@ -67,11 +105,20 @@ export default defineComponent({
 					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
 				} else return text
 			}
-		}
+		},
+    OpenListingDialog(token: ListableToken) {
+      // console.log(token);
+      this.$emit('open-listing-dialog', token);
+    }
   }
 })
 </script>
 
-<style>
-
+<style scoped>
+:deep(.list-btn.btn--no-hover .q-focus-helper) {
+	display: none;
+}
+:deep(.open-link.btn--no-hover .q-focus-helper) {
+	display: none;
+}
 </style>

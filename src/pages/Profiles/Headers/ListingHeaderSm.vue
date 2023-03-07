@@ -90,7 +90,7 @@
 import { defineComponent, PropType } from 'vue';
 import { ordersStore } from 'src/stores/orders-store';
 import 'src/css/Profile/shared.css';
-import { TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
+import { ListableToken } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
   props: {
@@ -107,7 +107,7 @@ export default defineComponent({
       required: true
     },
     listableNFTs: {
-      type: [] as PropType<TokenWithBrandImage[]>,
+      type: [] as PropType<ListableToken[]>,
       default: []
     }
   },

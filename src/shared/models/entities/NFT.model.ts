@@ -4,12 +4,13 @@ interface TokenIdentifier {
   readonly network: string;
 }
 
-interface TokenWithBrandImage extends TokenIdentifier {
+interface ListableToken extends TokenIdentifier {
   image: string;
   brand: string;
+  listingPrice?: string;
 }
 
 export {
   TokenIdentifier,
-  TokenWithBrandImage
+  ListableToken
 }

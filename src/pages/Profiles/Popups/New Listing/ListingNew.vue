@@ -32,6 +32,25 @@
       <NewListingNFTs 
         class="scroll"
         :listableNFTs="listableNFTs"
+        @open-listing-dialog="(token) => OpenListingDialog(token)"
+      />
+      <NewListingDialog 
+        v-model="openListingDialog"
+        :brand="brand"
+        :image="image"
+        :smartContractAddress="smartContractAddress"
+        :network="network"
+        :tokenID="tokenID"
+        :isEdit="false"
+        @listing-error-dialog="HandleError"
+        @listing-edit-close="openListingDialog = false"
+        @listable-nft-listed="(listed) => RemoveListableNFT(listed)"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :errorType="errorType"
+        :errorTitle="errorTitle"
+        :errorMessage="errorMessage"
       />
     </q-card>
   </q-dialog>
@@ -42,15 +61,58 @@ import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/newListing.css';
 import ListingNewHeader from './ListingNewHeader.vue';
 import ListingNewNFTs from './ListingNewNFTs.vue';
-import { TokenWithBrandImage } from 'src/shared/models/entities/NFT.model';
+import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import ListingEdit from '../ListingEdit.vue';
+import ProfileErrors from '../ProfileErrors.vue';
 
 export default defineComponent({
   components: {
     NewListingHeader: ListingNewHeader,
-    NewListingNFTs: ListingNewNFTs
+    NewListingNFTs: ListingNewNFTs,
+    NewListingDialog: ListingEdit,
+    ErrorDialog: ProfileErrors
   },
   props: {
-    listableNFTs: { type: [] as PropType<TokenWithBrandImage[]>, default: [] }
+    listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] }
+  },
+  data () {
+    return {
+      openListingDialog: false,
+      image: '',
+      brand: '',
+      smartContractAddress: '',
+      network: '',
+      tokenID: '',
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+      openErrorDialog: false
+    }
+  },
+  methods: {
+    OpenListingDialog(token: ListableToken) {
+      this.image = token.image;
+      this.brand = token.brand;
+      this.smartContractAddress = token.contractAddress;
+      this.network = token.network;
+      this.tokenID = token.identifierOrCriteria;
+      this.openListingDialog = true;
+    },
+    HandleError(err: {
+      errorType: string,
+      errorTitle: string,
+      errorMessage: string
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => { this.openErrorDialog = false }, 2000);
+    },
+    RemoveListableNFT(listed: ListableToken) {
+      this.$emit('listable-nft-listed', listed);
+    }
   }
 })
 </script>

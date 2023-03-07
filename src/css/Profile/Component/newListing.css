@@ -32,10 +32,14 @@
   opacity: 0.6;
 }
 
-.new-list-available-num {
+.new-list-available-num, .new-list-price {
   font-family: 'ProximaNova-Bold';
   font-size: 20px;
   color: #212131;
+}
+
+.new-list-price { 
+  height: 28px;
 }
 
 .new-list-card-brand {
@@ -60,6 +64,7 @@
   font-family: 'ProximaNova-Bold';
   color: #3586FF;
   font-size: 18px;
+  height: 25px;
 }
 
 .new-list-searchbox .q-field__control {
@@ -81,7 +86,20 @@
 }
 
 .new-list-card-image {
+  position: relative;
   border-radius: 6px !important;
+}
+
+.list-btn.disabled {
+  opacity: 1 !important;
+}
+
+.new-list-card-process-logo {
+  position: absolute;   
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
 }
 
 @media screen and (min-width: 1200px) {
@@ -101,7 +119,7 @@
 
 @media screen and (min-width: 600px) and (max-width: 1024px) {
   .new-list-card-container:nth-child(-n+3) {
-    margin-top: -3px;
+    margin-top: 1px;
   }
 }
 
@@ -113,7 +131,7 @@
 
 @media screen and (max-width: 600px) {
   .new-list-card-container {
-    width: 48%;
+    width: 45%;
   }
   .new-list-brand-text {
     font-size: 16px;
@@ -125,6 +143,6 @@
 
 @media screen and (min-width: 0px) and (max-width: 599px) {
   .new-list-card-container:nth-child(-n+2) {
-    margin-top: -4px;
+    margin-top: 2px;
   }
 }
