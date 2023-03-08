@@ -98,20 +98,21 @@
 </template>
 
 <script lang="ts">
-import { ordersStore } from 'src/stores/orders-store';
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { OutgoingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 export default defineComponent({
+  props: {
+    outgoingOffers: {
+      type: [] as PropType<OutgoingOffersResponse[]>,
+      default: []
+    }
+  },
   components: {
     NFTDialog: NFTDetails
   },
   data() {
-    const store = ordersStore();
     return {
-      store,
-      outgoingOffers: store.outgoingOffers,
-
       showNFTPopup: false,
       image: '',
       brand: '',

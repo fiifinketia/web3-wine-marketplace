@@ -40,6 +40,7 @@
         <ListingsColumns />
         <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
         <ListingsRows 
+          :listings="listings"
           @delete-listing="(listing) => OpenDeleteDialog(listing)"
           @edit-listing="(listing) => OpenEditDialog(listing)"
         />
@@ -51,6 +52,7 @@
       >
         <ListingsColumns />
         <ListingsRows
+          :listings="listings"
           @delete-listing="(listing) => OpenDeleteDialog(listing)"
           @edit-listing="(listing) => OpenEditDialog(listing)"
         />

@@ -36,6 +36,7 @@
         <IncomingColumns />
         <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
         <IncomingRows 
+          :incomingOffers="incomingOffers"
           @accept-offer="(req) => OpenConfirmDialog(req.orderHash, req.brand, req.image, req.token)"
         />
       </div>
@@ -46,6 +47,7 @@
       >
         <IncomingColumns />
         <IncomingRows 
+          :incomingOffers="incomingOffers"
           @accept-offer="(req) => OpenConfirmDialog(req.orderHash, req.brand, req.image, req.token)"
         />
       </div>

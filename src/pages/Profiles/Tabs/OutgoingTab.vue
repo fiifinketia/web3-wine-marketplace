@@ -36,6 +36,7 @@
         <OutgoingColumns />
         <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
         <OutgoingRows 
+          :outgoingOffers="outgoingOffers"
           @delete-offer="(offer) => OpenDeleteDialog(offer)"
           @edit-offer="(offer) => OpenEditDialog(offer)"
         />
@@ -47,6 +48,7 @@
       >
         <OutgoingColumns />
         <OutgoingRows 
+          :outgoingOffers="outgoingOffers"
           @delete-offer="(offer) => OpenDeleteDialog(offer)"
           @edit-offer="(offer) => OpenEditDialog(offer)"
         />

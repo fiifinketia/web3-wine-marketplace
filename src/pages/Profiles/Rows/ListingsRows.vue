@@ -107,19 +107,20 @@ import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
-import { ordersStore } from 'src/stores/orders-store';
 import NFTDetails from '../Popups/NFTDetails.vue';
 
 export default defineComponent({
+  props: {
+    listings: {
+      type: [] as PropType<ListingsResponse[]>,
+      default: []
+    }
+  },
   components: {
     NFTDialog: NFTDetails
   },
   data() {
-    const store = ordersStore();
     return {
-      store,
-      listings: store.listings,
-
       showNFTPopup: false,
       image: '',
       brand: '',
