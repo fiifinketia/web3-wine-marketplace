@@ -377,7 +377,7 @@
 						</div>
 						<div class="flex row justify-between">
 							<div class="starting-investment-text-bold">Risk level</div>
-							<div class="starting-investment-number">
+							<div class="starting-investment-number text-capitalize">
 								{{ riskType }}
 							</div>
 						</div>

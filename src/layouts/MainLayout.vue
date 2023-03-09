@@ -314,7 +314,7 @@
 														clickable
 													>
 														<q-item-section>
-															<q-item-label>conctact us</q-item-label>
+															<q-item-label>contact us</q-item-label>
 														</q-item-section>
 													</q-item>
 
