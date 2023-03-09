@@ -180,16 +180,16 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="row items-center">
+					<div v-if="$q.screen.width > 768" class="row items-center">
 						<img
 							v-if="!!walletAddress"
-							class="icons q-mx-xs"
+							class="cursor-pointer	icons q-mx-xs"
 							src="../../public/images/favs-icon.svg"
 							@click="$router.push('/favorites')"
 						/>
 						<img
 							v-if="!!walletAddress"
-							class="icons q-mx-xs"
+							class="cursor-pointer	icons q-mx-xs"
 							src="../../public/images/bell-icon.svg"
 							clickable
 						/>
@@ -314,7 +314,7 @@
 														clickable
 													>
 														<q-item-section>
-															<q-item-label>conctact us</q-item-label>
+															<q-item-label>contact us</q-item-label>
 														</q-item-section>
 													</q-item>
 

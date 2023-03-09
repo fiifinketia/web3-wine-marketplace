@@ -32,12 +32,33 @@
 		</div>
 		<div class="burger-bolder-text">stats</div>
 		<div class="burger-bolder-text">storefront</div>
+		<div v-if="userStore.walletAddress" class="burger-icons row justify-between">
+      <img
+        class="icons"
+        src="../../../public/images/favs-icon.svg"
+        alt="favorite-icon"
+				@click="$router.push('/favorites'); $emit('closeBurgerMenu')"
+      />
+      <img
+        class="icons"
+        src="../../../public/images/bell-icon.svg"
+        alt="bell-icon"
+      />
+      <img
+        class="icons"
+        src="../../../public/images/profile-icon.svg"
+        alt="profile-icon"
+        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
+      />
+    </div>
 		<div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
 		<div class="burger-bolder-text">digital wine cellar</div>
 		<div>settings</div>
 		<div>contact us</div>
 		<div>faqs</div>
 		<div v-if="isConnected" @click="Logout()">log out</div>
+		<div>&nbsp;</div>
+		<div>&nbsp;</div>
 	</div>
 </template>
 
