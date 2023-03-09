@@ -266,6 +266,7 @@ export const useListableFilters = defineStore('listableFilters', {
         ...(!!lwin ? { lwin } : {}),
         ...(!!heritage ? { heritage } : {}),
       }
+      delete Object.assign(filters, {case: filters.wineCase }).wineCase;
       this.filterBasedOnKey(filters, tokensToFilter)
     },
     clearAllFilters(originalListOfTokens: ListableToken[]) {
