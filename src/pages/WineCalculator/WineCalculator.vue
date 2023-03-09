@@ -184,7 +184,9 @@
 						</div>
 					</div>
 					<div class="full-width flex justify-end q-pr-sm q-pt-lg help-section">
-						Help
+						<q-btn flat dense>
+							Help
+						</q-btn>
 					</div>
 				</div>
 				<div
@@ -347,6 +349,7 @@
 									<q-btn
 										class="continue-button full-width"
 										no-caps
+										unelevated
 										@click="openCalculationPage()"
 									>
 										<div class="continue-text">Continue</div>
@@ -400,7 +403,6 @@
 										v-model="investmentAge"
 										thumb-path="0"
 										snap
-										:disable="showPrice"
 										:inner-min="3"
 										:step="1"
 										:min="0"
@@ -411,7 +413,7 @@
 							</div>
 						</div>
 						<div
-							class="full-width"
+							class="row justify-center full-width"
 							:style="[
 								calculationFinished
 									? { paddingTop: '231px' }
@@ -422,20 +424,40 @@
 								v-if="calculationFinished === false"
 								class="continue-button full-width"
 								no-caps
+								unelevated
 								@click="calculateFinalWorth(riskType)"
 							>
 								<div class="continue-text">Calculate</div>
 							</q-btn>
-							<q-btn
+							<q-btn-group
 								v-else
-								class="calculate-again-button full-width"
-								color="primary"
-								no-caps
+								unelevated
+								stretch
 								outline
-								@click="resetWindow()"
+								rounded
+								class="calculate-again-button full-width"
 							>
-								Calculate again
-							</q-btn>
+								<q-btn
+									class="full-width"
+									color="primary"
+									no-caps
+									outline
+									rounded
+									@click="resetWindow()"
+								>
+									Go Back
+								</q-btn>
+								<q-btn
+									class="full-width"
+									color="primary"
+									no-caps
+									outline
+									rounded
+									@click="calculateFinalWorth(riskType)"
+								>
+									Re-calculate
+								</q-btn>
+							</q-btn-group>
 						</div>
 						<div
 							v-if="calculationFinished === false"
@@ -444,7 +466,7 @@
 						>
 							<img src="../../../public/images/back.svg" class="q-pr-xs" /> Back
 						</div>
-						<q-btn v-else class="continue-button full-width q-mt-md" no-caps>
+						<q-btn v-else class="continue-button full-width q-mt-md" no-caps unelevated>
 							<div class="continue-text">Check the wines</div>
 						</q-btn>
 					</div>

@@ -430,8 +430,7 @@
 	line-height: 24px;
 	text-align: center;
 	background-clip: text;
-	border-radius: 6px;
-	padding: 0.9rem;
+	border-radius: 6px !important;
 	cursor: pointer;
 }
 

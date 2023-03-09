@@ -8,47 +8,47 @@
 		</div>
 		<div class="footer-wrapper">
 			<div class="footer-item-wrapper">
-				<div class="footer-bold" @click="$router.push('/marketplace?tab=nfts')">NFTs</div>
-				<div class="item-text q-pt-sm" @click="$router.push('/marketplace?tab=releases')">New Releases</div>
-				<div class="item-text q-pt-sm" @click="$router.push('/marketplace?tab=recommended')">Recommended</div>
-				<div class="item-title q-pt-md">Favourites</div>
-				<div class="item-title q-pt-md"  @click="$router.push('/favorites')">Stats</div>
-				<div class="item-text q-pt-sm">Wine Statisctics</div>
+				<router-link class="footer-bold" to="/marketplace?tab=nfts">NFTs</router-link>
+				<router-link class="item-text footer-normal q-pt-sm" to="/marketplace?tab=releases">New Releases</router-link>
+				<router-link class="item-text footer-normal q-pt-sm" to="/marketplace?tab=recommended">Recommended</router-link>
+				<router-link class="item-title footer-normal q-pt-md" to="/favorites">Favourites</router-link>
+				<router-link class="item-title footer-normal q-pt-md"  to="#">Stats</router-link>
+				<router-link class="item-text footer-normal q-pt-sm" to="#">Wine Statistics</router-link>
 
 				<div class="first-div-appear">
 					<div class="footer-bold">Storefront</div>
-					<div class="item-text q-pt-sm">New Commings</div>
-					<div class="item-text q-pt-sm">Recommended</div>
+					<div class="item-text footer-normal q-pt-sm">New Commings</div>
+					<div class="item-text footer-normal q-pt-sm">Recommended</div>
 				</div>
 
 				<div class="footer-item-wrapper fourth-400-item">
-					<div class="item-title">Contact info:</div>
-					<div class="item-text q-pt-sm">info@wiv.io</div>
-					<div class="item-text q-pt-sm">+0 000 000 0000</div>
+					<div class="item-title footer-normal">Contact info:</div>
+					<div class="item-text footer-normal q-pt-sm">info@wiv.io</div>
+					<div class="item-text footer-normal q-pt-sm">+0 000 000 0000</div>
 				</div>
 			</div>
 			<div class="footer-item-wrapper first-item">
-				<div class="item-title">Storefront</div>
-				<div class="item-text q-pt-sm">New Commings</div>
-				<div class="item-text q-pt-sm">Recommended</div>
+				<div class="item-title footer-normal">Storefront</div>
+				<div class="item-text footer-normal q-pt-sm">New Commings</div>
+				<div class="item-text footer-normal q-pt-sm">Recommended</div>
 			</div>
 			<div class="footer-item-wrapper">
-				<div class="item-title" @click="$router.push('/orders')">Profile</div>
-				<div class="item-text q-pt-sm">Digital Wine Cellar</div>
-				<div class="item-text q-pt-sm" @click="$router.push('/orders?tab=incoming')">Offers</div>
-				<div class="item-text q-pt-sm" @click="$router.push('/orders?tab=transactions')">Trading History</div>
-				<div class="item-text q-pt-sm">Notifications</div>
-				<div class="item-title q-pt-md">Settings</div>
+				<router-link class="item-title footer-normal" to="/orders">Profile</router-link>
+				<router-link to="" class="item-text footer-normal q-pt-sm">Digital Wine Cellar</router-link>
+				<router-link class="item-text footer-normal q-pt-sm" to="/orders?tab=incoming">Offers</router-link>
+				<router-link class="item-text footer-normal q-pt-sm" to="/orders?tab=transactions">Trading History</router-link>
+				<router-link to="" class="item-text footer-normal q-pt-sm">Notifications</router-link>
+				<router-link to="" class="item-title footer-normal q-pt-md">Settings</router-link>
 
 				<div class="footer-item-wrapper third-div-wrapper">
-					<div class="item-title">Help</div>
-					<div class="item-text q-pt-sm">Contract us</div>
-					<div class="item-text q-pt-sm">FAQs</div>
-					<div class="item-text q-pt-sm">Privacy Policy</div>
-					<div class="item-text q-pt-sm">Terms and Conditions</div>
+					<div class="item-title footer-normal">Help</div>
+					<div class="item-text footer-normal q-pt-sm">Contract us</div>
+					<div class="item-text footer-normal q-pt-sm">FAQs</div>
+					<div class="item-text footer-normal q-pt-sm">Privacy Policy</div>
+					<div class="item-text footer-normal q-pt-sm">Terms and Conditions</div>
 				</div>
 				<div class="footer-item-wrapper fifth-item-400">
-					<div class="item-title">Integrations</div>
+					<div class="item-title footer-normal">Integrations</div>
 					<div class="row q-pt-md">
 						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
 							<q-img src="../../../../public/images/discord.svg" width="23px" />
@@ -66,20 +66,20 @@
 				</div>
 			</div>
 			<div class="footer-item-wrapper third-item">
-				<div class="item-title">Help</div>
-				<div class="item-text q-pt-sm">Contact us</div>
-				<div class="item-text q-pt-sm">FAQs</div>
-				<div class="item-text q-pt-sm">Privacy Policy</div>
-				<div class="item-text q-pt-sm">Terms and Conditions</div>
+				<div class="item-title footer-normal">Help</div>
+				<div class="item-text footer-normal q-pt-sm">Contact us</div>
+				<div class="item-text footer-normal q-pt-sm">FAQs</div>
+				<div class="item-text footer-normal q-pt-sm">Privacy Policy</div>
+				<div class="item-text footer-normal q-pt-sm">Terms and Conditions</div>
 			</div>
 			<div class="footer-item-wrapper">
 				<div class="footer-nft-400-disappear">
-					<div class="item-title">Contract info:</div>
-					<div class="item-text q-pt-sm">info@wiv.io</div>
-					<div class="item-text q-pt-sm">+0 000 000 0000</div>
+					<div class="item-title footer-normal">Contract info:</div>
+					<div class="item-text footer-normal q-pt-sm">info@wiv.io</div>
+					<div class="item-text footer-normal q-pt-sm">+0 000 000 0000</div>
 				</div>
 				<div class="footer-item-wrapper fifth-div-wrapper">
-					<div class="item-title">Integrations</div>
+					<div class="item-title footer-normal">Integrations</div>
 					<div class="row q-pt-md">
 						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
 							<q-img src="../../../../public/images/discord.svg" width="23px" />
@@ -97,7 +97,7 @@
 				</div>
 			</div>
 			<div class="footer-item-wrapper fifth-item">
-				<div class="item-title">Integrations</div>
+				<div class="item-title footer-normal">Integrations</div>
 				<div class="row q-pt-md">
 						<a href="https://discord.gg/znkRDJDXvr" target="_blank" class="q-pr-sm">
 							<q-img src="../../../../public/images/discord.svg" width="23px" />
