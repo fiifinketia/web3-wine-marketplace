@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { FilterOptionsResponse } from 'src/pages/Marketplace-Main/models/Response.models/FilterOptions.response';
+import { ListableToken } from 'src/shared/models/entities/NFT.model';
 
 export const useListableFilters = defineStore('listableFilters', {
 	state: () => ({
@@ -15,44 +15,46 @@ export const useListableFilters = defineStore('listableFilters', {
 			},
 		],
 
-    type: [''],
+    type: [] as string[],
     typeOptions: [] as { label: string; value: string }[],
 
-		brand: [''],
+		brand: [] as string[],
 		brandOptions: [] as { label: string; value: string }[],
 
-		origin: [''],
+		origin: [] as string[],
 		originOptions: [] as { label: string; value: string }[],
 
-		producer: [''],
+		producer: [] as string[],
 		producerOptions: [] as { label: string; value: string }[],
 
-		country: [''],
+		country: [] as string[],
 		countryOptions: [] as { label: string; value: string }[],
 
-		region: [''],
+		region: [] as string[],
 		regionOptions: [] as { label: string; value: string }[],
 
-		appellation: [''],
+		appellation: [] as string[],
 		appellationOptions: [] as { label: string; value: string }[],
 
-		wineCase: [''],
+		wineCase: [] as string[],
 		wineCaseOptions: [] as { label: string; value: string }[],
 
-		heritage: [''],
+		heritage: [] as string[],
 		heritageOptions: [] as { label: string; value: string }[],
 
-		format: [''],
+		format: [] as string[],
 		formatOptions: [] as { label: string; value: string }[],
 
-		investmentGrade: [''],
+		investmentGrade: [] as string[],
 		investmentGradeOptions: [] as { label: string; value: string }[],
 
-		LWIN: [''],
+		LWIN: [] as string[],
 		LWINOptions: [] as { label: string; value: string }[],
 
 		filterMode: 'automatic',
-		filterKey: 0
+		filterKey: 0,
+
+    filteredListableTokens: [] as ListableToken[]
 	}),
 	getters: {
 		getType: (state) => state.type,
@@ -81,6 +83,9 @@ export const useListableFilters = defineStore('listableFilters', {
 				...state.investmentGrade
 			];
       return filters.filter((i) => !!i);
+    },
+    getFilteredListableTokens: (state) => {
+      return state.filteredListableTokens
     }
 	},
 	actions: {
@@ -145,84 +150,140 @@ export const useListableFilters = defineStore('listableFilters', {
 			this.investmentGrade = [];
 			this.sortedAtoZ = '';
 		},
-		setAllFilters(options: FilterOptionsResponse) {
-			for (const key in options) {
-				const value = options[key];
-				switch (key) {
-					case 'appellation':
-						value.forEach((f) => {
-							if (!this.appellationOptions.find((a) => a.value === f))
-								this.appellationOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'brand':
-						value.forEach((f) => {
-							if (!this.brandOptions.find((a) => a.value === f))
-								this.brandOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'case':
-						value.forEach((f) => {
-							if (!this.wineCaseOptions.find((a) => a.value === f))
-								this.wineCaseOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'country':
-						value.forEach((f) => {
-							if (!this.countryOptions.find((a) => a.value === f))
-								this.countryOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'format':
-						value.forEach((f) => {
-							if (!this.formatOptions.find((a) => a.value === f))
-								this.formatOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'heritage':
-						value.forEach((f) => {
-							if (!this.heritageOptions.find((a) => a.value === f))
-								this.heritageOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'investmentGrade':
-						value.forEach((f) => {
-							if (!this.investmentGradeOptions.find((a) => a.value === f))
-								this.investmentGradeOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'lwin':
-						value.forEach((f) => {
-							if (!this.LWINOptions.find((a) => a.value === f))
-								this.LWINOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'origin':
-						value.forEach((f) => {
-							if (!this.originOptions.find((a) => a.value === f))
-								this.originOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'producer':
-						value.forEach((f) => {
-							if (!this.producerOptions.find((a) => a.value === f))
-								this.producerOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'region':
-						value.forEach((f) => {
-							if (!this.regionOptions.find((a) => a.value === f))
-								this.regionOptions.push({ label: f, value: f });
-						});
-						break;
-					case 'type':
-						value.forEach((f) => {
-							if (!this.typeOptions.find((a) => a.value === f))
-								this.typeOptions.push({ label: f, value: f });
-						});
-						break;
-				}
-			}
+		setAllFilters(options: ListableToken[]) {
+      options.map(f => {
+        if (!this.regionOptions.find((a) => a.value === f.region))
+          this.regionOptions.push(
+            {
+              label: <string> f.region,
+              value: <string> f.region
+            }
+          );
+        if (!this.appellationOptions.find((a) => a.value === f.appellation))
+          this.appellationOptions.push(
+            {
+              label: <string> f.appellation,
+              value: <string> f.appellation
+            }
+          );
+        if (!this.wineCaseOptions.find((a) => a.value === f.case))
+          this.wineCaseOptions.push(
+            {
+              label: <string> f.case,
+              value: <string> f.case
+            }
+          );
+        if (!this.originOptions.find((a) => a.value === f.origin))
+          this.originOptions.push(
+            {
+              label: <string> f.origin,
+              value: <string> f.origin
+            }
+          );
+        if (!this.countryOptions.find((a) => a.value === f.productionCountry))
+          this.countryOptions.push(
+            {
+              label: <string> f.productionCountry,
+              value: <string> f.productionCountry
+            }
+          );
+        if (!this.typeOptions.find((a) => a.value === f.type))
+          this.typeOptions.push(
+            {
+              label: <string> f.type,
+              value: <string> f.type
+            }
+          );
+        if (!this.formatOptions.find((a) => a.value === f.format))
+          this.formatOptions.push(
+            {
+              label: <string> f.format,
+              value: <string> f.format
+            }
+          );
+        if (!this.LWINOptions.find((a) => a.value === f.lwin))
+          this.LWINOptions.push(
+            {
+              label: <string> f.lwin,
+              value: <string> f.lwin
+            }
+          );
+        if (!this.producerOptions.find((a) => a.value === f.producer))
+          this.producerOptions.push(
+            {
+              label: <string> f.producer,
+              value: <string> f.producer
+            }
+          );
+        if (!this.investmentGradeOptions.find((a) => a.value === f.investmentGrade))
+          this.investmentGradeOptions.push(
+            {
+              label: <string> f.investmentGrade,
+              value: <string> f.investmentGrade
+            }
+          );
+        if (!this.heritageOptions.find((a) => a.value === f.heritage))
+          this.heritageOptions.push(
+            {
+              label: <string> f.heritage,
+              value: <string> f.heritage
+            }
+          );
+        if (!this.brandOptions.find((a) => a.value === f.brand))
+          this.brandOptions.push(
+            {
+              label: <string> f.brand,
+              value: <string> f.brand
+            }
+          );
+      })
 		},
+    filterListableTokens(tokensToFilter: ListableToken[]) {
+      const type : null | string[] = this.type.length > 0 ? this.type : null;
+      const brand : null | string[] = this.brand.length > 0 ? this.brand : null;
+      const producer : null | string[] = this.producer.length > 0 ? this.producer : null;
+      const productionCountry : null | string[] = this.country.length > 0 ? this.country : null;
+      const region : null | string[] = this.region.length > 0 ? this.region : null;
+      const origin : null | string[] = this.origin.length > 0 ? this.origin : null;
+      const appellation : null | string[] = this.appellation.length > 0 ? this.appellation : null;
+      const wineCase = this.wineCase.length > 0 ? this.wineCase : null;
+      const format : null | string[] = this.format.length > 0 ? this.format : null;
+      const investmentGrade : null | string[] = this.investmentGrade.length > 0 ? this.investmentGrade : null;
+      const lwin : null | string[] = this.LWIN.length > 0 ? this.LWIN : null;
+      const heritage : null | string[] = this.heritage.length > 0 ? this.heritage : null;
+      
+      const filters = {
+        ...(!!type ? { type } : {}),
+        ...(!!brand ? { brand } : {}),
+        ...(!!producer ? { producer } : {}),
+        ...(!!productionCountry ? { productionCountry } : {}),
+        ...(!!region ? { region } : {}),
+        ...(!!origin ? { origin } : {}),
+        ...(!!appellation ? { appellation } : {}),
+        ...(!!wineCase ? { wineCase } : {}),
+        ...(!!format ? { format } : {}),
+        ...(!!investmentGrade ? { investmentGrade } : {}),
+        ...(!!lwin ? { lwin } : {}),
+        ...(!!heritage ? { heritage } : {}),
+      }
+      this.filterBasedOnKey(filters, tokensToFilter)
+    },
+    clearAllFilters(originalListOfTokens: ListableToken[]) {
+      this.filteredListableTokens = originalListOfTokens;
+    },
+    filterBasedOnKey(filters: any, tokensToFilter: ListableToken[]) {
+      const keys = Object.keys(filters);
+      if (keys.length > 1) {
+        keys.forEach(f => {
+          const key = f as keyof ListableToken;
+          this.filteredListableTokens = this.filteredListableTokens.filter(f => !!filters[key].includes(f[`${key}`]))
+        })
+      } else {
+        keys.forEach(f => {
+          const key = f as keyof ListableToken;
+          this.filteredListableTokens = tokensToFilter.filter(f => !!filters[key].includes(f[`${key}`]))
+        })
+      }
+    }
 	},
 });

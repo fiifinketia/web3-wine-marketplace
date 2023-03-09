@@ -116,6 +116,7 @@
         color="secondary"
         text-color="white"
         icon="app:filter"
+        @click="OpenSidebar()"
       />
     </div>
   </div>

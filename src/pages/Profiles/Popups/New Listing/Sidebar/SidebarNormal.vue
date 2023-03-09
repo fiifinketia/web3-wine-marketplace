@@ -2,11 +2,11 @@
   <q-dialog
     full-height
     seamless
-    transition-show="slide-left"
-    transition-hide="slide-right"
+    transition-show="scale"
+    transition-hide="scale"
     class="list-filter-dialog"
   >
-      <div class="column no-box-shadow q-mr-md">
+      <div class="no-box-shadow">
         <q-scroll-area
           bordered
           class="main-filter-box dark-blue-border q-px-md"
@@ -31,7 +31,7 @@
         <q-card
           flat
           bordered
-          class="main-filter-box hidden-b-1023 dark-blue-border q-mt-md"
+          class="main-filter-box dark-blue-border q-mt-md"
         >
           <q-card-section class="row justify-between q-pa-md">
             <q-btn
@@ -42,7 +42,7 @@
               no-caps
               flat
               dense
-              @click="ClearAllAndApply()"
+              @click="ClearFilters()"
             />
             <div class="row items-center">
               <span
@@ -54,7 +54,7 @@
               <q-btn 
                 v-close-popup
                 :disable="listableFiltersStore.getAllFiltersArray.length == 0"
-                @click="this.ApplyFilter()"
+                @click="ApplyFilter()"
                 class="header-apply"
                 label="Apply"
                 color="primary"
@@ -69,10 +69,15 @@
 
 <script lang="ts">
 import SidebarContents from './SidebarContents.vue';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { useListableFilters } from "src/stores/listable-filters";
+import 'src/css/Marketplace/header.css';
+import { ListableToken } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
+  props: {
+    listableNFTs: { type: [] as PropType<ListableToken[]>, required: true }
+  },
 	components: {
 		SidebarContents: SidebarContents
 	},
@@ -83,11 +88,14 @@ export default defineComponent({
       listableFiltersStore
     }
   },
-  // methods: {
-  //   ApplyFilter() {
-      
-  //   },
-  // }
+  methods: {
+    ApplyFilter() {
+      this.listableFiltersStore.filterListableTokens(this.listableNFTs);
+    },
+    ClearFilters() {
+      this.listableFiltersStore.clearAllFilters(this.listableNFTs);
+    },
+  }
 });
 
 </script>

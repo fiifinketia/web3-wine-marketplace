@@ -25,14 +25,14 @@
           />
         </q-btn>
       </div>
-      <NewListingHeader 
+      <NewListingHeader
         v-if="$q.screen.width > 600"
         :listableNFTs="listableNFTs"
         @open-norm-sidebar="showFilterSidebar = true"
       />
-      <NewListingNFTs 
+      <NewListingNFTs
+        @click="showFilterSidebar = false"
         class="scroll"
-        :listableNFTs="listableNFTs"
         @open-listing-dialog="(token) => OpenListingDialog(token)"
       />
       <NewListingDialog 
@@ -55,6 +55,7 @@
       />
       <SidebarNormal
         v-model="showFilterSidebar"
+        :listableNFTs="listableNFTs"
       />
     </q-card>
   </q-dialog>
@@ -95,7 +96,7 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
 
-      showFilterSidebar: true
+      showFilterSidebar: false
     }
   },
   methods: {

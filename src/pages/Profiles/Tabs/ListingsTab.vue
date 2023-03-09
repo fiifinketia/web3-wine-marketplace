@@ -102,6 +102,7 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { setCssVar } from 'quasar';
 import { ordersStore } from 'src/stores/orders-store';
+import { useListableFilters } from 'src/stores/listable-filters';
 import ListingHeaderLg from '../Headers/ListingHeaderLg.vue';
 import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
@@ -138,10 +139,12 @@ export default defineComponent({
     const nftStore = useNFTStore();
     const store = ordersStore();
     const userStore = useUserStore();
+    const listableFiltersStore = useListableFilters();
     return {
       store,
       userStore,
       nftStore,
+      listableFiltersStore,
 
       listings: store.listings,
       listingSortKey: store.getListingSortKey,
@@ -289,6 +292,8 @@ export default defineComponent({
         if (ownedNFTsMap.size > 0) {
           const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
           this.listableNFTs = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          this.listableFiltersStore.setAllFilters(this.listableNFTs);
+          this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
           // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
           // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
           // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);

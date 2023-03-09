@@ -1,15 +1,15 @@
 <template>
   <div
-    v-if="listableNFTs.length > 0"
+    v-if="getFilteredListableTokens.length > 0"
 		class="row q-mt-md q-pb-md q-px-sm q-gutter-y-md"
-		:class="listableNFTs.length >= 4 && $q.screen.width > 600
-		? 'justify-between': listableNFTs.length == 3 && $q.screen.width > 600
+		:class="getFilteredListableTokens.length >= 4 && $q.screen.width > 600
+		? 'justify-between': getFilteredListableTokens.length == 3 && $q.screen.width > 600
 		? 'justify-evenly' : $q.screen.width > 600
-		? 'justify-start q-gutter-x-md' : listableNFTs.length >= 2
+		? 'justify-start q-gutter-x-md' : getFilteredListableTokens.length >= 2
 		? 'justify-around' : 'justify-start q-ml-xs'"
   >
     <div
-      v-for="token in listableNFTs"
+      v-for="token in getFilteredListableTokens"
       :key="
         token.tokenID + ',' + token.network + ',' + token.smartContractAddress
       "
@@ -83,12 +83,20 @@
 </template>
 
 <script lang="ts">
+import { mapState } from "pinia";
 import { ListableToken } from "src/shared/models/entities/NFT.model";
-import { defineComponent, PropType } from "vue";
+import { useListableFilters } from "src/stores/listable-filters";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  props: {
-    listableNFTs: { type: [] as PropType<ListableToken[]>, required: true }
+  data() {
+    const listableFiltersStore = useListableFilters();
+    return {
+      listableFiltersStore,
+    }
+  },
+  computed: {
+    ...mapState(useListableFilters, ['getFilteredListableTokens'])
   },
   methods: {
     truncateText(text: string) {
