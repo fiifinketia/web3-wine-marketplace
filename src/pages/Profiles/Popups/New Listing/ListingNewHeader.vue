@@ -2,7 +2,7 @@
   <div class="row items-center justify-between full-width" style="flex-wrap: nowrap;" @click="CloseBrandFilter()">
     <div class="row items-center">
       <span class="q-pr-sm new-list-available-text"> Available </span>
-      <span class="new-list-available-num"> {{ listableNFTs.length > 0 ? listableNFTs.length : '0' }} </span>
+      <span class="new-list-available-num"> {{ getFilteredListableTokens.length > 0 ? getFilteredListableTokens.length : '0' }} </span>
     </div>
     <div 
       v-if="$q.screen.width > 1200"
@@ -37,18 +37,19 @@
               align="left"
               :key="brand"
               class="new-list-brandf-box column justify-center q-pa-sm"
-              @click="FilterBrand(brand)"
+              @click="FilterBrand([brand])"
             >
               <span class="new-list-brandf-text"> {{ brand }} </span>
             </q-btn>
           </div>
         </div>
         <q-btn
-          :disable="!newListingBrandFilter"
+          :disable="!listableSearchFilter"
           flat
           unelevated
           dense
           class="profile-primary-btn"
+          @click="FilterBrand(searchFilterResults)"
         >
           GO
         </q-btn>
@@ -58,7 +59,7 @@
           class="q-pa-sm text-weight-bolder text-h6"
           style="vertical-align: middle"
         >
-          ST
+          {{ getAllFiltersArray.length }}
         </span>
         <q-btn
           class="filter-btn btn--no-hover"
@@ -90,11 +91,12 @@
         </template>
       </q-input>
       <q-btn
-        :disable="!newListingBrandFilter"
+        :disable="!listableSearchFilter"
         flat
         unelevated
         dense
         class="profile-primary-btn"
+        @click="FilterBrand(searchFilterResults)"
       >
         GO
       </q-btn>
@@ -107,7 +109,7 @@
         class="q-pa-sm text-weight-bolder text-h6"
         style="vertical-align: middle"
       >
-        ST
+        {{ getAllFiltersArray.length }}
       </span>
       <q-btn
         class="filter-btn btn--no-hover"
@@ -127,6 +129,8 @@ import { defineComponent, PropType } from "vue";
 import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/newListing.css';
 import { ListableToken } from "src/shared/models/entities/NFT.model";
+import { useListableFilters } from "src/stores/listable-filters";
+import { mapState } from "pinia";
 
 export default defineComponent({
   props: {
@@ -136,14 +140,17 @@ export default defineComponent({
     },
   },
   data() {
+    const listableFiltersStore = useListableFilters();
     return {
-      newListingBrandFilter: '',
-
       listableSearchFilter: '',
       searchFilterResults: [] as string[],
+      listableFiltersStore,
 
       filteredNFTs: [] as ListableToken[]
     }
+  },
+  computed: {
+    ...mapState(useListableFilters, ['getFilteredListableTokens', 'getAllFiltersArray'])
   },
   watch: {
     listableSearchFilter: {
@@ -153,7 +160,7 @@ export default defineComponent({
         } else {
           this.searchFilterResults = [
             ...new Set (
-              this.listableNFTs
+              this.getFilteredListableTokens
                 .filter((f) => !!(f.brand.toLowerCase().includes(search.toLowerCase())))
                 .map((f => f.brand))
             )
@@ -163,8 +170,9 @@ export default defineComponent({
     }
   },
   methods: {
-    FilterBrand(brand: string) {
-      console.log(brand);
+    FilterBrand(brand: string[]) {
+      this.listableFiltersStore.filterBrand(brand, this.listableNFTs);
+      this.listableSearchFilter = '';
     },
     CloseBrandFilter() {
       this.searchFilterResults = [];

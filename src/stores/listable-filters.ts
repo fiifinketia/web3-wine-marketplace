@@ -271,20 +271,39 @@ export const useListableFilters = defineStore('listableFilters', {
     },
     clearAllFilters(originalListOfTokens: ListableToken[]) {
       this.filteredListableTokens = originalListOfTokens;
+      this.removeAllFilters();
     },
     filterBasedOnKey(filters: any, tokensToFilter: ListableToken[]) {
       const keys = Object.keys(filters);
+      // If keys are more than one, we filter filtered against itself to mimic an AND to the filters when loop through the key property
       if (keys.length > 1) {
         keys.forEach(f => {
           const key = f as keyof ListableToken;
           this.filteredListableTokens = this.filteredListableTokens.filter(f => !!filters[key].includes(f[`${key}`]))
         })
+      // Else, we can just filter against the original list of tokens to filter
       } else {
         keys.forEach(f => {
           const key = f as keyof ListableToken;
           this.filteredListableTokens = tokensToFilter.filter(f => !!filters[key].includes(f[`${key}`]))
         })
       }
-    }
+    },
+    filterBrand(brands: string[], originalListOfTokens: ListableToken[]) {
+      this.setBrand(brands);
+      if (this.filteredListableTokens.length !== originalListOfTokens.length) {
+        this.filteredListableTokens = this.filteredListableTokens.filter(f => !!brands.includes(f['brand']));
+      } else {
+        this.filteredListableTokens = originalListOfTokens.filter(f => !!brands.includes(f['brand']));
+      }
+    },
+    // RemoveListableNFTFromDuplicate(listed: ListableToken) {
+    //   const listedIndex = this.filteredListableTokens.findIndex((nft => 
+		// 		nft.contractAddress == listed.contractAddress && 
+		// 		nft.identifierOrCriteria == listed.identifierOrCriteria &&
+		// 		nft.network == listed.network
+		// 	))
+    //   this.filteredListableTokens[listedIndex].listingPrice = listed.listingPrice;
+    // }
 	},
 });
