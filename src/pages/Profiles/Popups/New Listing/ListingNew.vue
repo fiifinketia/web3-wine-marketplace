@@ -27,7 +27,8 @@
       </div>
       <NewListingHeader 
         v-if="$q.screen.width > 600"
-        :listableNFTsLength="listableNFTs.length"
+        :listableNFTs="listableNFTs"
+        @open-norm-sidebar="showFilterSidebar = true"
       />
       <NewListingNFTs 
         class="scroll"
@@ -52,6 +53,9 @@
         :errorTitle="errorTitle"
         :errorMessage="errorMessage"
       />
+      <SidebarNormal
+        v-model="showFilterSidebar"
+      />
     </q-card>
   </q-dialog>
 </template>
@@ -64,13 +68,15 @@ import ListingNewNFTs from './ListingNewNFTs.vue';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import ListingEdit from '../ListingEdit.vue';
 import ProfileErrors from '../ProfileErrors.vue';
+import SidebarNormal from './Sidebar/SidebarNormal.vue';
 
 export default defineComponent({
   components: {
     NewListingHeader: ListingNewHeader,
     NewListingNFTs: ListingNewNFTs,
     NewListingDialog: ListingEdit,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    SidebarNormal: SidebarNormal
   },
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] }
@@ -87,7 +93,9 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+
+      showFilterSidebar: true
     }
   },
   methods: {

@@ -18,6 +18,79 @@
   color: #212131;
 }
 
+.new-list-brandf-box {
+  background: #F0F0EF;
+  height: 56px;
+  width: 410px;
+}
+
+.new-list-brandf-text, .new-list-brandf-text-bold {
+  font-size: 16px;
+  color: #212131;
+  text-align: left;
+}
+
+.new-list-brandf-text {
+  font-family: 'ProximaNova-Regular';
+}
+
+.new-list-brandf-text-bold {
+  font-family: 'ProximaNova-Bold';
+}
+
+.new-list-brandf-container > .new-list-brandf-box:nth-of-type(even){
+  background: white;
+}
+
+.new-list-brandf-container {
+  z-index: 2;
+  border-radius: 8px;
+  position: absolute;
+  margin-top: 6px;
+  max-height: 200px;
+  overflow-y: scroll;
+  border-top: 1px solid #C0C0C0;
+  border-bottom: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.new-list-brandf-box {
+  border-left: 1px solid #C0C0C0;
+  border-right: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:not(:last-child) {
+  border-bottom: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* LIST-FILTER-SIDEBAR WORKAROUND STARTS HERE */
+
+.list-filter-dialog > .q-dialog__inner {
+  margin: auto;
+}
+
+/* DO NOT DELETE */
+@media screen and (min-width: 1154px) {
+  .list-filter-dialog > .q-dialog__inner {
+    width: 1100px;
+  }
+}
+
+.list-filter-dialog > .q-dialog__inner--fullheight {
+  max-height: calc(100vh - 108px);
+}
+
+/* LIST-FILTER-SIDEBAR WORKAROUND ENDS HERE */
+
 .new-list-subheader-text {
   font-family: 'ProximaNova-Regular';
   font-size: 18px;
