@@ -54,9 +54,40 @@
         :errorMessage="errorMessage"
       />
       <SidebarNormal
+        v-if="$q.screen.width > 600"
         v-model="showFilterSidebar"
         :listableNFTs="listableNFTs"
       />
+      <SidebarMobile
+        v-else
+        v-model="showFilterSidebar"
+        :listableNFTs="listableNFTs"
+      />
+      <q-page-sticky
+        v-if="$q.screen.width <= 600"
+        class="q-mr-md"
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
+        <q-card rounded class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container">
+          <span
+            class="text-weight-bold text-h6 sidebar-sticky-filter-icon q-pr-xs"
+            clickable
+            @click="showFilterSidebar = true"
+          >
+            {{ listableFiltersStore.getAllFiltersArray.length }}</span
+          >
+          <q-btn
+            dense
+            class="sidebar-sticky-filter-icon btn--no-hover"
+            color="secondary"
+            text-color="white"
+            icon="app:filter"
+            unelevated
+            @click="showFilterSidebar = true"
+          />
+        </q-card>
+      </q-page-sticky>
     </q-card>
   </q-dialog>
 </template>
@@ -70,6 +101,8 @@ import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import ListingEdit from '../ListingEdit.vue';
 import ProfileErrors from '../ProfileErrors.vue';
 import SidebarNormal from './Sidebar/SidebarNormal.vue';
+import SidebarMobile from './Sidebar/SidebarMobile.vue';
+import { useListableFilters } from 'src/stores/listable-filters';
 
 export default defineComponent({
   components: {
@@ -77,12 +110,14 @@ export default defineComponent({
     NewListingNFTs: ListingNewNFTs,
     NewListingDialog: ListingEdit,
     ErrorDialog: ProfileErrors,
-    SidebarNormal: SidebarNormal
+    SidebarNormal: SidebarNormal,
+    SidebarMobile: SidebarMobile
   },
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] }
   },
   data () {
+    const listableFiltersStore = useListableFilters();
     return {
       openListingDialog: false,
       image: '',
@@ -96,7 +131,9 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
 
-      showFilterSidebar: false
+      showFilterSidebar: false,
+
+      listableFiltersStore
     }
   },
   methods: {

@@ -92,6 +92,12 @@
   }
 }
 
+@media screen and (min-width: 600px) and (max-width: 1153px) {
+  .list-filter-dialog > .q-dialog__inner--minimized {
+    padding: 24px;
+  }
+}
+
 .list-filter-dialog > .q-dialog__inner--fullheight {
   max-height: calc(100vh - 108px);
 }

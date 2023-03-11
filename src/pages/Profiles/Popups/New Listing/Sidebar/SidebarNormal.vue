@@ -6,7 +6,10 @@
     transition-hide="scale"
     class="list-filter-dialog"
   >
-      <div class="no-box-shadow">
+      <div 
+        class="no-box-shadow"
+        :class="$q.screen.width < 1154 ? 'q-mr-md' : ''"
+      >
         <q-scroll-area
           bordered
           class="main-filter-box dark-blue-border q-px-md"
