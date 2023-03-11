@@ -299,13 +299,15 @@ export const useListableFilters = defineStore('listableFilters', {
         this.filteredListableTokens = originalListOfTokens.filter(f => !!brands.includes(f['brand']));
       }
     },
-    // RemoveListableNFTFromDuplicate(listed: ListableToken) {
-    //   const listedIndex = this.filteredListableTokens.findIndex((nft => 
-		// 		nft.contractAddress == listed.contractAddress && 
-		// 		nft.identifierOrCriteria == listed.identifierOrCriteria &&
-		// 		nft.network == listed.network
-		// 	))
-    //   this.filteredListableTokens[listedIndex].listingPrice = listed.listingPrice;
-    // }
+    UpdateListableNFTPriceInDuplicate(listed: ListableToken) {
+      const listedIndex = this.filteredListableTokens.findIndex((nft => 
+				nft.contractAddress == listed.contractAddress && 
+				nft.identifierOrCriteria == listed.identifierOrCriteria &&
+				nft.network == listed.network
+			))
+      if (!!listedIndex) {
+        this.filteredListableTokens[listedIndex].listingPrice = listed.listingPrice;
+      }
+    }
 	},
 });

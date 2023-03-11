@@ -8,6 +8,7 @@ interface ListableToken extends TokenIdentifier {
   image: string;
   brand: string;
   listingPrice?: string;
+  listingCancellationStatus?: boolean;
 
   appellation?: string;
   case?: string;

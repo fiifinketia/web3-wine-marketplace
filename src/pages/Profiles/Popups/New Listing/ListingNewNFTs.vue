@@ -17,7 +17,7 @@
     >
       <q-card flat>
         <q-btn
-          :disable="!!token.listingPrice"
+          :disable="!!token.listingPrice || !!token.listingCancellationStatus"
           @click="OpenListingDialog(token)"
           flat
           unelevated
@@ -31,10 +31,10 @@
             <img 
               :src="token.image"
               class="full-width"
-              :style="!!token.listingPrice ? 'filter: brightness(0.5);' : ''"
+              :style="!!token.listingPrice || !!token.listingCancellationStatus ? 'filter: brightness(0.5);' : ''"
             />
             <img 
-              v-if="!!token.listingPrice"
+              v-if="!!token.listingPrice || !!token.listingCancellationStatus"
               src="../../../../assets/listing-process.svg"
               class="new-list-card-process-logo"
             />
@@ -49,13 +49,21 @@
           </div>
         </q-btn>
         <div class="new-list-history-container row justify-between items-center q-px-sm">
+
           <span v-if="!token.listingPrice" class="new-list-history-text"> Price history </span>
-          <div v-else class="row items-center q-gutter-x-xs">
+          <div v-else-if="!!token.listingPrice && !token.listingCancellationStatus" class="row items-center q-gutter-x-xs">
             <q-img
               src="../../../../assets/processing.svg" 
               :style="$q.screen.width > 350 ? 'height: 34px; width: 23px' : 'height: 15px; width: 16px'"  
             />
             <span class="new-list-history-text"> Loading: </span>
+          </div>
+          <div v-else class="row items-center q-gutter-x-xs">
+            <q-img
+              src="../../../../assets/processing.svg" 
+              :style="$q.screen.width > 350 ? 'height: 34px; width: 23px' : 'height: 15px; width: 16px'"  
+            />
+            <span class="new-list-history-text"> Delisting </span>
           </div>
           <q-btn
             v-if="!token.listingPrice"
@@ -67,7 +75,7 @@
           >
             <img src="../../../../assets/button-right.svg" />
           </q-btn>
-          <div v-else class="row items-center q-gutter-x-xs">
+          <div v-else-if="!!token.listingPrice && !token.listingCancellationStatus" class="row items-center q-gutter-x-xs">
             <q-img
               src="../../../../assets/icons/currencies/USDC-Icon.svg"
               :style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"

@@ -86,7 +86,7 @@
       <CreateListing
         v-model="openNewListingDialog"
         :listableNFTs="listableNFTs"
-        @listable-nft-listed="(listed) => RemoveListableNFT(listed)"
+        @listable-nft-listed="(listed) => UpdateListableNFTWithPrice(listed)"
       />
     </div>
     <div v-else class="column items-center">
@@ -301,13 +301,14 @@ export default defineComponent({
       }
       // console.log('Listable NFTs Set', this.listableNFTs)
     },
-    RemoveListableNFT(listed: ListableToken) {
+    UpdateListableNFTWithPrice(listed: ListableToken) {
       const listedIndex = this.listableNFTs.findIndex((nft => 
 				nft.contractAddress == listed.contractAddress && 
 				nft.identifierOrCriteria == listed.identifierOrCriteria &&
 				nft.network == listed.network
 			))
       this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
+      this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
     }
   }
 });
