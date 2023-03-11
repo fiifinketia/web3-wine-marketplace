@@ -5,6 +5,7 @@
     :maximized="$q.screen.width > 600 ? false : true"
   >
     <q-card
+      v-if="listableNFTs.length > 0"
       class="new-list-container q-py-md"
       :class="$q.screen.width > 600 ? 'q-px-md' : ''"
     >
@@ -89,6 +90,28 @@
         </q-card>
       </q-page-sticky>
     </q-card>
+    <q-card
+      v-else
+      class="new-list-container q-py-md column items-center"
+      :class="$q.screen.width > 600 ? 'q-px-md' : ''"
+      style="flex-wrap: nowrap"
+    >
+      <div class="full-width row items-start justify-center q-pb-sm">
+        <span class="new-list-header-text"> Listing NFT </span>
+        <q-btn 
+          v-close-popup
+          flat
+          dense
+          unelevated
+          class="exit-btn btn--no-hover"
+        >
+          <img
+            src="../../../../assets/exit-light.svg"
+          />
+        </q-btn>
+      </div>
+      <NewListingEmpty />
+    </q-card>
   </q-dialog>
 </template>
 
@@ -103,12 +126,14 @@ import ProfileErrors from '../ProfileErrors.vue';
 import SidebarNormal from './Sidebar/SidebarNormal.vue';
 import SidebarMobile from './Sidebar/SidebarMobile.vue';
 import { useListableFilters } from 'src/stores/listable-filters';
+import ListingNewEmpty from './ListingNewEmpty.vue';
 
 export default defineComponent({
   components: {
     NewListingHeader: ListingNewHeader,
     NewListingNFTs: ListingNewNFTs,
     NewListingDialog: ListingEdit,
+    NewListingEmpty: ListingNewEmpty,
     ErrorDialog: ProfileErrors,
     SidebarNormal: SidebarNormal,
     SidebarMobile: SidebarMobile

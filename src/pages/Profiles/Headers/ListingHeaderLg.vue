@@ -12,7 +12,6 @@
       <q-btn 
         @click="OpenCreateNewListing()"
         :ripple="false"
-        :disable="listableNFTs.length == 0"
         unelevated
         dense
         flat
