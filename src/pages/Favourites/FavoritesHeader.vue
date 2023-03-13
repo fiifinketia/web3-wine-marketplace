@@ -1,12 +1,13 @@
 <template>
-  <div 
+
+  <div
     class="q-pb-md"
     :class="$q.screen.width > 600 ? 'q-pt-lg' : 'column items-center q-pt-none'"
     style="width: 100%"
   >
-    <div 
+    <div
       v-if="$q.screen.width <= 600"
-      class="bg-gradient_blue-green q-mb-md q-px-md q-py-sm" 
+      class="bg-gradient_blue-green q-mb-md q-px-md q-py-sm"
       style="width: 100%"
     >
       <div class="row items-center" style="height: 46.28px">
@@ -31,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div 
+    <div
       class="row items-center favorites-search-container"
       :class="$q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'"
     >
@@ -57,8 +58,8 @@
           </q-btn>
         </div>
       </div>
-      <div 
-        class="row justify-center q-gutter-x-sm" 
+      <div
+        class="row justify-center q-gutter-x-sm"
         :style="$q.screen.width > 600 ? '' : 'width:100%; flex-wrap: nowrap'"
       >
         <q-input
@@ -74,7 +75,7 @@
             <q-icon name="app:search" />
           </template>
         </q-input>
-        <q-btn 
+        <q-btn
           unelevated
           dense
           :disable="!searchText"

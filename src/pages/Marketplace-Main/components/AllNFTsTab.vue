@@ -7,11 +7,11 @@
 				: 'fixed fit row wrap justify-start items-start content-start'
 		"
 	>
-		<div 
-			class="row q-pb-sm col-xs-12" 
+		<div
+			class="row q-pb-sm col-xs-12"
 			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
 		>
-			<div 
+			<div
 				class="row"
 				:class="$q.screen.width >= 600 ? 'col 10' : 'col-12 q-px-md'"
 			>
@@ -104,8 +104,9 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
+
 			:style="qChipRows > 1 ? calculateExtraHeightSidebar(qChipRows) : ''"
-		 	class="col-sm-3 q-mt-sm" 
+		 	class="col-sm-3 q-mt-sm"
 		 />
 		<SidebarTablet
 			v-else-if="$q.screen.width > 768"
@@ -142,6 +143,7 @@
 					color="secondary"
 					text-color="white"
 					icon="app:filter"
+					unelevated
 					@click="toggleSidebar()"
 				/>
 			</q-card>

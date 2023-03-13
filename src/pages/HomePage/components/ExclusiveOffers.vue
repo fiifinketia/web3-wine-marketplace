@@ -42,12 +42,14 @@
 			</q-card>
 		</div>
 		<div class="go-to-marketplace-wrapper row justify-center">
-			<button
+			<q-btn
 				class="go-to-marketplace q-mt-lg"
+				unelevated
+				no-caps
 				@click="$router.push('marketplace?tab=nfts')"
-			>
+				>
 				Go to Marketplace
-			</button>
+			</q-btn>
 		</div>
 	</div>
 </template>

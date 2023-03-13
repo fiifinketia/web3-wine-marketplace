@@ -1,10 +1,10 @@
 <template>
 	<div class="row justify-between items-center partnership-container">
 		<div class="column col-sm col-xs-12">
-			<div class="first-text-partnership">
+			<div class="first-text-partnership q-my-sm">
 				Want to try some tasty wines sourced directly from producers?
 			</div>
-			<div class="second-text">
+			<div class="second-text q-my-sm">
 				Enjoy our specially selected partnership wines are coming soon!
 			</div>
 		</div>

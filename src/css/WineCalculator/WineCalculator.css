@@ -1,0 +1,609 @@
+.grape-img-left {
+	width: 25%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -5;
+}
+
+.grape-img-right {
+	width: 30%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: -5;
+}
+
+.welcome-to-calculator {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 870;
+	font-size: 32px;
+	line-height: 48px;
+	text-align: center;
+	letter-spacing: 0.03em;
+	color: #212131;
+}
+
+.welcome-to-calculator-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	width: 40%;
+}
+
+.calculator {
+	width: 80%;
+	height: 680px;
+	background: #ffffff;
+	/* Primary/Light blue */
+
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(20px);
+	border-radius: 20px;
+	margin-bottom: 4rem;
+	overflow: hidden;
+}
+
+.calculator-first-part {
+	width: 60%;
+	background: rgba(217, 232, 255, 0.3);
+	height: 100%;
+}
+
+.plant-section {
+	width: 60%;
+}
+
+.help-section {
+	padding-top: 120px;
+	padding-right: 30px;
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 20px;
+	text-decoration-line: underline;
+	color: #3586ff;
+}
+.current-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+	width: 90%;
+}
+
+.step-number {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.next-step {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 85%;
+}
+
+.next-step-second-version {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+	display: flex;
+	align-items: center;
+	width: 90%;
+}
+
+.next-step-number {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #9d9d9d;
+}
+
+.portfolio-calculation-title {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+	text-transform: uppercase;
+}
+
+.calculator-second-part {
+	width: 40%;
+}
+
+.calculator-second-part-wrapper {
+	width: 90%;
+	justify-content: start;
+}
+
+.starting-investment-text {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #262626;
+}
+
+.starting-investment-number {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: right;
+	color: #3586ff;
+}
+
+.risk-container {
+	background: linear-gradient(
+		109.05deg,
+		rgba(255, 255, 255, 0.13) 15.61%,
+		rgba(255, 255, 255, 0.04) 98.78%
+	);
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 6px;
+	width: 100%;
+	height: 100px;
+}
+
+.low-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #05a30b;
+}
+.medium-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #3586ff;
+}
+.high-risk-border {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: #c11b1b;
+}
+
+.unselected-border {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1.6px solid #9d9d9d;
+	cursor: pointer;
+}
+
+.unselected-border-wrapper {
+	padding-left: 10px;
+}
+
+.risk-title {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 25px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.6px;
+	color: #212131;
+}
+
+.risk-desc {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	color: #212131;
+}
+
+.selected-risk {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 5px solid #3586ff;
+	cursor: pointer;
+}
+
+.risk-level-title {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 450;
+	font-size: 18px;
+	line-height: 28px;
+	text-align: left;
+	letter-spacing: 0.02em;
+	color: #262626;
+	padding-bottom: 10px;
+}
+
+.calculating {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	padding-bottom: 30px;
+}
+
+.take-time {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 36px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #212131;
+	opacity: 0.6;
+	padding-top: 20px;
+}
+
+.continue-button {
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	padding: 0.8rem;
+}
+
+.continue-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 29px;
+	letter-spacing: 0.02em;
+	color: #ffffff;
+}
+
+.continue-button-wrapper {
+	padding-top: 90px;
+}
+
+.back-button {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	color: #9d9d9d;
+	cursor: pointer;
+}
+
+.starting-investment-text-bold {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 460;
+	font-size: 16px;
+	line-height: 25px;
+	text-align: right;
+	letter-spacing: 0.04em;
+	color: #262626;
+}
+
+.timing-container {
+	padding-top: 100px;
+}
+
+.end-amount {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-price {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 32px;
+	line-height: 50px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	letter-spacing: 0.02em;
+	color: #3586ff;
+}
+
+.end-amount-percentage-title {
+	font-family: 'Obviously';
+	font-style: normal;
+	font-weight: 440;
+	font-size: 18px;
+	line-height: 28px;
+	letter-spacing: 0.04em;
+	color: #212131;
+}
+
+.end-amount-percentage {
+	font-family: 'Obviously-Bold';
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 28px;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	color: #212131;
+}
+
+/* .center {
+	position: relative;
+} */
+
+.form-element .q-slider {
+	-webkit-appearance: none;
+	height: 35px !important;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.form-element .q-slider__track  {
+	height: auto !important;
+}
+.form-element .q-slider__focus-ring {
+	display: none;
+}
+
+.form-element .q-slider__thumb-shape {
+	-webkit-appearance: none;
+	background: rgba(255, 255, 255, 0.45);
+	background-image: url('../../../public/images/drag.svg');
+	background-position: center center;
+	left: -10px;
+	background-size:auto;
+	width: 30px;
+	height: 30px;
+	cursor: grabbing;
+	border-radius: 4px;
+	box-shadow: -407px 0 0 410px #3586ff;
+}
+
+.timing-container .form-element,
+.starting-investment-wrapper .form-element {
+	border: 1px solid rgba(94, 151, 236, 0.27);
+	border-radius: 8px;
+	line-height: 0;
+}
+
+.portfolio-calculation-mobile {
+	display: none;
+}
+
+.step-mobile {
+	display: none;
+}
+
+.calculate-again-button {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	background-clip: text;
+	border-radius: 6px !important;
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+	.risk-container {
+		width: 100%;
+	}
+	.risk-wrapper {
+		width: 87%;
+	}
+	.current-step {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.calculator-first-part {
+		width: 55%;
+	}
+	.calculator-second-part {
+		width: 45%;
+	}
+	.risk-wrapper {
+		width: 86%;
+	}
+	.risk-desc {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.calculator-first-part {
+		width: 100%;
+	}
+	.calculator-second-part {
+		width: 100%;
+	}
+	.risk-wrapper {
+		width: 91.5%;
+	}
+	.calculator {
+		width: 100%;
+		height: auto;
+		border-bottom: none;
+		border-end-end-radius: none;
+	}
+	.portfolio-calculation-desktop {
+		display: none;
+	}
+	.portfolio-calculation-mobile {
+		display: flex;
+		width: 70%;
+	}
+	.step-mobile {
+		font-family: 'Proxima Nova';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 16px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		color: #212131;
+		width: 80%;
+		padding-top: 15px;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.calculator {
+		width: 100%;
+		background: rgba(255, 255, 255, 0.7);
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(15px);
+		border-radius: 0px;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.calculator-first-part {
+		background: none;
+	}
+	.portfolio-calculation-title {
+		display: flex;
+		justify-content: center;
+	}
+	.portfolio-calculation-desktop {
+		display: none;
+	}
+	.welcome-to-calculator {
+		display: none;
+	}
+	.welcome-to-calculator-desc {
+		display: none;
+	}
+
+	.grape-img-right {
+		display: none;
+	}
+	.grape-img-left {
+		width: 45%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -5;
+	}
+	.portfolio-calculation-mobile {
+		display: flex;
+		width: 70%;
+	}
+	.calculate-button-wrapper {
+		padding-top: 50px;
+	}
+	.back-button-wrapper {
+		padding-right: 0px;
+		padding-bottom: 20px;
+	}
+	.step-mobile {
+		font-family: 'Proxima Nova';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 16px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		color: #212131;
+		width: 80%;
+		padding-top: 15px;
+	}
+	.calculator-second-part {
+		width: 100%;
+	}
+	.risk-container {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.risk-wrapper {
+		width: 86%;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.risk-wrapper {
+		width: 90%;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	.risk-wrapper {
+		width: 91%;
+	}
+}
+
+.line {
+	border: 3px solid #3586ff;
+	width: 100%;
+	height: 0;
+}
+.line-2 {
+	border: 3px solid #3586ff;
+	width: 50%;
+	height: 0;
+}
+
+.line-3 {
+	border: 3px solid rgba(94, 151, 236, 0.27);
+	width: 50%;
+	height: 0;
+}
+
+#slider {
+	width: 500px;
+}

@@ -100,14 +100,6 @@
 .see-market-button {
 	width: 260px;
 	height: 56px;
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-	outline: 1.3px solid #3586ff;
-	border: none;
-	cursor: pointer;
-	border-radius: 6px;
 	margin-top: 2rem;
 
 	font-family: 'ProximaNova-Bold';
@@ -117,10 +109,7 @@
 	line-height: 24px;
 	text-align: center;
 	letter-spacing: 0.02em;
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
+	padding: 4px 6px !important;
 }
 
 @media screen and (max-width: 992px) {
