@@ -16,18 +16,22 @@
         :incomingAmount="incomingOffers.length"
         :selectedIncomingSortKey="incomingSortKey"
         :updatedIncomingBrandFilter="incomingBrandFilter"
+        :brandSearched="brandSearched"
         @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
         @incomingSortKeySelected="(val) => incomingSortKey = val"
         @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
+        @reset-incoming-search="(val) => FetchIncomingOffers(val, '')"
       />
       <IncomingHeaderSm
         v-else
         :incomingAmount="incomingOffers.length"
         :selectedIncomingSortKey="incomingSortKey"
         :updatedIncomingBrandFilter="incomingBrandFilter"
+        :brandSearched="brandSearched"
         @incomingBrandFilterUpdated="(val) => incomingBrandFilter = val"
         @incomingSortKeySelected="(val) => incomingSortKey = val"
         @fetchIncomingWithBrandFilter="(val) => FetchIncomingOffers(val.sortKey, val.brandFilter)"
+        @reset-incoming-search="(val) => FetchIncomingOffers(val, '')"
       />
       <div 
         v-if="$q.screen.width > 600" 
@@ -132,7 +136,9 @@ export default defineComponent({
       orderHash: '',
       brand: '',
       image: '',
-      token: {} as TokenIdentifier
+      token: {} as TokenIdentifier,
+
+      brandSearched: false
     }
   },
 
@@ -196,7 +202,11 @@ export default defineComponent({
       await this.store.setIncomingOffers(nftStore.ownedNFTs, sortKey, brandFilter);
       if (this.store.getIncomingOffers.length == 0 && this.store.incomingBrandFilterStatus == true) {
         this.HandleMissingBrand();
+      } else if ( this.store.incomingBrandFilterStatus == true ) {
+        this.brandSearched = true;
+        this.loadingRequest = true;
       } else {
+        this.brandSearched = false;
         this.incomingOffers = this.EnsureIncomingOffersAreOwned();
         this.$emit('incomingAmount', this.incomingOffers.length);
         this.CheckForEmptyRequest();

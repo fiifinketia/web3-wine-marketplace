@@ -136,6 +136,16 @@
   margin-top: 2px;
 }
 
+.profile-back-text {
+	font-family: 'ProximaNova-Bold';
+	color: rgba(53, 134, 255, 1);
+	font-size: 20px;
+}
+
+.profile-back-text {
+	line-height: 0;
+}
+
 .profile-searchbox .q-field__control {
   border-radius: 6px !important;
 }

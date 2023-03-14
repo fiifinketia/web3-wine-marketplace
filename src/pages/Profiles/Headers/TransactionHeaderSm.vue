@@ -2,8 +2,24 @@
   <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 100%;">
     <div class="row justify-between items-center q-pb-sm">
       <div class="row q-gutter-x-lg">
-        <span class="profile-header-offer q-pr-xs"> Transaction </span>
-        <span class="profile-nft-number"> {{ transactionsAmount }} </span>
+        <div v-if="!brandSearched">
+          <span class="profile-header-offer q-pr-xs"> Transactions </span>
+          <span class="profile-nft-number"> {{ transactionsAmount }} </span>
+        </div>
+        <div v-else>
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            :ripple="false"
+            @click="ResetSearch()"
+            class="profile-back btn--no-hover"
+          >
+            <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+            <span class="profile-back-text q-pl-md"> All TXNs </span>
+          </q-btn>
+        </div>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
         <q-input 
@@ -81,6 +97,10 @@ export default defineComponent({
     updatedTransactionBrandFilter: {
       type: String,
       required: true
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -118,6 +138,11 @@ export default defineComponent({
     FetchTransactionWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setTransactionBrandFilterStatus(true);
       this.$emit('fetchTransactionWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    ResetSearch() {
+      this.transactionBrandFilter = '';
+      this.store.setTransactionBrandFilterStatus(false);
+      this.$emit('reset-transactions-search', this.transactionSortKey);
     }
   }
 })

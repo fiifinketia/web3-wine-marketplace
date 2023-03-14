@@ -2,8 +2,24 @@
   <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 100%;">
     <div class="row justify-between items-center q-pb-sm">
       <div class="row q-gutter-x-lg">
-        <span class="profile-header-offer q-pr-xs"> Incoming </span>
-        <span class="profile-nft-number"> {{ incomingAmount }} </span>
+        <div v-if="!brandSearched">
+          <span class="profile-header-offer q-pr-xs"> Incoming </span>
+          <span class="profile-nft-number"> {{ incomingAmount }} </span>
+        </div>
+        <div v-else>
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            :ripple="false"
+            @click="ResetSearch()"
+            class="profile-back btn--no-hover"
+          >
+            <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+            <span class="profile-back-text q-pl-md"> All Incoming </span>
+          </q-btn>
+        </div>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
         <q-input 
@@ -82,6 +98,10 @@ export default defineComponent({
     updatedIncomingBrandFilter: {
       type: String,
       required: true
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -119,6 +139,11 @@ export default defineComponent({
     FetchIncomingWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setIncomingBrandFilterStatus(true);
       this.$emit('fetchIncomingWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    ResetSearch() {
+      this.incomingBrandFilter = '';
+      this.store.setIncomingBrandFilterStatus(false);
+      this.$emit('reset-incoming-search', this.incomingSortKey);
     }
   }
 })

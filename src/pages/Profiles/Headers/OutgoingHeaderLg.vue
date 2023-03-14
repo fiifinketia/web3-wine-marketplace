@@ -1,8 +1,24 @@
 <template>
   <div class="row justify-between items-center q-pb-md" style="width: 100%">
     <div class="row q-gutter-x-lg">
-      <span class="profile-header-offer q-pr-xs"> Outgoing </span>
-      <span class="profile-nft-number"> {{ outgoingAmount }} </span>
+      <div v-if="!brandSearched">
+        <span class="profile-header-offer q-pr-xs"> Outgoing </span>
+        <span class="profile-nft-number"> {{ outgoingAmount }} </span>
+      </div>
+      <div v-else>
+        <q-btn
+          dense
+          unelevated
+          flat
+          no-caps
+          :ripple="false"
+          @click="ResetSearch()"
+          class="profile-back btn--no-hover"
+        >
+          <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+          <span class="profile-back-text q-pl-md"> All Out...ng </span>
+        </q-btn>
+      </div>
       <q-separator style="background-color: #5e97ec45 !important" vertical inset />
       <q-radio v-model="outgoingSortKey" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedSortKey('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       <q-radio v-model="outgoingSortKey" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedSortKey('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
@@ -53,6 +69,10 @@ export default defineComponent({
     updatedOutgoingBrandFilter: {
       type: String,
       required: true
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -90,6 +110,11 @@ export default defineComponent({
     FetchOutgoingWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setOutgoingBrandFilterStatus(true);
       this.$emit('fetchOutgoingWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    ResetSearch() {
+      this.outgoingBrandFilter = '';
+      this.store.setOutgoingBrandFilterStatus(false);
+      this.$emit('reset-outgoing-search', this.outgoingSortKey);
     }
   }
 })

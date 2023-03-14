@@ -16,18 +16,22 @@
         :transactionsAmount="transactions.length"
         :selectedTransactionSortKey="transactionSortKey"
         :updatedTransactionBrandFilter="transactionBrandFilter"
+        :brandSearched="brandSearched"
         @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
         @transactionSortKeySelected="(val) => transactionSortKey = val"
         @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
+        @reset-transactions-search="(val) => FetchTransactions(val, '')"
       />
       <TransactionHeaderSm
         v-else
         :transactionsAmount="transactions.length"
         :selectedTransactionSortKey="transactionSortKey"
         :updatedTransactionBrandFilter="transactionBrandFilter"
+        :brandSearched="brandSearched"
         @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
         @transactionSortKeySelected="(val) => transactionSortKey = val"
         @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
+        @reset-transactions-search="(val) => FetchTransactions(val, '')"
       />
       <div 
         v-if="$q.screen.width > 600"
@@ -99,7 +103,9 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+
+      brandSearched: false
     }
   },
   watch: {
@@ -141,7 +147,11 @@ export default defineComponent({
       await this.store.setTransactions(address, sortKey, brandFilter);
       if (this.store.getTransactions.length == 0 && this.store.transactionBrandFilterStatus == true) {
         this.HandleMissingBrand();
+      } else if ( this.store.transactionBrandFilterStatus == true ) {
+        this.brandSearched = true;
+        this.loadingRequest = true;
       } else {
+        this.brandSearched = false;
         this.transactions = this.store.getTransactions;
         this.$emit('transactionsAmount', this.transactions.length);
         this.CheckForEmptyRequest();

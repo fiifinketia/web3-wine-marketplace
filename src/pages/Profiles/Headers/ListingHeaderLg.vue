@@ -1,8 +1,24 @@
 <template>
   <div class="row justify-between items-center q-pb-md" style="width: 100%">
     <div class="row q-gutter-x-lg">
-      <span class="profile-header-offer q-pr-xs"> Listings </span>
-      <span class="profile-nft-number"> {{ listingsAmount }} </span>
+      <div v-if="!brandSearched">
+        <span class="profile-header-offer q-pr-xs"> Listings </span>
+        <span class="profile-nft-number"> {{ listingsAmount }} </span>
+      </div>
+      <div v-else>
+        <q-btn
+          dense
+          unelevated
+          flat
+          no-caps
+          :ripple="false"
+          @click="ResetSearch()"
+          class="profile-back btn--no-hover"
+        >
+          <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+          <span class="profile-back-text q-pl-md"> All List...s </span>
+        </q-btn>
+      </div>
       <q-separator style="background-color: #5e97ec45 !important" vertical inset />
       <q-radio v-model="listingSortKey" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedSortKey('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       <q-radio v-model="listingSortKey" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedSortKey('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
@@ -68,6 +84,10 @@ export default defineComponent({
     listableNFTs: {
       type: [] as PropType<TokenIdentifier[]>,
       default: []
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -108,6 +128,11 @@ export default defineComponent({
     },
     OpenCreateNewListing() {
       this.$emit('create-new-listing')
+    },
+    ResetSearch() {
+      this.listingBrandFilter = '';
+      this.store.setListingBrandFilterStatus(false);
+      this.$emit('reset-listings-search', this.listingSortKey);
     }
   }
 })

@@ -17,10 +17,12 @@
         :selectedListingSortKey="listingSortKey"
         :updatedListingBrandFilter="listingBrandFilter"
         :listableNFTs="listableNFTs"
+        :brandSearched="brandSearched"
         @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
         @listingSortKeySelected="(val) => listingSortKey = val"
         @create-new-listing="openNewListingDialog = true"
         @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
+        @reset-listings-search="(val) => FetchListings(val, '')"
       />
       <ListingHeaderSm
         v-else
@@ -28,10 +30,12 @@
         :selectedListingSortKey="listingSortKey"
         :updatedListingBrandFilter="listingBrandFilter"
         :listableNFTs="listableNFTs"
+        :brandSearched="brandSearched"
         @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
         @listingSortKeySelected="(val) => listingSortKey = val"
         @create-new-listing="openNewListingDialog = true"
         @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
+        @reset-listings-search="(val) => FetchListings(val, '')"
       />
       <div 
         v-if="$q.screen.width > 600"
@@ -166,7 +170,9 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+
+      brandSearched: false
     }
   },
 
@@ -213,7 +219,11 @@ export default defineComponent({
       await this.store.setListings(address, sortKey, brandFilter);
       if (this.store.getListings.length == 0 && this.store.listingBrandFilterStatus == true) {
         this.HandleMissingBrand();
-      } else {        
+      } else if ( this.store.listingBrandFilterStatus == true ) {
+        this.brandSearched = true;
+        this.loadingRequest = true;
+      } else {
+        this.brandSearched = false;
         this.listings = this.store.getListings;
         this.$emit('listingsAmount', this.listings.length);
         this.CheckForEmptyRequest();
@@ -236,6 +246,7 @@ export default defineComponent({
       if (this.listings.length == 0) {
         this.emptyRequest = true 
       }
+      this.loadingRequest = true;
     },
     HandleError(err: {
       errorType: string,

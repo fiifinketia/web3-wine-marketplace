@@ -1,8 +1,24 @@
 <template>
   <div class="row justify-between items-center q-pb-md" style="width: 100%">
     <div class="row q-gutter-x-lg">
-      <span class="profile-header-offer q-pr-xs"> Transactions </span>
-      <span class="profile-nft-number"> {{ transactionsAmount }} </span>
+      <div v-if="!brandSearched">
+        <span class="profile-header-offer q-pr-xs"> Transactions </span>
+        <span class="profile-nft-number"> {{ transactionsAmount }} </span>
+      </div>
+      <div v-else>
+        <q-btn
+          dense
+          unelevated
+          flat
+          no-caps
+          :ripple="false"
+          @click="ResetSearch()"
+          class="profile-back btn--no-hover"
+        >
+          <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+          <span class="profile-back-text q-pl-md"> All TXNs </span>
+        </q-btn>
+      </div>
       <q-separator style="background-color: #5e97ec45 !important" vertical inset />
       <q-radio v-model="transactionSortKey" dense val="newest" label="New First" class="profile-checkbox" :style="IsSelectedSortKey('newest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
       <q-radio v-model="transactionSortKey" dense val="oldest" label="Old First" class="profile-checkbox" :style="IsSelectedSortKey('oldest') ? `font-family: 'ProximaNova-Bold';` : 'color: #9D9D9D'"/>
@@ -52,6 +68,10 @@ export default defineComponent({
     updatedTransactionBrandFilter: {
       type: String,
       required: true
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -89,6 +109,11 @@ export default defineComponent({
     FetchTransactionWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setTransactionBrandFilterStatus(true);
       this.$emit('fetchTransactionWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    ResetSearch() {
+      this.transactionBrandFilter = '';
+      this.store.setTransactionBrandFilterStatus(false);
+      this.$emit('reset-transactions-search', this.transactionSortKey);
     }
   }
 })

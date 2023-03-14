@@ -16,18 +16,22 @@
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
         :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        :brandSearched="brandSearched"
         @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
         @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
       />
       <OutgoingHeaderSm
         v-else
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
         :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        :brandSearched="brandSearched"
         @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
         @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
       />
       <div 
         v-if="$q.screen.width > 600"
@@ -138,7 +142,9 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+
+      brandSearched: false
     }
   },
   watch: {
@@ -178,7 +184,11 @@ export default defineComponent({
       // Checks whether a brand filter was used
       if (this.store.getOutgoingOffers.length == 0 && this.store.outgoingBrandFilterStatus == true) {
         this.HandleMissingBrand();
+      } else if ( this.store.outgoingBrandFilterStatus == true ) {
+        this.brandSearched = true;
+        this.loadingRequest = true;
       } else {
+        this.brandSearched = false;
         this.outgoingOffers = this.store.getOutgoingOffers;
         this.$emit('outgoingAmount', this.outgoingOffers.length);
         this.CheckForEmptyRequest();
