@@ -5,170 +5,79 @@
       :loadingText="'Loading your outgoing offers'"
     />
   </div>
-  <div v-else class="column items-center">
-    <div v-if="!emptyRequest" class="column items-center">
+  <div v-else class="column items-center full-width q-mx-none">
+    <div 
+      v-if="!emptyRequest"
+      class="column items-center"
+      :class="$q.screen.width > 600 ? '' : 'full-width'"
+    >
       <OutgoingHeaderLg
         v-if="$q.screen.width > 1020"
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
         :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        :brandSearched="brandSearched"
         @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
         @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
       />
       <OutgoingHeaderSm
         v-else
         :outgoingAmount="outgoingOffers.length"
         :selectedOutgoingSortKey="outgoingSortKey"
         :updatedOutgoingBrandFilter="outgoingBrandFilter"
+        :brandSearched="brandSearched"
         @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
         @outgoingSortKeySelected="(val) => outgoingSortKey = val"
         @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
+        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
       />
-      <div class="profile-main-container column">
-        <div class="row q-pa-lg profile-column-name">
-          <span class="outgoing-column-nft">
-            NFT
-          </span>
-          <span 
-            v-if="$q.screen.width > 600"
-            class="outgoing-column-own-offer"
-          >
-            Your offer
-          </span>
-          <span 
-            v-if="$q.screen.width <= 600"
-            class="outgoing-column-own-offer"
-          >
-            Yours
-          </span>
-          <span 
-            v-if="$q.screen.width > 600"
-            class="outgoing-column-highest-offer"
-          >
-            Highest Offer
-          </span>
-          <span 
-            v-if="$q.screen.width > 1265"
-            class="outgoing-column-expire"
-          >
-            Exp On
-          </span>
-          <span class="outgoing-column-action">
-            Action
-          </span>
-        </div>
+      <div 
+        v-if="$q.screen.width > 600"
+        class="profile-main-container column"
+      >
+        <OutgoingColumns />
         <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
-        <div class="profile-nft-container">
-        <div 
-          v-for="offer in outgoingOffers"
-          :key="offer.orderHash"
-          class="q-px-lg q-py-md row items-center"
-        >
-          <q-btn 
-            flat
-            unelevated
-            dense
-            no-caps
-            align="left"
-            padding="0px"
-            class="outgoing-column-nft btn--no-hover"
-            :to="{ path: '/nft', query: { id: offer.identifierOrCriteria, network: offer.network, contractAddress: offer.contractAddress} }"
-          >
-            <img v-if="$q.screen.width > 1265" :src="offer.image" class="profile-nft-image q-mr-md"/>
-            <span class="profile-nft-brand"> {{ offer.brand }}</span>
-          </q-btn>
-          <div 
-            v-if="$q.screen.width > 600"
-            class="row items-center outgoing-column-own-offer"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number"> {{ offer.offer }} </span>
-            <q-tooltip 
-              v-if="
-                $q.screen.width <= 1265
-                && $q.screen.width > 600
-              "
-              anchor="top start" 
-              self="center start"
-              class="outgoing-tooltip-container"
-              :offset="[70, 30]"
-            >
-              <div class="column">
-                <div class="row items-center justify-between">
-                  <span class="outgoing-tooltip-label">
-                    Expiration On
-                  </span>
-                  <span class="outgoing-tooltip-expire q-pl-xs"> {{ offer.endTime }} </span>
-                </div>
-              </div>
-            </q-tooltip>
-          </div>
-          <div 
-            v-if="$q.screen.width > 600"
-            class="row items-center outgoing-column-highest-offer"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number"> {{ !!offer.highestOffer ? offer.highestOffer : '0.00' }} </span>
-          </div>
-          <div
-            v-if="$q.screen.width > 1265"
-            class="row items-center outgoing-column-expire"
-          >
-            <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
-          </div>
-          <div 
-            v-if="$q.screen.width <= 600"
-            class="outgoing-column-own-offer column"
-          >
-            <div class="row q-pb-xs">
-              <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-              <span class="profile-nft-number"> {{ offer.offer }} </span>
-            </div>
-            <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
-          </div>
-          <div style="margin-left: -5px;" class="row items-center outgoing-column-action">
-            <q-btn
-              flat
-              unelevated
-              dense
-              @click="OpenDeleteDialog(offer)"
-            >
-              <img src="../../../assets/trash.svg" />
-            </q-btn>
-            <q-btn
-              flat
-              unelevated
-              dense
-              @click="OpenEditDialog(offer)"
-            >
-              <img src="../../../assets/edit.svg" />
-            </q-btn>
-          </div>
-          <OutgoingDialogEdit
-            v-model="openEditDialog"
-            :brand="singleOffer.brand"
-            :highestOffer="singleOffer.highestOffer"
-            :highestOfferCurrency="singleOffer.highestOfferCurrency"
-            :image="singleOffer.image"
-            :network="singleOffer.network"
-            :orderHash="singleOffer.orderHash"
-            :smartContractAddress="singleOffer.contractAddress"
-            :tokenID="singleOffer.identifierOrCriteria"
-            @outgoing-edit-close="openEditDialog = false"
-            @remove-offer="(val) => RemoveRow(val)"
-            @outgoing-error-dialog="HandleError"
-          />
-          <OutgoingDialogDelete
-            v-model="openDeleteDialog"
-            :orderHash="singleOffer.orderHash"
-            @outgoing-delete-close="openDeleteDialog = false"
-            @remove-offer="(val) => RemoveRow(val)"
-            @outgoing-error-dialog="HandleError"
-          />
-        </div>
-        </div>
+        <OutgoingRows 
+          :outgoingOffers="outgoingOffers"
+          @delete-offer="(offer) => OpenDeleteDialog(offer)"
+          @edit-offer="(offer) => OpenEditDialog(offer)"
+        />
       </div>
+      <div
+        v-else
+        class="full-width"
+        style="width: 100vw"
+      >
+        <OutgoingColumns />
+        <OutgoingRows 
+          :outgoingOffers="outgoingOffers"
+          @delete-offer="(offer) => OpenDeleteDialog(offer)"
+          @edit-offer="(offer) => OpenEditDialog(offer)"
+        />
+      </div>
+      <OutgoingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleOffer.brand"
+        :highestOffer="singleOffer.highestOffer"
+        :highestOfferCurrency="singleOffer.highestOfferCurrency"
+        :image="singleOffer.image"
+        :network="singleOffer.network"
+        :orderHash="singleOffer.orderHash"
+        :smartContractAddress="singleOffer.contractAddress"
+        :tokenID="singleOffer.identifierOrCriteria"
+        @outgoing-edit-close="openEditDialog = false"
+        @remove-offer="(val) => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+      />
+      <OutgoingDialogDelete
+        v-model="openDeleteDialog"
+        :orderHash="singleOffer.orderHash"
+        @outgoing-delete-close="openDeleteDialog = false"
+        @remove-offer="(val) => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+      />
       <ErrorDialog
         v-model="openErrorDialog"
         :errorType="errorType"
@@ -196,6 +105,8 @@ import OutgoingEdit from '../Popups/OutgoingEdit.vue';
 import OutgoingDelete from '../Popups/OutgoingDelete.vue';
 import { OutgoingOffersResponse } from '../models/response.models';
 import ProfileErrors from '../Popups/ProfileErrors.vue';
+import OutgoingColumns from '../Columns/OutgoingColumns.vue';
+import OutgoingRows from '../Rows/OutgoingRows.vue';
 
 export default defineComponent({
   components: {
@@ -205,7 +116,9 @@ export default defineComponent({
     EmptyView: EmptyOrders,
     OutgoingDialogEdit: OutgoingEdit,
     OutgoingDialogDelete: OutgoingDelete,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OutgoingColumns: OutgoingColumns,
+    OutgoingRows: OutgoingRows
   },
   data() {
     const store = ordersStore();
@@ -229,7 +142,9 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+
+      brandSearched: false
     }
   },
   watch: {
@@ -269,7 +184,11 @@ export default defineComponent({
       // Checks whether a brand filter was used
       if (this.store.getOutgoingOffers.length == 0 && this.store.outgoingBrandFilterStatus == true) {
         this.HandleMissingBrand();
+      } else if ( this.store.outgoingBrandFilterStatus == true ) {
+        this.brandSearched = true;
+        this.loadingRequest = true;
       } else {
+        this.brandSearched = false;
         this.outgoingOffers = this.store.getOutgoingOffers;
         this.$emit('outgoingAmount', this.outgoingOffers.length);
         this.CheckForEmptyRequest();

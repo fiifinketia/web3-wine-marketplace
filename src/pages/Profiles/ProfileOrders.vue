@@ -3,8 +3,9 @@
 		<div>
 			<section class="q-gutter-y-md">
 				<q-tabs
+					v-if="$q.screen.width > 600"
 					v-model="tab"
-					class="text-grey hidden-a-599 profile-tabs"
+					class="text-grey profile-tabs"
 					active-color="primary"
 					indicator-color="primary"
 					align="justify"
@@ -16,8 +17,9 @@
 					<q-tab name="transactions" label="Trading History" />
 				</q-tabs>
 				<q-tabs
+					v-else
 					v-model="tab"
-					class="row justify-between items-center text-grey hidden-b-599 q-py-sm q-px-md bg-gradient_blue-green"
+					class="row justify-between items-center text-grey q-py-sm q-px-md bg-gradient_blue-green"
 					indicator-color="primary"
 					no-caps
 				>
@@ -58,19 +60,35 @@
 
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated>
-					<q-tab-panel class="q-pa-none q-px-sm" name="listings">
+					<q-tab-panel 
+						class="q-pa-none"
+						:class="$q.screen.width > 600 ? 'q-px-sm' : ''"
+						name="listings"
+					>
 						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<Listings v-else @listingsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="incoming">
+					<q-tab-panel 
+						class="q-pa-none"
+						:class="$q.screen.width > 600 ? 'q-px-sm' : ''"
+						name="incoming"
+					>
 						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<IncomingOffers v-else @incomingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="outgoing">
+					<q-tab-panel 
+						class="q-pa-none"
+						:class="$q.screen.width > 600 ? 'q-px-sm' : ''"
+						name="outgoing"
+					>
 						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<OutgoingOffers v-else @outgoingAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
-					<q-tab-panel class="q-pa-none q-px-md" name="transactions">
+					<q-tab-panel 
+						class="q-pa-none"
+						:class="$q.screen.width > 600 ? 'q-px-sm' : ''"
+						name="transactions"
+					>
 						<Unconnected v-if="!isConnected" @openConnectWallet="$emit('openConnectWallet')"/>
 						<Transactions v-else @transactionsAmount="(val) => countForTab = val"/>
 					</q-tab-panel>
@@ -104,7 +122,7 @@ export default defineComponent({
 		const userStore = useUserStore();
     return {
       tab: ref(queryT || 'listings'),
-      tabLabel: ref('Listings'),
+      tabLabel: '',
 			countForTab: 0,
 			isConnected: false,
 			userStore
@@ -121,20 +139,7 @@ export default defineComponent({
 						(tabTo === 'listings' || tabTo === 'outgoing' || tabTo === 'incoming' || tabTo === 'transactions')
 					) {
 						this.tab = tabTo;
-						switch (tabTo) {
-							case 'listings':
-								this.tabLabel = 'Listings';
-								break;
-							case 'outgoing':
-								this.tabLabel = 'Outgoing Offers';
-								break;
-							case 'incoming':
-								this.tabLabel = 'Incoming Offers';
-								break;
-							case 'transactions':
-								this.tabLabel = 'Trading History';
-								break;
-						}
+						this.TabLabelSetter(tabTo);
 					}
 				}
 			},
@@ -144,15 +149,19 @@ export default defineComponent({
 			handler(val) {
 				switch (val) {
 					case 'listings':
+						this.$router.push({ path: 'orders', query: { tab: 'listings' }});
 						this.tabLabel = 'Listings';
 						break;
 					case 'outgoing':
+						this.$router.push({ path: 'orders', query: { tab: 'outgoing' }});
 						this.tabLabel = 'Outgoing Offers';
 						break;
 					case 'incoming':
+						this.$router.push({ path: 'orders', query: { tab: 'incoming' }});
 						this.tabLabel = 'Incoming Offers';
 						break;
 					case 'transactions':
+						this.$router.push({ path: 'orders', query: { tab: 'transactions' }});
 						this.tabLabel = 'Trading History';
 						break;
 				}
@@ -175,6 +184,8 @@ export default defineComponent({
 		if (!!wallet) {
 			this.isConnected = true;
 		}
+		const tab = this.tab;
+		this.TabLabelSetter(tab);
 	},
 
 	methods: {
@@ -188,6 +199,25 @@ export default defineComponent({
 					return 'Offers';
 				case 'Trading History':
 					return 'TXN'
+			}
+		},
+		TabLabelSetter(tab: string) {
+			switch (tab) {
+				case 'listings':
+					this.tabLabel = 'Listings';
+					break;
+				case 'outgoing':
+					this.tabLabel = 'Outgoing Offers';
+					break;
+				case 'incoming':
+					this.tabLabel = 'Incoming Offers';
+					break;
+				case 'transactions':
+					this.tabLabel = 'Trading History';
+					break;
+				default:
+					this.tabLabel = 'Listings';
+					break;
 			}
 		}
 	}

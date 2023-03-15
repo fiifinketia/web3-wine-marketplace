@@ -1,5 +1,5 @@
 <template>
-	<q-dialog v-model="suggestedWines" class="suggested-wines-background">
+	<q-dialog class="suggested-wines-background">
 		<q-card class="suggested-wines column items-center">
 			<q-card-section class="join-wiv-world">
 				<div>We're happy to see you join WiV wine world!</div>
@@ -64,18 +64,8 @@
 			</q-card-section>
 
 			<q-card-section class="suggested-buttons-container row">
-				<button
-					class="suggested-buttons suggested-skip-btn"
-					@click="suggestedWines = false"
-				>
-					Skip
-				</button>
-				<button
-					class="suggested-buttons suggested-show-btn"
-					@click="suggestedWines = false"
-				>
-					Show more
-				</button>
+				<button class="suggested-buttons suggested-skip-btn">Skip</button>
+				<button class="suggested-buttons suggested-show-btn">Show more</button>
 			</q-card-section>
 		</q-card>
 	</q-dialog>
@@ -89,7 +79,6 @@ export default defineComponent({
 	name: 'SuggestedWines',
 	data() {
 		return {
-			suggestedWines: false,
 			items: [
 				{
 					id: 1,

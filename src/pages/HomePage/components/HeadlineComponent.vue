@@ -12,11 +12,11 @@
 			class="grape-mobile"
 			src="../../../../public/images/Grape-mobile.svg"
 		/>
-		<h1 class="headline-title">WiV Marketplace</h1>
-		<p class="headline-paragraph">We offer the best fine wine investments</p>
-		<div class="headline-buttons-container row">
-			<button class="headline-buttons left-btn">Start collection</button>
-			<button class="headline-buttons right-btn">Learn about WiV</button>
+		<h1 class="headline-title q-mb-xs">WiV Marketplace</h1>
+		<p class="headline-paragraph q-mb-lg">We offer the best fine wine investments</p>
+		<div class="headline-buttons-container row q-mt-md">
+			<q-btn class="headline-buttons" unelevated color="primary" no-caps>Start collection</q-btn>
+			<q-btn class="headline-buttons" unelevated color="primary" outline no-caps>Learn about WiV</q-btn>
 		</div>
 	</div>
 </template>

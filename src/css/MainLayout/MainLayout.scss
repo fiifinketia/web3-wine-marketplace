@@ -1,5 +1,8 @@
 body {
 	position: relative;
+	:focus {
+		outline: none;
+	}
 }
 .q-page-container {
 	height: 100%;
@@ -77,6 +80,22 @@ body {
 	display: none;
 }
 
+.q-btn-menu-div hr{
+	display: none;
+}
+
+#mainlayout-expansion-item {
+	width: 100% !important;
+}
+
+#mainlayout-expansion-item .q-item {
+	border: none;
+}
+
+#mainlayout-expansion-item .q-expansion-item__container .q-item {
+	right: 15px;
+}
+
 .btn-dropdown-help {
 	padding-left: 0;
 }
@@ -106,9 +125,6 @@ body {
 	color: #3586ff;
 }
 
-.nav-bar-container-right {
-	gap: 1rem;
-}
 .nav-bar-container-right > img {
 	cursor: pointer;
 }
@@ -163,6 +179,13 @@ body {
 
 .burger-menu-exit-icon {
 	cursor: pointer;
+}
+
+.logo-replacement-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 18px;
+	color: #3586FF;
+	height: 22px;
 }
 
 @media screen and (max-width: 992px) {

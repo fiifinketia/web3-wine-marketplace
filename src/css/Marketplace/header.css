@@ -1,0 +1,74 @@
+.header-nfts-title {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.header-nfts-count {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  color: #212131;
+}
+
+.header-clear-btn {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #3586FF;
+  line-height: 0;
+}
+
+.header-filter-chip {
+  color: white;
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+.header-go {
+  border-radius: 6px;
+  font-family: 'ProximaNova-Regular';
+  width: 45px;
+}
+
+.header-go:hover {
+  background: #8CBAFF !important;
+}
+
+.header-go.disabled {
+  background: #C0C0C0 !important;
+}
+
+.header-apply:hover {
+  background: #8CBAFF !important;
+}
+
+.header-apply.disabled {
+  background: #C0C0C0 !important;
+}
+
+.header-clear-btn:hover {
+  background: none !important;
+}
+
+.header-search .q-field__native {
+  font-family: 'ProximaNova-Regular' !important;
+  font-size: 16px;
+  color: rgba(157, 157, 157, 1);
+}
+
+.header-search .q-field__control {
+  border-radius: 6px !important;
+}
+
+@media screen and (max-width: 600px) {
+  .header-search {
+    flex-grow: 1;
+  }
+}
+
+.header-apply {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  border-radius: 6px;
+}

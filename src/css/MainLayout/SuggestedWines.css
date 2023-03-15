@@ -162,6 +162,14 @@
 	border: none;
 }
 
+@media screen and (min-width: 1512px) {
+	.suggested-wines {
+		margin: 0 auto;
+		max-width: 1246px;
+		max-height: 813px;
+	}
+}
+
 @media screen and (max-width: 1250px) {
 	.suggested-wines-background .q-dialog__inner--minimized {
 		padding: 1.2rem 2rem 1rem;

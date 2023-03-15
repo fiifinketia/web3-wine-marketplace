@@ -7,15 +7,17 @@
   >
     <q-card class="q-pa-none column">
       <q-card-section class="row items-center q-pb-lg">
-        <div class="dialog-title">Edit Listing</div>
+        <div class="dialog-title"> 
+          {{ !isEdit ? 'List' : 'Edit Listing' }} 
+        </div>
         <q-separator v-if="$q.screen.width > 600" spaced="md" size="2px" inset vertical color="accent" />
         <q-space />
         <q-btn
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
@@ -56,12 +58,12 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!listingPrice 
+            <span class="dialog-total">
+              {{
+                !!listingPrice
                   ? parseInt(listingPrice)
                   : '0.00'
-              }} 
+              }}
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
@@ -82,9 +84,10 @@
           no-caps
           outline
           style="color: #3586FF;"
+					unelevated
           @click="ResetData()"
         >
-          <span> Reset </span>
+          <span class="dialog-cancel-gr-text"> Reset </span>
         </q-btn>
         <q-btn
           class="dialog-confirm-small"
@@ -99,7 +102,7 @@
           "
           @click="CreateNewOrder()"
         >
-          Update
+          {{ !isEdit ? 'List the NFT' : 'Update' }} 
         </q-btn>
       </div>
     </q-card>
@@ -120,16 +123,18 @@
       "
     >
       <q-card-section class="row items-center q-pb-none">
-        <div class="dialog-title">Edit Listing</div>
+        <div class="dialog-title">
+          {{ !isEdit ? 'List' :  'Edit Listing' }}
+        </div>
         <q-separator spaced="md" size="2px" inset vertical color="accent" />
         <div class="dialog-subtitle">{{ brand }}</div>
         <q-space />
-        <q-btn 
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
@@ -168,12 +173,12 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!listingPrice 
+            <span class="dialog-total">
+              {{
+                !!listingPrice
                   ? parseInt(listingPrice)
                   : '0.00'
-              }} 
+              }}
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
@@ -189,9 +194,10 @@
               no-caps
               outline
               style="color: #3586FF;"
+							unelevated
               @click="ResetData()"
             >
-              <span> Reset </span>
+              <span class="dialog-cancel-gr-text"> Reset </span>
             </q-btn>
             <q-btn
               class="dialog-confirm"
@@ -205,7 +211,7 @@
               "
               @click="CreateNewOrder()"
             >
-              Update
+              {{ !isEdit ? 'List the NFT' : 'Update' }} 
             </q-btn>
           </div>
         </div>
@@ -221,11 +227,12 @@ import { defineComponent } from 'vue';
 import { CreateERC721Listing, CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
+import { ListableToken, TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   props: {
     orderHash: {
       type: String,
-      required: true
+      default: ''
     },
     image: {
       type: String,
@@ -246,6 +253,10 @@ export default defineComponent({
     tokenID: {
       type: String,
       required: true
+    },
+    isEdit: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -260,9 +271,20 @@ export default defineComponent({
   },
   methods: {
     async CreateNewOrder() {
+      console.log(
+            this.tokenID,
+            this.smartContractAddress,
+            this.brand,
+            this.image,
+            this.userStore.walletAddress,
+            this.listingPrice,
+            this.listingExpirationDate
+      )
       try {
-        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
-        this.$emit('remove-listing', this.orderHash);
+        if (!!this.isEdit) {
+          await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
+          this.$emit('remove-listing', this.orderHash);
+        }
         try {
           await CreateERC721Listing(
             this.tokenID,
@@ -273,6 +295,17 @@ export default defineComponent({
             this.listingPrice,
             this.listingExpirationDate
           )
+          if (!this.isEdit) {
+            const token: ListableToken = {
+              contractAddress: this.smartContractAddress,
+              network: this.network,
+              identifierOrCriteria: this.tokenID,
+              image: this.image,
+              brand: this.brand,
+              listingPrice: this.listingPrice
+            }
+            this.$emit('listable-nft-listed', token);
+          }
         } catch (err) {
           this.BuildErrorDialog(err)
         }

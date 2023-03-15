@@ -40,7 +40,7 @@ interface LowestOfferModel {
   lowestOfferCurrency?: string | null;
 }
 
-interface TransactionResponse {
+interface TransactionResponse extends TokenIdentifier {
   event: string;
 
   image: string;

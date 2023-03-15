@@ -2,24 +2,40 @@
   <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 100%;">
     <div class="row justify-between items-center q-pb-sm">
       <div class="row q-gutter-x-lg">
-        <span class="profile-header-offer q-pr-xs"> Outgoing </span>
-        <span class="profile-nft-number"> {{ outgoingAmount }} </span>
+        <div v-if="!brandSearched">
+          <span class="profile-header-offer q-pr-xs"> Outgoing </span>
+          <span class="profile-nft-number"> {{ outgoingAmount }} </span>
+        </div>
+        <div v-else>
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            :ripple="false"
+            @click="ResetSearch()"
+            class="profile-back btn--no-hover"
+          >
+            <img src="../../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
+            <span class="profile-back-text q-pl-md"> All Outgoing </span>
+          </q-btn>
+        </div>
       </div>
       <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
-        <img src="../../../assets/sell.svg" style="cursor: pointer;"/>
         <q-input 
           v-model="outgoingBrandFilter"
-          color="grey"
           outlined 
           dense
-          label="Search"
+          placeholder="Search"
           class="profile-searchbox"
+          :input-style="!!outgoingBrandFilter ? 'color: #212131' : ''"
         >
           <template #prepend>
-            <q-icon name="search" color="grey"></q-icon>
+            <q-icon name="app:search" />
           </template>
         </q-input>
         <q-btn
+          :disable="!outgoingBrandFilter"
           flat
           unelevated
           dense
@@ -38,20 +54,21 @@
       </div>
     </div>
   </div>
-  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm" style="width: 100%">
+  <div v-else class="row justify-between q-pb-md items-center q-gutter-x-sm q-px-sm" style="width: 100%">
     <q-input 
       v-model="outgoingBrandFilter"
-      color="grey"
       outlined 
       dense
-      label="Search"
+      placeholder="Search"
       class="profile-searchbox"
+      :input-style="!!outgoingBrandFilter ? 'color: #212131' : ''"
     >
       <template #prepend>
-        <q-icon name="search" color="grey"></q-icon>
+        <q-icon name="app:search" />
       </template>
     </q-input>
     <q-btn
+      :disable="!outgoingBrandFilter"
       flat
       unelevated
       dense
@@ -81,6 +98,10 @@ export default defineComponent({
     updatedOutgoingBrandFilter: {
       type: String,
       required: true
+    },
+    brandSearched: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -118,6 +139,11 @@ export default defineComponent({
     FetchOutgoingWithBrandFilter(sortKey: string, brandFilter: string) {
       this.store.setOutgoingBrandFilterStatus(true);
       this.$emit('fetchOutgoingWithBrandFilter', {sortKey: sortKey, brandFilter: brandFilter})
+    },
+    ResetSearch() {
+      this.outgoingBrandFilter = '';
+      this.store.setOutgoingBrandFilterStatus(false);
+      this.$emit('reset-outgoing-search', this.outgoingSortKey);
     }
   }
 })

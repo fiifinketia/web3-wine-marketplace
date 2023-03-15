@@ -1,132 +1,343 @@
 <template>
-	<FAVsRemove />
-	<div class="column q-pa-md">
-		<div class="row justify-between q-pt-sm">
-			<div class="row">
-				<div class="favorites-title">NFTs</div>
-				<div class="favorites-number q-pl-sm">{{ favNFTs.length }}</div>
-			</div>
-			<div class="row">
-				<q-input
-					v-model="text"
-					dense
-					outlined
-					color="blue-6"
-					placeholder="Search"
-					class="search-bar"
+	<q-page 
+		class="column items-center" 
+		style="margin-bottom: 10px; min-height: 0"
+	>
+		<FavsHeader 
+			:nftsLength="favNFTs.length"
+			@brand-search="(val) => getAllFavoritesWithBrand(val)"
+			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
+		<FavsError 
+			v-if="!isLoading && !!erroredOut"
+			@reset-search="getAllFavoritesWithoutBrand()"
+		/>
+		<FavsMissing 
+			v-else-if="!isLoading && !!emptySearch"
+		/>
+		<div 
+			v-else-if="!isLoading && !emptyRequest"
+			class="row q-gutter-y-md"
+			:class="favNFTs.length >= 4 && $q.screen.width > 600
+				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
+				? 'justify-evenly q-px-md' : $q.screen.width > 600
+				? 'justify-start q-gutter-x-lg' : favNFTs.length >= 2
+				? 'justify-around q-px-sm' : 'justify-start q-px-sm'"
+			style="width: 100%"
+		>
+			<div
+				v-for="nft in favNFTs"
+				:key="nft.tokenID"
+				class="favorites-card-container"
+			>
+				<q-card
+					class="q-ma-xs"
+					flat
 				>
-					<template #prepend>
-						<q-icon name="app:search" />
-					</template>
-				</q-input>
-				<q-btn flat class="search-btn q-ml-sm">GO</q-btn>
+					<img 
+						class="favorites-card-image clickable-image"
+						:src="nft.nftDetails.image"
+					/>
+					<div
+						class="q-pb-sm favorites-brand column justify-center"
+						style="text-align: left"
+					>
+						<span>
+							{{ truncateText(nft.nftDetails.brand) }}
+						</span>
+					</div>
+					<div class="favorites-price-container column q-pa-sm">
+						<div class="row justify-between">
+							<span class="favorites-price-text">Price</span>
+							<q-img
+								v-if="!!nft.favoriteLoading"
+								src="../../assets/loading-heart.gif"
+								:style="$q.screen.width > 350 
+									? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px' 
+									: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'"
+							/>
+							<q-img
+								v-else
+								:width="$q.screen.width > 350 ? '20px' : '16px'"
+								:height="$q.screen.width > 350 ? '20px' : '16px'"
+								src="../../../public/images/heart.svg"
+								class="clickable-image"
+								@click.stop="
+									removeNFT(nft.tokenID, nft.contractAddress, nft.network)
+								"
+							/>
+						</div>
+						<div v-if="!!nft.nftDetails.orderDetails?.listingPrice && !!nft.nftDetails.orderDetails?.transactionStatus">
+							<div class="row items-center q-gutter-x-xs q-pt-xs">
+								<q-img
+									src="../../assets/icons/currencies/USDC-Icon.svg"
+									:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
+								/>
+								<span class="favorites-b-text-active">
+									{{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
+								</span>
+							</div>
+						</div>
+						<div v-else class="q-pt-sm" style="display: flex">
+							<span class="favorites-b-text-inactive"> Not available </span>
+						</div>
+					</div>
+					<q-menu touch-position context-menu>
+						<q-list dense style="min-width: 100px">
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft)">Open</q-item-section>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft, 'new-tab')"
+									>Open link in New Tab</q-item-section
+								>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="openNFT(nft, 'new-window')"
+									>Open link in New Window</q-item-section
+								>
+							</q-item>
+							<q-separator />
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyAddress(nft)"
+									>Copy Link</q-item-section
+								>
+							</q-item>
+							<q-item clickable v-close-popup>
+								<q-item-section @click="copyToken(nft)"
+									>Copy Token Details</q-item-section
+								>
+							</q-item>
+						</q-list>
+					</q-menu>
+				</q-card>
 			</div>
 		</div>
 		<div
-			v-if="!favNFTs.length"
-			class="no-nfts-container column justify-center items-center"
+			v-else-if="!isLoading && emptyRequest"
+			style="min-height: calc(100vh - 200px); width: 80%"
+			class="column items-center justify-center"
 		>
-			<q-img src="../../../public/images/NoNFTs.svg" width="180px" />
-			<div>You do not have any favorites yet.</div>
+			<FavsEmpty />
 		</div>
-		<div class="row favs-cards-container">
-			<q-card
-				v-for="item in favNFTs"
-				:key="item.tokenID"
-				class="no-shadow q-pa-sm col-xl-2 col-md-3 col-sm-4 col-xs-6"
+		<div 
+			v-else
+			class="row q-px-md q-pt-sm q-gutter-y-md"
+			:class="$q.screen.width > 600
+				? 'justify-between' : 'justify-around'"
+		>
+			<div
+				v-for="loading in loadingFavNFTs"
+				:key="loading"
+				class="favorites-loading-card-container"
 			>
-				<img class="main-marketplace-card-image" :src="item.nftDetails.image" />
-				<div class="favs-wine-name q-py-md">TokenID: {{ item.tokenID }}</div>
-				<div class="favs-price-container column q-pa-sm">
-					<div class="row justify-between q-pb-md">
-						<div class="starting-from">Price</div>
-						<q-btn
-							class="un-favour-btn"
-							icon="app:heart"
-							flat
-							dense
-							padding="0"
-							@click="
-								removeNFT(item.tokenID, item.contractAddress, item.network)
-							"
-						/>
-					</div>
-					<div class="row justify-between">
-						<div class="favs-price">
-							<q-img src="../../../public/images/USDT.svg" width="20px" />
-							&nbsp;{{ item.nftDetails?.orderDetails?.listingPrice || '00.00' }}
-						</div>
-						<q-img
-							src="../../../public/images/mini-button.svg"
-							width="24px"
-							height="24px"
-						/>
-					</div>
-				</div>
-			</q-card>
+				<q-card
+					class="q-ma-xs"
+					flat
+				>
+					<img
+						src="../../../src/assets/loading-card.svg"
+						class="favorites-card-image"
+					/>
+					<img
+						src="../../../src/assets/loading-brand.svg"
+						style="height: 35px"
+						class="q-my-md"
+					/>
+					<img
+						src="../../../src/assets/loading-pricebox.svg"
+					/>
+				</q-card>
 		</div>
-	</div>
+		</div>
+		<FavsRemoved v-model="removeDialog"/>
+	</q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../css/Favorites/Favorites.css';
-
-import FAVsRemove from './FAVsRemove.vue';
 import { FavoritesModel } from './models/Response';
 import {
 	RemoveFavorites,
 	GetAllFavorites,
 } from '../Marketplace-Main/services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
+import FavoritesHeader from './FavoritesHeader.vue';
+import EmptyFavorites from './EmptyFavorites.vue';
+import RemoveDialog from './RemoveDialog.vue';
+import ErrorFavorites from './ErrorFavorites.vue';
+import MissingFavorites from './MissingFavorites.vue';
+
 export default defineComponent({
 	name: 'FavouritesPage',
 	components: {
-		FAVsRemove,
+		FavsRemoved: RemoveDialog,
+		FavsHeader: FavoritesHeader,
+		FavsEmpty: EmptyFavorites,
+		FavsError: ErrorFavorites,
+		FavsMissing: MissingFavorites
 	},
 	data() {
 		const userStore = useUserStore();
 		return {
 			favNFTs: Array<FavoritesModel>(),
-			userStore
+			loadingFavNFTs: [0,1,2,3,4,5,6,7],
+			isLoading: true,
+			emptyRequest: false,
+			emptySearch: false,
+			brandSearch: '',
+			userStore,
+			removeDialog: false,
+			erroredOut: false
 		};
 	},
 	mounted() {
-		this.getAllFavorites();
+		this.getAllFavoritesWithoutBrand();
 	},
 	methods: {
-		async getAllFavorites() {
-			const { result: nfts } = await GetAllFavorites(
-				`?walletAddress=${this.userStore.walletAddress}`
-			);
-			this.favNFTs = nfts;
-		},
-		animation(opacity: string, transform: string, zIndex: string) {
-			const removeNFTBackground = document.querySelector(
-				'.fr-background'
-			) as HTMLElement;
-			const removeNFTContainer = document.querySelector(
-				'.fr-container'
-			) as HTMLElement;
-
-			removeNFTBackground.style.zIndex = zIndex;
-			removeNFTBackground.style.opacity = opacity;
-			removeNFTContainer.style.transform = transform;
+		async getAllFavorites(walletAddress: string, brand: string) {
+			this.isLoading = true;
+			try {
+				const { result: nfts } = await GetAllFavorites(
+					walletAddress,
+					brand
+				);
+				this.favNFTs = nfts;
+				this.CheckForEmptiness(this.favNFTs, brand);
+				this.erroredOut = false;
+			} catch {
+				this.erroredOut = true;
+			} finally {
+				this.isLoading = false;
+			}
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
-			await RemoveFavorites({
-				walletAddress: this.userStore.walletAddress,
-				tokenID: tokenID,
-				contractAddress: cAddress,
-				network: network,
+			const nftIndex = this.favNFTs.findIndex((nft => 
+				nft.contractAddress == cAddress && 
+				nft.tokenID == tokenID &&
+				nft.network == network
+			))
+			try {
+				if (nftIndex > -1) {
+					this.favNFTs[nftIndex].favoriteLoading = true;
+					this.removeDialog = true;
+      		setTimeout(() => { 
+						this.removeFavoritesCountdown(nftIndex, {tokenID, cAddress, network})
+					}, 2000);
+				}
+			} catch {
+				return 0
+			} finally {
+				this.favNFTs[nftIndex].favoriteLoading = false;
+			}
+		},
+		async removeFavoritesCountdown(index: number, favorite: { tokenID: string, cAddress: string, network: string }) {
+			if (!!this.removeDialog) {
+				await RemoveFavorites({
+					walletAddress: this.userStore.walletAddress,
+					tokenID: favorite.tokenID,
+					contractAddress: favorite.cAddress,
+					network: favorite.network,
+				});
+				this.favNFTs.splice(index, 1);
+			} else {
+				this.favNFTs[index].favoriteLoading = false;
+			}
+			this.removeDialog = false;
+			this.CheckForEmptiness(this.favNFTs, '');
+		},
+		getAllFavoritesWithBrand(brand: string) {
+			this.getAllFavorites(this.userStore.walletAddress, brand);
+		},
+		getAllFavoritesWithoutBrand() {
+			this.getAllFavorites(this.userStore.walletAddress, '');
+		},
+		ToInt(price: string) {
+			return parseInt(price);
+		},
+		truncateText(text: string) {
+			if (this.$q.screen.width > 1350) {
+				if (text.length > 50) {
+					return text.trim().substring(0, 50).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else if (this.$q.screen.width <= 600) {
+				if (text.length > 35) {
+					return text.trim().substring(0, 35).split(" ").slice(0, -1).join(" ") + "…";	
+				} else return text
+			} else {
+				if (text.length > 40) {
+					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
+				} else return text
+			}
+		},
+		CheckForEmptiness(favNFTs: FavoritesModel[], brand: string) {
+			if (favNFTs.length == 0) {
+				if (!!brand) {
+					this.emptySearch = true;
+				} else {
+					this.emptyRequest = true;
+				}
+			} else {
+				this.emptySearch = false;
+				this.emptyRequest = false;
+			}
+		},
+		openNFT(token: FavoritesModel, where?: string) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.contractAddress,
+				},
 			});
-			this.getAllFavorites();
-
-			this.animation('1', 'scale(1)', '200');
-
-			setTimeout(() => {
-				this.animation('0', 'scale(0.5)', '-200');
-			}, 1500);
+			switch (where) {
+				case 'here':
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.contractAddress,
+						},
+					});
+					break;
+				case 'new-tab':
+					window.open(routeData.href, '_blank');
+					break;
+				case 'new-window':
+					window.open(
+						routeData.href,
+						'_blank',
+						'location=yes,status=yes,scrollbars=yes,height=auto,width=auto'
+					);
+					break;
+				default:
+					this.$router.push({
+						path: '/nft',
+						query: {
+							id: token.tokenID,
+							network: token.network,
+							contractAddress: token.contractAddress,
+						},
+					});
+					break;
+			}
+		},
+		copyToken(token: FavoritesModel) {
+			navigator.clipboard.writeText(JSON.stringify(token));
+		},
+		copyAddress(token: FavoritesModel) {
+			const routeData = this.$router.resolve({
+				path: '/nft',
+				query: {
+					id: token.tokenID,
+					network: token.network,
+					contractAddress: token.contractAddress,
+				},
+			});
+			navigator.clipboard.writeText(window.location.host + routeData.href);
 		},
 	},
 });

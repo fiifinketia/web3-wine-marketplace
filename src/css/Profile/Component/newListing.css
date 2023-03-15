@@ -1,0 +1,234 @@
+.new-list-container {
+  width: 1100px !important;
+  height: calc(100vh - 48px);
+  border-radius: 20px !important;
+}
+
+.exit-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 16px;
+  padding-top: 16px;
+}
+
+.new-list-header-text {
+  font-family: 'Obviously-Bolder';
+  font-size: 18px;
+  color: #212131;
+}
+
+.new-list-brandf-box {
+  background: #F0F0EF;
+  height: 56px;
+  width: 410px;
+}
+
+.new-list-brandf-text, .new-list-brandf-text-bold {
+  font-size: 16px;
+  color: #212131;
+  text-align: left;
+}
+
+.new-list-brandf-text {
+  font-family: 'ProximaNova-Regular';
+}
+
+.new-list-brandf-text-bold {
+  font-family: 'ProximaNova-Bold';
+}
+
+.new-list-brandf-container > .new-list-brandf-box:nth-of-type(even){
+  background: white;
+}
+
+.new-list-brandf-container {
+  z-index: 2;
+  border-radius: 8px;
+  position: absolute;
+  margin-top: 6px;
+  max-height: 200px;
+  overflow-y: scroll;
+  border-top: 1px solid #C0C0C0;
+  border-bottom: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.new-list-brandf-box {
+  border-left: 1px solid #C0C0C0;
+  border-right: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:not(:last-child) {
+  border-bottom: 1px solid #C0C0C0;
+}
+
+.new-list-brandf-box:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* LIST-FILTER-SIDEBAR WORKAROUND STARTS HERE */
+
+.list-filter-dialog > .q-dialog__inner {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.list-filter-dialog > .q-dialog__inner--minimized {
+  padding: 12px;
+}
+
+/* DO NOT DELETE */
+@media screen and (min-width: 1154px) {
+  .list-filter-dialog > .q-dialog__inner {
+    width: 1100px;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1153px) {
+  .list-filter-dialog > .q-dialog__inner--minimized {
+    padding: 24px;
+  }
+}
+
+.list-filter-dialog > .q-dialog__inner--fullheight {
+  max-height: calc(100vh - 108px);
+}
+
+/* LIST-FILTER-SIDEBAR WORKAROUND ENDS HERE */
+
+.new-list-subheader-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.new-list-available-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  color: #212131;
+  opacity: 0.6;
+}
+
+.new-list-available-num, .new-list-price {
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color: #212131;
+}
+
+.new-list-price { 
+  height: 28px;
+}
+
+.new-list-card-brand {
+  height: 57px;
+  line-height: 1.2;
+}
+
+.new-list-brand-text {
+  font-family: 'Obviously-Bolder';
+  font-size: 18px;
+}
+
+.new-list-history-container {
+  background: linear-gradient(109.05deg, rgba(255, 255, 255, 0.13) 15.61%, rgba(255, 255, 255, 0.04) 98.78%);
+  border: 1px solid rgba(94, 151, 236, 0.27) !important;
+  backdrop-filter: blur(20px);
+  border-radius: 6px !important;
+  height: 52px;
+}
+
+.new-list-history-text {
+  font-family: 'ProximaNova-Bold';
+  color: #3586FF;
+  font-size: 18px;
+  height: 25px;
+}
+
+.new-list-searchbox .q-field__control {
+  border-radius: 6px !important;
+}
+
+.new-list-searchbox .q-field__label {
+  font-family: 'ProximaNova-Regular' !important; 
+}
+
+.new-list-searchbox .q-icon {
+	width: 20px;
+}
+
+.new-list-searchbox .q-field__native {
+	font-family: 'ProximaNova-Regular';
+	font-size: 16px;
+	color: #9d9d9d;
+}
+
+.new-list-card-image {
+  position: relative;
+  border-radius: 6px !important;
+}
+
+.list-btn.disabled {
+  opacity: 1 !important;
+}
+
+.new-list-card-process-logo {
+  position: absolute;   
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+}
+
+@media screen and (min-width: 1200px) {
+  .new-list-searchbox {
+    width: 410px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .new-list-card-container {
+    width: 23%;
+  }
+  .new-list-card-container:nth-child(-n+4) {
+    margin-top: 2px;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+  .new-list-card-container:nth-child(-n+3) {
+    margin-top: 1px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .new-list-card-container {
+    width: 32%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .new-list-card-container {
+    width: 45%;
+  }
+  .new-list-brand-text {
+    font-size: 16px;
+  }
+  .new-list-history-text {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 0px) and (max-width: 599px) {
+  .new-list-card-container:nth-child(-n+2) {
+    margin-top: 2px;
+  }
+}

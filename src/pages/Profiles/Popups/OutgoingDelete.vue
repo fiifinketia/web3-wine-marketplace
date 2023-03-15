@@ -23,7 +23,7 @@
           style="color: #3586FF;"
           v-close-popup
         >
-          <span> Cancel </span>
+          <span class="dialog-cancel-gr-text"> Cancel </span>
         </q-btn>
         <q-btn
           class="dialog-delete"

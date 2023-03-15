@@ -39,8 +39,9 @@
 }
 
 .x-icon {
-	padding-left: 5rem;
 	cursor: pointer;
+	left: -1rem;
+	padding-left: 1rem;
 }
 
 .my-wallet-ballance-container {
@@ -127,6 +128,14 @@
 .id-mobile {
 	display: none;
 }
+
+@media screen and (min-width: 1512px) {
+	.my-wallet-container {
+		margin: 0 auto;
+		max-width: 785px;
+	}
+}
+
 @media screen and (max-width: 570px) {
 	.wallet-id {
 		display: none;
@@ -140,6 +149,9 @@
 		letter-spacing: 0.02em;
 		display: block;
 		margin: 0 auto;
+	}
+	.my-wallet-container {
+		width: 100vw;
 	}
 }
 @media screen and (max-width: 470px) {
