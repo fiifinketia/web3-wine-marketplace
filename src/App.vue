@@ -13,6 +13,7 @@ const customIcons: { [key: string]: string } = {
 	'app:profile': 'img:/images/profile-icon.svg',
 	'app:heart': 'img:/images/heart.svg',
 	'app:search': 'img:/images/search.svg',
+	'app:bell-icon': 'img:/images/bell-icon.svg',
 };
 export default defineComponent({
 	name: 'App',

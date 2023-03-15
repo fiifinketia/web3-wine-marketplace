@@ -104,7 +104,7 @@
 		@openConnectWallet="showConnectWallet = true"
 		@openMyWallet="showMyWallet = true"
 	/>
-	<SuggestedWines />
+	<SuggestedWines v-model="suggestedWinesDialog" />
 
 	<!-------------------------------------- /POPUP MODALS -------------------------------------->
 
@@ -181,28 +181,20 @@
 							</q-list>
 						</div>
 					</q-btn-dropdown>
-					<div
-						clickable
-					>
-						Stats
-					</div>
-					<div
-						clickable
-					>
-						Storefront
-					</div>
+					<div clickable>Stats</div>
+					<div clickable>Storefront</div>
 				</div>
 				<div class="row">
-					<div class="row items-center">
+					<div v-if="$q.screen.width > 768" class="row items-center">
 						<img
 							v-if="!!walletAddress"
-							class="icons q-mx-xs"
+							class="cursor-pointer	icons q-mx-xs"
 							src="../../public/images/favs-icon.svg"
 							@click="$router.push('/favorites')"
 						/>
 						<img
 							v-if="!!walletAddress"
-							class="icons q-mx-xs"
+							class="cursor-pointer	icons q-mx-xs"
 							src="../../public/images/bell-icon.svg"
 							clickable
 						/>
@@ -212,7 +204,11 @@
 							flat
 							icon="app:profile"
 						>
-							<q-menu class="q-btn-menu-div no-scroll" max-width="300px" max-height="100vh">
+							<q-menu
+								class="q-btn-menu-div no-scroll"
+								max-width="300px"
+								max-height="100vh"
+							>
 								<q-toolbar v-if="!!walletAddress" class="text-white">
 									<q-chip
 										v-close-popup
@@ -242,40 +238,68 @@
 													<q-item
 														v-close-popup
 														clickable
-														@click="$router.push({ path: 'orders', query: { tab: 'listings' }})"
+														@click="
+															$router.push({
+																path: 'orders',
+																query: { tab: 'listings' },
+															})
+														"
 													>
 														<q-item-section>
-															<q-item-label class="text-no-wrap">listings</q-item-label>
+															<q-item-label class="text-no-wrap"
+																>listings</q-item-label
+															>
 														</q-item-section>
 													</q-item>
 
 													<q-item
 														v-close-popup
 														clickable
-														@click="$router.push({ path: 'orders', query: { tab: 'incoming' }})"
+														@click="
+															$router.push({
+																path: 'orders',
+																query: { tab: 'incoming' },
+															})
+														"
 													>
 														<q-item-section>
-															<q-item-label class="text-no-wrap">incoming offers</q-item-label>
+															<q-item-label class="text-no-wrap"
+																>incoming offers</q-item-label
+															>
 														</q-item-section>
 													</q-item>
 
 													<q-item
 														v-close-popup
 														clickable
-														@click="$router.push({ path: 'orders', query: { tab: 'outgoing' }})"
+														@click="
+															$router.push({
+																path: 'orders',
+																query: { tab: 'outgoing' },
+															})
+														"
 													>
 														<q-item-section>
-															<q-item-label class="text-no-wrap">outgoing offers</q-item-label>
+															<q-item-label class="text-no-wrap"
+																>outgoing offers</q-item-label
+															>
 														</q-item-section>
 													</q-item>
 
 													<q-item
 														v-close-popup
 														clickable
-														@click="$router.push({ path: 'orders', query: { tab: 'transactions' }})"
+														@click="
+															$router.push({
+																path: 'orders',
+																query: { tab: 'transactions' },
+															})
+														"
 													>
 														<q-item-section>
-															<q-item-label class="text-no-wrap">trading history</q-item-label>
+															<q-item-label class="text-no-wrap"
+																>trading history</q-item-label
+															>
 														</q-item-section>
 													</q-item>
 												</q-list>
@@ -299,14 +323,13 @@
 										href="https://dwc.wiv-tech.com/#/"
 									>
 										<q-item-section>
-											<q-item-label class="text-no-wrap">digital wine cellar</q-item-label>
+											<q-item-label class="text-no-wrap"
+												>digital wine cellar</q-item-label
+											>
 										</q-item-section>
 									</q-item>
 
-									<q-item
-										v-close-popup
-										clickable
-									>
+									<q-item v-close-popup clickable>
 										<q-item-section>
 											<q-item-label>settings</q-item-label>
 										</q-item-section>
@@ -322,19 +345,13 @@
 										>
 											<div>
 												<q-list class="q-ml-md">
-													<q-item
-														v-close-popup
-														clickable
-													>
+													<q-item v-close-popup clickable>
 														<q-item-section>
-															<q-item-label>conctact us</q-item-label>
+															<q-item-label>contact us</q-item-label>
 														</q-item-section>
 													</q-item>
 
-													<q-item
-														v-close-popup
-														clickable
-													>
+													<q-item v-close-popup clickable>
 														<q-item-section>
 															<q-item-label>Faqs</q-item-label>
 														</q-item-section>
@@ -423,6 +440,7 @@ export default defineComponent({
 			walletAddress: '',
 			isMetaMaskInstalled,
 			balance: 0,
+			suggestedWinesDialog: false,
 		};
 	},
 	watch: {
@@ -487,7 +505,6 @@ export default defineComponent({
 				await this.$router.replace({ path: next, replace: true });
 				window.location.reload();
 			}
-
 		},
 
 		setupWallet() {

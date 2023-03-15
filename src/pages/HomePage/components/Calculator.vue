@@ -14,7 +14,7 @@
 			</div>
 			<div class="we-offer-text">
 				We offer only specially selected partnership wines, considering your
-				invesrment style.
+				investment style.
 			</div>
 			<div class="justify-center items-center">
 				<q-btn class="calculate-worth-button calculate-worth-text" unelevated no-caps @click="$router.push('/calculator')">
@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue-demi';
-import '../../../css/Homepage/WineCalcualtor.css';
+import '../../../css/Homepage/Calcualtor.css';
 export default defineComponent({
 	name: 'WineCalculator',
 });
