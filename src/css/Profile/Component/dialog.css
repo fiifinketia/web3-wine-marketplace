@@ -98,6 +98,20 @@
   border-radius: 10px !important;
 }
 
+.dialog-confirm-box-long {
+  width: 550px;
+  background-color: #ffffff;
+  border-radius: 10px !important;
+}
+
+.dialog-cancel-gr-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	background: -webkit-linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
 .dialog-confirm, .dialog-confirm-small {
   background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
   border-radius: 6px;
@@ -124,12 +138,27 @@
   font-size: 20px;
 }
 
+.dialog-reset::before {
+	border-radius: 6px;
+  border: 1px solid transparent;
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; 
+	mask-composite: exclude;
+}
+
 @media screen and (max-width: 800px) {
   .dialog-confirm-small {
     width: 200px;
   }
   .dialog-reset-small {
     width: 200px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .dialog-confirm-box-long {
+    width: 100%;
   }
 }
 

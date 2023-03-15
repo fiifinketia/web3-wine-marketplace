@@ -144,13 +144,32 @@
   font-family: 'ProximaNova-Regular' !important; 
 }
 
+.profile-searchbox .q-icon {
+	width: 20px;
+}
+
+.profile-searchbox .q-field__native {
+	font-family: 'ProximaNova-Regular';
+	font-size: 16px;
+	color: #9d9d9d;
+}
+
 .profile-primary-btn {
   font-family: 'ProximaNova-Regular' !important;
   font-size: 14px;
   background: #3586FF;
   color: white;
   width: 45px;
-  height: 38px;
+  height: 39px;
+  border-radius: 6px;
+}
+
+.profile-primary-btn:hover {
+	background: #8cbaff;
+}
+
+.profile-primary-btn.disabled {
+	background: #C0C0C0 !important;
 }
 
 .profile-accept-btn {
@@ -216,6 +235,11 @@
   }
   .profile-nft-brand {
     font-size: 16px;
+  }
+  .profile-column-name {
+    border-top: 1px solid rgba(94, 151, 236, 0.27);
+    border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+    height: 60px;
   }
 }
 

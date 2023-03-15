@@ -10,17 +10,18 @@
     <div class="row items-center q-gutter-x-sm" style="flex-wrap: nowrap;">
       <q-input 
         v-model="transactionBrandFilter"
-        color="grey"
         outlined 
         dense
-        label="Search"
+        placeholder="Search"
         class="profile-searchbox"
+        :input-style="!!transactionBrandFilter ? 'color: #212131' : ''"
       >
         <template #prepend>
-          <q-icon name="search" color="grey"></q-icon>
+          <q-icon name="app:search" />
         </template>
       </q-input>
       <q-btn
+        :disable="!transactionBrandFilter"
         flat
         unelevated
         dense

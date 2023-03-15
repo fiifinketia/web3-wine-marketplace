@@ -1,12 +1,18 @@
 <template>
-	<div 
+	<div
 		v-if="!isLoading && allNFTs.length > 0 && !erroredOut"
-		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container" 
-		:class="allNFTs.length >= 4 && $q.screen.width > 600
-		? 'justify-between': allNFTs.length == 3 && $q.screen.width > 600
-		? 'justify-evenly' : $q.screen.width > 600
-		? 'justify-start q-gutter-x-md' : allNFTs.length >= 2
-		? 'justify-around' : 'justify-start q-ml-xs'"
+		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container"
+		:class="
+			allNFTs.length >= 4 && $q.screen.width > 600
+				? 'justify-between'
+				: allNFTs.length == 3 && $q.screen.width > 600
+				? 'justify-evenly'
+				: $q.screen.width > 600
+				? 'justify-start q-gutter-x-md'
+				: allNFTs.length >= 2
+				? 'justify-around'
+				: 'justify-start q-ml-xs'
+		"
 	>
 		<div
 			v-for="token in allNFTs"
@@ -37,9 +43,11 @@
 						<q-img
 							v-if="!!userStore.walletAddress && !!token.favoriteLoading"
 							src="../../../assets/loading-heart.gif"
-							:style="$q.screen.width > 350 
-								? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px' 
-								: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'"
+							:style="
+								$q.screen.width > 350
+									? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
+									: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
+							"
 						/>
 						<q-img
 							v-else-if="!!userStore.walletAddress && token.favorited === true"
@@ -72,11 +80,20 @@
 							"
 						/>
 					</div>
-					<div v-if="!!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus">
+					<div
+						v-if="
+							!!token.orderDetails?.listingPrice &&
+							!!token.orderDetails?.transactionStatus
+						"
+					>
 						<div class="row items-center q-gutter-x-xs q-pt-xs">
 							<q-img
 								src="../../../assets/icons/currencies/USDC-Icon.svg"
-								:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
+								:style="
+									$q.screen.width > 350
+										? 'height: 20px; width: 20px'
+										: 'height: 15px; width: 16px'
+								"
 							/>
 							<span class="main-marketplace-price-text-b-active">
 								{{ ToInt(token.orderDetails.listingPrice) }}
@@ -84,7 +101,9 @@
 						</div>
 					</div>
 					<div v-else class="q-pt-sm" style="display: flex">
-						<span class="main-marketplace-price-text-b-inactive"> Not available </span>
+						<span class="main-marketplace-price-text-b-inactive">
+							Not available
+						</span>
 					</div>
 				</q-card-section>
 				<q-menu touch-position context-menu>
@@ -122,13 +141,12 @@
 		<EmptyView />
 	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
-		<ErrorView @retrieve-again="this.RetrieveTokens()"/>
+		<ErrorView @retrieve-again="this.RetrieveTokens()" />
 	</div>
-	<div 
-		v-else 
+	<div
+		v-else
 		class="row q-pt-none q-px-sm q-gutter-y-md main-marketplace-overall-container"
-		:class="$q.screen.width > 600
-			? 'justify-between' : 'justify-around'"
+		:class="$q.screen.width > 600 ? 'justify-between' : 'justify-around'"
 	>
 		<div
 			v-for="loading in loadingNFTs"
@@ -136,10 +154,7 @@
 			class="main-marketplace-loading-card-container"
 		>
 			<div>
-				<q-card
-					class="q-ma-xs main-marketplace-loading-qcard"
-					flat
-				>
+				<q-card class="q-ma-xs main-marketplace-loading-qcard" flat>
 					<img
 						src="../../../../src/assets/loading-card.svg"
 						class="main-marketplace-card-image"
@@ -149,9 +164,7 @@
 						:style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
 						class="q-my-md"
 					/>
-					<img
-						src="../../../../src/assets/loading-pricebox.svg"
-					/>
+					<img src="../../../../src/assets/loading-pricebox.svg" />
 				</q-card>
 			</div>
 		</div>
@@ -163,7 +176,10 @@ import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useWineFilters } from 'src/stores/wine-filters';
 import { useGeneralSearch } from 'src/stores/general-search-filter';
-import { DynamicKeyWithCount, ListingWithPricingAndImage } from '../models/Response.models';
+import {
+	DynamicKeyWithCount,
+	ListingWithPricingAndImage,
+} from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
 import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
@@ -173,7 +189,7 @@ import EmptyView from './EmptyView.vue';
 export default defineComponent({
 	components: {
 		ErrorView: ErrorViewVue,
-		EmptyView: EmptyView
+		EmptyView: EmptyView,
 	},
 	emits: ['totalTokens'],
 	data() {
@@ -184,7 +200,7 @@ export default defineComponent({
 
 		return {
 			allNFTs: new Array<ListingWithPricingAndImage>(),
-			loadingNFTs: [0,1,2,3,4,5,6,7],
+			loadingNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
 			isLoading: true,
 			card: ref(false),
 			stars: ref(3),
@@ -193,10 +209,10 @@ export default defineComponent({
 			wineFiltersStore,
 			generalSearchStore,
 			filterListenersEnabled: true,
-			erroredOut: false,
+			erroredOut: false, // change
 			filterKey: wineFiltersStore.filterKey,
 			nftEnums: {} as DynamicKeyWithCount,
-			subscription: Function()
+			subscription: Function(),
 		};
 	},
 	async mounted() {
@@ -205,18 +221,20 @@ export default defineComponent({
 		const filterOptions = await RetrieveFilterDetails();
 		this.wineFiltersStore.setAllFilters(filterOptions);
 
-		this.subscription = this.wineFiltersStore.$subscribe(async (mutation, state) => {
-			if (!this.filterListenersEnabled) {
-				return
+		this.subscription = this.wineFiltersStore.$subscribe(
+			async (mutation, state) => {
+				if (!this.filterListenersEnabled) {
+					return;
+				}
+				if (this.wineFiltersStore.filterMode == 'automatic') {
+					await this.RetrieveTokens(null);
+				}
 			}
-			if (this.wineFiltersStore.filterMode == 'automatic') {
-				await this.RetrieveTokens(null);
-			}
-		})
+		);
 	},
-	unmounted () {
+	unmounted() {
 		// cancels subscription once changing to another tab (e.g. releases, recommended)
-		this.subscription()
+		this.subscription();
 	},
 	watch: {
 		'wineFiltersStore.filterKey': {
@@ -224,7 +242,7 @@ export default defineComponent({
 				if (val != 0) {
 					this.RetrieveTokens(null);
 				}
-			}
+			},
 		},
 		'generalSearchStore.generalSearchKey': {
 			async handler(val) {
@@ -236,16 +254,18 @@ export default defineComponent({
 						await this.RetrieveTokens(this.generalSearchStore.generalSearch);
 						await this.wineFiltersStore.removeAllFilters();
 						// tick the brand options related to the NFTs retrieved from general search key
-						await this.wineFiltersStore.setBrandFiltersAfterGenSearch(this.nftEnums);
+						await this.wineFiltersStore.setBrandFiltersAfterGenSearch(
+							this.nftEnums
+						);
 					} catch {
-						return 
+						return;
 					} finally {
 						// after removing filters, bring back listeners for the filter
 						this.filterListenersEnabled = true;
 					}
 				}
-			}
-		}
+			},
+		},
 	},
 
 	methods: {
@@ -255,11 +275,12 @@ export default defineComponent({
 			network: string,
 			objective: string
 		) {
-			const nftIndex = this.allNFTs.findIndex((nft => 
-				nft.smartContractAddress == cAddress && 
-				nft.tokenID == tokenID &&
-				nft.network == network
-			))
+			const nftIndex = this.allNFTs.findIndex(
+				(nft) =>
+					nft.smartContractAddress == cAddress &&
+					nft.tokenID == tokenID &&
+					nft.network == network
+			);
 			switch (objective) {
 				case 'add':
 					try {
@@ -272,7 +293,7 @@ export default defineComponent({
 						});
 						this.allNFTs[nftIndex].favorited = true;
 					} catch {
-						return 0
+						return 0;
 					} finally {
 						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
@@ -288,7 +309,7 @@ export default defineComponent({
 						});
 						this.allNFTs[nftIndex].favorited = false;
 					} catch {
-						return 0
+						return 0;
 					} finally {
 						this.allNFTs[nftIndex].favoriteLoading = false;
 					}
@@ -368,22 +389,22 @@ export default defineComponent({
 					const { result: nfts } = await RetrieveFilteredNFTs(
 						`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 					);
-					console.log(nfts)
+					console.log(nfts);
 					this.$emit('totalTokens', nfts.length);
 					this.allNFTs = nfts;
-					this.erroredOut = false;
+					this.erroredOut = false; // change
 				} catch {
 					this.erroredOut = true;
-				} 
+				}
 			} else {
 				try {
 					const { result: nfts, counts: nftEnums } = await RetrieveFilteredNFTs(
 						`generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
 					);
-					console.log(nfts)
+					console.log(nfts);
 					this.$emit('totalTokens', nfts.length);
 					this.allNFTs = nfts;
-					this.erroredOut = false;
+					this.erroredOut = false; // change
 					this.nftEnums = nftEnums;
 				} catch {
 					this.erroredOut = true;
@@ -397,18 +418,24 @@ export default defineComponent({
 		truncateText(text: string) {
 			if (this.$q.screen.width > 1350) {
 				if (text.length > 50) {
-					return text.trim().substring(0, 50).split(" ").slice(0, -1).join(" ") + "…";	
-				} else return text
+					return (
+						text.trim().substring(0, 50).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			} else if (this.$q.screen.width <= 600) {
 				if (text.length > 35) {
-					return text.trim().substring(0, 35).split(" ").slice(0, -1).join(" ") + "…";	
-				} else return text
+					return (
+						text.trim().substring(0, 35).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			} else {
 				if (text.length > 40) {
-					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
-				} else return text
+					return (
+						text.trim().substring(0, 40).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			}
-		}
+		},
 	},
 });
 </script>

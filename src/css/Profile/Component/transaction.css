@@ -54,18 +54,34 @@
   font-family: 'ProximaNova-Regular';
   font-size: 18px;
   color: #9D9D9D;
-  
+}
+
+.transaction-hash-text-mobile, a {
+  font-family: 'ProximaNova-Regular';
+  color: #3586FF;
+}
+
+.transaction-hash-text-mobile {
+  font-size: 18px;
+  height: 20px;
+}
+
+@media screen and (min-width: 601px) {
+  a {
+    font-size: 20px;
+    text-decoration: underline;
+  }
+  a:hover {
+    font-family: 'ProximaNova-Bold';
+  }
 }
 
 @media screen and (max-width: 1020px) {
   .transaction-column-nft {
-    width: 40%;
+    width: 47%;
   }
   .transaction-column-price {
     width: 25%;
-  }
-  .transaction-column-date {
-    width: 35%;
   }
 }
 
@@ -81,5 +97,6 @@
   }
   .transaction-number-text, .transaction-time-text, .transaction-date-text {
     font-size: 16px;
+    word-break: break-all;
   }
 }

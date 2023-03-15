@@ -85,7 +85,7 @@
 					unelevated
           @click="ResetData()"
         >
-          <span> Reset </span>
+          <span class="dialog-cancel-gr-text"> Reset </span>
         </q-btn>
         <q-btn
           class="dialog-confirm-small"
@@ -193,7 +193,7 @@
 							unelevated
               @click="ResetData()"
             >
-              <span> Reset </span>
+              <span class="dialog-cancel-gr-text"> Reset </span>
             </q-btn>
             <q-btn
               class="dialog-confirm"
