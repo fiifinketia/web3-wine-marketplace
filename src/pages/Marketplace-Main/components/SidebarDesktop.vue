@@ -25,16 +25,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import 'src/css/Marketplace/sidebar.css'
+import 'src/css/Marketplace/sidebar.css';
 import SidebarContents from './SidebarContents.vue';
 
 export default defineComponent({
 	components: {
-		SidebarContents: SidebarContents
-	}
+		SidebarContents: SidebarContents,
+	},
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

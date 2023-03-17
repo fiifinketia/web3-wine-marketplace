@@ -5,15 +5,13 @@ export const useGeneralSearch = defineStore('generalSearchFilter', {
 		generalSearch: '',
 		generalSearchKey: 0,
 	}),
-	getters: {
-		
-	},
+	getters: {},
 	actions: {
-    setGeneralSearch(search: string) {
+		setGeneralSearch(search: string) {
 			this.generalSearch = search;
 		},
 		indexGeneralSearchKey() {
-			this.generalSearchKey = this.generalSearchKey + 1
+			this.generalSearchKey = this.generalSearchKey + 1;
 		},
 	},
 });

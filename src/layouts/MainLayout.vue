@@ -121,19 +121,19 @@
 						src="../../public/images/WiV-logo.svg"
 						@click="$router.push('/')"
 					/>
-					<span 
+					<span
 						v-else-if="$router.currentRoute.value.path === '/orders'"
 						class="logo-replacement-text"
 					>
 						Profile
 					</span>
-					<span 
+					<span
 						v-else-if="$router.currentRoute.value.path === '/marketplace'"
 						class="logo-replacement-text"
 					>
 						Marketplace
 					</span>
-					<span 
+					<span
 						v-else-if="$router.currentRoute.value.path === '/favorites'"
 						class="logo-replacement-text"
 					>
@@ -188,13 +188,13 @@
 					<div v-if="$q.screen.width > 768" class="row items-center">
 						<img
 							v-if="!!walletAddress"
-							class="cursor-pointer	icons q-mx-xs"
+							class="cursor-pointer icons q-mx-xs"
 							src="../../public/images/favs-icon.svg"
 							@click="$router.push('/favorites')"
 						/>
 						<img
 							v-if="!!walletAddress"
-							class="cursor-pointer	icons q-mx-xs"
+							class="cursor-pointer icons q-mx-xs"
 							src="../../public/images/bell-icon.svg"
 							clickable
 						/>
@@ -483,15 +483,15 @@ export default defineComponent({
 			this.showMyWallet = false;
 			transak.init();
 
-			transak.on(
-				transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
-				async (orderData: any) => {
-					// TODO: Notitfy user on balance update
-					this.balance = await this.userStore.getWalletBalance();
-					// console.log(orderData);
-					transak.close();
-				}
-			);
+			// transak.on(
+			// 	transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
+			// 	async (orderData: any) => {
+			// 		// TODO: Notitfy user on balance update
+			// 		this.balance = await this.userStore.getWalletBalance();
+			// 		// console.log(orderData);
+			// 	}
+			// );
+			transak.close();
 			// This is so that the balance is updated after new funds are imported
 		},
 		async connectWallet() {

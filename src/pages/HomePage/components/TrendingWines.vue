@@ -78,13 +78,20 @@
 				</div>
 			</div>
 
-			<q-btn class="see-market-button" color="primary" no-caps outline unelevated>See market statistics</q-btn>
+			<q-btn
+				class="see-market-button"
+				color="primary"
+				no-caps
+				outline
+				unelevated
+				>See market statistics</q-btn
+			>
 		</div>
 	</div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent } from 'vue-demi';
 import '../../../css/Homepage/TrendingWines.css';
 export default defineComponent({
 	name: 'TrendingWines',

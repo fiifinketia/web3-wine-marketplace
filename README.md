@@ -1,17 +1,21 @@
 # WiV Marketplace (wiv-marketplace)
+
 The WiV Marketplace is a web application which allows customers to trade their NFT wines using Opensea's Seaport Protocol.
 
 ## Install the dependencies
+
 ```bash
 npm install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
 ```bash
 npm run dev
 ```
 
 ### Lint the files
+
 ```bash
 yarn lint
 # or
@@ -19,11 +23,13 @@ npm run lint
 ```
 
 ### Build the app for production
+
 ```bash
 quasar build
 ```
 
 # ENV File Variables
+
 ```
 # BASEURL
 MARKETPLACE_API_URL=http://localhost:8080/api

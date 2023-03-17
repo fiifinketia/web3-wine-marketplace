@@ -1,4 +1,3 @@
-
 module.exports = {
 	// https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
 	// This option interrupts the configuration hierarchy at this file
@@ -86,30 +85,34 @@ module.exports = {
 		'no-var': 'error',
 
 		'no-console': 'warn',
-    'no-use-before-define': 'error',
+		'no-use-before-define': 'error',
 
 		'no-nested-ternary': 'error',
-    'no-trailing-spaces': 'error',
+		'no-trailing-spaces': 'error',
 
 		'no-restricted-syntax': [
-      'error',
-      {
-        'selector': 'ForInStatement',
-        'message': 'Use array methods like map or filter instead of a for-in loop.'
-      },
-      {
-        'selector': 'ForOfStatement',
-        'message': 'Use array methods like forEach or map instead of a for-of loop.'
-      },
-      {
-        'selector': 'LabeledStatement',
-        'message': 'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.'
-      },
-      {
-        'selector': 'WithStatement',
-        'message': '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.'
-      }
-    ],
+			'error',
+			{
+				selector: 'ForInStatement',
+				message:
+					'Use array methods like map or filter instead of a for-in loop.',
+			},
+			{
+				selector: 'ForOfStatement',
+				message:
+					'Use array methods like forEach or map instead of a for-of loop.',
+			},
+			{
+				selector: 'LabeledStatement',
+				message:
+					'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.',
+			},
+			{
+				selector: 'WithStatement',
+				message:
+					'`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
+			},
+		],
 
 		// allow debugger during development only
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

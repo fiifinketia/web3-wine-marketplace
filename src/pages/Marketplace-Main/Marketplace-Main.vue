@@ -1,5 +1,5 @@
 <template>
-	<q-page 
+	<q-page
 		v-scroll.self="$q.screen.width > 600 ? '' : onScroll"
 		class="q-mb-sm"
 		style="min-height: 0"
@@ -29,7 +29,7 @@
 					</span>
 					<q-btn-dropdown
 						v-model="marketplaceDropdown"
-						style="height: 42px;"
+						style="height: 42px"
 						no-caps
 						color="white"
 						text-color="secondary"
@@ -41,14 +41,32 @@
 						:label="tabLabel"
 					>
 						<q-list>
-							<q-item clickable @click="tabLabel = 'Marketplace'; tab = 'nfts'">
+							<q-item
+								clickable
+								@click="
+									tabLabel = 'Marketplace';
+									tab = 'nfts';
+								"
+							>
 								<span class="profile-dropdown-selection"> Marketplace </span>
 							</q-item>
 
-							<q-item clickable @click="tabLabel = 'Releases'; tab = 'releases'">
+							<q-item
+								clickable
+								@click="
+									tabLabel = 'Releases';
+									tab = 'releases';
+								"
+							>
 								<span class="profile-dropdown-selection"> Releases </span>
 							</q-item>
-							<q-item clickable @click="tabLabel = 'Recommended'; tab = 'recommended'">
+							<q-item
+								clickable
+								@click="
+									tabLabel = 'Recommended';
+									tab = 'recommended';
+								"
+							>
 								<span class="profile-dropdown-selection"> Recommended </span>
 							</q-item>
 						</q-list>
@@ -58,13 +76,15 @@
 				<q-separator class="q-ma-none" />
 				<q-tab-panels v-model="tab" animated class="q-pa-none">
 					<q-tab-panel class="q-pa-none q-px-none" name="nfts">
-						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total" />
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-none" name="releases">
-						<NewlyReleasedTab @total-tokens="(total:number) => totalTokens = total"/>
+						<NewlyReleasedTab
+							@total-tokens="(total:number) => totalTokens = total"
+						/>
 					</q-tab-panel>
 					<q-tab-panel class="q-pa-none q-px-none" name="recommended">
-						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total"/>
+						<AllNFTsTab @total-tokens="(total:number) => totalTokens = total" />
 					</q-tab-panel>
 				</q-tab-panels>
 			</section>
@@ -90,7 +110,7 @@ export default defineComponent({
 			tab: ref(queryT || 'nfts'),
 			tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
 			totalTokens: ref(0),
-			marketplaceDropdown: false
+			marketplaceDropdown: false,
 		};
 	},
 
@@ -139,7 +159,7 @@ export default defineComponent({
 			if (!!this.marketplaceDropdown) {
 				this.marketplaceDropdown = false;
 			}
-		}
+		},
 	},
 });
 </script>

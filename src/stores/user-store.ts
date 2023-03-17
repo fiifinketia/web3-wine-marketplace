@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import axios from 'axios';
 import { ethers, utils } from 'ethers';
-import { useNFTStore } from './nft-store';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 
@@ -43,8 +42,9 @@ export const useUserStore = defineStore(
 					}
 				);
 				user.value = newUser.data;
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {
-				console.log('Failed to upload user!');
+				throw error;
 			}
 		};
 
@@ -57,14 +57,15 @@ export const useUserStore = defineStore(
 			}
 		};
 
-		const checkNetwork = async () => {
-			const connectedAccounts: string[] = await window.ethereum.request({
-				method: 'eth_accounts',
-			});
-			if (connectedAccounts.length == 0) {
-				walletAddress.value = '';
-			}
-		};
+		//TODO: detect network feature
+		// const checkNetwork = async () => {
+		// 	const connectedAccounts: string[] = await window.ethereum.request({
+		// 		method: 'eth_accounts',
+		// 	});
+		// 	if (connectedAccounts.length == 0) {
+		// 		walletAddress.value = '';
+		// 	}
+		// };
 
 		const getWalletBalance = async () => {
 			if (!window.ethereum) return 0;
@@ -81,9 +82,8 @@ export const useUserStore = defineStore(
 		};
 
 		const $reset = () => {
-			walletAddress.value = '',
-			user.value = null
-		}
+			(walletAddress.value = ''), (user.value = null);
+		};
 
 		return {
 			// provider,
@@ -96,7 +96,7 @@ export const useUserStore = defineStore(
 			// walletBalance,
 			// connect,
 			// logout,
-			$reset
+			$reset,
 		};
 	},
 	{ persist: true }

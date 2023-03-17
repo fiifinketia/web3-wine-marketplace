@@ -19,11 +19,15 @@ import routes from './routes';
 
 export default route(function ({ store }) {
 	const userStore = useUserStore(store);
-	const createHistory = process.env.SERVER
-		? createMemoryHistory
-		: process.env.VUE_ROUTER_MODE === 'history'
-		? createWebHistory
-		: createWebHashHistory;
+	let createHistory;
+
+	if (process.env.SERVER) {
+		createHistory = createMemoryHistory;
+	} else if (process.env.VUE_ROUTER_MODE === 'history') {
+		createHistory = createWebHistory;
+	} else {
+		createHistory = createWebHashHistory;
+	}
 
 	const Router = createRouter({
 		scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -39,7 +43,7 @@ export default route(function ({ store }) {
 
 	Router.beforeEach((to, from, next) => {
 		if (
-			to.matched.some((record) => record.meta.requiresAuth) &&
+			to.matched.some(record => record.meta.requiresAuth) &&
 			!userStore.walletAddress
 		) {
 			next({ query: { next: to.fullPath, connect: 'open' } });

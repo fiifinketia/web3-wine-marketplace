@@ -1,3 +1,22 @@
+export enum TOKENTYPE {
+	ERC1155 = 'ERC1155',
+	ERC721 = 'ERC721',
+}
+interface TokenProperties {
+	amount?: number;
+	hasValueToken?: boolean;
+	dateAdded?: number;
+	isOwner?: boolean;
+	tokenType?: TOKENTYPE;
+}
+
+interface OrderProperties {
+	listingPrice?: string;
+	currency?: string;
+	orderHash?: string;
+	transactionStatus?: string;
+	expTime?: number;
+}
 export interface NewPolygonNFT extends TokenProperties, OrderProperties {
 	tokenID: string;
 	description: string;
@@ -39,46 +58,28 @@ export interface SeaportTransactionsModel {
 	image?: string;
 	brand?: string;
 }
-export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails{
-	nftHistory: SeaportTransactionsModel[]
-}
 
 interface FavoritesAndOrderDetails {
 	favorited?: null | boolean;
 
-  offerDetails?: {
+	offerDetails?: {
 		highestBidCurrency: string;
-    highestBid: string;
-    highestBidHash: string;
+		highestBid: string;
+		highestBidHash: string;
 		highestBidExpTime: number;
-  };
+	};
 
 	listingDetails?: {
-    listingPrice: string;
-    currency: string;
-    orderHash: string;
-    transactionStatus: boolean;
-    expTime: string;
-	}
+		listingPrice: string;
+		currency: string;
+		orderHash: string;
+		transactionStatus: boolean;
+		expTime: string;
+	};
 }
 
-interface TokenProperties {
-	amount?: number;
-	hasValueToken?: boolean;
-	dateAdded?: number;
-	isOwner?: boolean;
-	tokenType?: TOKENTYPE;
-}
-
-export enum TOKENTYPE {
-	ERC1155 = 'ERC1155',
-	ERC721 = 'ERC721',
-}
-
-interface OrderProperties {
-	listingPrice?: string;
-	currency?: string;
-	orderHash?: string;
-	transactionStatus?: string;
-	expTime?: number;
+export interface NFTWithListingAndFavorites
+	extends NewPolygonNFT,
+		FavoritesAndOrderDetails {
+	nftHistory: SeaportTransactionsModel[];
 }

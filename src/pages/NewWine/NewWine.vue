@@ -93,9 +93,9 @@ export default defineComponent({
 			name: '',
 			bottleSize: '',
 			packSize: '',
-			tokenID: Number() || '',
+			tokenID: '',
 			smartContract: '',
-			price: Number() || '',
+			price: 0,
 			status: '',
 			showTable: false,
 		};
@@ -111,6 +111,8 @@ export default defineComponent({
 			});
 		},
 		filterWine() {
+			//TODO: eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.selected.filter((item: any) => {
 				this.lwin = item.lwin;
 				this.name = item.name;
@@ -125,7 +127,7 @@ export default defineComponent({
 			lwin: string,
 			packSize: string,
 			bottleSize: string,
-			tokenID: number,
+			tokenID: string,
 			smartContract: string
 		) {
 			const result = await sendWineToList(

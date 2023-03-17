@@ -1,28 +1,32 @@
 <template>
-	<q-page 
-		class="column items-center" 
+	<q-page
+		class="column items-center"
 		style="margin-bottom: 10px; min-height: 0"
 	>
-		<FavsHeader 
-			:nftsLength="favNFTs.length"
-			@brand-search="(val) => getAllFavoritesWithBrand(val)"
+		<FavsHeader
+			:nfts-length="favNFTs.length"
+			@brand-search="val => getAllFavoritesWithBrand(val)"
 			@reset-search="getAllFavoritesWithoutBrand()"
 		/>
-		<FavsError 
+		<FavsError
 			v-if="!isLoading && !!erroredOut"
 			@reset-search="getAllFavoritesWithoutBrand()"
 		/>
-		<FavsMissing 
-			v-else-if="!isLoading && !!emptySearch"
-		/>
-		<div 
+		<FavsMissing v-else-if="!isLoading && !!emptySearch" />
+		<div
 			v-else-if="!isLoading && !emptyRequest"
 			class="row q-gutter-y-md"
-			:class="favNFTs.length >= 4 && $q.screen.width > 600
-				? 'justify-between q-px-md': favNFTs.length == 3 && $q.screen.width > 600
-				? 'justify-evenly q-px-md' : $q.screen.width > 600
-				? 'justify-start q-gutter-x-lg' : favNFTs.length >= 2
-				? 'justify-around q-px-sm' : 'justify-start q-px-sm'"
+			:class="
+				favNFTs.length >= 4 && $q.screen.width > 600
+					? 'justify-between q-px-md'
+					: favNFTs.length == 3 && $q.screen.width > 600
+					? 'justify-evenly q-px-md'
+					: $q.screen.width > 600
+					? 'justify-start q-gutter-x-lg'
+					: favNFTs.length >= 2
+					? 'justify-around q-px-sm'
+					: 'justify-start q-px-sm'
+			"
 			style="width: 100%"
 		>
 			<div
@@ -30,11 +34,8 @@
 				:key="nft.tokenID"
 				class="favorites-card-container"
 			>
-				<q-card
-					class="q-ma-xs"
-					flat
-				>
-					<img 
+				<q-card class="q-ma-xs" flat>
+					<img
 						class="favorites-card-image clickable-image"
 						:src="nft.nftDetails.image"
 					/>
@@ -52,9 +53,11 @@
 							<q-img
 								v-if="!!nft.favoriteLoading"
 								src="../../assets/loading-heart.gif"
-								:style="$q.screen.width > 350 
-									? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px' 
-									: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'"
+								:style="
+									$q.screen.width > 350
+										? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
+										: 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
+								"
 							/>
 							<q-img
 								v-else
@@ -67,11 +70,20 @@
 								"
 							/>
 						</div>
-						<div v-if="!!nft.nftDetails.orderDetails?.listingPrice && !!nft.nftDetails.orderDetails?.transactionStatus">
+						<div
+							v-if="
+								!!nft.nftDetails.orderDetails?.listingPrice &&
+								!!nft.nftDetails.orderDetails?.transactionStatus
+							"
+						>
 							<div class="row items-center q-gutter-x-xs q-pt-xs">
 								<q-img
 									src="../../assets/icons/currencies/USDC-Icon.svg"
-									:style="$q.screen.width > 350 ? 'height: 20px; width: 20px' : 'height: 15px; width: 16px'"
+									:style="
+										$q.screen.width > 350
+											? 'height: 20px; width: 20px'
+											: 'height: 15px; width: 16px'
+									"
 								/>
 								<span class="favorites-b-text-active">
 									{{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
@@ -84,26 +96,26 @@
 					</div>
 					<q-menu touch-position context-menu>
 						<q-list dense style="min-width: 100px">
-							<q-item clickable v-close-popup>
+							<q-item v-close-popup clickable>
 								<q-item-section @click="openNFT(nft)">Open</q-item-section>
 							</q-item>
-							<q-item clickable v-close-popup>
+							<q-item v-close-popup clickable>
 								<q-item-section @click="openNFT(nft, 'new-tab')"
 									>Open link in New Tab</q-item-section
 								>
 							</q-item>
-							<q-item clickable v-close-popup>
+							<q-item v-close-popup clickable>
 								<q-item-section @click="openNFT(nft, 'new-window')"
 									>Open link in New Window</q-item-section
 								>
 							</q-item>
 							<q-separator />
-							<q-item clickable v-close-popup>
+							<q-item v-close-popup clickable>
 								<q-item-section @click="copyAddress(nft)"
 									>Copy Link</q-item-section
 								>
 							</q-item>
-							<q-item clickable v-close-popup>
+							<q-item v-close-popup clickable>
 								<q-item-section @click="copyToken(nft)"
 									>Copy Token Details</q-item-section
 								>
@@ -120,21 +132,17 @@
 		>
 			<FavsEmpty />
 		</div>
-		<div 
+		<div
 			v-else
 			class="row q-px-md q-pt-sm q-gutter-y-md"
-			:class="$q.screen.width > 600
-				? 'justify-between' : 'justify-around'"
+			:class="$q.screen.width > 600 ? 'justify-between' : 'justify-around'"
 		>
 			<div
 				v-for="loading in loadingFavNFTs"
 				:key="loading"
 				class="favorites-loading-card-container"
 			>
-				<q-card
-					class="q-ma-xs"
-					flat
-				>
+				<q-card class="q-ma-xs" flat>
 					<img
 						src="../../../src/assets/loading-card.svg"
 						class="favorites-card-image"
@@ -144,13 +152,11 @@
 						style="height: 35px"
 						class="q-my-md"
 					/>
-					<img
-						src="../../../src/assets/loading-pricebox.svg"
-					/>
+					<img src="../../../src/assets/loading-pricebox.svg" />
 				</q-card>
+			</div>
 		</div>
-		</div>
-		<FavsRemoved v-model="removeDialog"/>
+		<FavsRemoved v-model="removeDialog" />
 	</q-page>
 </template>
 
@@ -176,20 +182,20 @@ export default defineComponent({
 		FavsHeader: FavoritesHeader,
 		FavsEmpty: EmptyFavorites,
 		FavsError: ErrorFavorites,
-		FavsMissing: MissingFavorites
+		FavsMissing: MissingFavorites,
 	},
 	data() {
 		const userStore = useUserStore();
 		return {
 			favNFTs: Array<FavoritesModel>(),
-			loadingFavNFTs: [0,1,2,3,4,5,6,7],
+			loadingFavNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
 			isLoading: true,
 			emptyRequest: false,
 			emptySearch: false,
 			brandSearch: '',
 			userStore,
 			removeDialog: false,
-			erroredOut: false
+			erroredOut: false,
 		};
 	},
 	mounted() {
@@ -199,10 +205,7 @@ export default defineComponent({
 		async getAllFavorites(walletAddress: string, brand: string) {
 			this.isLoading = true;
 			try {
-				const { result: nfts } = await GetAllFavorites(
-					walletAddress,
-					brand
-				);
+				const { result: nfts } = await GetAllFavorites(walletAddress, brand);
 				this.favNFTs = nfts;
 				this.CheckForEmptiness(this.favNFTs, brand);
 				this.erroredOut = false;
@@ -213,26 +216,34 @@ export default defineComponent({
 			}
 		},
 		async removeNFT(tokenID: string, cAddress: string, network: string) {
-			const nftIndex = this.favNFTs.findIndex((nft => 
-				nft.contractAddress == cAddress && 
-				nft.tokenID == tokenID &&
-				nft.network == network
-			))
+			const nftIndex = this.favNFTs.findIndex(
+				nft =>
+					nft.contractAddress == cAddress &&
+					nft.tokenID == tokenID &&
+					nft.network == network
+			);
 			try {
 				if (nftIndex > -1) {
 					this.favNFTs[nftIndex].favoriteLoading = true;
 					this.removeDialog = true;
-      		setTimeout(() => { 
-						this.removeFavoritesCountdown(nftIndex, {tokenID, cAddress, network})
+					setTimeout(() => {
+						this.removeFavoritesCountdown(nftIndex, {
+							tokenID,
+							cAddress,
+							network,
+						});
 					}, 2000);
 				}
 			} catch {
-				return 0
+				return 0;
 			} finally {
 				this.favNFTs[nftIndex].favoriteLoading = false;
 			}
 		},
-		async removeFavoritesCountdown(index: number, favorite: { tokenID: string, cAddress: string, network: string }) {
+		async removeFavoritesCountdown(
+			index: number,
+			favorite: { tokenID: string; cAddress: string; network: string }
+		) {
 			if (!!this.removeDialog) {
 				await RemoveFavorites({
 					walletAddress: this.userStore.walletAddress,
@@ -259,16 +270,22 @@ export default defineComponent({
 		truncateText(text: string) {
 			if (this.$q.screen.width > 1350) {
 				if (text.length > 50) {
-					return text.trim().substring(0, 50).split(" ").slice(0, -1).join(" ") + "…";	
-				} else return text
+					return (
+						text.trim().substring(0, 50).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			} else if (this.$q.screen.width <= 600) {
 				if (text.length > 35) {
-					return text.trim().substring(0, 35).split(" ").slice(0, -1).join(" ") + "…";	
-				} else return text
+					return (
+						text.trim().substring(0, 35).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			} else {
 				if (text.length > 40) {
-					return text.trim().substring(0, 40).split(" ").slice(0, -1).join(" ") + "…";
-				} else return text
+					return (
+						text.trim().substring(0, 40).split(' ').slice(0, -1).join(' ') + '…'
+					);
+				} else return text;
 			}
 		},
 		CheckForEmptiness(favNFTs: FavoritesModel[], brand: string) {

@@ -1,3 +1,12 @@
+interface DynamicKeyWithCount {
+	[key: string]: [
+		{
+			_id: string;
+			count: number;
+		}
+	];
+}
+
 interface ListingWithPricingAndImage {
 	smartContractAddress: string;
 	tokenID: string;
@@ -21,15 +30,6 @@ interface ListingWithPricingAndImage {
 interface ResultAndCountResponse {
 	result: ListingWithPricingAndImage[];
 	counts: DynamicKeyWithCount;
-}
-
-interface DynamicKeyWithCount {
-	[key: string]: [
-		{
-			_id: string;
-			count: number;
-		}
-	];
 }
 
 export {

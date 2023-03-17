@@ -20,7 +20,7 @@ export default defineComponent({
 	setup() {
 		const $q = useQuasar();
 
-		$q.iconMapFn = (iconName) => {
+		$q.iconMapFn = iconName => {
 			const icon = customIcons[iconName];
 			if (icon !== void 0) {
 				return { icon: icon };

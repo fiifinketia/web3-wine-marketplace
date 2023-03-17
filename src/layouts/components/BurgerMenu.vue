@@ -32,25 +32,34 @@
 		</div>
 		<div class="burger-bolder-text">stats</div>
 		<div class="burger-bolder-text">storefront</div>
-		<div v-if="userStore.walletAddress" class="burger-icons row justify-between">
-      <img
-        class="icons"
-        src="../../../public/images/favs-icon.svg"
-        alt="favorite-icon"
-				@click="$router.push('/favorites'); $emit('closeBurgerMenu')"
-      />
-      <img
-        class="icons"
-        src="../../../public/images/bell-icon.svg"
-        alt="bell-icon"
-      />
-      <img
-        class="icons"
-        src="../../../public/images/profile-icon.svg"
-        alt="profile-icon"
-        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
-      />
-    </div>
+		<div
+			v-if="userStore.walletAddress"
+			class="burger-icons row justify-between"
+		>
+			<img
+				class="icons"
+				src="../../../public/images/favs-icon.svg"
+				alt="favorite-icon"
+				@click="
+					$router.push('/favorites');
+					$emit('closeBurgerMenu');
+				"
+			/>
+			<img
+				class="icons"
+				src="../../../public/images/bell-icon.svg"
+				alt="bell-icon"
+			/>
+			<img
+				class="icons"
+				src="../../../public/images/profile-icon.svg"
+				alt="profile-icon"
+				@click="
+					$router.push('/orders');
+					$emit('closeBurgerMenu');
+				"
+			/>
+		</div>
 		<div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
 		<div class="burger-bolder-text">digital wine cellar</div>
 		<div>settings</div>
@@ -67,8 +76,8 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
-import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { ordersStore } from 'src/stores/orders-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
 	name: 'BurgerMenu',
 	emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet'],

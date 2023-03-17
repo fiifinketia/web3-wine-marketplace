@@ -89,7 +89,7 @@
 			<div class="price-history q-pb-lg">Transaction history</div>
 			<q-table
 				class="price-table"
-				style="height: auto; width: 100%; max-height: 80vh;"
+				style="height: auto; width: 100%; max-height: 80vh"
 				title=""
 				hide-header
 				:rows="nftTxnHistory"
@@ -99,12 +99,12 @@
 						required: false,
 						label: '',
 						align: 'left',
-						field: (row) => row,
+						field: row => row,
 					},
 				]"
 				row-key="index"
 			>
-				<template v-slot:body="props">
+				<template #body="props">
 					<q-tr
 						:key="`e_${props.row.index}`"
 						:props="props"
@@ -116,19 +116,22 @@
 							:props="props"
 							colspan="100%"
 						>
-						<div class="row">
-							<p class="col-10 text-left" style="word-wrap: break-word; white-space: initial;">
-								<span class="user-ids-bold">{{ col.value.event }}</span> by
-								<span class="user-ids-bold">{{ col.value.from }}</span>
-								<span v-if="col.value.to"> to </span>
-								<span v-if="col.value.to" class="user-ids-bold">{{
-									col.value.to
-								}}</span>
-							</p>
-							<p class="col-2 text-right date-of-transaction">
-								{{ timestamptoDate(col.value.timestamp) }}
-							</p>
-						</div>
+							<div class="row">
+								<p
+									class="col-10 text-left"
+									style="word-wrap: break-word; white-space: initial"
+								>
+									<span class="user-ids-bold">{{ col.value.event }}</span> by
+									<span class="user-ids-bold">{{ col.value.from }}</span>
+									<span v-if="col.value.to"> to </span>
+									<span v-if="col.value.to" class="user-ids-bold">{{
+										col.value.to
+									}}</span>
+								</p>
+								<p class="col-2 text-right date-of-transaction">
+									{{ timestamptoDate(col.value.timestamp) }}
+								</p>
+							</div>
 						</q-td>
 					</q-tr>
 				</template>
@@ -332,7 +335,7 @@ export default defineComponent({
 					},
 				},
 			},
-			selection: 'three_months'
+			selection: 'three_months',
 		};
 	},
 	methods: {
@@ -343,7 +346,7 @@ export default defineComponent({
 		updateData(timeline: string, isMobile: boolean) {
 			this.selection = timeline;
 			this.currentTimeline = timeline;
-			var original = new Date(this.selectedDate);
+			let original = new Date(this.selectedDate);
 			if (this.currentTimeline === 'three_months') {
 				this.three_months = original.setMonth(original.getMonth() - 3);
 			} else if (this.currentTimeline === 'six_months') {
@@ -353,8 +356,11 @@ export default defineComponent({
 			} else {
 				this.five_years = original.setMonth(original.getMonth() - 60);
 			}
+			//TODO: Fix variables here
 			const options = [
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				this.$refs.overallChart as any,
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				this.$refs.overallChartMobile as any,
 			];
 			let chosenOption;

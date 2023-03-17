@@ -3,31 +3,26 @@
 		:class="
 			isMobile()
 				? 'fit row wrap justify-center items-start content-start'
-				: $q.screen.width > 1025 ? 'fixed fit row wrap justify-start items-start content-start q-pl-md'
+				: $q.screen.width > 1025
+				? 'fixed fit row wrap justify-start items-start content-start q-pl-md'
 				: 'fixed fit row wrap justify-start items-start content-start'
 		"
 	>
 		<div
 			class="row q-pb-sm col-xs-12"
-			:class="$q.screen.width >= 1024 ? 'justify-between': 'justify-center'"
+			:class="$q.screen.width >= 1024 ? 'justify-between' : 'justify-center'"
 		>
 			<div
 				class="row"
 				:class="$q.screen.width >= 600 ? 'col 10' : 'col-12 q-px-md'"
 			>
 				<div class="flex hidden-a-599 q-pl-lg-none q-pl-md items-center col-4">
-					<span class="header-nfts-title">
-						NFTs
-					</span>
-					<span class="q-pl-sm header-nfts-count">{{
-						totalNFTs || 0
-					}}</span>
+					<span class="header-nfts-title"> NFTs </span>
+					<span class="q-pl-sm header-nfts-count">{{ totalNFTs || 0 }}</span>
 				</div>
 				<div class="col-sm-8 col-xs-12">
 					<div class="q-mx-xs hidden-a-1023 overflow-hidden">
-						<q-resize-observer
-							@resize="onResize"
-						/>
+						<q-resize-observer @resize="onResize" />
 						<q-chip
 							v-for="filter in wineFiltersStore.getAllFiltersArray.slice(0, 7)"
 							:key="filter"
@@ -66,7 +61,7 @@
 							label="GO"
 							unelevated
 							class="header-go"
-							@click="this.emitGeneralSearch()"
+							@click="emitGeneralSearch()"
 						/>
 					</div>
 				</div>
@@ -104,18 +99,11 @@
 
 		<SidebarDesktop
 			v-if="$q.screen.width > 1023"
-
 			:style="qChipRows > 1 ? calculateExtraHeightSidebar(qChipRows) : ''"
-		 	class="col-sm-3 q-mt-sm"
-		 />
-		<SidebarTablet
-			v-else-if="$q.screen.width > 768"
-			v-model="openSidebar"
+			class="col-sm-3 q-mt-sm"
 		/>
-		<SidebarMobile
-			v-else
-			v-model="openSidebar"
-		/>
+		<SidebarTablet v-else-if="$q.screen.width > 768" v-model="openSidebar" />
+		<SidebarMobile v-else v-model="openSidebar" />
 
 		<!-- List Section -->
 		<NFTSelections
@@ -129,7 +117,10 @@
 			position="bottom-right"
 			:offset="[18, 18]"
 		>
-			<q-card rounded class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container">
+			<q-card
+				rounded
+				class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container"
+			>
 				<span
 					class="text-weight-bold text-h6 sidebar-sticky-filter-icon q-pr-xs"
 					clickable
@@ -167,7 +158,7 @@ export default defineComponent({
 		NFTSelections: NFTSelections,
 		SidebarDesktop: SidebarDesktop,
 		SidebarTablet: SidebarTablet,
-		SidebarMobile: SidebarMobile
+		SidebarMobile: SidebarMobile,
 	},
 	emits: ['totalTokens'],
 	data() {
@@ -182,7 +173,7 @@ export default defineComponent({
 			openSidebar: false,
 			totalNFTs: ref(0),
 			generalSearch: '',
-			qChipRows: 0
+			qChipRows: 0,
 		};
 	},
 
@@ -195,7 +186,7 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		this.CheckFilterMode()
+		this.CheckFilterMode();
 	},
 
 	methods: {
@@ -218,41 +209,44 @@ export default defineComponent({
 			}
 		},
 		emitGeneralSearch() {
-      this.generalSearchStore.setGeneralSearch(this.generalSearch);
-      this.generalSearchStore.indexGeneralSearchKey();
-      this.generalSearch = '';
-    },
+			this.generalSearchStore.setGeneralSearch(this.generalSearch);
+			this.generalSearchStore.indexGeneralSearchKey();
+			this.generalSearch = '';
+		},
 		truncateChipText(filter: string) {
-			const checkForPriceFilter = filter.split(' ')[0]
+			const checkForPriceFilter = filter.split(' ')[0];
 			if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
 				return filter;
 			}
 			const splitText = filter.split(',');
 			const newSplitText = splitText[0].split(' ');
 			if (newSplitText.length > 2) {
-				filter = `${newSplitText[0]} ${newSplitText[1]} ${newSplitText[2].slice(0,2)}...`
+				filter = `${newSplitText[0]} ${newSplitText[1]} ${newSplitText[2].slice(
+					0,
+					2
+				)}...`;
 			} else {
 				if (splitText.length > 1) {
 					splitText[1] = splitText[1].replace(/\s/g, '');
-					filter = `${splitText[0]}, ${splitText[1].slice(0,2)}...`
+					filter = `${splitText[0]}, ${splitText[1].slice(0, 2)}...`;
 				}
 			}
-			return filter
+			return filter;
 		},
-		onResize (size: { width: number, height: number }) {
+		onResize(size: { width: number; height: number }) {
 			if (this.$q.screen.width > 1023) {
 				const rows = size.height / 32;
 				this.qChipRows = rows;
 			}
 		},
 		calculateExtraHeightNFTs(rows: number) {
-			const extraHeight = (rows*32)-32;
-			return `max-height: calc(95% - ${(-150 - extraHeight)*-1}px)`
+			const extraHeight = rows * 32 - 32;
+			return `max-height: calc(95% - ${(-150 - extraHeight) * -1}px)`;
 		},
 		calculateExtraHeightSidebar(rows: number) {
-			const extraHeight = (rows*32)-32;
-			return `max-height: calc(100% - ${(-200 - extraHeight)*-1}px)`
-		}
+			const extraHeight = rows * 32 - 32;
+			return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
+		},
 	},
 });
 </script>

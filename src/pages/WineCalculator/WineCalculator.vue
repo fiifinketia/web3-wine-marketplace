@@ -184,9 +184,7 @@
 						</div>
 					</div>
 					<div class="full-width flex justify-end q-pr-sm q-pt-lg help-section">
-						<q-btn flat dense>
-							Help
-						</q-btn>
+						<q-btn flat dense> Help </q-btn>
 					</div>
 				</div>
 				<div
@@ -466,7 +464,12 @@
 						>
 							<img src="../../../public/images/back.svg" class="q-pr-xs" /> Back
 						</div>
-						<q-btn v-else class="continue-button full-width q-mt-md" no-caps unelevated>
+						<q-btn
+							v-else
+							class="continue-button full-width q-mt-md"
+							no-caps
+							unelevated
+						>
 							<div class="continue-text">Check the wines</div>
 						</q-btn>
 					</div>
@@ -482,24 +485,24 @@ import { defineComponent } from 'vue-demi';
 import { ref } from 'vue';
 
 function initialData() {
-			return {
-				riskType: 'low',
-				calculating: false,
-				showButton: true,
-				secondSection: false,
-				calculateWorth: false,
-				calculationFinished: false,
-				showPrice: false,
-				potentialGain: ref(0),
-				potentialReturn: ref(0),
-				percentage: ref(0),
-				firstStepMobile: true,
-				secondStepMobile: false,
-				thirdStepMobile: false,
-				investmentPrincipal: 15000,
-				investmentAge: 12,
-			};
-		}
+	return {
+		riskType: 'low',
+		calculating: false,
+		showButton: true,
+		secondSection: false,
+		calculateWorth: false,
+		calculationFinished: false,
+		showPrice: false,
+		potentialGain: ref(0),
+		potentialReturn: ref(0),
+		percentage: ref(0),
+		firstStepMobile: true,
+		secondStepMobile: false,
+		thirdStepMobile: false,
+		investmentPrincipal: 15000,
+		investmentAge: 12,
+	};
+}
 export default defineComponent({
 	name: 'WineCalculator',
 	data() {
@@ -558,8 +561,8 @@ export default defineComponent({
 		},
 
 		resetWindow() {
-        Object.assign(this.$data, initialData());
-    }
+			Object.assign(this.$data, initialData());
+		},
 	},
 });
 </script>

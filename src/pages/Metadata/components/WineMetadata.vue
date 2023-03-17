@@ -39,39 +39,36 @@
 					<div class="q-pt-lg metadata-price-wrapper">
 						<div class="flex column">
 							<div class="starting-from">Price</div>
-							<div v-if="!!ongoingListingTransaction" class="flex row items-center">
-								<q-img
-									src="../../../assets/processing.svg"
-									width="30px"
-								/>
-								<div class="price1-blue">
-									Processing price
-								</div>
+							<div
+								v-if="!!ongoingListingTransaction"
+								class="flex row items-center"
+							>
+								<q-img src="../../../assets/processing.svg" width="30px" />
+								<div class="price1-blue">Processing price</div>
 							</div>
-							<div v-else-if="!!nft.listingDetails?.listingPrice && !!nft.listingDetails.transactionStatus" class="flex row items-center">
+							<div
+								v-else-if="
+									!!nft.listingDetails?.listingPrice &&
+									!!nft.listingDetails.transactionStatus
+								"
+								class="flex row items-center"
+							>
 								<div>
-									<q-img
-										src="../../../assets/usdc.svg"
-										width="28px"
-									/>
+									<q-img src="../../../assets/usdc.svg" width="28px" />
 								</div>
 								<div class="price1">
 									{{ nft.listingDetails?.listingPrice }}
 								</div>
 							</div>
-							<div v-else-if="nft.listingDetails?.listingPrice == null" class="flex row items-center">
-								<div class="price1">
-									Not Available
-								</div>
+							<div
+								v-else-if="nft.listingDetails?.listingPrice == null"
+								class="flex row items-center"
+							>
+								<div class="price1">Not Available</div>
 							</div>
 							<div v-else class="flex row items-center">
-								<q-img
-									src="../../../assets/processing.svg"
-									width="30px"
-								/>
-								<div class="price1-blue">
-									Processing price
-								</div>
+								<q-img src="../../../assets/processing.svg" width="30px" />
+								<div class="price1-blue">Processing price</div>
 							</div>
 						</div>
 						<div class="flex column">
@@ -90,7 +87,10 @@
 			</div>
 		</div>
 		<div v-if="userStore.walletAddress" class="q-pt-lg row modal-container">
-			<div v-if="nft.isOwner" class="q-pt-lg flex row justify-center modal-container">
+			<div
+				v-if="nft.isOwner"
+				class="q-pt-lg flex row justify-center modal-container"
+			>
 				<div v-if="!nft.listingDetails?.orderHash" class="q-pr-sm">
 					<q-btn
 						class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
@@ -118,7 +118,10 @@
 					class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
 					no-caps
 					flat
-					:disable="!nft.listingDetails?.orderHash || !nft.listingDetails.transactionStatus"
+					:disable="
+						!nft.listingDetails?.orderHash ||
+						!nft.listingDetails.transactionStatus
+					"
 					@click="openBuyNowModal = !openBuyNowModal"
 				>
 					Buy now
@@ -138,10 +141,7 @@
 				Please Connect Wallet to view actions.
 			</div>
 		</div>
-		<button
-			class="q-mt-lg row items-center update-metadata-button"
-			flat
-		>
+		<button class="q-mt-lg row items-center update-metadata-button" flat>
 			<div class="q-pr-sm cursor-pointer">
 				<q-img src="../../../../public/images/refresh.svg" width="24px" />
 			</div>
@@ -482,7 +482,13 @@
 							<div class="row col-12 justify-between">
 								<div class="col-6 q-pa-sm">
 									<p class="text-weight-thin col-12 q-mb-xs">Price</p>
-									<p class="text-h6">{{ nft.listingDetails?.listingPrice ? nft.listingDetails.listingPrice : 'Not Available'}}</p>
+									<p class="text-h6">
+										{{
+											nft.listingDetails?.listingPrice
+												? nft.listingDetails.listingPrice
+												: 'Not Available'
+										}}
+									</p>
 								</div>
 							</div>
 							<div class="row col-12 justify-between">
@@ -647,7 +653,7 @@
 <script lang="ts">
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, PropType, ref } from 'vue-demi';
-import { NFTWithListingAndFavorites } from '../models/Metadata'
+import { NFTWithListingAndFavorites } from '../models/Metadata';
 import '../../../css/Metadata/WineMetadata.css';
 import { TOKENTYPE } from '../models/Metadata';
 import {
@@ -712,7 +718,7 @@ export default defineComponent({
 			}),
 			totalPrice: ref(0),
 			currentInterval: ref<NodeJS.Timeout>(),
-			ongoingListingTransaction: false
+			ongoingListingTransaction: false,
 		};
 	},
 
@@ -723,8 +729,8 @@ export default defineComponent({
 			}
 		},
 		openBuyNowModal: function (val) {
-			if (val === true) {
-				const tDate = parseInt(this.nft.listingDetails!.expTime);
+			if (val === true && this.nft.listingDetails) {
+				const tDate = parseInt(this.nft.listingDetails.expTime);
 				const timer = new CountdownTimer({
 					selector: '#clock1',
 					targetDate: new Date(tDate * 1000),
@@ -756,7 +762,7 @@ export default defineComponent({
 			// 	return;
 			// }
 			try {
-				this.makeOfferLoading = true;		
+				this.makeOfferLoading = true;
 				if (this.nft.tokenType === TOKENTYPE.ERC721) {
 					try {
 						await CreateERC721Offer(
@@ -779,19 +785,17 @@ export default defineComponent({
 				setTimeout(() => {
 					this.openOfferCompletedModal = false;
 				}, this.completedTimeoutModal);
-				
 			} catch (error: any) {
 				this.makeOfferLoading = false;
 				this.openOfferFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock meteamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openOfferFailedModal = false;
@@ -828,13 +832,12 @@ export default defineComponent({
 				this.openBuyNowFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock Metamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock Metamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openBuyNowFailedModal = false;
@@ -887,13 +890,12 @@ export default defineComponent({
 				this.openListingFailedModal = true;
 				if (error.code === 'ACTION_REJECTED') {
 					this.errorMessage = 'User cancelled transaction.';
-				}
-				else if (error.message && error.message.includes('unknown account'))
-				{
-					this.errorMessage = 'Account locked, please unlock meteamask to continue';
-				}
-				else {
-					this.errorMessage = error.message || 'Please try again or reconnect wallet.';
+				} else if (error.message && error.message.includes('unknown account')) {
+					this.errorMessage =
+						'Account locked, please unlock meteamask to continue';
+				} else {
+					this.errorMessage =
+						error.message || 'Please try again or reconnect wallet.';
 				}
 				setTimeout(() => {
 					this.openListingFailedModal = false;
@@ -904,7 +906,10 @@ export default defineComponent({
 		},
 		async cancelOrder() {
 			if (!!this.nft.listingDetails) {
-				await CancelSingleOrder(this.nft.listingDetails.orderHash, this.userStore.walletAddress);
+				await CancelSingleOrder(
+					this.nft.listingDetails.orderHash,
+					this.userStore.walletAddress
+				);
 			}
 		},
 		async openWalletSideBar() {

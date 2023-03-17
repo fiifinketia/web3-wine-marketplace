@@ -1,7 +1,24 @@
 import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
 import { Seaport } from '@opensea/seaport-js';
-import { Transaction, ethers } from 'ethers';
+import { Transaction } from 'ethers';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
+interface OfferModel {
+	item_type: number;
+	token: string;
+	identifier_or_criteria: string;
+	startAmount?: number;
+	endAmount?: number;
+}
+
+interface ConsiderationModel extends OfferModel {
+	recipient: string;
+}
+
+interface Fee {
+	recipient: string;
+	basisPoints: number;
+}
 export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
 	orderHash: string;
 	network: string;
@@ -29,39 +46,16 @@ export interface OrderRequest {
 	accountAddress: string;
 }
 
-interface OfferModel {
-	item_type: number;
-	token: string;
-	identifier_or_criteria: string;
-	startAmount?: number;
-	endAmount?: number;
-}
-
-interface ConsiderationModel extends OfferModel {
-	recipient: string;
-}
-
-interface Fee {
-	recipient: string;
-	basisPoints: number;
-}
-
 export interface SeaportInstance {
 	seaport: Seaport;
 	network: string;
-}
-
-export interface TokenIdentifier {
-	readonly contractAddress: string;
-	readonly identifierOrCriteria: string;
-	readonly network: string;
 }
 
 export interface UpdateListingRequest extends TokenIdentifier {
 	readonly notificationID: number;
 	readonly brand: string;
 	readonly image: string;
-	
+
 	readonly orderHash: string;
 	readonly isOwner: boolean;
 	readonly nonce: number;
@@ -104,32 +98,6 @@ export interface ListingWithPricingAndImage {
 	listingPrice: string;
 	priceCurrency: string;
 	brand: string;
-	network: string;
-}
-
-interface NewPolygonNFT {
-	tokenID: string;
-	description: string;
-	image: string;
-	name: string;
-	wivVintage: string;
-	brand: string;
-	producer: string;
-	productionCountry: string;
-	region: string;
-	appellation: string;
-	vintage: string;
-	grape: string;
-	lwin: string;
-	maturity: string;
-	heritage: string;
-	investmentGrade: string;
-	case: string;
-	origin: string;
-	source: string;
-	type: string;
-	format: string;
-	smartContractAddress: string;
 	network: string;
 }
 

@@ -1,6 +1,5 @@
 <template>
 	<div class="column items-center">
-
 		<!-- Newly Minted Section -->
 		<div class="releases-tab-container column items-center justify-center">
 			NEWLY MINTED
@@ -16,11 +15,10 @@ import '../../../css/Marketplace/containers.css';
 
 export default defineComponent({
 	components: {
-		NewlyMintedSection: NewlyMintedVue
+		NewlyMintedSection: NewlyMintedVue,
 	},
-	emits: [ 'totalTokens' ]
+	emits: ['totalTokens'],
 });
 </script>
 
-<style>
-</style>
+<style></style>

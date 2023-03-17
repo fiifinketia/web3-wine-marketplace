@@ -47,7 +47,7 @@
 				unelevated
 				no-caps
 				@click="$router.push('marketplace?tab=nfts')"
-				>
+			>
 				Go to Marketplace
 			</q-btn>
 		</div>

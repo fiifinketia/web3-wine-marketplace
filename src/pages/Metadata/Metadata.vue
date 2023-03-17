@@ -1,14 +1,15 @@
 <template>
 	<div v-if="!loadingMetadata">
 		<div v-if="tokenExists">
-			<WineMetadata
-				:nft="nft"
-				@open-wallet="openWalletSideBar"
-			/>
+			<WineMetadata :nft="nft" @open-wallet="openWalletSideBar" />
 			<q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
 				<q-tab name="history" label="NFT history" />
 				<q-tab class="tab-text-not-clicked" name="about" label="About" />
-				<q-tab name="wine-maker" class="tab-text-not-clicked" label="Wine-maker" />
+				<q-tab
+					name="wine-maker"
+					class="tab-text-not-clicked"
+					label="Wine-maker"
+				/>
 			</q-tabs>
 			<q-tab-panels
 				v-model="tab"
@@ -30,20 +31,19 @@
 				</q-tab-panel>
 			</q-tab-panels>
 		</div>
-		<UnavailableNFT
-			v-else
-		/>
+		<UnavailableNFT v-else />
 	</div>
 	<div v-else>
-		<LoadingMetadata
-		/>
+		<LoadingMetadata />
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NFTWithListingAndFavorites, SeaportTransactionsModel } from './models/Metadata';
+import {
+	NFTWithListingAndFavorites,
+} from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';
 import WineMetadata from './components/WineMetadata.vue';
@@ -52,7 +52,10 @@ import WineMaker from './components/WineMaker.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
-import { NewPolygonCollectionContract_MumbaiInstance, NewPolygonCollectionContract_PolygonInstance } from 'src/shared/web3.helper';
+import {
+	NewPolygonCollectionContract_MumbaiInstance,
+	NewPolygonCollectionContract_PolygonInstance,
+} from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
 
@@ -64,7 +67,7 @@ export default defineComponent({
 		WineMaker,
 		WineMetadata,
 		UnavailableNFT: UnavailableNFT,
-		LoadingMetadata: LoadingMetadata
+		LoadingMetadata: LoadingMetadata,
 	},
 	emits: ['openWalletSidebar'],
 
@@ -75,7 +78,7 @@ export default defineComponent({
 			userStore,
 			tab: ref('history'),
 			tokenExists: false,
-			loadingMetadata: true
+			loadingMetadata: true,
 		};
 	},
 
@@ -86,8 +89,16 @@ export default defineComponent({
 	methods: {
 		async getMetadata() {
 			const { id, contractAddress, network } = this.$route.query;
-			if (typeof id === 'string' && typeof contractAddress === 'string' && typeof network === 'string') {
-				const tokenExistCheck = await this.CheckTokenExistence(id, contractAddress, network);
+			if (
+				typeof id === 'string' &&
+				typeof contractAddress === 'string' &&
+				typeof network === 'string'
+			) {
+				const tokenExistCheck = await this.CheckTokenExistence(
+					id,
+					contractAddress,
+					network
+				);
 				if (!!tokenExistCheck) {
 					await this.FetchMetadata(id, contractAddress, network);
 					this.tokenExists = true;
@@ -105,15 +116,23 @@ export default defineComponent({
 					walletAddress: this.userStore.walletAddress,
 				});
 				if (!!this.userStore.walletAddress) {
-					nft.isOwner = await this.CheckOwnership(this.userStore.walletAddress, contractAddress, id);
+					nft.isOwner = await this.CheckOwnership(
+						this.userStore.walletAddress,
+						contractAddress,
+						id
+					);
 				}
 				this.nft = nft;
 			} catch (error) {
-				console.log(error);
+				throw error;
 			}
 		},
 
-		async CheckTokenExistence(id: string, contractAddress: string, network: string) : Promise<boolean> {
+		async CheckTokenExistence(
+			id: string,
+			contractAddress: string,
+			network: string
+		): Promise<boolean> {
 			let exists = true;
 			try {
 				let contract: Contract;
@@ -127,24 +146,30 @@ export default defineComponent({
 						await contract.tokenURI(id);
 						break;
 				}
-				console.log('Token:', id, 'exists')
 				exists = true;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (err: any) {
-				const nonexistentMessage = err.message.toString().includes('URI query for nonexistent token');
+				const nonexistentMessage = err.message
+					.toString()
+					.includes('URI query for nonexistent token');
 				if (nonexistentMessage) {
 					const burntNFT: TokenIdentifier = {
 						contractAddress: contractAddress,
 						identifierOrCriteria: id,
-						network: network
-					}
-					this.$axios.post(<string> process.env.BURN_NFT_URL, burntNFT)
+						network: network,
+					};
+					this.$axios.post(<string>process.env.BURN_NFT_URL, burntNFT);
 					exists = false;
 				}
 			}
 			return exists;
 		},
 
-		async CheckOwnership(walletAddress: string, contractAddress: string, tokenID: string) {
+		async CheckOwnership(
+			walletAddress: string,
+			contractAddress: string,
+			tokenID: string
+		) {
 			let isOwned = false;
 			try {
 				let actualOwner = '';
@@ -161,8 +186,8 @@ export default defineComponent({
 						isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
 						break;
 				}
-			} catch {
-				console.log('Failed to check ownership.')
+			} catch (err) {
+				throw err;
 			} finally {
 				return isOwned;
 			}

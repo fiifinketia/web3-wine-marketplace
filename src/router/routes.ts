@@ -1,6 +1,4 @@
-import { useUserStore } from 'src/stores/user-store';
 import { RouteRecordRaw } from 'vue-router';
-import Web3 from 'web3';
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -75,8 +73,7 @@ const routes: RouteRecordRaw[] = [
 				component: () => import('pages/NewWine/NewWine.vue'),
 			},
 		],
-		beforeEnter: async (from, to) => {
-			const mainAccount = '0xAdE82F372e70f8032f675b80E3C6A7D31E3A5269';
+		beforeEnter: async () => {
 			const accounts = await window.ethereum.request({
 				method: 'eth_requestAccounts',
 			});

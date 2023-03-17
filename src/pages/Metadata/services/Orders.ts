@@ -1,5 +1,5 @@
 import { Seaport } from '@opensea/seaport-js';
-import { ethers, utils, ContractTransaction } from 'ethers';
+import { ethers, utils } from 'ethers';
 import {
 	ChainID,
 	ItemType,
@@ -22,6 +22,35 @@ const GETParams = {
 		t: new Date().getTime(),
 	},
 };
+
+const RandomIdGenerator = () => {
+	return Date.now();
+};
+
+export async function GetWeb3(): Promise<SeaportInstance> {
+	const web3 = new ethers.providers.Web3Provider(window.ethereum);
+	const chainId = (await web3.getNetwork()).chainId;
+	let network = '';
+	switch (chainId) {
+		case ChainID.ETHEREUM:
+			network = 'Ethereum';
+			break;
+		case ChainID.POLYGON:
+			network = 'Polygon';
+			break;
+		case ChainID.RINKEBY:
+			network = 'Rinkeby';
+			break;
+		case ChainID.MUMBAI:
+			network = 'Mumbai';
+	}
+	const seaport = new Seaport(web3);
+	const seaportInstance: SeaportInstance = {
+		seaport: seaport,
+		network: network,
+	};
+	return seaportInstance;
+}
 
 export async function CreateERC721Listing(
 	tokenID: string,
@@ -80,7 +109,7 @@ export async function CreateERC721Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		nonce: txn.nonce
+		nonce: txn.nonce,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -152,7 +181,7 @@ export async function CreateERC1155Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		nonce: txn.nonce
+		nonce: txn.nonce,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -223,7 +252,7 @@ export async function CreateERC721Offer(
 		brand: brand,
 		image: image,
 		highestBid: offerPrice,
-		nonce: txn.nonce
+		nonce: txn.nonce,
 	};
 	const OrderRequest = {
 		order: db_Order,
@@ -244,7 +273,7 @@ export async function FulfillBasicOrder(
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const order: RetrieveListingResponse = await axios
 		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
-		.then((result) => {
+		.then(result => {
 			const data = result.data;
 			return {
 				parameters: data.parameters,
@@ -274,43 +303,21 @@ export async function FulfillBasicOrder(
 		isOwner: owner,
 		walletAddress: address,
 		image: image,
-		nonce: txn.nonce
+		nonce: txn.nonce,
 	};
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
 }
 
-export async function GetWeb3(): Promise<SeaportInstance> {
-	const web3 = new ethers.providers.Web3Provider(window.ethereum);
-	const chainId = (await web3.getNetwork()).chainId;
-	let network = '';
-	switch (chainId) {
-		case ChainID.ETHEREUM:
-			network = 'Ethereum';
-			break;
-		case ChainID.POLYGON:
-			network = 'Polygon';
-			break;
-		case ChainID.RINKEBY:
-			network = 'Rinkeby';
-			break;
-		case ChainID.MUMBAI:
-			network = 'Mumbai';
-	}
-	const seaport = new Seaport(web3);
-	const seaportInstance: SeaportInstance = {
-		seaport: seaport,
-		network: network,
-	};
-	return seaportInstance;
-}
-
-export async function CancelSingleOrder(orderHash: string, walletAddress: string) {
+export async function CancelSingleOrder(
+	orderHash: string,
+	walletAddress: string
+) {
 	if (!!walletAddress) {
 		const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 		const order: OrderComponents = await axios
 			.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
-			.then((result) => {
+			.then(result => {
 				const data = result.data;
 				return {
 					...(<OrderParameters & { counter: number }>data.parameters),
@@ -325,12 +332,8 @@ export async function CancelSingleOrder(orderHash: string, walletAddress: string
 		requestToCancel.push({
 			orderHash: orderHash,
 			walletAddress: walletAddress,
-			nonce: txn.nonce
-		})
+			nonce: txn.nonce,
+		});
 		axios.post(cancelOrderURL, requestToCancel);
 	}
 }
-
-const RandomIdGenerator = () => {
-	return Date.now();
-};

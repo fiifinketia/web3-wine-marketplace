@@ -5,14 +5,14 @@ export async function sendWineToList(
 	lwin: string,
 	packSize: string,
 	bottleSize: string,
-	tokenID: number,
+	tokenID: string,
 	smartContract: string
 ) {
 	const result = await axios
 		.post('http://localhost:3600/suggestion/sendWineToList', [
 			{ name, lwin, packSize, bottleSize, tokenID, smartContract },
 		])
-		.then((res) => {
+		.then(res => {
 			return res;
 		});
 	return result;

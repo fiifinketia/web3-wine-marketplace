@@ -108,26 +108,26 @@
 				</q-card-section>
 				<q-menu touch-position context-menu>
 					<q-list dense style="min-width: 100px">
-						<q-item clickable v-close-popup>
+						<q-item v-close-popup clickable>
 							<q-item-section @click="openNFT(token)">Open</q-item-section>
 						</q-item>
-						<q-item clickable v-close-popup>
+						<q-item v-close-popup clickable>
 							<q-item-section @click="openNFT(token, 'new-tab')"
 								>Open link in New Tab</q-item-section
 							>
 						</q-item>
-						<q-item clickable v-close-popup>
+						<q-item v-close-popup clickable>
 							<q-item-section @click="openNFT(token, 'new-window')"
 								>Open link in New Window</q-item-section
 							>
 						</q-item>
 						<q-separator />
-						<q-item clickable v-close-popup>
+						<q-item v-close-popup clickable>
 							<q-item-section @click="copyAddress(token)"
 								>Copy Link</q-item-section
 							>
 						</q-item>
-						<q-item clickable v-close-popup>
+						<q-item v-close-popup clickable>
 							<q-item-section @click="copyToken(token)"
 								>Copy Token Details</q-item-section
 							>
@@ -141,7 +141,7 @@
 		<EmptyView />
 	</div>
 	<div v-else-if="!isLoading && !!erroredOut">
-		<ErrorView @retrieve-again="this.RetrieveTokens()" />
+		<ErrorView @retrieve-again="RetrieveTokens()" />
 	</div>
 	<div
 		v-else
@@ -215,27 +215,6 @@ export default defineComponent({
 			subscription: Function(),
 		};
 	},
-	async mounted() {
-		await this.RetrieveTokens(null);
-
-		const filterOptions = await RetrieveFilterDetails();
-		this.wineFiltersStore.setAllFilters(filterOptions);
-
-		this.subscription = this.wineFiltersStore.$subscribe(
-			async (mutation, state) => {
-				if (!this.filterListenersEnabled) {
-					return;
-				}
-				if (this.wineFiltersStore.filterMode == 'automatic') {
-					await this.RetrieveTokens(null);
-				}
-			}
-		);
-	},
-	unmounted() {
-		// cancels subscription once changing to another tab (e.g. releases, recommended)
-		this.subscription();
-	},
 	watch: {
 		'wineFiltersStore.filterKey': {
 			handler(val) {
@@ -267,6 +246,27 @@ export default defineComponent({
 			},
 		},
 	},
+	async mounted() {
+		await this.RetrieveTokens(null);
+
+		const filterOptions = await RetrieveFilterDetails();
+		this.wineFiltersStore.setAllFilters(filterOptions);
+
+		this.subscription = this.wineFiltersStore.$subscribe(
+			async () => {
+				if (!this.filterListenersEnabled) {
+					return;
+				}
+				if (this.wineFiltersStore.filterMode == 'automatic') {
+					await this.RetrieveTokens(null);
+				}
+			}
+		);
+	},
+	unmounted() {
+		// cancels subscription once changing to another tab (e.g. releases, recommended)
+		this.subscription();
+	},
 
 	methods: {
 		async addRemoveFavorites(
@@ -276,7 +276,7 @@ export default defineComponent({
 			objective: string
 		) {
 			const nftIndex = this.allNFTs.findIndex(
-				(nft) =>
+				nft =>
 					nft.smartContractAddress == cAddress &&
 					nft.tokenID == tokenID &&
 					nft.network == network
@@ -317,7 +317,7 @@ export default defineComponent({
 			}
 		},
 
-		openNFT(token: any, where?: string) {
+		openNFT(token: ListingWithPricingAndImage, where?: string) {
 			const routeData = this.$router.resolve({
 				path: '/nft',
 				query: {
@@ -360,11 +360,11 @@ export default defineComponent({
 			}
 		},
 
-		copyToken(token: any) {
+		copyToken(token: ListingWithPricingAndImage) {
 			navigator.clipboard.writeText(JSON.stringify(token));
 		},
 
-		copyAddress(token: any) {
+		copyAddress(token: ListingWithPricingAndImage) {
 			const routeData = this.$router.resolve({
 				path: '/nft',
 				query: {
@@ -382,14 +382,13 @@ export default defineComponent({
 			this.selected = this.allNFTs.filter((x: any) => x.tokenID === tokenID)[0];
 		},
 
-		async RetrieveTokens(genSearch: string | null) {
+		async RetrieveTokens(genSearch?: string | null) {
 			this.isLoading = true;
 			if (!genSearch) {
 				try {
 					const { result: nfts } = await RetrieveFilteredNFTs(
 						`${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
 					);
-					console.log(nfts);
 					this.$emit('totalTokens', nfts.length);
 					this.allNFTs = nfts;
 					this.erroredOut = false; // change
@@ -401,7 +400,6 @@ export default defineComponent({
 					const { result: nfts, counts: nftEnums } = await RetrieveFilteredNFTs(
 						`generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
 					);
-					console.log(nfts);
 					this.$emit('totalTokens', nfts.length);
 					this.allNFTs = nfts;
 					this.erroredOut = false; // change
