@@ -47,6 +47,7 @@ export default defineComponent({
 		errorMessage: {
 			type: String,
 			required: true,
+		}
 	},
 });
 </script>
