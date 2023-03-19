@@ -220,3 +220,7 @@ console.log(fibonacci(5)); // Output: 5
 - Use watchers to react to changes in component props or data.
 - Use`v-if` for conditional rendering and `v-for` for list rendering.
 - Use the shorthand`@` to bind event handlers.
+
+## ENV Variables
+
+- ENV varaibles should not end with a `/` to avoid confusion when using them
