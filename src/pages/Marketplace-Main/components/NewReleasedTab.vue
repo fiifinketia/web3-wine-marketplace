@@ -1,10 +1,10 @@
 <template>
-  <div class="column items-center">
+  <div class="fit column items-center">
     <!-- Newly Minted Section -->
     <div class="releases-tab-container column items-center justify-center">
       NEWLY MINTED
     </div>
-    <NewlyMintedSection />
+    <NewlyMintedSection class="q-pa-md"/>
   </div>
 </template>
 
