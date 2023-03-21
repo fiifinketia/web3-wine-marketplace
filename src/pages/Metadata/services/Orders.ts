@@ -35,6 +35,7 @@ export async function CreateERC721Listing(
 	listingPrice = utils.parseEther(listingPrice).toString();
 
 	const { seaport, network } = await GetWeb3();
+	const blockNumber = await GetBlockNumber();
 	const { executeAllActions } = await seaport.createOrder(
 		{
 			offer: [
@@ -85,6 +86,7 @@ export async function CreateERC721Listing(
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
+		blockNumber: blockNumber
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
@@ -176,6 +178,7 @@ export async function CreateERC721Offer(
 	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
 	offerPrice = utils.parseEther(offerPrice).toString();
 
+	const blockNumber = await GetBlockNumber();
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
 		{
@@ -228,6 +231,7 @@ export async function CreateERC721Offer(
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
+		blockNumber: blockNumber
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	await axios.post(createOrderURL, OrderRequest);
@@ -254,6 +258,7 @@ export async function FulfillBasicOrder(
 				contractAddress: data.contractAddress,
 			};
 		});
+	const blockNumber = await GetBlockNumber();
 	const { executeAllActions: executeAllFulfillActions } =
 		await seaport.fulfillOrder({
 			order: {
@@ -273,8 +278,10 @@ export async function FulfillBasicOrder(
 		brand: brand,
 		isOwner: owner,
 		walletAddress: address,
+		offerer: order.parameters.offerer,
 		image: image,
-		nonce: txn.nonce
+		nonce: txn.nonce,
+		blockNumber: blockNumber
 	};
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
@@ -305,6 +312,11 @@ export async function GetWeb3(): Promise<SeaportInstance> {
 	return seaportInstance;
 }
 
+export async function GetBlockNumber(): Promise<number> {
+	const web3 = new ethers.providers.Web3Provider(window.ethereum);
+	return await web3.getBlockNumber();
+}
+
 export async function CancelSingleOrder(orderHash: string, walletAddress: string) {
 	if (!!walletAddress) {
 		const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
@@ -318,15 +330,16 @@ export async function CancelSingleOrder(orderHash: string, walletAddress: string
 				};
 			});
 		const { seaport } = await GetWeb3();
+		const blockNumber = await GetBlockNumber();
 		const { transact } = seaport.cancelOrders([order]);
 		const txn = await transact();
 		const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-		const requestToCancel = [];
-		requestToCancel.push({
+		const requestToCancel = {
 			orderHash: orderHash,
 			walletAddress: walletAddress,
-			nonce: txn.nonce
-		})
+			nonce: txn.nonce,
+			blockNumber: blockNumber
+		};
 		axios.post(cancelOrderURL, requestToCancel);
 	}
 }

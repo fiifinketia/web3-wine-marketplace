@@ -66,6 +66,8 @@ export interface UpdateListingRequest extends TokenIdentifier {
 	readonly isOwner: boolean;
 	readonly nonce: number;
 	readonly walletAddress: string;
+	readonly blockNumber: number;
+	readonly offerer: string;
 }
 
 export interface UnverifiedFulfillment extends TokenIdentifier {
