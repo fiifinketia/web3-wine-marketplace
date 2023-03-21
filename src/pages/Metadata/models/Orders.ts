@@ -52,14 +52,15 @@ export interface SeaportInstance {
 }
 
 export interface UpdateListingRequest extends TokenIdentifier {
-  readonly notificationID: number;
-  readonly brand: string;
-  readonly image: string;
-
-  readonly orderHash: string;
-  readonly isOwner: boolean;
-  readonly nonce: number;
-  readonly walletAddress: string;
+	readonly notificationID: number;
+	readonly brand: string;
+	readonly image: string;
+	readonly orderHash: string;
+	readonly isOwner: boolean;
+	readonly nonce: number;
+	readonly walletAddress: string;
+	readonly blockNumber: number;
+	readonly offerer: string;
 }
 
 export interface UnverifiedFulfillment extends TokenIdentifier {
