@@ -1,49 +1,47 @@
 <template>
-	<div v-if="!loadingMetadata">
-		<div v-if="tokenExists">
-			<WineMetadata :nft="nft" @open-wallet="openWalletSideBar" />
-			<q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
-				<q-tab name="history" label="NFT history" />
-				<q-tab class="tab-text-not-clicked" name="about" label="About" />
-				<q-tab
-					name="wine-maker"
-					class="tab-text-not-clicked"
-					label="Wine-maker"
-				/>
-			</q-tabs>
-			<q-tab-panels
-				v-model="tab"
-				animated
-				swipeable
-				transition-prev="jump-right"
-				transition-next="jump-left"
-			>
-				<q-tab-panel name="history">
-					<NFTHistory :nft-txn-history="nft.nftHistory" />
-				</q-tab-panel>
+  <div v-if="!loadingMetadata">
+    <div v-if="tokenExists">
+      <WineMetadata :nft="nft" @open-wallet="openWalletSideBar" />
+      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
+        <q-tab name="history" label="NFT history" />
+        <q-tab class="tab-text-not-clicked" name="about" label="About" />
+        <q-tab
+          name="wine-maker"
+          class="tab-text-not-clicked"
+          label="Wine-maker"
+        />
+      </q-tabs>
+      <q-tab-panels
+        v-model="tab"
+        animated
+        swipeable
+        transition-prev="jump-right"
+        transition-next="jump-left"
+      >
+        <q-tab-panel name="history">
+          <NFTHistory :nft-txn-history="nft.nftHistory" />
+        </q-tab-panel>
 
-				<q-tab-panel name="about">
-					<About :nft="nft" />
-				</q-tab-panel>
+        <q-tab-panel name="about">
+          <About :nft="nft" />
+        </q-tab-panel>
 
-				<q-tab-panel name="wine-maker">
-					<WineMaker :nft="nft" />
-				</q-tab-panel>
-			</q-tab-panels>
-		</div>
-		<UnavailableNFT v-else />
-	</div>
-	<div v-else>
-		<LoadingMetadata />
-	</div>
+        <q-tab-panel name="wine-maker">
+          <WineMaker :nft="nft" />
+        </q-tab-panel>
+      </q-tab-panels>
+    </div>
+    <UnavailableNFT v-else />
+  </div>
+  <div v-else>
+    <LoadingMetadata />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import {
-	NFTWithListingAndFavorites,
-} from './models/Metadata';
+import { NFTWithListingAndFavorites } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
 import NFTHistory from './components/NFTHistory.vue';
 import WineMetadata from './components/WineMetadata.vue';
@@ -53,155 +51,155 @@ import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
 import {
-	NewPolygonCollectionContract_MumbaiInstance,
-	NewPolygonCollectionContract_PolygonInstance,
+  NewPolygonCollectionContract_MumbaiInstance,
+  NewPolygonCollectionContract_PolygonInstance,
 } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
 
 export default defineComponent({
-	name: 'MetadataPage',
-	components: {
-		NFTHistory,
-		About,
-		WineMaker,
-		WineMetadata,
-		UnavailableNFT: UnavailableNFT,
-		LoadingMetadata: LoadingMetadata,
-	},
-	emits: ['openWalletSidebar'],
+  name: 'MetadataPage',
+  components: {
+    NFTHistory,
+    About,
+    WineMaker,
+    WineMetadata,
+    UnavailableNFT: UnavailableNFT,
+    LoadingMetadata: LoadingMetadata,
+  },
+  emits: ['openWalletSidebar'],
 
-	data() {
-		const userStore = useUserStore();
-		return {
-			nft: {} as NFTWithListingAndFavorites,
-			userStore,
-			tab: ref('history'),
-			tokenExists: false,
-			loadingMetadata: true,
-		};
-	},
+  data() {
+    const userStore = useUserStore();
+    return {
+      nft: {} as NFTWithListingAndFavorites,
+      userStore,
+      tab: ref('history'),
+      tokenExists: false,
+      loadingMetadata: true,
+    };
+  },
 
-	async mounted() {
-		await this.getMetadata();
-	},
+  async mounted() {
+    await this.getMetadata();
+  },
 
-	methods: {
-		async getMetadata() {
-			const { id, contractAddress, network } = this.$route.query;
-			if (
-				typeof id === 'string' &&
-				typeof contractAddress === 'string' &&
-				typeof network === 'string'
-			) {
-				const tokenExistCheck = await this.CheckTokenExistence(
-					id,
-					contractAddress,
-					network
-				);
-				if (!!tokenExistCheck) {
-					await this.FetchMetadata(id, contractAddress, network);
-					this.tokenExists = true;
-				}
-				this.loadingMetadata = false;
-			}
-		},
+  methods: {
+    async getMetadata() {
+      const { id, contractAddress, network } = this.$route.query;
+      if (
+        typeof id === 'string' &&
+        typeof contractAddress === 'string' &&
+        typeof network === 'string'
+      ) {
+        const tokenExistCheck = await this.CheckTokenExistence(
+          id,
+          contractAddress,
+          network
+        );
+        if (!!tokenExistCheck) {
+          await this.FetchMetadata(id, contractAddress, network);
+          this.tokenExists = true;
+        }
+        this.loadingMetadata = false;
+      }
+    },
 
-		async FetchMetadata(id: string, contractAddress: string, network: string) {
-			try {
-				const nft = await GetMetadata({
-					id,
-					contractAddress,
-					network,
-					walletAddress: this.userStore.walletAddress,
-				});
-				if (!!this.userStore.walletAddress) {
-					nft.isOwner = await this.CheckOwnership(
-						this.userStore.walletAddress,
-						contractAddress,
-						id
-					);
-				}
-				this.nft = nft;
-			} catch (error) {
-				throw error;
-			}
-		},
+    async FetchMetadata(id: string, contractAddress: string, network: string) {
+      try {
+        const nft = await GetMetadata({
+          id,
+          contractAddress,
+          network,
+          walletAddress: this.userStore.walletAddress,
+        });
+        if (!!this.userStore.walletAddress) {
+          nft.isOwner = await this.CheckOwnership(
+            this.userStore.walletAddress,
+            contractAddress,
+            id
+          );
+        }
+        this.nft = nft;
+      } catch (error) {
+        throw error;
+      }
+    },
 
-		async CheckTokenExistence(
-			id: string,
-			contractAddress: string,
-			network: string
-		): Promise<boolean> {
-			let exists = true;
-			try {
-				let contract: Contract;
-				switch (contractAddress) {
-					case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-						contract = NewPolygonCollectionContract_MumbaiInstance;
-						await contract.tokenURI(id);
-						break;
-					case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
-						contract = NewPolygonCollectionContract_PolygonInstance;
-						await contract.tokenURI(id);
-						break;
-				}
-				exists = true;
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (err: any) {
-				const nonexistentMessage = err.message
-					.toString()
-					.includes('URI query for nonexistent token');
-				if (nonexistentMessage) {
-					const burntNFT: TokenIdentifier = {
-						contractAddress: contractAddress,
-						identifierOrCriteria: id,
-						network: network,
-					};
-					this.$axios.post(<string>process.env.BURN_NFT_URL, burntNFT);
-					exists = false;
-				}
-			}
-			return exists;
-		},
+    async CheckTokenExistence(
+      id: string,
+      contractAddress: string,
+      network: string
+    ): Promise<boolean> {
+      let exists = true;
+      try {
+        let contract: Contract;
+        switch (contractAddress) {
+          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+            contract = NewPolygonCollectionContract_MumbaiInstance;
+            await contract.tokenURI(id);
+            break;
+          case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
+            contract = NewPolygonCollectionContract_PolygonInstance;
+            await contract.tokenURI(id);
+            break;
+        }
+        exists = true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        const nonexistentMessage = err.message
+          .toString()
+          .includes('URI query for nonexistent token');
+        if (nonexistentMessage) {
+          const burntNFT: TokenIdentifier = {
+            contractAddress: contractAddress,
+            identifierOrCriteria: id,
+            network: network,
+          };
+          this.$axios.post(<string>process.env.BURN_NFT_URL, burntNFT);
+          exists = false;
+        }
+      }
+      return exists;
+    },
 
-		async CheckOwnership(
-			walletAddress: string,
-			contractAddress: string,
-			tokenID: string
-		) {
-			let isOwned = false;
-			try {
-				let actualOwner = '';
-				let contract: Contract;
-				switch (contractAddress) {
-					case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-						contract = NewPolygonCollectionContract_MumbaiInstance;
-						actualOwner = await contract.ownerOf(tokenID);
-						isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-						break;
-					case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-						contract = NewPolygonCollectionContract_PolygonInstance;
-						actualOwner = await contract.ownerOf(tokenID);
-						isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-						break;
-				}
-			} catch (err) {
-				throw err;
-			} finally {
-				return isOwned;
-			}
-		},
+    async CheckOwnership(
+      walletAddress: string,
+      contractAddress: string,
+      tokenID: string
+    ) {
+      let isOwned = false;
+      try {
+        let actualOwner = '';
+        let contract: Contract;
+        switch (contractAddress) {
+          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+            contract = NewPolygonCollectionContract_MumbaiInstance;
+            actualOwner = await contract.ownerOf(tokenID);
+            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
+            break;
+          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+            contract = NewPolygonCollectionContract_PolygonInstance;
+            actualOwner = await contract.ownerOf(tokenID);
+            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
+            break;
+        }
+      } catch (err) {
+        throw err;
+      } finally {
+        return isOwned;
+      }
+    },
 
-		openWalletSideBar() {
-			this.$emit('openWalletSidebar');
-		},
-	},
+    openWalletSideBar() {
+      this.$emit('openWalletSidebar');
+    },
+  },
 });
 </script>
 
 <style>
 .q-tab-panel {
-	padding: 3rem 0 4rem !important;
+  padding: 3rem 0 4rem !important;
 }
 </style>

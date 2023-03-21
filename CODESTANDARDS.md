@@ -43,13 +43,13 @@ For example, to create a button, use the Quasar `q-btn` component instead of the
 
 ```html
 <template>
-	<div class="page">
-		<q-btn color="primary">Click Me</q-btn>
-		<q-row>
-			<q-col cols="6">Left Column</q-col>
-			<q-col cols="6">Right Column</q-col>
-		</q-row>
-	</div>
+  <div class="page">
+    <q-btn color="primary">Click Me</q-btn>
+    <q-row>
+      <q-col cols="6">Left Column</q-col>
+      <q-col cols="6">Right Column</q-col>
+    </q-row>
+  </div>
 </template>
 ```
 
@@ -59,13 +59,13 @@ For example
 
 ```html
 <template>
-	<div class="q-pa-md">
-		<div class="row q-col-gutter-md">
-			<div class="col-4">Column 1</div>
-			<div class="col-4">Column 2</div>
-			<div class="col-4">Column 3</div>
-		</div>
-	</div>
+  <div class="q-pa-md">
+    <div class="row q-col-gutter-md">
+      <div class="col-4">Column 1</div>
+      <div class="col-4">Column 2</div>
+      <div class="col-4">Column 3</div>
+    </div>
+  </div>
 </template>
 ```
 
@@ -79,15 +79,15 @@ Quasar provides a `q-dialog` component that allows you to display a dialog box. 
 
 ```html
 <q-dialog v-model="showDialog">
-	<q-card>
-		<q-card-section>
-			Are you sure you want to delete this item?
-		</q-card-section>
-		<q-card-actions>
-			<q-btn label="Cancel" @click="showDialog = false" />
-			<q-btn label="Delete" @click="deleteItem" color="negative" />
-		</q-card-actions>
-	</q-card>
+  <q-card>
+    <q-card-section>
+      Are you sure you want to delete this item?
+    </q-card-section>
+    <q-card-actions>
+      <q-btn label="Cancel" @click="showDialog = false" />
+      <q-btn label="Delete" @click="deleteItem" color="negative" />
+    </q-card-actions>
+  </q-card>
 </q-dialog>
 ```
 
@@ -112,30 +112,59 @@ Quasar provides a `q-dialog` component that allows you to display a dialog box. 
 - Use`===` instead of`==` for equality comparisons.
 - Use`let` or`const` instead of`var`.
 - Use object destructuring instead of dot notation to access object properties.
+
+  ```javascript
+  // Using dot notation to access object properties
+  const person = {
+    firstName: 'John',
+    lastName: 'Doe',
+    age: 30,
+    address: {
+      street: '123 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zipCode: '12345',
+    },
+  };
+
+  const firstName = person.firstName;
+  const lastName = person.lastName;
+  const city = person.address.city;
+  const state = person.address.state;
+
+  // Using object destructuring to access object properties
+  const {
+    firstName,
+    lastName,
+    address: { city, state },
+  } = person;
+  ```
+
 - Use arrow functions instead of function declarations.
 - Avoid using`this` in arrow functions.
-- Use 1 tab for indentation
+- Use 2 space for indentation
+- Use the `!` or `!!` for checking falsey/truthy values instead of doing an `if (x !== null && x !== undefined)`
 
 ```javascript
 const myObj = { foo: 'bar', baz: 'qux' };
 
 const myFunction = (arg1, arg2) => {
-	let result = arg1 + arg2;
-	return result;
+  let result = arg1 + arg2;
+  return result;
 };
 
 const myArrowFunction = () => {
-	const { foo, baz } = myObj;
-	return `${foo} ${baz}`;
+  const { foo, baz } = myObj;
+  return `${foo} ${baz}`;
 };
 
 let myVar = 'hello';
 myVar += ' world';
 
 if (myVar === 'hello world') {
-	console.log('This is true.');
+  console.log('This is true.');
 } else {
-	console.log('This is false.');
+  console.log('This is false.');
 }
 ```
 
@@ -151,18 +180,18 @@ if (myVar === 'hello world') {
 ```javascript
 // Use async/await instead of Promise.then() for asynchronous operations
 async function getData() {
-	try {
-		const response = await fetch('/api/data');
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error(error);
-	}
+  try {
+    const response = await fetch('/api/data');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // Use default parameter values instead of if statements to handle missing function arguments
 function greet(name = 'world') {
-	console.log(`Hello, ${name}!`);
+  console.log(`Hello, ${name}!`);
 }
 
 greet(); // Output: Hello, world!
@@ -185,26 +214,26 @@ console.log(area); // Output: 78.53975
 
 // Avoid using global variables and functions
 (function () {
-	const message = 'Hello, world!';
-	console.log(message);
+  const message = 'Hello, world!';
+  console.log(message);
 })();
 
 // Use comments to explain complex code or algorithms
 function fibonacci(n) {
-	// Check if the input is a non-negative integer
-	if (!Number.isInteger(n) || n < 0) {
-		throw new Error('Invalid input');
-	}
+  // Check if the input is a non-negative integer
+  if (!Number.isInteger(n) || n < 0) {
+    throw new Error('Invalid input');
+  }
 
-	// Calculate the n-th Fibonacci number
-	let a = 0;
-	let b = 1;
-	for (let i = 0; i < n; i++) {
-		const temp = a + b;
-		a = b;
-		b = temp;
-	}
-	return a;
+  // Calculate the n-th Fibonacci number
+  let a = 0;
+  let b = 1;
+  for (let i = 0; i < n; i++) {
+    const temp = a + b;
+    a = b;
+    b = temp;
+  }
+  return a;
 }
 
 console.log(fibonacci(5)); // Output: 5

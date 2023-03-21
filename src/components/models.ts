@@ -1,21 +1,21 @@
 export interface Todo {
-	id: number;
-	content: string;
+  id: number;
+  content: string;
 }
 
 export interface Meta {
-	totalCount: number;
+  totalCount: number;
 }
 
 export interface UserModel {
-	walletAddress: string;
-	avatar?: string;
-	email?: string;
-	firstName?: string;
-	lastName?: string;
-	phone?: string;
-	dob?: string;
-	isLegal: boolean;
-	isVerified: boolean;
-	settings: object;
+  walletAddress: string;
+  avatar?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  dob?: string;
+  isLegal: boolean;
+  isVerified: boolean;
+  settings: object;
 }

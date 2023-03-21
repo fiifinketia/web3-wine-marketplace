@@ -1,32 +1,32 @@
 // app global css in SCSS form
 img {
-	border-radius: 6px !important;
+  border-radius: 6px !important;
 }
 
 .dark-blue-border {
-	border: 1px solid rgba(94, 151, 236, 0.27);
+  border: 1px solid rgba(94, 151, 236, 0.27);
 }
 
 .bg-gradient_blue-green {
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
 }
 @media only screen and (max-width: 1023px) {
-	.hidden-a-1023 {
-		display: none;
-	}
+  .hidden-a-1023 {
+    display: none;
+  }
 }
 @media only screen and (min-width: 1024px) {
-	.hidden-b-1023 {
-		display: none;
-	}
+  .hidden-b-1023 {
+    display: none;
+  }
 }
 @media only screen and (min-width: 600px) {
-	.hidden-b-599 {
-		display: none;
-	}
+  .hidden-b-599 {
+    display: none;
+  }
 }
 @media only screen and (max-width: 599px) {
-	.hidden-a-599 {
-		display: none;
-	}
+  .hidden-a-599 {
+    display: none;
+  }
 }

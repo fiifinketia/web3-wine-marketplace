@@ -1,11 +1,11 @@
 <template>
-	<HeadlineComponent />
-	<ExclusiveOffers />
-	<Calculator />
-	<TrendingWines class="trending" />
-	<PartnershipWines class="partnership" />
-	<FAQ class="faq" />
-	<LandingPageFooter />
+  <HeadlineComponent />
+  <ExclusiveOffers />
+  <Calculator />
+  <TrendingWines class="trending" />
+  <PartnershipWines class="partnership" />
+  <FAQ class="faq" />
+  <LandingPageFooter />
 </template>
 
 <script lang="ts">
@@ -22,21 +22,21 @@ import HeadlineComponent from './components/HeadlineComponent.vue';
 import FAQ from './components/FAQ.vue';
 
 export default defineComponent({
-	name: 'VueHomepage',
-	components: {
-		HeadlineComponent,
-		ExclusiveOffers,
-		Calculator,
-		TrendingWines,
-		LandingPageFooter,
-		PartnershipWines,
-		FAQ,
-	},
+  name: 'VueHomepage',
+  components: {
+    HeadlineComponent,
+    ExclusiveOffers,
+    Calculator,
+    TrendingWines,
+    LandingPageFooter,
+    PartnershipWines,
+    FAQ,
+  },
 });
 </script>
 
 <style>
 .trending {
-	margin-top: 220px;
+  margin-top: 220px;
 }
 </style>

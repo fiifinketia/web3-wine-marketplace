@@ -9,9 +9,9 @@ import piniaPluginPersist from 'pinia-plugin-persistedstate';
  * @see https://pinia.vuejs.org/core-concepts/plugins.html#typing-new-store-properties
  */
 declare module 'pinia' {
-	export interface PiniaCustomProperties {
-		readonly router: Router;
-	}
+  export interface PiniaCustomProperties {
+    readonly router: Router;
+  }
 }
 
 /*
@@ -24,10 +24,10 @@ declare module 'pinia' {
  */
 
 export default store((/* { ssrContext } */) => {
-	const pinia = createPinia();
+  const pinia = createPinia();
 
-	// You can add Pinia plugins here
-	pinia.use(piniaPluginPersist);
+  // You can add Pinia plugins here
+  pinia.use(piniaPluginPersist);
 
-	return pinia;
+  return pinia;
 });
