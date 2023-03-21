@@ -9,7 +9,12 @@
       <q-scroll-area
         bordered
         class="main-filter-box dark-blue-border q-px-md"
-        style="height: 100%; max-width: 100%; max-height: calc(100% - 100px); min-width: 275px;"
+        style="
+          height: 100%;
+          max-width: 100%;
+          max-height: calc(100% - 100px);
+          min-width: 275px;
+        "
         :thumb-style="{
           right: '4px',
           borderRadius: '5px',
@@ -48,16 +53,16 @@
               class="q-pa-sm text-weight-bolder text-h6 q-mr-xs"
               style="vertical-align: middle"
             >
-						  {{ wineFiltersStore.getAllFiltersArray.length }}
+              {{ wineFiltersStore.getAllFiltersArray.length }}
             </span>
-            <q-btn 
+            <q-btn
               v-close-popup
               :disable="wineFiltersStore.getAllFiltersArray.length == 0"
-              @click="this.ApplyFilter()"
               class="header-apply"
               label="Apply"
               color="primary"
               no-caps
+              @click="ApplyFilter()"
             />
           </div>
         </q-card-section>
@@ -72,15 +77,15 @@ import { defineComponent } from 'vue';
 import { useWineFilters } from 'src/stores/wine-filters';
 
 export default defineComponent({
-	components: {
-		SidebarContents: SidebarContents
-	},
+  components: {
+    SidebarContents: SidebarContents,
+  },
   data() {
     const wineFiltersStore = useWineFilters();
 
     return {
-      wineFiltersStore
-    }
+      wineFiltersStore,
+    };
   },
   methods: {
     ApplyFilter() {
@@ -89,14 +94,13 @@ export default defineComponent({
     async ClearAllAndApply() {
       await this.wineFiltersStore.removeAllFilters();
       this.wineFiltersStore.indexFilterKey();
-    }
-  }
+    },
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

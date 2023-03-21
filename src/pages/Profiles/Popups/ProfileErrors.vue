@@ -1,27 +1,28 @@
 <template>
-  <q-dialog
-    transition-show="slide-up"
-    transition-hide="slide-down"
-  >
+  <q-dialog transition-show="slide-up" transition-hide="slide-down">
     <q-card class="q-pa-none profile-error-container q-pa-md">
       <q-card-section class="column justify-center items-center">
-        <q-img 
+        <q-img
           v-if="errorType == 'accept'"
           src="../../../assets/purchase_failed.svg"
           :style="$q.screen.width > 360 ? 'width: 20%' : 'width: 25vw'"
         />
-        <q-img 
+        <q-img
           v-else
           src="../../../assets/make_offer_failed.svg"
           :style="$q.screen.width > 360 ? 'width: 20%' : 'width: 25vw'"
         />
       </q-card-section>
       <q-card-section class="column items-center justify-center q-gutter-y-sm">
-        <span 
+        <span
           v-if="errorTitle"
-          :class="errorType == 'filter' ? 'profile-warning-title' : 'profile-error-title'"
-        > 
-          {{ errorTitle }} 
+          :class="
+            errorType == 'filter'
+              ? 'profile-warning-title'
+              : 'profile-error-title'
+          "
+        >
+          {{ errorTitle }}
         </span>
         <span class="profile-error-text"> {{ errorMessage }} </span>
       </q-card-section>
@@ -37,20 +38,18 @@ export default defineComponent({
   props: {
     errorType: {
       type: String,
-      required: true
+      required: true,
     },
     errorTitle: {
       type: String,
-      required: true
+      required: true,
     },
     errorMessage: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

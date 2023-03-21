@@ -1,66 +1,72 @@
 <template>
-<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
-  <div v-if="!loadingRequest" class="column items-center">
-    <LoadingView
-      :loadingText="'Loading your transactions'"
-    />
-  </div>
-  <div v-else class="column items-center full-width q-mx-none">
-    <div 
-      v-if="!emptyRequest"
-      class="column items-center"
-      :class="$q.screen.width > 600 ? '' : 'full-width'"
-    >
-      <TransactionHeaderLg
-        v-if="$q.screen.width > 1020"
-        :transactionsAmount="transactions.length"
-        :selectedTransactionSortKey="transactionSortKey"
-        :updatedTransactionBrandFilter="transactionBrandFilter"
-        :brandSearched="brandSearched"
-        @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
-        @transactionSortKeySelected="(val) => transactionSortKey = val"
-        @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
-        @reset-transactions-search="(val) => FetchTransactions(val, '')"
-      />
-      <TransactionHeaderSm
-        v-else
-        :transactionsAmount="transactions.length"
-        :selectedTransactionSortKey="transactionSortKey"
-        :updatedTransactionBrandFilter="transactionBrandFilter"
-        :brandSearched="brandSearched"
-        @transactionBrandFilterUpdated="(val) => transactionBrandFilter = val"
-        @transactionSortKeySelected="(val) => transactionSortKey = val"
-        @fetchTransactionWithBrandFilter="(val) => FetchTransactions(val.sortKey, val.brandFilter)"
-        @reset-transactions-search="(val) => FetchTransactions(val, '')"
-      />
-      <div 
-        v-if="$q.screen.width > 600"
-        class="profile-main-container column"
-      >
-        <TransactionsColumns />
-        <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
-        <TransactionsRows />
-      </div>
+  <q-page
+    class="column items-center"
+    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+  >
+    <div v-if="!loadingRequest" class="column items-center">
+      <LoadingView :loading-text="'Loading your transactions'" />
+    </div>
+    <div v-else class="column items-center full-width q-mx-none">
       <div
-        v-else
-        class="full-width"
-        style="width: 100vw"
+        v-if="!emptyRequest"
+        class="column items-center"
+        :class="$q.screen.width > 600 ? '' : 'full-width'"
       >
-        <TransactionsColumns />
-        <TransactionsRows />
+        <TransactionHeaderLg
+          v-if="$q.screen.width > 1020"
+          :transactions-amount="transactions.length"
+          :selected-transaction-sort-key="transactionSortKey"
+          :updated-transaction-brand-filter="transactionBrandFilter"
+          :brand-searched="brandSearched"
+          @transaction-brand-filter-updated="
+            val => (transactionBrandFilter = val)
+          "
+          @transaction-sort-key-selected="val => (transactionSortKey = val)"
+          @fetch-transaction-with-brand-filter="
+            val => FetchTransactions(val.sortKey, val.brandFilter)
+          "
+          @reset-transactions-search="val => FetchTransactions(val, '')"
+        />
+        <TransactionHeaderSm
+          v-else
+          :transactions-amount="transactions.length"
+          :selected-transaction-sort-key="transactionSortKey"
+          :updated-transaction-brand-filter="transactionBrandFilter"
+          :brand-searched="brandSearched"
+          @transaction-brand-filter-updated="
+            val => (transactionBrandFilter = val)
+          "
+          @transaction-sort-key-selected="val => (transactionSortKey = val)"
+          @fetch-transaction-with-brand-filter="
+            val => FetchTransactions(val.sortKey, val.brandFilter)
+          "
+          @reset-transactions-search="val => FetchTransactions(val, '')"
+        />
+        <div v-if="$q.screen.width > 600" class="profile-main-container column">
+          <TransactionsColumns />
+          <q-separator
+            style="background-color: #5e97ec45 !important"
+            inset
+            class="q-mx-xl"
+          />
+          <TransactionsRows />
+        </div>
+        <div v-else class="full-width" style="width: 100vw">
+          <TransactionsColumns />
+          <TransactionsRows />
+        </div>
+        <ErrorDialog
+          v-model="openErrorDialog"
+          :error-type="errorType"
+          :error-title="errorTitle"
+          :error-message="errorMessage"
+        />
       </div>
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :errorType="errorType"
-        :errorTitle="errorTitle"
-        :errorMessage="errorMessage"
-      />
+      <div v-else class="column items-center">
+        <EmptyView :empty-text="'You have not made any offers yet.'" />
+      </div>
     </div>
-    <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any offers yet.'" />
-    </div>
-  </div>
-</q-page>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -84,8 +90,9 @@ export default defineComponent({
     EmptyView: EmptyOrders,
     ErrorDialog: ProfileErrors,
     TransactionsColumns: TransactionsColumns,
-    TransactionsRows: TransactionsRows
+    TransactionsRows: TransactionsRows,
   },
+  emits: ['transactionsAmount'],
   data() {
     const store = ordersStore();
     const userStore = useUserStore();
@@ -105,8 +112,8 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
 
-      brandSearched: false
-    }
+      brandSearched: false,
+    };
   },
   watch: {
     transactionSortKey: {
@@ -117,15 +124,15 @@ export default defineComponent({
         } else {
           await this.FetchTransactions(sortKey, this.transactionBrandFilter);
         }
-        this.loadingRequest = true
-      }
+        this.loadingRequest = true;
+      },
     },
     transactionBrandFilter: {
       handler: function (brandFilter) {
         this.store.setTransactionBrandFilter(brandFilter);
         this.store.setTransactionBrandFilterStatus(false);
-      }
-    }
+      },
+    },
   },
   async mounted() {
     const transactionRequestStatus = this.store.getTransactionRequestStatus;
@@ -139,15 +146,18 @@ export default defineComponent({
   },
   methods: {
     ReduceAddress(walletAddress: string) {
-      return `${walletAddress.slice(0, 11)}...`
+      return `${walletAddress.slice(0, 11)}...`;
     },
     async FetchTransactions(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
       await this.store.setTransactions(address, sortKey, brandFilter);
-      if (this.store.getTransactions.length == 0 && this.store.transactionBrandFilterStatus == true) {
+      if (
+        this.store.getTransactions.length == 0 &&
+        this.store.transactionBrandFilterStatus == true
+      ) {
         this.HandleMissingBrand();
-      } else if ( this.store.transactionBrandFilterStatus == true ) {
+      } else if (this.store.transactionBrandFilterStatus == true) {
         this.brandSearched = true;
         this.loadingRequest = true;
       } else {
@@ -155,23 +165,25 @@ export default defineComponent({
         this.transactions = this.store.getTransactions;
         this.$emit('transactionsAmount', this.transactions.length);
         this.CheckForEmptyRequest();
-        this.loadingRequest = true
+        this.loadingRequest = true;
       }
     },
     HandleError(err: {
-      errorType: string,
-      errorTitle: string,
-      errorMessage: string
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
     }) {
       this.errorType = err.errorType;
       this.errorTitle = err.errorTitle;
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
-      setTimeout(() => { this.openErrorDialog = false }, 2000);
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
     },
     CheckForEmptyRequest() {
       if (this.transactions.length == 0) {
-        this.emptyRequest = true 
+        this.emptyRequest = true;
       }
     },
     HandleMissingBrand() {
@@ -182,14 +194,11 @@ export default defineComponent({
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your transactions',
-        errorMessage: 'There are no transactions under your current filter'
-      })
-    }
-  }
+        errorMessage: 'There are no transactions under your current filter',
+      });
+    },
+  },
 });
-
 </script>
 
-<style>
-
-</style>
+<style></style>

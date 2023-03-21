@@ -1,86 +1,95 @@
 <template>
-  <q-dialog
-    transition-show="scale"
-    transition-hide="scale"
-  >
-    <q-card class="full-width no-shadow" style="border-radius: 8px; max-width: 390px;">
-      <img :src="image"/>
-      <span class="nft-dialog-brand nft-dialog-custom-padding"> {{ brand }}</span>
+  <q-dialog transition-show="scale" transition-hide="scale">
+    <q-card
+      class="full-width no-shadow"
+      style="border-radius: 8px; max-width: 390px"
+    >
+      <img :src="image" />
+      <span class="nft-dialog-brand nft-dialog-custom-padding">
+        {{ brand }}</span
+      >
 
-      <div v-if="tab == 'listings'" class="column nft-dialog-custom-padding q-py-sm">
+      <div
+        v-if="tab == 'listings'"
+        class="column nft-dialog-custom-padding q-py-sm"
+      >
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Highest Offer
-          </span>
+          <span class="nft-dialog-label"> Highest Offer </span>
           <div class="row items-center q-gutter-x-xs">
-            <img class="nft-dialog-currency" src="../../../assets/icons/currencies/USDC-Icon.svg" />
+            <img
+              class="nft-dialog-currency"
+              src="../../../assets/icons/currencies/USDC-Icon.svg"
+            />
             <span class="nft-dialog-text-highlight"> {{ highestOffer }} </span>
           </div>
         </div>
       </div>
 
-      <div v-else-if="tab == 'incoming'" class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm">
+      <div
+        v-else-if="tab == 'incoming'"
+        class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm"
+      >
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Floor Price
-          </span>
+          <span class="nft-dialog-label"> Floor Price </span>
           <div class="row items-center q-gutter-x-xs">
-            <img class="nft-dialog-currency" src="../../../assets/icons/currencies/USDC-Icon.svg" />
+            <img
+              class="nft-dialog-currency"
+              src="../../../assets/icons/currencies/USDC-Icon.svg"
+            />
             <span class="nft-dialog-text-default"> {{ floorPrice }} </span>
           </div>
         </div>
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            From
-          </span>
+          <span class="nft-dialog-label"> From </span>
           <div class="row items-center q-gutter-x-xs">
             <span class="nft-dialog-text-default"> {{ from }} </span>
           </div>
         </div>
       </div>
 
-      <div v-else-if="tab == 'outgoing'" class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm">
+      <div
+        v-else-if="tab == 'outgoing'"
+        class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm"
+      >
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Expiration On
-          </span>
+          <span class="nft-dialog-label"> Expiration On </span>
           <div class="row items-center q-gutter-x-xs">
             <span class="nft-dialog-text-highlight"> {{ offerEndTime }} </span>
           </div>
         </div>
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Highest Offer
-          </span>
+          <span class="nft-dialog-label"> Highest Offer </span>
           <div class="row items-center q-gutter-x-xs">
-            <img class="nft-dialog-currency" src="../../../assets/icons/currencies/USDC-Icon.svg" />
+            <img
+              class="nft-dialog-currency"
+              src="../../../assets/icons/currencies/USDC-Icon.svg"
+            />
             <span class="nft-dialog-text-default"> {{ highestOffer }} </span>
           </div>
         </div>
       </div>
 
-      <div v-else-if="tab == 'transactions'" class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm">
+      <div
+        v-else-if="tab == 'transactions'"
+        class="column nft-dialog-custom-padding q-py-sm q-gutter-y-sm"
+      >
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Date
-          </span>
+          <span class="nft-dialog-label"> Date </span>
           <div class="column items-end">
             <span class="nft-dialog-date"> {{ date }} </span>
             <span class="nft-dialog-time"> {{ time }} </span>
           </div>
         </div>
         <div class="row items-center justify-between">
-          <span class="nft-dialog-label">
-            Transaction ID
-          </span>
+          <span class="nft-dialog-label"> Transaction ID </span>
           <div class="row items-center q-gutter-x-xs">
-            <span class="nft-dialog-hash"> {{ txnHash.slice(0,11) + '...' }} </span>
+            <span class="nft-dialog-hash">
+              {{ txnHash.slice(0, 11) + '...' }}
+            </span>
           </div>
         </div>
         <div class="row justify-between items-center">
-          <span class="nft-dialog-info">
-            Full transaction info
-          </span>
+          <span class="nft-dialog-info"> Full transaction info </span>
           <q-btn
             unelevated
             flat
@@ -112,13 +121,13 @@ export default defineComponent({
     txnHash: { type: String, default: '' },
     date: { type: String, default: '' },
     time: { type: String, default: '' },
-    txnLinkPrepend: { type: String, default: '' }
-  }
-})
+    txnLinkPrepend: { type: String, default: '' },
+  },
+});
 </script>
 
 <style scoped>
 :deep(.open-link.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

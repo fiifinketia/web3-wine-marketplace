@@ -24,7 +24,7 @@
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
             v-model="listableFiltersStore.type"
-            :options="listableFiltersStore.typeOptions" 
+            :options="listableFiltersStore.typeOptions"
             type="checkbox"
             class="sidebar-options"
           />
@@ -279,52 +279,50 @@
 </template>
 
 <script lang="ts">
-import { useListableFilters } from "src/stores/listable-filters";
-import { defineComponent, ref } from "vue";
+import { useListableFilters } from 'src/stores/listable-filters';
+import { defineComponent, ref } from 'vue';
 import 'src/css/Marketplace/sidebar.css';
 
 export default defineComponent({
   setup() {
     const listableFiltersStore = useListableFilters();
 
-		return {
-			listableFiltersStore,
-			searchQuery: ref(''),
-			brandQuery: ref(''),
-			regionQuery: ref(''),
-			producerQuery: ref(''),
-			vintageQuery: ref(''),
-			formatQuery: ref(''),
-			investmentGradeQuery: ref(''),
-			appellationQuery: ref(''),
-			lwinQuery: ref(''),
-			heritageQuery: ref(''),
-			caseQuery: ref(''),
-			originQuery: ref(''),
-			countryQuery: ref(''),
-			brandOptions: listableFiltersStore.brandOptions,
-			regionOptions: listableFiltersStore.regionOptions,
-			producerOptions: listableFiltersStore.producerOptions,
-			formatOptions: listableFiltersStore.formatOptions,
-			investmentGradeOptions: listableFiltersStore.investmentGradeOptions,
-			appellationOptions: listableFiltersStore.appellationOptions,
-			LWINOptions: listableFiltersStore.LWINOptions,
-			heritageOptions: listableFiltersStore.heritageOptions,
-			caseOptions: listableFiltersStore.wineCaseOptions,
-			originOptions: listableFiltersStore.originOptions,
-			countryOptions: listableFiltersStore.countryOptions
-		};
+    return {
+      listableFiltersStore,
+      searchQuery: ref(''),
+      brandQuery: ref(''),
+      regionQuery: ref(''),
+      producerQuery: ref(''),
+      vintageQuery: ref(''),
+      formatQuery: ref(''),
+      investmentGradeQuery: ref(''),
+      appellationQuery: ref(''),
+      lwinQuery: ref(''),
+      heritageQuery: ref(''),
+      caseQuery: ref(''),
+      originQuery: ref(''),
+      countryQuery: ref(''),
+      brandOptions: listableFiltersStore.brandOptions,
+      regionOptions: listableFiltersStore.regionOptions,
+      producerOptions: listableFiltersStore.producerOptions,
+      formatOptions: listableFiltersStore.formatOptions,
+      investmentGradeOptions: listableFiltersStore.investmentGradeOptions,
+      appellationOptions: listableFiltersStore.appellationOptions,
+      LWINOptions: listableFiltersStore.LWINOptions,
+      heritageOptions: listableFiltersStore.heritageOptions,
+      caseOptions: listableFiltersStore.wineCaseOptions,
+      originOptions: listableFiltersStore.originOptions,
+      countryOptions: listableFiltersStore.countryOptions,
+    };
   },
   data() {
     return {
       generalSearch: '',
       minPrice: null,
-      maxPrice: null
-    }
+      maxPrice: null,
+    };
   },
-})
+});
 </script>
 
-<style>
-
-</style>
+<style></style>

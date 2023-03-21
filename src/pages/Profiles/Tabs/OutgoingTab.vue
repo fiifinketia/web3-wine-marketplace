@@ -1,95 +1,97 @@
 <template>
-<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''">
-  <div v-if="!loadingRequest" class="column items-center">
-    <LoadingView
-      :loadingText="'Loading your outgoing offers'"
-    />
-  </div>
-  <div v-else class="column items-center full-width q-mx-none">
-    <div 
-      v-if="!emptyRequest"
-      class="column items-center"
-      :class="$q.screen.width > 600 ? '' : 'full-width'"
-    >
-      <OutgoingHeaderLg
-        v-if="$q.screen.width > 1020"
-        :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingSortKey="outgoingSortKey"
-        :updatedOutgoingBrandFilter="outgoingBrandFilter"
-        :brandSearched="brandSearched"
-        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
-        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
-        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
-        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
-      />
-      <OutgoingHeaderSm
-        v-else
-        :outgoingAmount="outgoingOffers.length"
-        :selectedOutgoingSortKey="outgoingSortKey"
-        :updatedOutgoingBrandFilter="outgoingBrandFilter"
-        :brandSearched="brandSearched"
-        @outgoingBrandFilterUpdated="(val) => outgoingBrandFilter = val"
-        @outgoingSortKeySelected="(val) => outgoingSortKey = val"
-        @fetchOutgoingWithBrandFilter="(val) => FetchOutgoingOffers(val.sortKey, val.brandFilter)"
-        @reset-outgoing-search="(val) => FetchOutgoingOffers(val, '')"
-      />
-      <div 
-        v-if="$q.screen.width > 600"
-        class="profile-main-container column"
-      >
-        <OutgoingColumns />
-        <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
-        <OutgoingRows 
-          :outgoingOffers="outgoingOffers"
-          @delete-offer="(offer) => OpenDeleteDialog(offer)"
-          @edit-offer="(offer) => OpenEditDialog(offer)"
-        />
-      </div>
+  <q-page
+    class="column items-center"
+    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+  >
+    <div v-if="!loadingRequest" class="column items-center">
+      <LoadingView :loading-text="'Loading your outgoing offers'" />
+    </div>
+    <div v-else class="column items-center full-width q-mx-none">
       <div
-        v-else
-        class="full-width"
-        style="width: 100vw"
+        v-if="!emptyRequest"
+        class="column items-center"
+        :class="$q.screen.width > 600 ? '' : 'full-width'"
       >
-        <OutgoingColumns />
-        <OutgoingRows 
-          :outgoingOffers="outgoingOffers"
-          @delete-offer="(offer) => OpenDeleteDialog(offer)"
-          @edit-offer="(offer) => OpenEditDialog(offer)"
+        <OutgoingHeaderLg
+          v-if="$q.screen.width > 1020"
+          :outgoing-amount="outgoingOffers.length"
+          :selected-outgoing-sort-key="outgoingSortKey"
+          :updated-outgoing-brand-filter="outgoingBrandFilter"
+          :brand-searched="brandSearched"
+          @outgoing-brand-filter-updated="val => (outgoingBrandFilter = val)"
+          @outgoing-sort-key-selected="val => (outgoingSortKey = val)"
+          @fetch-outgoing-with-brand-filter="
+            val => FetchOutgoingOffers(val.sortKey, val.brandFilter)
+          "
+          @reset-outgoing-search="val => FetchOutgoingOffers(val, '')"
+        />
+        <OutgoingHeaderSm
+          v-else
+          :outgoing-amount="outgoingOffers.length"
+          :selected-outgoing-sort-key="outgoingSortKey"
+          :updated-outgoing-brand-filter="outgoingBrandFilter"
+          :brand-searched="brandSearched"
+          @outgoing-brand-filter-updated="val => (outgoingBrandFilter = val)"
+          @outgoing-sort-key-selected="val => (outgoingSortKey = val)"
+          @fetch-outgoing-with-brand-filter="
+            val => FetchOutgoingOffers(val.sortKey, val.brandFilter)
+          "
+          @reset-outgoing-search="val => FetchOutgoingOffers(val, '')"
+        />
+        <div v-if="$q.screen.width > 600" class="profile-main-container column">
+          <OutgoingColumns />
+          <q-separator
+            style="background-color: #5e97ec45 !important"
+            inset
+            class="q-mx-xl"
+          />
+          <OutgoingRows
+            :outgoing-offers="outgoingOffers"
+            @delete-offer="offer => OpenDeleteDialog(offer)"
+            @edit-offer="offer => OpenEditDialog(offer)"
+          />
+        </div>
+        <div v-else class="full-width" style="width: 100vw">
+          <OutgoingColumns />
+          <OutgoingRows
+            :outgoing-offers="outgoingOffers"
+            @delete-offer="offer => OpenDeleteDialog(offer)"
+            @edit-offer="offer => OpenEditDialog(offer)"
+          />
+        </div>
+        <OutgoingDialogEdit
+          v-model="openEditDialog"
+          :brand="singleOffer.brand"
+          :highest-offer="singleOffer.highestOffer!"
+          :highest-offer-currency="singleOffer.highestOfferCurrency!"
+          :image="singleOffer.image"
+          :network="singleOffer.network"
+          :order-hash="singleOffer.orderHash"
+          :smart-contract-address="singleOffer.contractAddress"
+          :token-i-d="singleOffer.identifierOrCriteria"
+          @outgoing-edit-close="openEditDialog = false"
+          @remove-offer="val => RemoveRow(val)"
+          @outgoing-error-dialog="HandleError"
+        />
+        <OutgoingDialogDelete
+          v-model="openDeleteDialog"
+          :order-hash="singleOffer.orderHash"
+          @outgoing-delete-close="openDeleteDialog = false"
+          @remove-offer="val => RemoveRow(val)"
+          @outgoing-error-dialog="HandleError"
+        />
+        <ErrorDialog
+          v-model="openErrorDialog"
+          :error-type="errorType"
+          :error-title="errorTitle"
+          :error-message="errorMessage"
         />
       </div>
-      <OutgoingDialogEdit
-        v-model="openEditDialog"
-        :brand="singleOffer.brand"
-        :highestOffer="singleOffer.highestOffer"
-        :highestOfferCurrency="singleOffer.highestOfferCurrency"
-        :image="singleOffer.image"
-        :network="singleOffer.network"
-        :orderHash="singleOffer.orderHash"
-        :smartContractAddress="singleOffer.contractAddress"
-        :tokenID="singleOffer.identifierOrCriteria"
-        @outgoing-edit-close="openEditDialog = false"
-        @remove-offer="(val) => RemoveRow(val)"
-        @outgoing-error-dialog="HandleError"
-      />
-      <OutgoingDialogDelete
-        v-model="openDeleteDialog"
-        :orderHash="singleOffer.orderHash"
-        @outgoing-delete-close="openDeleteDialog = false"
-        @remove-offer="(val) => RemoveRow(val)"
-        @outgoing-error-dialog="HandleError"
-      />
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :errorType="errorType"
-        :errorTitle="errorTitle"
-        :errorMessage="errorMessage"
-      />
+      <div v-else class="column items-center">
+        <EmptyView :empty-text="'You have not made any offers yet.'" />
+      </div>
     </div>
-    <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any offers yet.'" />
-    </div>
-  </div>
-</q-page>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -118,8 +120,9 @@ export default defineComponent({
     OutgoingDialogDelete: OutgoingDelete,
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
-    OutgoingRows: OutgoingRows
+    OutgoingRows: OutgoingRows,
   },
+  emits: ['outgoingAmount'],
   data() {
     const store = ordersStore();
     const userStore = useUserStore();
@@ -144,8 +147,8 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
 
-      brandSearched: false
-    }
+      brandSearched: false,
+    };
   },
   watch: {
     outgoingSortKey: {
@@ -156,18 +159,19 @@ export default defineComponent({
         } else {
           await this.FetchOutgoingOffers(sortKey, this.outgoingBrandFilter);
         }
-        this.loadingRequest = true
-      }
+        this.loadingRequest = true;
+      },
     },
     outgoingBrandFilter: {
       handler: function (brandFilter) {
         this.store.setOutgoingBrandFilter(brandFilter);
         this.store.setOutgoingBrandFilterStatus(false);
-      }
-    }
+      },
+    },
   },
   async mounted() {
-    const outgoingOffersRequestStatus = this.store.getOutgoingOffersRequestStatus;
+    const outgoingOffersRequestStatus =
+      this.store.getOutgoingOffersRequestStatus;
     if (outgoingOffersRequestStatus == false) {
       await this.FetchOutgoingOffers('', '');
     } else {
@@ -182,9 +186,12 @@ export default defineComponent({
       const address = this.userStore.walletAddress;
       await this.store.setOutgoingOffers(address, sortKey, brandFilter);
       // Checks whether a brand filter was used
-      if (this.store.getOutgoingOffers.length == 0 && this.store.outgoingBrandFilterStatus == true) {
+      if (
+        this.store.getOutgoingOffers.length == 0 &&
+        this.store.outgoingBrandFilterStatus == true
+      ) {
         this.HandleMissingBrand();
-      } else if ( this.store.outgoingBrandFilterStatus == true ) {
+      } else if (this.store.outgoingBrandFilterStatus == true) {
         this.brandSearched = true;
         this.loadingRequest = true;
       } else {
@@ -192,7 +199,7 @@ export default defineComponent({
         this.outgoingOffers = this.store.getOutgoingOffers;
         this.$emit('outgoingAmount', this.outgoingOffers.length);
         this.CheckForEmptyRequest();
-        this.loadingRequest = true
+        this.loadingRequest = true;
       }
     },
     OpenDeleteDialog(offer: OutgoingOffersResponse) {
@@ -204,7 +211,9 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.outgoingOffers = this.outgoingOffers.filter(f => f.orderHash !== orderHash);
+      this.outgoingOffers = this.outgoingOffers.filter(
+        f => f.orderHash !== orderHash
+      );
       this.store.filterOutgoingOffers(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -214,15 +223,17 @@ export default defineComponent({
       }
     },
     HandleError(err: {
-      errorType: string,
-      errorTitle: string,
-      errorMessage: string
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
     }) {
       this.errorType = err.errorType;
       this.errorTitle = err.errorTitle;
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
-      setTimeout(() => { this.openErrorDialog = false }, 2000);
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
     },
     HandleMissingBrand() {
       this.store.resetOutgoingOffers();
@@ -232,17 +243,15 @@ export default defineComponent({
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your orders',
-        errorMessage: 'There are no orders under your current filter'
-      })
-    }
-  }
-
+        errorMessage: 'There are no orders under your current filter',
+      });
+    },
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.q-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

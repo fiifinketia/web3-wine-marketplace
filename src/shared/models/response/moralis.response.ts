@@ -3,7 +3,7 @@ interface MoralisAddressNFTs {
   token_address: string;
   token_id: string;
   owner_of: string;
-  
+
   block_number: string;
   block_number_minted: string;
   token_hash: string;
@@ -17,6 +17,4 @@ interface MoralisAddressNFTs {
   minter_address: string;
 }
 
-export {
-  MoralisAddressNFTs
-}
+export { MoralisAddressNFTs };

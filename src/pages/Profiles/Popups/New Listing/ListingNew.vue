@@ -12,57 +12,57 @@
       <div class="full-width row items-start justify-center q-pb-sm">
         <div class="column items-center q-gutter-y-sm">
           <span class="new-list-header-text"> Listing NFT </span>
-          <span class="new-list-subheader-text"> Click on the NFT you want to sell </span>
+          <span class="new-list-subheader-text">
+            Click on the NFT you want to sell
+          </span>
         </div>
-        <q-btn 
+        <q-btn
           v-close-popup
           flat
           dense
           unelevated
           class="exit-btn btn--no-hover"
         >
-          <img
-            src="../../../../assets/exit-light.svg"
-          />
+          <img src="../../../../assets/exit-light.svg" />
         </q-btn>
       </div>
       <NewListingHeader
         v-if="$q.screen.width > 600"
-        :listableNFTs="listableNFTs"
+        :listable-n-f-ts="listableNFTs"
         @open-norm-sidebar="showFilterSidebar = true"
       />
       <NewListingNFTs
-        @click="showFilterSidebar = false"
         class="scroll"
-        @open-listing-dialog="(token) => OpenListingDialog(token)"
+        @click="showFilterSidebar = false"
+        @open-listing-dialog="token => OpenListingDialog(token)"
       />
-      <NewListingDialog 
+      <NewListingDialog
         v-model="openListingDialog"
         :brand="brand"
         :image="image"
-        :smartContractAddress="smartContractAddress"
+        :smart-contract-address="smartContractAddress"
         :network="network"
-        :tokenID="tokenID"
-        :isEdit="false"
+        :token-i-d="tokenID"
+        :is-edit="false"
         @listing-error-dialog="HandleError"
         @listing-edit-close="openListingDialog = false"
-        @listable-nft-listed="(listed) => RemoveListableNFT(listed)"
+        @listable-nft-listed="listed => RemoveListableNFT(listed)"
       />
       <ErrorDialog
         v-model="openErrorDialog"
-        :errorType="errorType"
-        :errorTitle="errorTitle"
-        :errorMessage="errorMessage"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
       />
       <SidebarNormal
         v-if="$q.screen.width > 600"
         v-model="showFilterSidebar"
-        :listableNFTs="listableNFTs"
+        :listable-n-f-ts="listableNFTs"
       />
       <SidebarMobile
         v-else
         v-model="showFilterSidebar"
-        :listableNFTs="listableNFTs"
+        :listable-n-f-ts="listableNFTs"
       />
       <q-page-sticky
         v-if="$q.screen.width <= 600"
@@ -70,7 +70,10 @@
         position="bottom-right"
         :offset="[18, 18]"
       >
-        <q-card rounded class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container">
+        <q-card
+          rounded
+          class="row items-center justify-center q-pa-xs rounded-borders sidebar-sticky-container"
+        >
           <span
             class="text-weight-bold text-h6 sidebar-sticky-filter-icon q-pr-xs"
             clickable
@@ -98,16 +101,14 @@
     >
       <div class="full-width row items-start justify-center q-pb-sm">
         <span class="new-list-header-text"> Listing NFT </span>
-        <q-btn 
+        <q-btn
           v-close-popup
           flat
           dense
           unelevated
           class="exit-btn btn--no-hover"
         >
-          <img
-            src="../../../../assets/exit-light.svg"
-          />
+          <img src="../../../../assets/exit-light.svg" />
         </q-btn>
       </div>
       <NewListingEmpty />
@@ -136,12 +137,13 @@ export default defineComponent({
     NewListingEmpty: ListingNewEmpty,
     ErrorDialog: ProfileErrors,
     SidebarNormal: SidebarNormal,
-    SidebarMobile: SidebarMobile
+    SidebarMobile: SidebarMobile,
   },
   props: {
-    listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] }
+    listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] },
   },
-  data () {
+  emits: ['listable-nft-listed'],
+  data() {
     const listableFiltersStore = useListableFilters();
     return {
       openListingDialog: false,
@@ -158,8 +160,8 @@ export default defineComponent({
 
       showFilterSidebar: false,
 
-      listableFiltersStore
-    }
+      listableFiltersStore,
+    };
   },
   methods: {
     OpenListingDialog(token: ListableToken) {
@@ -171,21 +173,23 @@ export default defineComponent({
       this.openListingDialog = true;
     },
     HandleError(err: {
-      errorType: string,
-      errorTitle: string,
-      errorMessage: string
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
     }) {
       this.errorType = err.errorType;
       this.errorTitle = err.errorTitle;
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
-      setTimeout(() => { this.openErrorDialog = false }, 2000);
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
     },
     RemoveListableNFT(listed: ListableToken) {
       this.$emit('listable-nft-listed', listed);
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style scoped>
@@ -195,6 +199,6 @@ export default defineComponent({
   }
 }
 :deep(.exit-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

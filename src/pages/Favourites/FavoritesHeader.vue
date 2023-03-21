@@ -1,5 +1,4 @@
 <template>
-
   <div
     class="q-pb-md"
     :class="$q.screen.width > 600 ? 'q-pt-lg' : 'column items-center q-pt-none'"
@@ -23,18 +22,25 @@
             unelevated
             flat
             no-caps
-            @click="resetSearch()"
             class="favorites-back btn--no-hover"
+            @click="resetSearch()"
           >
-            <img src="../../assets/back-left-white.svg" style="height: 20px; width: 11.5px" />
-            <span class="favorites-back-text q-pl-md" style="color: white;"> All Fav...s </span>
+            <img
+              src="../../assets/back-left-white.svg"
+              style="height: 20px; width: 11.5px"
+            />
+            <span class="favorites-back-text q-pl-md" style="color: white">
+              All Fav...s
+            </span>
           </q-btn>
         </div>
       </div>
     </div>
     <div
       class="row items-center favorites-search-container"
-      :class="$q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'"
+      :class="
+        $q.screen.width > 600 ? 'justify-between q-px-md' : 'justify-center'
+      "
     >
       <div v-if="$q.screen.width > 600" class="row items-center">
         <div v-if="!usingFilter">
@@ -49,12 +55,22 @@
             unelevated
             flat
             no-caps
-            @click="resetSearch()"
             class="favorites-back btn--no-hover"
+            @click="resetSearch()"
           >
-            <img src="../../assets/back-left.svg" style="height: 20px; width: 11.5px" />
-            <span v-if="$q.screen.width > 1200" class="favorites-back-text q-pl-md"> All Favorites </span>
-            <span v-else class="favorites-back-text q-pl-md"> All Fav...s </span>
+            <img
+              src="../../assets/back-left.svg"
+              style="height: 20px; width: 11.5px"
+            />
+            <span
+              v-if="$q.screen.width > 1200"
+              class="favorites-back-text q-pl-md"
+            >
+              All Favorites
+            </span>
+            <span v-else class="favorites-back-text q-pl-md">
+              All Fav...s
+            </span>
           </q-btn>
         </div>
       </div>
@@ -80,8 +96,8 @@
           dense
           :disable="!searchText"
           flat
-          @click="submitBrand()"
           class="favorites-search-btn"
+          @click="submitBrand()"
         >
           GO
         </q-btn>
@@ -94,13 +110,14 @@
 import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
-    nftsLength: { type: Number, required: true }
+    nftsLength: { type: Number, required: true },
   },
-  data () {
+  emits: ['brand-search', 'reset-search'],
+  data() {
     return {
       searchText: '',
-      usingFilter: false
-    }
+      usingFilter: false,
+    };
   },
   methods: {
     submitBrand() {
@@ -111,13 +128,13 @@ export default defineComponent({
       this.$emit('reset-search');
       this.searchText = '';
       this.usingFilter = false;
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style scoped>
 :deep(.favorites-back.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

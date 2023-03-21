@@ -1,103 +1,106 @@
 <template>
-<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''" style="flex-wrap: nowrap">
-  <div v-if="!loadingRequest" class="column items-center">
-    <LoadingView
-      :loadingText="'Loading your listings'"
-    />
-  </div>
-  <div v-else class="column items-center full-width q-mx-none">
-    <div 
-      v-if="!emptyRequest"
-      class="column items-center"
-      :class="$q.screen.width > 600 ? '' : 'full-width'"
-    >
-      <ListingHeaderLg
-        v-if="$q.screen.width > 1020"
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        :listableNFTs="listableNFTs"
-        :brandSearched="brandSearched"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @create-new-listing="openNewListingDialog = true"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
-        @reset-listings-search="(val) => FetchListings(val, '')"
-      />
-      <ListingHeaderSm
-        v-else
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        :listableNFTs="listableNFTs"
-        :brandSearched="brandSearched"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @create-new-listing="openNewListingDialog = true"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
-        @reset-listings-search="(val) => FetchListings(val, '')"
-      />
-      <div 
-        v-if="$q.screen.width > 600"
-        class="profile-main-container column"
-      >
-        <ListingsColumns />
-        <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
-        <ListingsRows 
-          :listings="listings"
-          @delete-listing="(listing) => OpenDeleteDialog(listing)"
-          @edit-listing="(listing) => OpenEditDialog(listing)"
-        />
-      </div>
+  <q-page
+    class="column items-center"
+    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
+  >
+    <div v-if="!loadingRequest" class="column items-center">
+      <LoadingView :loading-text="'Loading your listings'" />
+    </div>
+    <div v-else class="column items-center full-width q-mx-none">
       <div
-        v-else
-        class="full-width"
-        style="width: 100vw"
+        v-if="!emptyRequest"
+        class="column items-center"
+        :class="$q.screen.width > 600 ? '' : 'full-width'"
       >
-        <ListingsColumns />
-        <ListingsRows
-          :listings="listings"
-          @delete-listing="(listing) => OpenDeleteDialog(listing)"
-          @edit-listing="(listing) => OpenEditDialog(listing)"
+        <ListingHeaderLg
+          v-if="$q.screen.width > 1020"
+          :listings-amount="listings.length"
+          :selected-listing-sort-key="listingSortKey"
+          :updated-listing-brand-filter="listingBrandFilter"
+          :listable-n-f-ts="listableNFTs"
+          :brand-searched="brandSearched"
+          @listing-brand-filter-updated="val => (listingBrandFilter = val)"
+          @listing-sort-key-selected="val => (listingSortKey = val)"
+          @create-new-listing="openNewListingDialog = true"
+          @fetch-listings-with-brand-filter="
+            val => FetchListings(val.sortKey, val.brandFilter)
+          "
+          @reset-listings-search="val => FetchListings(val, '')"
+        />
+        <ListingHeaderSm
+          v-else
+          :listings-amount="listings.length"
+          :selected-listing-sort-key="listingSortKey"
+          :updated-listing-brand-filter="listingBrandFilter"
+          :listable-n-f-ts="listableNFTs"
+          :brand-searched="brandSearched"
+          @listing-brand-filter-updated="val => (listingBrandFilter = val)"
+          @listing-sort-key-selected="val => (listingSortKey = val)"
+          @create-new-listing="openNewListingDialog = true"
+          @fetch-listings-with-brand-filter="
+            val => FetchListings(val.sortKey, val.brandFilter)
+          "
+          @reset-listings-search="val => FetchListings(val, '')"
+        />
+        <div v-if="$q.screen.width > 600" class="profile-main-container column">
+          <ListingsColumns />
+          <q-separator
+            style="background-color: #5e97ec45 !important"
+            inset
+            class="q-mx-xl"
+          />
+          <ListingsRows
+            :listings="listings"
+            @delete-listing="listing => OpenDeleteDialog(listing)"
+            @edit-listing="listing => OpenEditDialog(listing)"
+          />
+        </div>
+        <div v-else class="full-width" style="width: 100vw">
+          <ListingsColumns />
+          <ListingsRows
+            :listings="listings"
+            @delete-listing="listing => OpenDeleteDialog(listing)"
+            @edit-listing="listing => OpenEditDialog(listing)"
+          />
+        </div>
+        <ListingDialogEdit
+          v-model="openEditDialog"
+          :brand="singleListing.brand"
+          :image="singleListing.image"
+          :order-hash="singleListing.orderHash"
+          :network="singleListing.network"
+          :smart-contract-address="singleListing.contractAddress"
+          :token-i-d="singleListing.identifierOrCriteria"
+          :is-edit="true"
+          @listing-edit-close="openEditDialog = false"
+          @remove-listing="val => RemoveRow(val)"
+          @listing-error-dialog="HandleError"
+        />
+        <ListingDialogUnlist
+          v-model="openDeleteDialog"
+          :order-hash="singleListing.orderHash"
+          @listing-delete-close="openDeleteDialog = false"
+          @remove-listing="val => RemoveRow(val)"
+          @listing-error-dialog="HandleError"
+        />
+        <ErrorDialog
+          v-model="openErrorDialog"
+          :error-type="errorType"
+          :error-title="errorTitle"
+          :error-message="errorMessage"
+        />
+        <CreateListing
+          v-model="openNewListingDialog"
+          :listable-n-f-ts="listableNFTs"
+          @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
         />
       </div>
-      <ListingDialogEdit
-        v-model="openEditDialog"
-        :brand="singleListing.brand"
-        :image="singleListing.image"
-        :orderHash="singleListing.orderHash"
-        :network="singleListing.network"
-        :smartContractAddress="singleListing.contractAddress"
-        :tokenID="singleListing.identifierOrCriteria"
-        :isEdit="true"
-        @listing-edit-close="openEditDialog = false"
-        @remove-listing="(val) => RemoveRow(val)"
-        @listing-error-dialog="HandleError"
-      />
-      <ListingDialogUnlist
-        v-model="openDeleteDialog"
-        :orderHash="singleListing.orderHash"
-        @listing-delete-close="openDeleteDialog = false"
-        @remove-listing="(val) => RemoveRow(val)"
-        @listing-error-dialog="HandleError"
-      />
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :errorType="errorType"
-        :errorTitle="errorTitle"
-        :errorMessage="errorMessage"
-      />
-      <CreateListing
-        v-model="openNewListingDialog"
-        :listableNFTs="listableNFTs"
-        @listable-nft-listed="(listed) => UpdateListableNFTWithPrice(listed)"
-      />
+      <div v-else class="column items-center">
+        <EmptyView :empty-text="'You have not made any listings yet.'" />
+      </div>
     </div>
-    <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any listings yet.'" />
-    </div>
-  </div>
-</q-page>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -120,7 +123,10 @@ import ListingsColumns from '../Columns/ListingsColumns.vue';
 import ListingsRows from '../Rows/ListingsRows.vue';
 import ListingNew from '../Popups/New Listing/ListingNew.vue';
 import { useNFTStore } from 'src/stores/nft-store';
-import { TokenIdentifier, ListableToken } from 'src/shared/models/entities/NFT.model';
+import {
+  TokenIdentifier,
+  ListableToken,
+} from 'src/shared/models/entities/NFT.model';
 import { ReturnMissingNFTDetails } from '../orders.requests';
 
 setCssVar('custom', '#5e97ec45');
@@ -136,8 +142,9 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
-    CreateListing: ListingNew
+    CreateListing: ListingNew,
   },
+  emits: ['listingsAmount'],
 
   data() {
     const nftStore = useNFTStore();
@@ -172,8 +179,8 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
 
-      brandSearched: false
-    }
+      brandSearched: false,
+    };
   },
 
   watch: {
@@ -187,15 +194,15 @@ export default defineComponent({
           await this.FetchListings(sortKey, this.listingBrandFilter);
           this.loadingRequest = true;
         }
-        this.loadingRequest = true
-      }
+        this.loadingRequest = true;
+      },
     },
     listingBrandFilter: {
       handler: async function (brandFilter) {
         this.store.setListingBrandFilter(brandFilter);
         this.store.setListingBrandFilterStatus(false);
-      }
-    }
+      },
+    },
   },
 
   async mounted() {
@@ -209,7 +216,7 @@ export default defineComponent({
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
     }
-    this.loadingRequest = true
+    this.loadingRequest = true;
   },
 
   methods: {
@@ -217,9 +224,12 @@ export default defineComponent({
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
       await this.store.setListings(address, sortKey, brandFilter);
-      if (this.store.getListings.length == 0 && this.store.listingBrandFilterStatus == true) {
+      if (
+        this.store.getListings.length == 0 &&
+        this.store.listingBrandFilterStatus == true
+      ) {
         this.HandleMissingBrand();
-      } else if ( this.store.listingBrandFilterStatus == true ) {
+      } else if (this.store.listingBrandFilterStatus == true) {
         this.brandSearched = true;
         this.loadingRequest = true;
       } else {
@@ -244,20 +254,22 @@ export default defineComponent({
     },
     CheckForEmptyRequest() {
       if (this.listings.length == 0) {
-        this.emptyRequest = true 
+        this.emptyRequest = true;
       }
       this.loadingRequest = true;
     },
     HandleError(err: {
-      errorType: string,
-      errorTitle: string,
-      errorMessage: string
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
     }) {
       this.errorType = err.errorType;
       this.errorTitle = err.errorTitle;
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
-      setTimeout(() => { this.openErrorDialog = false }, 2000);
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
     },
     HandleMissingBrand() {
       this.store.resetListings();
@@ -267,8 +279,8 @@ export default defineComponent({
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your orders',
-        errorMessage: 'There are no orders under your current filter'
-      })
+        errorMessage: 'There are no orders under your current filter',
+      });
     },
     async RefetchNFTs() {
       this.loadingRequest = false;
@@ -283,17 +295,25 @@ export default defineComponent({
         const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
 
         ownedNFTs.forEach(f => {
-          const { identifierOrCriteria: id, contractAddress: address, network } = f;
+          const {
+            identifierOrCriteria: id,
+            contractAddress: address,
+            network,
+          } = f;
           const key = `${id},${address},${network}`;
           ownedNFTsMap.set(key, {
             identifierOrCriteria: id,
             contractAddress: address,
-            network: network
-          })
+            network: network,
+          });
         });
 
         currentListings.forEach(f => {
-          const { identifierOrCriteria: id, contractAddress: address, network } = f;
+          const {
+            identifierOrCriteria: id,
+            contractAddress: address,
+            network,
+          } = f;
           const key = `${id},${address},${network}`;
           if (ownedNFTsMap.has(key)) {
             ownedNFTsMap.delete(key);
@@ -313,21 +333,21 @@ export default defineComponent({
       // console.log('Listable NFTs Set', this.listableNFTs)
     },
     UpdateListableNFTWithPrice(listed: ListableToken) {
-      const listedIndex = this.listableNFTs.findIndex((nft => 
-				nft.contractAddress == listed.contractAddress && 
-				nft.identifierOrCriteria == listed.identifierOrCriteria &&
-				nft.network == listed.network
-			))
+      const listedIndex = this.listableNFTs.findIndex(
+        nft =>
+          nft.contractAddress == listed.contractAddress &&
+          nft.identifierOrCriteria == listed.identifierOrCriteria &&
+          nft.network == listed.network
+      );
       this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
       this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
-    }
-  }
+    },
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.q-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

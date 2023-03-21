@@ -4,23 +4,21 @@
     <span class="profile-loading-text">
       {{ emptyText }}
     </span>
-  </div>  
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 import 'src/css/Profile/shared.css';
 
 export default defineComponent({
   props: {
     emptyText: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

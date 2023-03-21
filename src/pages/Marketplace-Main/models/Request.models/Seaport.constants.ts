@@ -11,5 +11,5 @@ export enum ChainID {
   ETHEREUM = 1,
   POLYGON = 137,
   RINKEBY = 4,
-  MUMBAI = 80001
+  MUMBAI = 80001,
 }

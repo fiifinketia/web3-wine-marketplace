@@ -1,18 +1,28 @@
 <template>
-  <div class="row items-center justify-between full-width" style="flex-wrap: nowrap;" @click="CloseBrandFilter()">
+  <div
+    class="row items-center justify-between full-width"
+    style="flex-wrap: nowrap"
+    @click="CloseBrandFilter()"
+  >
     <div class="row items-center">
       <span class="q-pr-sm new-list-available-text"> Available </span>
-      <span class="new-list-available-num"> {{ getFilteredListableTokens.length > 0 ? getFilteredListableTokens.length : '0' }} </span>
+      <span class="new-list-available-num">
+        {{
+          getFilteredListableTokens.length > 0
+            ? getFilteredListableTokens.length
+            : '0'
+        }}
+      </span>
     </div>
-    <div 
+    <div
       v-if="$q.screen.width > 1200"
       class="row items-center justify-end q-gutter-x-lg"
     >
       <div class="row items-center q-gutter-x-sm">
         <div class="columns items-center">
-          <q-input 
+          <q-input
             v-model="listableSearchFilter"
-            outlined 
+            outlined
             dense
             placeholder="Search"
             class="new-list-searchbox"
@@ -22,12 +32,13 @@
               <q-icon name="app:search" />
             </template>
           </q-input>
-          <div 
-            class="new-list-brandf-container"
+          <div
             v-if="searchFilterResults.length > 0"
+            class="new-list-brandf-container"
           >
             <q-btn
-              v-for="(brand) in searchFilterResults"
+              v-for="brand in searchFilterResults"
+              :key="brand"
               flat
               square
               no-caps
@@ -35,7 +46,6 @@
               unelevated
               :ripple="false"
               align="left"
-              :key="brand"
               class="new-list-brandf-box column justify-center q-pa-sm"
               @click="FilterBrand([brand])"
             >
@@ -55,7 +65,7 @@
         </q-btn>
       </div>
       <div class="row items-center">
-        <span 
+        <span
           class="q-pa-sm text-weight-bolder text-h6"
           style="vertical-align: middle"
         >
@@ -72,14 +82,14 @@
         />
       </div>
     </div>
-    <div 
+    <div
       v-if="$q.screen.width <= 1200"
       class="row items-center q-gutter-x-sm"
       style="width: 50%; flex-wrap: nowrap"
     >
-      <q-input 
+      <q-input
         v-model="newListingBrandFilter"
-        outlined 
+        outlined
         dense
         placeholder="Search"
         class="new-list-searchbox"
@@ -101,11 +111,8 @@
         GO
       </q-btn>
     </div>
-    <div 
-      v-if="$q.screen.width <= 1200"
-      class="row items-center"
-    >
-      <span 
+    <div v-if="$q.screen.width <= 1200" class="row items-center">
+      <span
         class="q-pa-sm text-weight-bolder text-h6"
         style="vertical-align: middle"
       >
@@ -125,20 +132,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/newListing.css';
-import { ListableToken } from "src/shared/models/entities/NFT.model";
-import { useListableFilters } from "src/stores/listable-filters";
-import { mapState } from "pinia";
+import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { useListableFilters } from 'src/stores/listable-filters';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   props: {
-    listableNFTs: { 
+    listableNFTs: {
       type: [] as PropType<ListableToken[]>,
-      default: []
+      default: [],
     },
   },
+  emits: ['open-norm-sidebar'],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
@@ -146,28 +154,33 @@ export default defineComponent({
       searchFilterResults: [] as string[],
       listableFiltersStore,
 
-      filteredNFTs: [] as ListableToken[]
-    }
+      filteredNFTs: [] as ListableToken[],
+    };
   },
   computed: {
-    ...mapState(useListableFilters, ['getFilteredListableTokens', 'getAllFiltersArray'])
+    ...mapState(useListableFilters, [
+      'getFilteredListableTokens',
+      'getAllFiltersArray',
+    ]),
   },
   watch: {
     listableSearchFilter: {
       handler(search: string) {
         if (!search) {
-          this.searchFilterResults = []
+          this.searchFilterResults = [];
         } else {
           this.searchFilterResults = [
-            ...new Set (
+            ...new Set(
               this.getFilteredListableTokens
-                .filter((f) => !!(f.brand.toLowerCase().includes(search.toLowerCase())))
-                .map((f => f.brand))
-            )
+                .filter(
+                  f => !!f.brand.toLowerCase().includes(search.toLowerCase())
+                )
+                .map(f => f.brand)
+            ),
           ];
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     FilterBrand(brand: string[]) {
@@ -178,13 +191,10 @@ export default defineComponent({
       this.searchFilterResults = [];
     },
     OpenSidebar() {
-      console.log('open')
       this.$emit('open-norm-sidebar');
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
-<style>
-
-</style>
+<style></style>

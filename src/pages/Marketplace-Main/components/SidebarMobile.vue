@@ -5,33 +5,33 @@
     :transition-hide="$q.screen.width > 600 ? 'slide-right' : 'slide-down'"
   >
     <div class="column bg-white items-center">
-      <q-card 
+      <q-card
         flat
         square
         class="row justify-between sidebar-header-container q-my-xs q-px-md"
         style="width: 100%"
       >
-        <img 
+        <img
           src="../../../../public/images/WiV-logo.svg"
           style="width: 100px"
         />
-        <q-btn 
+        <q-btn
           v-close-popup
           flat
           dense
           unelevated
           class="exit-btn btn--no-hover"
         >
-          <img
-            src="../../../assets/exit.svg"
-          />
+          <img src="../../../assets/exit.svg" />
         </q-btn>
       </q-card>
       <q-scroll-area
         bordered
         class="q-pr-md"
-        style="height: 80%;"
-        :style="$q.screen.width > 600 ? 'width: 70%; max-width: 400px;' : 'width: 95%'"
+        style="height: 80%"
+        :style="
+          $q.screen.width > 600 ? 'width: 70%; max-width: 400px;' : 'width: 95%'
+        "
         :thumb-style="{
           right: '4px',
           borderRadius: '5px',
@@ -54,7 +54,7 @@
         class="main-filter-box q-mt-md"
         :style="$q.screen.width > 600 ? 'width: 70%' : 'width: 95%'"
       >
-        <q-card-section 
+        <q-card-section
           class="row justify-between"
           style="padding-left: 0; padding-right: 0"
         >
@@ -73,16 +73,16 @@
               class="q-pa-sm text-weight-bolder text-h6 q-mr-xs"
               style="vertical-align: middle"
             >
-						  {{ wineFiltersStore.getAllFiltersArray.length }}
+              {{ wineFiltersStore.getAllFiltersArray.length }}
             </span>
-            <q-btn 
+            <q-btn
               v-close-popup
               :disable="wineFiltersStore.getAllFiltersArray.length == 0"
-              @click="ApplyFilter()"
               class="header-apply"
               label="Apply"
               color="primary"
               no-caps
+              @click="ApplyFilter()"
             />
           </div>
         </q-card-section>
@@ -97,15 +97,15 @@ import { defineComponent } from 'vue';
 import { useWineFilters } from 'src/stores/wine-filters';
 
 export default defineComponent({
-	components: {
-		SidebarContents: SidebarContents
-	},
+  components: {
+    SidebarContents: SidebarContents,
+  },
   data() {
     const wineFiltersStore = useWineFilters();
 
     return {
-      wineFiltersStore
-    }
+      wineFiltersStore,
+    };
   },
   methods: {
     ApplyFilter() {
@@ -114,17 +114,16 @@ export default defineComponent({
     async ClearAllAndApply() {
       await this.wineFiltersStore.removeAllFilters();
       this.wineFiltersStore.indexFilterKey();
-    }
-  }
+    },
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 :deep(.exit-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

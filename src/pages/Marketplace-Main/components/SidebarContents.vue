@@ -26,7 +26,7 @@
         unelevated
         label="GO"
         dense
-        @click="this.emitGeneralSearch()"
+        @click="emitGeneralSearch()"
       />
     </q-card-section>
     <q-list class="rounded-borders">
@@ -231,7 +231,9 @@
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
         <q-card class="sidebar-active-border rounded-borders q-my-sm q-pa-sm">
-          <q-card-section class="column items-center col-12 q-pa-xs q-gutter-y-md">
+          <q-card-section
+            class="column items-center col-12 q-pa-xs q-gutter-y-md"
+          >
             <div class="full-width">
               <div class="col-12 row justify-between">
                 <div class="column q-gutter-y-xs sidebar-price-column">
@@ -266,7 +268,9 @@
               label="Apply price range"
               outlined
               color="primary"
-              @click="wineFiltersStore.setPrice({min: minPrice, max: maxPrice})"
+              @click="
+                wineFiltersStore.setPrice({ min: minPrice, max: maxPrice })
+              "
             />
           </q-card-section>
         </q-card>
@@ -370,9 +374,9 @@
 </template>
 
 <script lang="ts">
-import { useWineFilters } from "src/stores/wine-filters";
+import { useWineFilters } from 'src/stores/wine-filters';
 import { useGeneralSearch } from 'src/stores/general-search-filter';
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue';
 import 'src/css/Marketplace/sidebar.css';
 
 export default defineComponent({
@@ -380,150 +384,148 @@ export default defineComponent({
     const wineFiltersStore = useWineFilters();
     const generalSearchStore = useGeneralSearch();
 
-		return {
-			wineFiltersStore,
+    return {
+      wineFiltersStore,
       generalSearchStore,
-			searchQuery: ref(''),
-			brandQuery: ref(''),
-			regionQuery: ref(''),
-			producerQuery: ref(''),
-			vintageQuery: ref(''),
-			formatQuery: ref(''),
-			investmentGradeQuery: ref(''),
-			appellationQuery: ref(''),
-			lwinQuery: ref(''),
-			heritageQuery: ref(''),
-			caseQuery: ref(''),
-			originQuery: ref(''),
-			countryQuery: ref(''),
-			brandOptions: wineFiltersStore.brandOptions,
-			regionOptions: wineFiltersStore.regionOptions,
-			producerOptions: wineFiltersStore.producerOptions,
-			formatOptions: wineFiltersStore.formatOptions,
-			investmentGradeOptions: wineFiltersStore.investmentGradeOptions,
-			appellationOptions: wineFiltersStore.appellationOptions,
-			LWINOptions: wineFiltersStore.LWINOptions,
-			heritageOptions: wineFiltersStore.heritageOptions,
-			caseOptions: wineFiltersStore.wineCaseOptions,
-			originOptions: wineFiltersStore.originOptions,
-			countryOptions: wineFiltersStore.countryOptions,
-			maturity: ref(wineFiltersStore.maturity),
-		};
+      searchQuery: ref(''),
+      brandQuery: ref(''),
+      regionQuery: ref(''),
+      producerQuery: ref(''),
+      vintageQuery: ref(''),
+      formatQuery: ref(''),
+      investmentGradeQuery: ref(''),
+      appellationQuery: ref(''),
+      lwinQuery: ref(''),
+      heritageQuery: ref(''),
+      caseQuery: ref(''),
+      originQuery: ref(''),
+      countryQuery: ref(''),
+      brandOptions: wineFiltersStore.brandOptions,
+      regionOptions: wineFiltersStore.regionOptions,
+      producerOptions: wineFiltersStore.producerOptions,
+      formatOptions: wineFiltersStore.formatOptions,
+      investmentGradeOptions: wineFiltersStore.investmentGradeOptions,
+      appellationOptions: wineFiltersStore.appellationOptions,
+      LWINOptions: wineFiltersStore.LWINOptions,
+      heritageOptions: wineFiltersStore.heritageOptions,
+      caseOptions: wineFiltersStore.wineCaseOptions,
+      originOptions: wineFiltersStore.originOptions,
+      countryOptions: wineFiltersStore.countryOptions,
+      maturity: ref(wineFiltersStore.maturity),
+    };
   },
   data() {
     return {
       generalSearch: '',
-      minPrice: null,
-      maxPrice: null
-    }
+      minPrice: 0,
+      maxPrice: 0,
+    };
   },
   watch: {
-		brandQuery: {
-			handler: function (val) {
-				this.brandOptions = this.wineFiltersStore.brandOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		regionQuery: {
-			handler: function (val) {
-				this.regionOptions = this.wineFiltersStore.regionOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		producerQuery: {
-			handler: function (val) {
-				this.producerOptions = this.wineFiltersStore.producerOptions.filter(
-					(b) => b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		originQuery: {
-			handler: function (val) {
-				this.originOptions = this.wineFiltersStore.originOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		appellationQuery: {
-			handler: function (val) {
-				this.appellationOptions =
-					this.wineFiltersStore.appellationOptions.filter((b) =>
-						b.value.toLowerCase().includes(val.toLowerCase())
-					);
-			},
-		},
-		countryQuery: {
-			handler: function (val) {
-				this.countryOptions = this.wineFiltersStore.countryOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		formatQuery: {
-			handler: function (val) {
-				this.formatOptions = this.wineFiltersStore.formatOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		investmentGradeQuery: {
-			handler: function (val) {
-				this.investmentGradeOptions =
-					this.wineFiltersStore.investmentGradeOptions.filter((b) =>
-						b.value.toLowerCase().includes(val.toLowerCase())
-					);
-			},
-		},
-		lwinQuery: {
-			handler: function (val) {
-				this.LWINOptions = this.wineFiltersStore.LWINOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		heritageQuery: {
-			handler: function (val) {
-				this.heritageOptions = this.wineFiltersStore.heritageOptions.filter(
-					(b) => b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-		caseQuery: {
-			handler: function (val) {
-				this.caseOptions = this.wineFiltersStore.wineCaseOptions.filter((b) =>
-					b.value.toLowerCase().includes(val.toLowerCase())
-				);
-			},
-		},
-	},
+    brandQuery: {
+      handler: function (val) {
+        this.brandOptions = this.wineFiltersStore.brandOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    regionQuery: {
+      handler: function (val) {
+        this.regionOptions = this.wineFiltersStore.regionOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    producerQuery: {
+      handler: function (val) {
+        this.producerOptions = this.wineFiltersStore.producerOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    originQuery: {
+      handler: function (val) {
+        this.originOptions = this.wineFiltersStore.originOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    appellationQuery: {
+      handler: function (val) {
+        this.appellationOptions =
+          this.wineFiltersStore.appellationOptions.filter(b =>
+            b.value.toLowerCase().includes(val.toLowerCase())
+          );
+      },
+    },
+    countryQuery: {
+      handler: function (val) {
+        this.countryOptions = this.wineFiltersStore.countryOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    formatQuery: {
+      handler: function (val) {
+        this.formatOptions = this.wineFiltersStore.formatOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    investmentGradeQuery: {
+      handler: function (val) {
+        this.investmentGradeOptions =
+          this.wineFiltersStore.investmentGradeOptions.filter(b =>
+            b.value.toLowerCase().includes(val.toLowerCase())
+          );
+      },
+    },
+    lwinQuery: {
+      handler: function (val) {
+        this.LWINOptions = this.wineFiltersStore.LWINOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    heritageQuery: {
+      handler: function (val) {
+        this.heritageOptions = this.wineFiltersStore.heritageOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+    caseQuery: {
+      handler: function (val) {
+        this.caseOptions = this.wineFiltersStore.wineCaseOptions.filter(b =>
+          b.value.toLowerCase().includes(val.toLowerCase())
+        );
+      },
+    },
+  },
   methods: {
     applyMaturityFilter() {
-			// console.log(this.wineFiltersStore);
-		},
+      // console.log(this.wineFiltersStore);
+    },
     getYears(monthCount: number) {
-			function getPlural(number: number, word: { [key: string]: string }) {
-				return (number === 1 && word.one) || word.other;
-			}
+      function getPlural(number: number, word: { [key: string]: string }) {
+        return (number === 1 && word.one) || word.other;
+      }
 
-			var months = { one: 'mo', other: 'mos' },
-				years = { one: 'yr', other: 'yrs' },
-				m = monthCount % 12,
-				y = Math.floor(monthCount / 12);
+      let months = { one: 'mo', other: 'mos' },
+        years = { one: 'yr', other: 'yrs' },
+        m = monthCount % 12,
+        y = Math.floor(monthCount / 12);
 
-			if (y == 0) return m + ' ' + getPlural(m, months);
-			else return y + ' ' + getPlural(y, years);
-		},
+      if (y == 0) return m + ' ' + getPlural(m, months);
+      else return y + ' ' + getPlural(y, years);
+    },
     emitGeneralSearch() {
       this.generalSearchStore.setGeneralSearch(this.generalSearch);
       this.generalSearchStore.indexGeneralSearchKey();
       this.generalSearch = '';
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,37 +1,33 @@
 <template>
-  <q-dialog
-    maximized
-    transition-show="slide-up"
-    transition-hide="slide-down"
-  >
+  <q-dialog maximized transition-show="slide-up" transition-hide="slide-down">
     <div class="column bg-white items-center" style="flex-wrap: nowrap">
-      <q-card 
+      <q-card
         flat
         square
         class="row justify-between sidebar-header-container q-my-xs q-px-md"
         style="width: 100%"
       >
-        <img 
+        <img
           src="../../../../../../public/images/WiV-logo.svg"
           style="width: 100px"
         />
-        <q-btn 
+        <q-btn
           v-close-popup
           flat
           dense
           unelevated
           class="exit-btn btn--no-hover"
         >
-          <img
-            src="../../../../../assets/exit.svg"
-          />
+          <img src="../../../../../assets/exit.svg" />
         </q-btn>
       </q-card>
       <q-scroll-area
         bordered
         class="q-pr-md"
-        style="height: 80%;"
-        :style="$q.screen.width > 600 ? 'width: 70%; max-width: 400px;' : 'width: 95%'"
+        style="height: 80%"
+        :style="
+          $q.screen.width > 600 ? 'width: 70%; max-width: 400px;' : 'width: 95%'
+        "
         :thumb-style="{
           right: '4px',
           borderRadius: '5px',
@@ -54,7 +50,7 @@
         class="main-filter-box q-mt-md"
         :style="$q.screen.width > 600 ? 'width: 70%' : 'width: 95%'"
       >
-        <q-card-section 
+        <q-card-section
           class="row justify-between"
           style="padding-left: 0; padding-right: 0"
         >
@@ -73,16 +69,16 @@
               class="q-pa-sm text-weight-bolder text-h6 q-mr-xs"
               style="vertical-align: middle"
             >
-						  {{ listableFiltersStore.getAllFiltersArray.length }}
+              {{ listableFiltersStore.getAllFiltersArray.length }}
             </span>
-            <q-btn 
+            <q-btn
               v-close-popup
               :disable="listableFiltersStore.getAllFiltersArray.length == 0"
-              @click="ApplyFilter()"
               class="header-apply"
               label="Apply"
               color="primary"
               no-caps
+              @click="ApplyFilter()"
             />
           </div>
         </q-card-section>
@@ -94,23 +90,23 @@
 <script lang="ts">
 import SidebarContents from './SidebarContents.vue';
 import { defineComponent, PropType } from 'vue';
-import { useListableFilters } from "src/stores/listable-filters";
+import { useListableFilters } from 'src/stores/listable-filters';
 import 'src/css/Marketplace/header.css';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
-  props: {
-    listableNFTs: { type: [] as PropType<ListableToken[]>, required: true }
+  components: {
+    SidebarContents: SidebarContents,
   },
-	components: {
-		SidebarContents: SidebarContents
-	},
+  props: {
+    listableNFTs: { type: [] as PropType<ListableToken[]>, required: true },
+  },
   data() {
     const listableFiltersStore = useListableFilters();
 
     return {
-      listableFiltersStore
-    }
+      listableFiltersStore,
+    };
   },
   methods: {
     ApplyFilter() {
@@ -119,13 +115,12 @@ export default defineComponent({
     ClearFilters() {
       this.listableFiltersStore.clearAllFilters(this.listableNFTs);
     },
-  }
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.header-clear-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

@@ -23,7 +23,4 @@ interface ListableToken extends TokenIdentifier {
   region?: string;
 }
 
-export {
-  TokenIdentifier,
-  ListableToken
-}
+export { TokenIdentifier, ListableToken };

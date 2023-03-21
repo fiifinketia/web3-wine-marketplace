@@ -8,29 +8,47 @@
     <q-card class="q-pa-none column">
       <q-card-section class="row items-center q-pb-none">
         <div class="dialog-title">Edit Offer</div>
-        <q-separator v-if="$q.screen.width > 600" spaced="md" size="2px" inset vertical color="accent" />
+        <q-separator
+          v-if="$q.screen.width > 600"
+          spaced="md"
+          size="2px"
+          inset
+          vertical
+          color="accent"
+        />
         <q-space />
-        <q-btn 
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
 
-      <span class="dialog-subtitle" style="align-self: center;">{{ brand }}</span>
+      <span class="dialog-subtitle" style="align-self: center">{{
+        brand
+      }}</span>
 
       <q-card-section class="row justify-start">
-        <div v-if="$q.screen.width > 600" style="width: 55%; align-self: center">
+        <div
+          v-if="$q.screen.width > 600"
+          style="width: 55%; align-self: center"
+        >
           <q-img :src="image" width="95%" />
         </div>
-        <div class="column justify-between q-my-xs q-gutter-y-md" style="width: 45%" :style="$q.screen.width > 600 ? 'width: 45%' : 'width: 100%'">
+        <div
+          class="column justify-between q-my-xs q-gutter-y-md"
+          style="width: 45%"
+          :style="$q.screen.width > 600 ? 'width: 45%' : 'width: 100%'"
+        >
           <div class="column">
             <span class="dialog-label"> Highest Offer </span>
             <div class="row items-center">
-              <span class="dialog-highest-offer-price"> {{ !!highestOffer ? highestOffer : 0.00 }} </span>
+              <span class="dialog-highest-offer-price">
+                {{ !!highestOffer ? highestOffer : 0.0 }}
+              </span>
             </div>
           </div>
           <div class="column">
@@ -62,28 +80,36 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!offerPrice 
-                  ? parseInt(offerPrice)
-                  : '0.00'
-              }} 
+            <span class="dialog-total">
+              {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
             </span>
           </div>
         </div>
       </q-card-section>
 
-      <q-checkbox v-model="acceptTerms" class="q-pb-md" style="align-self: center;">
-        <span class="dialog-terms-conditions"> I agree with the Terms and Conditions </span>
+      <q-checkbox
+        v-model="acceptTerms"
+        class="q-pb-md"
+        style="align-self: center"
+      >
+        <span class="dialog-terms-conditions">
+          I agree with the Terms and Conditions
+        </span>
       </q-checkbox>
 
-      <div :class="$q.screen.width > 450 ? 'row justify-center q-gutter-x-sm' : 'column items-center q-gutter-y-sm'">
+      <div
+        :class="
+          $q.screen.width > 450
+            ? 'row justify-center q-gutter-x-sm'
+            : 'column items-center q-gutter-y-sm'
+        "
+      >
         <q-btn
           class="dialog-reset-small"
           :style="$q.screen.width <= 450 ? 'width: 95% !important;' : ''"
           no-caps
           outline
-          style="color: #3586FF;"
+          style="color: #3586ff"
           @click="ResetData()"
         >
           <span class="dialog-cancel-gr-text"> Reset </span>
@@ -96,7 +122,7 @@
           :disable="
             !acceptTerms ||
             offerExpirationDate === '' ||
-            offerPrice <= 0 ||
+            parseFloat(offerPrice) <= 0 ||
             loadingOffer
           "
           @click="CreateNewOrder()"
@@ -106,11 +132,7 @@
       </div>
     </q-card>
   </q-dialog>
-  <q-dialog
-    v-else
-    transition-show="scale"
-    transition-hide="scale"
-  >
+  <q-dialog v-else transition-show="scale" transition-hide="scale">
     <q-card
       class="q-pa-none"
       style="
@@ -125,12 +147,12 @@
         <q-separator spaced="md" size="2px" inset vertical color="accent" />
         <div class="dialog-subtitle">{{ brand }}</div>
         <q-space />
-        <q-btn 
-          v-close-popup 
-          icon="close" 
-          flat 
-          round 
-          dense 
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
           @click="ResetData()"
         />
       </q-card-section>
@@ -139,11 +161,16 @@
         <div style="width: 55%; align-self: center">
           <q-img :src="image" width="95%" />
         </div>
-        <div class="column justify-between q-my-xs q-gutter-y-md" style="width: 45%">
+        <div
+          class="column justify-between q-my-xs q-gutter-y-md"
+          style="width: 45%"
+        >
           <div class="column">
             <span class="dialog-label"> Highest Offer </span>
             <div class="row items-center">
-              <span class="dialog-highest-offer-price"> {{ !!highestOffer ? highestOffer : 0.00 }} </span>
+              <span class="dialog-highest-offer-price">
+                {{ !!highestOffer ? highestOffer : 0.0 }}
+              </span>
             </div>
           </div>
           <div class="column">
@@ -175,23 +202,21 @@
           <q-separator size="2px" color="accent" />
           <div class="column">
             <span class="dialog-label"> Total </span>
-            <span class="dialog-total"> 
-              {{ 
-                !!offerPrice 
-                  ? parseInt(offerPrice)
-                  : '0.00'
-              }} 
+            <span class="dialog-total">
+              {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
             </span>
           </div>
           <q-checkbox v-model="acceptTerms">
-            <span class="dialog-terms-conditions"> I agree with the Terms and Conditions </span>
+            <span class="dialog-terms-conditions">
+              I agree with the Terms and Conditions
+            </span>
           </q-checkbox>
           <div class="row justify-between q-mb-sm">
             <q-btn
               class="dialog-reset"
               no-caps
               outline
-              style="color: #3586FF;"
+              style="color: #3586ff"
               @click="ResetData()"
             >
               <span class="dialog-cancel-gr-text"> Reset </span>
@@ -203,7 +228,7 @@
               :disable="
                 !acceptTerms ||
                 offerExpirationDate === '' ||
-                offerPrice <= 0 ||
+                parseFloat(offerPrice) <= 0 ||
                 loadingOffer
               "
               @click="CreateNewOrder()"
@@ -215,50 +240,53 @@
       </q-card-section>
     </q-card>
   </q-dialog>
-
 </template>
 
 <script lang="ts">
-import 'src/css/Profile/Component/dialog.css'
+import 'src/css/Profile/Component/dialog.css';
 import { defineComponent } from 'vue';
-import { CreateERC721Offer, CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
+import {
+  CreateERC721Offer,
+  CancelSingleOrder,
+} from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 export default defineComponent({
   props: {
     orderHash: {
       type: String,
-      required: true
+      required: true,
     },
     image: {
       type: String,
-      required: true
+      required: true,
     },
     brand: {
       type: String,
-      required: true
+      required: true,
     },
     smartContractAddress: {
       type: String,
-      required: true
+      required: true,
     },
     network: {
       type: String,
-      required: true
+      required: true,
     },
     tokenID: {
       type: String,
-      required: true
+      required: true,
     },
     highestOffer: {
       type: String,
-      required: true
+      required: true,
     },
     highestOfferCurrency: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
+  emits: ['remove-offer', 'outgoing-edit-close', 'outgoing-error-dialog'],
   data() {
     const userStore = useUserStore();
     return {
@@ -267,8 +295,8 @@ export default defineComponent({
       offerExpirationDate: '',
       fee: '',
       acceptTerms: false,
-      loadingOffer: false
-    }
+      loadingOffer: false,
+    };
   },
   methods: {
     async CreateNewOrder() {
@@ -276,7 +304,7 @@ export default defineComponent({
         await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
         this.$emit('remove-offer', this.orderHash);
         try {
-          await CreateERC721Offer (
+          await CreateERC721Offer(
             this.tokenID,
             this.smartContractAddress,
             this.brand,
@@ -284,14 +312,14 @@ export default defineComponent({
             this.userStore.walletAddress,
             this.offerPrice,
             this.offerExpirationDate
-          )
+          );
         } catch (err) {
           this.BuildErrorDialog(err);
         }
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
-        this.$emit('outgoing-edit-close')
+        this.$emit('outgoing-edit-close');
       }
     },
     ResetData() {
@@ -299,14 +327,13 @@ export default defineComponent({
       this.offerExpirationDate = '';
       this.acceptTerms = false;
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     BuildErrorDialog(err: any) {
       const errorDetails: ErrorModel = ErrorMessageBuilder(err);
       this.$emit('outgoing-error-dialog', errorDetails);
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
-<style>
-
-</style>
+<style></style>
