@@ -121,22 +121,14 @@ export default defineComponent({
           const tabTo = to.query.tab;
           if (
             tabTo !== from.query.tab &&
-            (tabTo === 'nfts' ||
+            (
+              tabTo === 'nfts' ||
               tabTo === 'releases' ||
-              tabTo === 'recommended')
+              tabTo === 'recommended'
+            )
           ) {
             this.tab = tabTo;
-            switch (tabTo) {
-              case 'nfts':
-                this.tabLabel = 'Marketplace';
-                break;
-              case 'releases':
-                this.tabLabel = 'Releases';
-                break;
-              case 'recommended':
-                this.tabLabel = 'Recommended';
-                break;
-            }
+            this.TabLabelSetter(tabTo);
           }
         }
       },
@@ -162,6 +154,11 @@ export default defineComponent({
     },
   },
 
+  mounted() {
+    const tab = this.tab;
+    this.TabLabelSetter(tab);
+  },
+
   methods: {
     getLabel(query: string) {
       switch (query) {
@@ -176,6 +173,22 @@ export default defineComponent({
     onScroll() {
       if (!!this.marketplaceDropdown) {
         this.marketplaceDropdown = false;
+      }
+    },
+    TabLabelSetter(tab: string) {
+      switch (tab) {
+        case 'nfts':
+          this.tabLabel = 'Marketplace';
+          break;
+        case 'releases':
+          this.tabLabel = 'Releases';
+          break;
+        case 'recommended':
+          this.tabLabel = 'Recommended';
+          break;
+        default:
+          this.tabLabel = 'Marketplace';
+          break;
       }
     },
   },
