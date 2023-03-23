@@ -24,12 +24,12 @@ export default defineComponent({
     };
   },
   async mounted() {
-    await this.GetNewlyMinted();
+    await this.GetNewlyListed();
   },
 
   methods: {
-    async GetNewlyMinted() {
-      const url = <string>process.env.RETRIEVE_NEWLY_MINTED_NFTS_URL;
+    async GetNewlyListed() {
+      const url = <string>process.env.RETRIEVE_NEWLY_LISTED_NFTS_URL;
       await axios
         .get(`${url}?walletAddress=${this.userStore.walletAddress}`)
         .then(

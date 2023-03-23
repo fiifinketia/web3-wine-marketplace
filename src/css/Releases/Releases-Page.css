@@ -1,0 +1,26 @@
+.releases-tab-container {
+  background: #3586FF;
+  padding: 12px;
+  height: 56px;
+  width: 98vw;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color: white;
+  line-height: 0;
+}
+
+.releases-tab-icons {
+  width: 32px;
+  height: 32px;
+}
+
+@media screen and (min-width: 1512px) {
+	.fit, .releases-tab-container {
+		max-width: 1200px;
+	}
+
+	.q-page {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+}
