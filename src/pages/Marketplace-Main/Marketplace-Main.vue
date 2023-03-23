@@ -108,7 +108,7 @@ export default defineComponent({
     const queryT = this.$router.currentRoute.value.query.tab as string;
     return {
       tab: ref(queryT || 'nfts'),
-      tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
+      tabLabel: '',
       totalTokens: ref(0),
       marketplaceDropdown: false,
     };
@@ -141,6 +141,24 @@ export default defineComponent({
         }
       },
       immediate: true,
+    },
+    tab: {
+      handler(val) {
+        switch (val) {
+          case 'nfts':
+            this.$router.push({ path: 'marketplace', query: { tab: 'nfts' } });
+            this.tabLabel = 'Marketplace';
+            break;
+          case 'releases':
+            this.$router.push({ path: 'marketplace', query: { tab: 'releases' } });
+            this.tabLabel = 'Releases';
+            break;
+          case 'recommended':
+            this.$router.push({ path: 'marketplace', query: { tab: 'recommended' } });
+            this.tabLabel = 'Recommended';
+            break;
+        }
+      },
     },
   },
 

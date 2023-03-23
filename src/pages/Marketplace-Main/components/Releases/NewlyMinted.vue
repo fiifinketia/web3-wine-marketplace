@@ -1,6 +1,7 @@
 <template>
   <NFTSelections
     :nft-selections="newNFTs"
+    :is-loading="isLoading"
   />
 </template>
 
@@ -21,6 +22,7 @@ export default defineComponent({
     return {
       userStore,
       newNFTs: new Array<ListingWithPricingAndImage>(),
+      isLoading: true
     };
   },
   async mounted() {
@@ -30,12 +32,17 @@ export default defineComponent({
   methods: {
     async GetNewlyMinted() {
       const url = <string>process.env.RETRIEVE_NEWLY_MINTED_NFTS_URL;
-      await axios
-        .get(`${url}?walletAddress=${this.userStore.walletAddress}`)
-        .then(
-          (res: AxiosResponse<ListingWithPricingAndImage[]>) =>
-            (this.newNFTs = res.data)
-        );
+      try {
+        await axios
+          .get(`${url}?walletAddress=${this.userStore.walletAddress}`)
+          .then(
+            (res: AxiosResponse<ListingWithPricingAndImage[]>) =>
+              (this.newNFTs = res.data)
+          );
+        this.isLoading = false;
+      } catch {
+        return;
+      }
     }
   },
 });

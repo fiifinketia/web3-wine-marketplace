@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isLoading"
     class="row fit"
     :class="
       nfts.length >= 4 && $q.screen.width > 600
@@ -139,6 +140,32 @@
       </q-card>
     </div>
   </div>
+  <div
+    v-else
+    class="row q-pt-none q-px-sm q-gutter-y-md"
+    :class="$q.screen.width > 600 ? 'justify-between' : 'justify-around'"
+  >
+    <div
+      v-for="loading in loadingNFTs"
+      :key="loading"
+      class="releases-loading-card-container"
+    >
+      <div>
+        <q-card class="q-ma-xs" flat>
+          <img
+            src="../../../../assets/loading-card.svg"
+            class="releases-card-image"
+          />
+          <img
+            src="../../../../assets/loading-brand.svg"
+            :style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
+            class="q-my-md"
+          />
+          <img src="../../../../assets/loading-pricebox.svg" />
+        </q-card>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -153,12 +180,21 @@ export default defineComponent({
       type: [] as PropType<ListingWithPricingAndImage[]>,
       default: [],
     },
+    isLoading: {
+      type: Boolean,
+      default: true
+    },
+    erroredOut: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     const userStore = useUserStore();
     return {
       userStore,
-      nfts: [] as ListingWithPricingAndImage[]
+      nfts: [] as ListingWithPricingAndImage[],
+      loadingNFTs: [0, 1, 2, 3]
     };
   },
   beforeUpdate() {
