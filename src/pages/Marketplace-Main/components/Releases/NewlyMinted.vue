@@ -2,6 +2,9 @@
   <NFTSelections
     :nft-selections="newNFTs"
     :is-loading="isLoading"
+    :errored-out="erroredOut"
+    :section-error="erroredText"
+    @refetch-release="GetNewlyMinted()"
   />
 </template>
 
@@ -22,7 +25,9 @@ export default defineComponent({
     return {
       userStore,
       newNFTs: new Array<ListingWithPricingAndImage>(),
-      isLoading: true
+      isLoading: true,
+      erroredOut: false,
+      erroredText: 'Newly minted wines'
     };
   },
   async mounted() {
@@ -33,15 +38,18 @@ export default defineComponent({
     async GetNewlyMinted() {
       const url = <string>process.env.RETRIEVE_NEWLY_MINTED_NFTS_URL;
       try {
+        this.isLoading = true;
         await axios
           .get(`${url}?walletAddress=${this.userStore.walletAddress}`)
           .then(
             (res: AxiosResponse<ListingWithPricingAndImage[]>) =>
               (this.newNFTs = res.data)
           );
-        this.isLoading = false;
+        this.erroredOut = false;
       } catch {
-        return;
+        this.erroredOut = true;
+      } finally {
+        this.isLoading = false;
       }
     }
   },

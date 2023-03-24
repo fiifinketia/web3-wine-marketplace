@@ -42,6 +42,35 @@
 	color: #9d9d9d;
 }
 
+.releases-error-header {
+	font-family: 'Obviously-Bolder';
+	color: #3586FF;
+	line-height: 50px;
+	text-align: center;
+	font-size: 32px;
+}
+
+.releases-error-subheader {
+	font-family: 'ProximaNova-Bold';
+	color: #212131;
+	line-height: 30px;
+	text-align: center;
+	font-size: 20px;
+}
+
+.releases-error-btn {
+  justify-content: center;
+  align-items: center;
+  width: 147px;
+  height: 48px;
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
+  border-radius: 6px;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
 .releases-price-text-b-active,
 .releases-price-text-b-inactive {
 	font-family: 'ProximaNova-Bold';

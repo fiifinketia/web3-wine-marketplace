@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!isLoading"
+    v-if="!isLoading && !erroredOut"
     class="row fit"
     :class="
       nfts.length >= 4 && $q.screen.width > 600
@@ -140,6 +140,11 @@
       </q-card>
     </div>
   </div>
+  <ErrorView
+    v-else-if="!isLoading && !!erroredOut"
+    :section-error="sectionError"
+    @refetch-release="RefetchSection()"
+  />
   <div
     v-else
     class="row q-pt-none q-px-sm q-gutter-y-md"
@@ -173,8 +178,12 @@ import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { AddFavorites, RemoveFavorites } from '../../services/FavoritesFunctions';
+import NewlyError from './NewlyError.vue';
 
 export default defineComponent({
+  components: {
+    ErrorView: NewlyError
+  },
   props: {
     nftSelections: {
       type: [] as PropType<ListingWithPricingAndImage[]>,
@@ -187,8 +196,15 @@ export default defineComponent({
     erroredOut: {
       type: Boolean,
       default: false
+    },
+    sectionError: {
+      type: String,
+      default: ''
     }
   },
+  emits: [
+    'refetch-release'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -313,6 +329,9 @@ export default defineComponent({
     },
     ToInt(price: string) {
       return parseInt(price);
+    },
+    RefetchSection() {
+      this.$emit('refetch-release')
     }
   }
 })
