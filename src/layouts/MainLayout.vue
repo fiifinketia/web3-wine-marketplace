@@ -145,6 +145,7 @@
             class="btn-dropdown-menu dropdown-center"
             dense
             flat
+            :ripple="false"
             label="Marketplace"
           >
             <div class="q-btn-menu-div">
@@ -434,7 +435,7 @@ export default defineComponent({
       userStore,
       nftStore,
       orderStore,
-      walletAddress: '',
+      walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
       balance: 0,
       suggestedWinesDialog: false,
@@ -452,14 +453,19 @@ export default defineComponent({
       },
       immediate: true,
     },
+    'userStore.walletAddress': {
+      handler: function (walletAddress: string) {
+        this.walletAddress = walletAddress;
+      }
+    }
   },
 
   async mounted() {
     await this.userStore.checkConnection();
-    this.walletAddress = this.userStore.walletAddress;
-    this.balance = await this.userStore.getWalletBalance();
     if (!this.walletAddress) {
       this.ClearStore();
+    } else {
+      this.balance = await this.userStore.getWalletBalance();
     }
   },
   methods: {
@@ -500,7 +506,6 @@ export default defineComponent({
       } else {
         const next = this.$route.query?.next as string;
         await this.$router.replace({ path: next, replace: true });
-        window.location.reload();
       }
     },
 

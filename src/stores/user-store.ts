@@ -22,11 +22,14 @@ export const useUserStore = defineStore(
       });
       walletAddress.value = utils.getAddress(accounts[0]);
       // await nftStorage.fetchNFTs(accounts[0]);
-
-      const getUser = await axios.get(
-        process.env.MARKETPLACE_API_URL + '/market/users/' + walletAddress.value
-      );
-      if (!!getUser.data) return (user.value = getUser.data);
+      try {
+        const getUser = await axios.get(
+          process.env.MARKETPLACE_API_URL + '/market/users/' + walletAddress.value
+        );
+        if (!!getUser.data) return (user.value = getUser.data);
+      } catch {
+        return 0;
+      }
 
       try {
         const getColors = [
@@ -43,8 +46,8 @@ export const useUserStore = defineStore(
         );
         user.value = newUser.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        throw error;
+      } catch {
+        return 0;
       }
     };
 
