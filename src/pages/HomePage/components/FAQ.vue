@@ -134,24 +134,24 @@ export default defineComponent({
     return {
       items: [
         {
-          image: require('../../../assets/wallet.png'),
+          image: require('../../../assets/wallet.svg'),
           text: 'To sign up click on & connect your wallet',
           text2: 'If you do not have a wallet, Click here to create one',
           class: 'first',
         },
         {
-          image: require('../../../assets/box.png'),
+          image: require('../../../assets/box.svg'),
           text: 'To review, buy, or place a bid for an NFT click on it to see the meta data.',
           class: 'second',
         },
         {
-          image: require('../../../assets/heartFaq.png'),
+          image: require('../../../assets/heartFaq.svg'),
           text: 'Hesitating what to buy or want to compare?',
           text2: 'Add NFTs to the favs to monitor them & buy later',
           class: 'third',
         },
         {
-          image: require('../../../assets/wine.png'),
+          image: require('../../../assets/wine.svg'),
           text: 'All your wines will be stored in a special place - Digital Wine Cellar. Its our web app to monitor manage the NFTs you own.',
           text2: 'Visit cellar',
           class: 'fourth',
