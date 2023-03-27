@@ -141,6 +141,7 @@
         Please Connect Wallet to view actions.
       </div>
     </div>
+
     <button class="q-mt-lg row items-center update-metadata-button" flat>
       <div class="q-pr-sm cursor-pointer">
         <q-img src="../../../../public/images/refresh.svg" width="24px" />
@@ -249,7 +250,7 @@
         style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/listing_completed.png" width="50%" />
+          <q-img src="/images/listing_completed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-primary">
@@ -273,7 +274,7 @@
         style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/listing_failed.png" width="50%" />
+          <q-img src="/images/listing_failed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-negative">
@@ -409,7 +410,7 @@
         style="background-color: #ffffff; border-radius: 10px; max-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/buy_now_completed.png" width="50%" />
+          <q-img src="/images/buy_now_completed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-primary">
@@ -421,6 +422,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
     <q-dialog
       v-model="openBuyNowFailedModal"
       transition-show="slide-up"
@@ -432,7 +434,7 @@
         style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/buy_now_failed.png" width="50%" />
+          <q-img src="/images/buy_now_failed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-negative">
@@ -601,6 +603,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
     <q-dialog
       v-model="openOfferCompletedModal"
       transition-show="slide-up"
@@ -612,7 +615,7 @@
         style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/make_offer_completed.png" width="50%" />
+          <q-img src="/images/make_offer_completed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-primary">
@@ -625,6 +628,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
     <q-dialog
       v-model="openOfferFailedModal"
       transition-show="slide-up"
@@ -636,7 +640,7 @@
         style="background-color: #ffffff; border-radius: 10px; min-width: 30%"
       >
         <q-card-section class="row items-center justify-center q-pa-sm">
-          <q-img src="/images/make_offer_failed.png" width="50%" />
+          <q-img src="/images/make_offer_failed.svg" width="50%" />
         </q-card-section>
         <q-card-section class="row items-center justify-center q-py-sm">
           <p class="row col-7 text-bold text-negative">
