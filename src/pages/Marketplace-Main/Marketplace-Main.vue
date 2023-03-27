@@ -84,7 +84,7 @@
             />
           </q-tab-panel>
           <q-tab-panel class="q-pa-none q-px-none" name="recommended">
-            <AllNFTsTab @total-tokens="(total:number) => totalTokens = total" />
+            <RecommendedTab />
           </q-tab-panel>
         </q-tab-panels>
       </section>
@@ -97,11 +97,13 @@ import { defineComponent, ref } from 'vue';
 import 'src/css/Profile/shared.css';
 import AllNFTsTab from './components/AllNFTsTab.vue';
 import NewReleasedTab from './components/NewReleasedTab.vue';
+import RecommendedTab from './components/Recommended/RecommendedTab.vue';
 
 export default defineComponent({
   components: {
     AllNFTsTab: AllNFTsTab,
     NewlyReleasedTab: NewReleasedTab,
+		RecommendedTab: RecommendedTab,
   },
 
   data() {
