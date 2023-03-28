@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import axios, { AxiosResponse } from 'axios';
 import { defineComponent } from 'vue';
+import { GetNFTsFromRegion } from '../../services/RetrieveReleased';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import '../../../../css/Releases/Releases-Selections.css';
 import { useUserStore } from 'src/stores/user-store';
@@ -36,15 +36,9 @@ export default defineComponent({
 
   methods: {
     async GetSuperTuscans() {
-      const url = <string>process.env.RETRIEVE_NEWLY_ADDED_REGION_NFTS_URL;
       try {
         this.isLoading = true;
-        await axios
-          .get(`${url}?walletAddress=${this.userStore.walletAddress}&region=Tuscany`)
-          .then(
-            (res: AxiosResponse<ListingWithPricingAndImage[]>) =>
-              (this.newNFTs = res.data)
-          );
+        this.newNFTs = await GetNFTsFromRegion(this.userStore.walletAddress, 'Tuscany');
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;

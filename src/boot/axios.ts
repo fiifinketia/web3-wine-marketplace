@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 
+export const APIKeyString = process.env.MKTPLACE_API_KEY;
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;

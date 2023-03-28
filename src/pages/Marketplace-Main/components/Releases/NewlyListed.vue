@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import axios, { AxiosResponse } from 'axios';
+import { GetNewListings } from '../../services/RetrieveReleased';
 import { defineComponent } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import '../../../../css/Releases/Releases-Selections.css';
@@ -36,15 +36,9 @@ export default defineComponent({
 
   methods: {
     async GetNewlyListed() {
-      const url = <string>process.env.RETRIEVE_NEWLY_LISTED_NFTS_URL;
       try {
         this.isLoading = true;
-        await axios
-          .get(`${url}?walletAddress=${this.userStore.walletAddress}`)
-          .then(
-            (res: AxiosResponse<ListingWithPricingAndImage[]>) =>
-              (this.newNFTs = res.data)
-          );
+        this.newNFTs = await GetNewListings(this.userStore.walletAddress)
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;

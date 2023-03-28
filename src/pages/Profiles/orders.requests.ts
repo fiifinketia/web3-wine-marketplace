@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { APIKeyString } from 'src/boot/axios';
 import {
   TokenIdentifier,
   ListableToken,
@@ -16,10 +17,15 @@ async function ReturnListings(
   brandFilter: string
 ): Promise<ListingsResponse[]> {
   let listingResponse: ListingsResponse[] = [];
-  const query = `?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`;
+  const body = {
+    walletAddress: walletAddress,
+    sortKey: sortKey,
+    brandFilter: brandFilter,
+    apiKey: APIKeyString
+  }
   const url = <string>process.env.RETRIEVE_LISTINGS_URL;
   await axios
-    .get(url + query)
+    .post(url, body)
     .then((f: AxiosResponse<ListingsResponse[]>) => (listingResponse = f.data));
   return listingResponse;
 }
@@ -35,6 +41,7 @@ async function ReturnIncomingOffers(
     sortKey: sortKey,
     ownedNFTs: ownedNFTs,
     brandFilter: brandFilter,
+    apiKey: APIKeyString
   };
   await axios
     .post(url, body)
@@ -51,10 +58,14 @@ async function ReturnOutgoingOffers(
 ) {
   let outgoingOffers: OutgoingOffersResponse[] = [];
   const url = <string>process.env.RETRIEVE_OUTGOING_OFFERS_URL;
+  const body = {
+    walletAddress: walletAddress,
+    sortKey: sortKey,
+    brandFilter: brandFilter,
+    apiKey: APIKeyString
+  }
   await axios
-    .get(
-      `${url}?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`
-    )
+    .post(url, body)
     .then(
       (f: AxiosResponse<OutgoingOffersResponse[]>) => (outgoingOffers = f.data)
     );
@@ -68,10 +79,14 @@ async function ReturnTransactions(
 ) {
   let transactions: TransactionResponse[] = [];
   const url = <string>process.env.RETRIEVE_TRANSACTIONS_URL;
+  const body = {
+    walletAddress: walletAddress,
+    sortKey: sortKey,
+    brandFilter: brandFilter,
+    apiKey: APIKeyString
+  }
   await axios
-    .get(
-      `${url}?walletAddress=${walletAddress}&sortKey=${sortKey}&brandFilter=${brandFilter}`
-    )
+    .post(url, body)
     .then((f: AxiosResponse<TransactionResponse[]>) => (transactions = f.data));
   return transactions;
 }
@@ -79,8 +94,12 @@ async function ReturnTransactions(
 async function ReturnMissingNFTDetails(ownedTokens: TokenIdentifier[]) {
   let updatedOwnedNFTs: ListableToken[] = [];
   const url = <string>process.env.RETRIEVE_MISSING_DETAILS;
+  const body = {
+    ownedTokens: ownedTokens,
+    apiKey: APIKeyString
+  }
   await axios
-    .post(url, ownedTokens)
+    .post(url, body)
     .then((f: AxiosResponse<ListableToken[]>) => (updatedOwnedNFTs = f.data));
   return updatedOwnedNFTs;
 }
