@@ -194,7 +194,7 @@
           <div class="calculating">Calculating...</div>
           <div>
             <q-img
-              src="../../assets/giffycanvas.png"
+              src="../../assets/giffycanvas.gif"
               width="130px"
               height="190px"
             />
@@ -208,7 +208,7 @@
           <div class="calculating">Calculating the final worth...</div>
           <div>
             <q-img
-              src="../../assets/giffycanvas.png"
+              src="../../assets/giffycanvas.gif"
               width="130px"
               height="190px"
             />
@@ -221,7 +221,7 @@
         >
           <div class="q-pb-lg">
             <q-img
-              src="../../assets/moneyPlant.png"
+              src="../../assets/moneyPlant.svg"
               width="55px"
               height="117px"
             />
