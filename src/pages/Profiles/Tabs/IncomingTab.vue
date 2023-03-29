@@ -117,6 +117,7 @@ import { ErrorMessageBuilder } from 'src/shared/error.msg.helper';
 import AcceptOffer from '../Popups/AcceptOffer.vue';
 import IncomingColumns from '../Columns/IncomingColumns.vue';
 import IncomingRows from '../Rows/IncomingRows.vue';
+import { mapState } from 'pinia';
 
 const nftStore = useNFTStore();
 
@@ -141,7 +142,6 @@ export default defineComponent({
       store,
       nftStore,
       userStore,
-      incomingOffers: store.incomingOffers,
       incomingSortKey: store.getIncomingSortKey,
 
       incomingBrandFilter: store.getIncomingBrandFilter,
@@ -158,10 +158,15 @@ export default defineComponent({
       orderHash: '',
       brand: '',
       image: '',
-      token: {} as TokenIdentifier,
-
-      brandSearched: false,
+      token: {} as TokenIdentifier
     };
+  },
+
+  computed: {
+    ...mapState(ordersStore, {
+      incomingOffers: store => store.getIncomingOffers,
+      brandSearched: store => store.getIncomingBrandFilterStatus
+    }),
   },
 
   watch: {
@@ -185,6 +190,7 @@ export default defineComponent({
   },
 
   async mounted() {
+    this.store.setIncomingBrandFilterStatus(false);
     await this.FetchIncomingOffers('', '');
   },
 
@@ -277,11 +283,6 @@ export default defineComponent({
       return actualIncomingOffers;
     },
     RemoveRow(token: TokenIdentifier) {
-      const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
-      this.incomingOffers = this.incomingOffers.filter(f => {
-        const offersKey = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
-        return offersKey !== tokenKey;
-      });
       this.store.filterIncomingOffers(token);
       this.CheckForEmptyRequest();
     },

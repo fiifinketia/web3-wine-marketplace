@@ -82,6 +82,7 @@ import { useUserStore } from 'src/stores/user-store';
 import ProfileErrors from '../Popups/ProfileErrors.vue';
 import TransactionsColumns from '../Columns/TransactionsColumns.vue';
 import TransactionsRows from '../Rows/TransactionsRows.vue';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   components: {
@@ -111,10 +112,13 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false,
-
-      brandSearched: false,
+      openErrorDialog: false
     };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      brandSearched: store => store.getTransactionBrandFilterStatus
+    }),
   },
   watch: {
     transactionSortKey: {
@@ -131,7 +135,6 @@ export default defineComponent({
     transactionBrandFilter: {
       handler: function (brandFilter) {
         this.store.setTransactionBrandFilter(brandFilter);
-        this.store.setTransactionBrandFilterStatus(false);
       },
     },
   },
@@ -190,7 +193,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetTransactions();
       this.transactionBrandFilter = this.store.transactionBrandFilter;
-      this.store.setTransactionBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',

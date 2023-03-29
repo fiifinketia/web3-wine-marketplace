@@ -128,6 +128,7 @@ import {
   ListableToken,
 } from 'src/shared/models/entities/NFT.model';
 import { ReturnMissingNFTDetails } from '../orders.requests';
+import { mapState } from 'pinia';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -157,7 +158,6 @@ export default defineComponent({
       nftStore,
       listableFiltersStore,
 
-      listings: store.listings,
       listingSortKey: store.getListingSortKey,
 
       listingBrandFilter: store.getListingBrandFilter,
@@ -177,12 +177,15 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false,
-
-      brandSearched: false,
+      openErrorDialog: false
     };
   },
-
+  computed: {
+    ...mapState(ordersStore, {
+      listings: store => store.getListings,
+      brandSearched: store => store.getListingBrandFilterStatus
+    }),
+  },
   watch: {
     listingSortKey: {
       handler: async function (sortKey) {
@@ -200,7 +203,6 @@ export default defineComponent({
     listingBrandFilter: {
       handler: async function (brandFilter) {
         this.store.setListingBrandFilter(brandFilter);
-        this.store.setListingBrandFilterStatus(false);
       },
     },
   },
@@ -235,7 +237,6 @@ export default defineComponent({
         this.loadingRequest = true;
       } else {
         this.brandSearched = false;
-        this.listings = this.store.getListings;
         this.$emit('listingsAmount', this.listings.length);
         this.CheckForEmptyRequest();
       }
@@ -249,7 +250,6 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
       this.store.filterListings(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -275,7 +275,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetListings();
       this.listingBrandFilter = this.store.listingBrandFilter;
-      this.store.setListingBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',

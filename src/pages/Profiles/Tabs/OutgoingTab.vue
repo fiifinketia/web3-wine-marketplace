@@ -110,6 +110,7 @@ import { OutgoingOffersResponse } from '../models/response.models';
 import ProfileErrors from '../Popups/ProfileErrors.vue';
 import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   components: {
@@ -130,7 +131,6 @@ export default defineComponent({
     return {
       store,
       userStore,
-      outgoingOffers: store.outgoingOffers,
       outgoingSortKey: store.getOutgoingSortKey,
 
       outgoingBrandFilter: store.getOutgoingBrandFilter,
@@ -146,10 +146,14 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false,
-
-      brandSearched: false,
+      openErrorDialog: false
     };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      outgoingOffers: store => store.getOutgoingOffers,
+      brandSearched: store => store.getOutgoingBrandFilterStatus
+    }),
   },
   watch: {
     outgoingSortKey: {
@@ -166,7 +170,6 @@ export default defineComponent({
     outgoingBrandFilter: {
       handler: function (brandFilter) {
         this.store.setOutgoingBrandFilter(brandFilter);
-        this.store.setOutgoingBrandFilterStatus(false);
       },
     },
   },
@@ -197,7 +200,6 @@ export default defineComponent({
         this.loadingRequest = true;
       } else {
         this.brandSearched = false;
-        this.outgoingOffers = this.store.getOutgoingOffers;
         this.$emit('outgoingAmount', this.outgoingOffers.length);
         this.CheckForEmptyRequest();
         this.loadingRequest = true;
@@ -212,9 +214,6 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.outgoingOffers = this.outgoingOffers.filter(
-        f => f.orderHash !== orderHash
-      );
       this.store.filterOutgoingOffers(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -239,7 +238,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetOutgoingOffers();
       this.outgoingBrandFilter = this.store.outgoingBrandFilter;
-      this.store.setOutgoingBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
