@@ -1,3 +1,9 @@
+@media screen and (min-width: 1512px) {
+  .profile-page-container, .profile-main-container {
+    width: 1200px !important;
+  }
+}
+
 .profile-dropdown-container {
   font-family: 'ProximaNova-Bold';
   font-size: 18px;

@@ -2,11 +2,12 @@
   <q-page
     class="column items-center"
     :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
   >
     <div v-if="!loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your outgoing offers'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -62,8 +63,8 @@
         <OutgoingDialogEdit
           v-model="openEditDialog"
           :brand="singleOffer.brand"
-          :highest-offer="singleOffer.highestOffer!"
-          :highest-offer-currency="singleOffer.highestOfferCurrency!"
+          :highest-offer="singleOffer.highestOffer"
+          :highest-offer-currency="singleOffer.highestOfferCurrency"
           :image="singleOffer.image"
           :network="singleOffer.network"
           :order-hash="singleOffer.orderHash"
