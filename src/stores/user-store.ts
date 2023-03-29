@@ -4,31 +4,32 @@ import axios from 'axios';
 import { ethers, utils } from 'ethers';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
+import { APIKeyString } from 'src/boot/axios';
 
 export const useUserStore = defineStore(
   'userStore',
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
-    // const nftStorage = useNFTStore();
     const user: Ref<UserModel | null> = ref<UserModel | null>(null);
 
     const connectWallet = async () => {
-      // this.showConnectWallet = true;
-      // // this.showMyWallet = true;
-      // document.body.classList.add('no-scroll');
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
       walletAddress.value = utils.getAddress(accounts[0]);
-      // await nftStorage.fetchNFTs(accounts[0]);
       try {
-        const getUser = await axios.get(
-          process.env.MARKETPLACE_API_URL + '/market/users/' + walletAddress.value
+        const body = {
+          walletAddress: walletAddress.value,
+          apiKey: APIKeyString
+        }
+        const getUser = await axios.post(
+          process.env.MARKETPLACE_API_URL + '/market/users/retrieve',
+          body
         );
         if (!!getUser.data) return (user.value = getUser.data);
-      } catch {
-        return 0;
+      } catch (error: unknown) {
+        throw 'User does not exist'
       }
 
       try {
@@ -38,7 +39,7 @@ export const useUserStore = defineStore(
           generateRandomColor(),
         ].join(',');
         const newUser = await axios.post(
-          process.env.MARKETPLACE_API_URL + '/market/users',
+          process.env.MARKETPLACE_API_URL + '/market/create',
           {
             walletAddress: walletAddress.value,
             avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
