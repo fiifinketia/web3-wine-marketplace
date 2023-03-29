@@ -172,7 +172,6 @@ export default defineComponent({
       enableListingDialog: false,
 
       singleListing: {} as ListingsResponse,
-      listableNFTs: [] as ListableToken[],
 
       errorType: '',
       errorTitle: '',
@@ -185,6 +184,9 @@ export default defineComponent({
       listings: store => store.getListings,
       brandSearched: store => store.getListingBrandFilterStatus
     }),
+    ...mapState(useListableFilters, {
+      listableNFTs: store => store.getParentListableTokens
+    })
   },
   watch: {
     listingSortKey: {
@@ -322,7 +324,8 @@ export default defineComponent({
 
         if (ownedNFTsMap.size > 0) {
           const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
-          this.listableNFTs = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          this.listableFiltersStore.setParentListableTokens(listableTokens);
           this.listableFiltersStore.setAllFilters(this.listableNFTs);
           this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
           // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
