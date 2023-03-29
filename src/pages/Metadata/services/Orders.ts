@@ -14,14 +14,10 @@ import {
   OrderComponents,
   OrderParameters,
 } from '@opensea/seaport-js/lib/types';
+import { APIKeyString } from 'src/boot/axios';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
-const GETParams = {
-  params: {
-    t: new Date().getTime(),
-  },
-};
 
 const RandomIdGenerator = () => {
   return Date.now();
@@ -120,7 +116,8 @@ export async function CreateERC721Listing(
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
-		blockNumber: blockNumber
+		blockNumber: blockNumber,
+		apiKey: APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
@@ -193,6 +190,7 @@ export async function CreateERC1155Listing(
   const OrderRequest = {
     order: db_Order,
     notificationID: RandomIdGenerator(),
+		apiKey: APIKeyString
   };
   const createOrderURL = <string>process.env.CREATE_ORDER_URL;
   axios.post(createOrderURL, OrderRequest);
@@ -265,7 +263,8 @@ export async function CreateERC721Offer(
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
-		blockNumber: blockNumber
+		blockNumber: blockNumber,
+		apiKey: APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	await axios.post(createOrderURL, OrderRequest);
@@ -280,8 +279,12 @@ export async function FulfillBasicOrder(
 ) {
 	const { seaport } = await GetWeb3();
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
+	const body = {
+		apiKey: APIKeyString,
+		orderHash: orderHash
+	}
 	const order: RetrieveListingResponse = await axios
-		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
+		.post(retrieveOrderUrl, body)
 		.then(result => {
 			const data = result.data;
 			return {
@@ -303,7 +306,7 @@ export async function FulfillBasicOrder(
 
   const txn = await executeAllFulfillActions();
 
-	const updateOrder: UpdateListingRequest = {
+	const updateOrder: UpdateListingRequest & { apiKey: string } = {
 		notificationID: RandomIdGenerator(),
 		identifierOrCriteria: order.identifierOrCriteria,
 		contractAddress: order.contractAddress,
@@ -315,7 +318,8 @@ export async function FulfillBasicOrder(
 		offerer: order.parameters.offerer,
 		image: image,
 		nonce: txn.nonce,
-		blockNumber: blockNumber
+		blockNumber: blockNumber,
+		apiKey: <string> APIKeyString
 	};
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
@@ -324,8 +328,12 @@ export async function FulfillBasicOrder(
 export async function CancelSingleOrder(orderHash: string, walletAddress: string) {
 	if (!!walletAddress) {
 		const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
+		const body = {
+			apiKey: APIKeyString,
+			orderHash: orderHash
+		}
 		const order: OrderComponents = await axios
-			.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
+			.post(retrieveOrderUrl, body)
 			.then((result) => {
 				const data = result.data;
 				return {
@@ -342,7 +350,8 @@ export async function CancelSingleOrder(orderHash: string, walletAddress: string
 			orderHash: orderHash,
 			walletAddress: walletAddress,
 			nonce: txn.nonce,
-			blockNumber: blockNumber
+			blockNumber: blockNumber,
+			apiKey: APIKeyString
 		};
 		axios.post(cancelOrderURL, requestToCancel);
 	}

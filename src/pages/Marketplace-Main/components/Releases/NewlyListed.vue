@@ -4,12 +4,12 @@
     :is-loading="isLoading"
     :errored-out="erroredOut"
     :section-error="erroredText"
-    @refetch-release="GetNewlyMinted()"
+    @refetch-release="GetNewlyListed()"
   />
 </template>
 
 <script lang="ts">
-import { GetLatestMinted } from '../../services/RetrieveReleased';
+import { GetNewListings } from '../../services/RetrieveReleased';
 import { defineComponent } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import '../../../../css/Releases/Releases-Selections.css';
@@ -27,18 +27,18 @@ export default defineComponent({
       newNFTs: new Array<ListingWithPricingAndImage>(),
       isLoading: true,
       erroredOut: false,
-      erroredText: 'Newly minted wines'
+      erroredText: 'Newly listed wines'
     };
   },
   async mounted() {
-    await this.GetNewlyMinted();
+    await this.GetNewlyListed();
   },
 
   methods: {
-    async GetNewlyMinted() {
+    async GetNewlyListed() {
       try {
         this.isLoading = true;
-        this.newNFTs = await GetLatestMinted(this.userStore.walletAddress);
+        this.newNFTs = await GetNewListings(this.userStore.walletAddress)
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;

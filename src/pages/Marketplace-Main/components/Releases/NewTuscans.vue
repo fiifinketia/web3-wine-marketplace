@@ -4,13 +4,13 @@
     :is-loading="isLoading"
     :errored-out="erroredOut"
     :section-error="erroredText"
-    @refetch-release="GetNewlyMinted()"
+    @refetch-release="GetSuperTuscans()"
   />
 </template>
 
 <script lang="ts">
-import { GetLatestMinted } from '../../services/RetrieveReleased';
 import { defineComponent } from 'vue';
+import { GetNFTsFromRegion } from '../../services/RetrieveReleased';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import '../../../../css/Releases/Releases-Selections.css';
 import { useUserStore } from 'src/stores/user-store';
@@ -27,18 +27,18 @@ export default defineComponent({
       newNFTs: new Array<ListingWithPricingAndImage>(),
       isLoading: true,
       erroredOut: false,
-      erroredText: 'Newly minted wines'
+      erroredText: 'Super Tuscan wines'
     };
   },
   async mounted() {
-    await this.GetNewlyMinted();
+    await this.GetSuperTuscans();
   },
 
   methods: {
-    async GetNewlyMinted() {
+    async GetSuperTuscans() {
       try {
         this.isLoading = true;
-        this.newNFTs = await GetLatestMinted(this.userStore.walletAddress);
+        this.newNFTs = await GetNFTsFromRegion(this.userStore.walletAddress, 'Tuscany');
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;

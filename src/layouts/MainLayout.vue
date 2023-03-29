@@ -145,6 +145,7 @@
             class="btn-dropdown-menu dropdown-center"
             dense
             flat
+            :ripple="false"
             label="Marketplace"
           >
             <div class="q-btn-menu-div">
@@ -152,7 +153,7 @@
                 <q-item
                   v-close-popup
                   clickable
-                  @click="$router.push('/marketplace?tab=nfts')"
+                  :to="{ path: '/marketplace', query: { tab: 'nfts' } }"
                 >
                   <q-item-section>
                     <q-item-label>All NFTs</q-item-label>
@@ -162,7 +163,7 @@
                 <q-item
                   v-close-popup
                   clickable
-                  @click="$router.push('/marketplace?tab=releases')"
+                  :to="{ path: '/marketplace', query: { tab: 'releases' } }"
                 >
                   <q-item-section>
                     <q-item-label>New Releases</q-item-label>
@@ -172,7 +173,7 @@
                 <q-item
                   v-close-popup
                   clickable
-                  @click="$router.push('/marketplace?tab=recommended')"
+                  :to="{ path: '/marketplace', query: { tab: 'recommended' } }"
                 >
                   <q-item-section>
                     <q-item-label>Recommended</q-item-label>
@@ -186,22 +187,39 @@
         </div>
         <div class="row">
           <div v-if="$q.screen.width > 768" class="row items-center">
-            <img
-              v-if="!!walletAddress"
-              class="cursor-pointer icons q-mx-xs"
-              src="../../public/images/favs-icon.svg"
-              @click="$router.push('/favorites')"
-            />
-            <img
-              v-if="!!walletAddress"
-              class="cursor-pointer icons q-mx-xs"
-              src="../../public/images/bell-icon.svg"
-              clickable
-            />
             <q-btn
-              class="btn-dropdown-menu profile-dropdown q-mx-xs"
+              v-if="!!walletAddress"
+              dense
+              :ripple="false"
+              unelevated
+              flat
+              class="route-btn btn--no-hover q-mx-xs no-padding"
+              :to="{ path: '/favorites' }"
+            >
+              <img
+                src="../../public/images/favs-icon.svg"
+                class="icons"
+              />
+            </q-btn>
+            <q-btn
+              v-if="!!walletAddress"
+              dense
+              :ripple="false"
+              unelevated
+              flat
+              class="route-btn btn--no-hover q-mx-xs no-padding"
+            >
+              <img
+                src="../../public/images/bell-icon.svg"
+                class="icons"
+              />
+            </q-btn>
+            <q-btn
+              class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
+              :ripple="false"
               dense
               flat
+              unelevated
               icon="app:profile"
             >
               <q-menu
@@ -238,68 +256,48 @@
                           <q-item
                             v-close-popup
                             clickable
-                            @click="
-                              $router.push({
-                                path: 'orders',
-                                query: { tab: 'listings' },
-                              })
-                            "
+                            :to="{ path: '/orders', query: { tab: 'listings' } }"
                           >
                             <q-item-section>
-                              <q-item-label class="text-no-wrap"
-                                >listings</q-item-label
-                              >
+                              <q-item-label class="text-no-wrap">
+                                listings
+                              </q-item-label>
                             </q-item-section>
                           </q-item>
 
                           <q-item
                             v-close-popup
                             clickable
-                            @click="
-                              $router.push({
-                                path: 'orders',
-                                query: { tab: 'incoming' },
-                              })
-                            "
+                            :to="{ path: '/orders', query: { tab: 'incoming' } }"
                           >
                             <q-item-section>
-                              <q-item-label class="text-no-wrap"
-                                >incoming offers</q-item-label
-                              >
+                              <q-item-label class="text-no-wrap">
+                                incoming offers
+                              </q-item-label>
                             </q-item-section>
                           </q-item>
 
                           <q-item
                             v-close-popup
                             clickable
-                            @click="
-                              $router.push({
-                                path: 'orders',
-                                query: { tab: 'outgoing' },
-                              })
-                            "
+                            :to="{ path: '/orders', query: { tab: 'outgoing' } }"
                           >
                             <q-item-section>
-                              <q-item-label class="text-no-wrap"
-                                >outgoing offers</q-item-label
-                              >
+                              <q-item-label class="text-no-wrap">
+                                outgoing offers
+                              </q-item-label>
                             </q-item-section>
                           </q-item>
 
                           <q-item
                             v-close-popup
                             clickable
-                            @click="
-                              $router.push({
-                                path: 'orders',
-                                query: { tab: 'transactions' },
-                              })
-                            "
+                            :to="{ path: '/orders', query: { tab: 'transactions' } }"
                           >
                             <q-item-section>
-                              <q-item-label class="text-no-wrap"
-                                >trading history</q-item-label
-                              >
+                              <q-item-label class="text-no-wrap">
+                                trading history
+                              </q-item-label>
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -437,7 +435,7 @@ export default defineComponent({
       userStore,
       nftStore,
       orderStore,
-      walletAddress: '',
+      walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
       balance: 0,
       suggestedWinesDialog: false,
@@ -455,14 +453,19 @@ export default defineComponent({
       },
       immediate: true,
     },
+    'userStore.walletAddress': {
+      handler: function (walletAddress: string) {
+        this.walletAddress = walletAddress;
+      }
+    }
   },
 
   async mounted() {
     await this.userStore.checkConnection();
-    this.walletAddress = this.userStore.walletAddress;
-    this.balance = await this.userStore.getWalletBalance();
     if (!this.walletAddress) {
       this.ClearStore();
+    } else {
+      this.balance = await this.userStore.getWalletBalance();
     }
   },
   methods: {
@@ -503,7 +506,6 @@ export default defineComponent({
       } else {
         const next = this.$route.query?.next as string;
         await this.$router.replace({ path: next, replace: true });
-        window.location.reload();
       }
     },
 
@@ -578,4 +580,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+:deep(.route-btn.btn--no-hover .q-focus-helper) {
+  display: none;
+}
+</style>

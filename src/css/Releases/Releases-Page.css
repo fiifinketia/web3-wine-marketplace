@@ -9,6 +9,11 @@
   line-height: 0;
 }
 
+.releases-tab-icons {
+  width: 32px;
+  height: 32px;
+}
+
 @media screen and (min-width: 1512px) {
 	.fit, .releases-tab-container {
 		max-width: 1200px;

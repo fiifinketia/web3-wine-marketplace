@@ -84,7 +84,7 @@
             />
           </q-tab-panel>
           <q-tab-panel class="q-pa-none q-px-none" name="recommended">
-            <AllNFTsTab @total-tokens="(total:number) => totalTokens = total" />
+            <RecommendedTab />
           </q-tab-panel>
         </q-tab-panels>
       </section>
@@ -97,18 +97,20 @@ import { defineComponent, ref } from 'vue';
 import 'src/css/Profile/shared.css';
 import AllNFTsTab from './components/AllNFTsTab.vue';
 import NewReleasedTab from './components/NewReleasedTab.vue';
+import RecommendedTab from './components/Recommended/RecommendedTab.vue';
 
 export default defineComponent({
   components: {
     AllNFTsTab: AllNFTsTab,
     NewlyReleasedTab: NewReleasedTab,
+		RecommendedTab: RecommendedTab,
   },
 
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
     return {
       tab: ref(queryT || 'nfts'),
-      tabLabel: ref(this.getLabel(queryT) || 'Marketplace'),
+      tabLabel: '',
       totalTokens: ref(0),
       marketplaceDropdown: false,
     };
@@ -121,27 +123,42 @@ export default defineComponent({
           const tabTo = to.query.tab;
           if (
             tabTo !== from.query.tab &&
-            (tabTo === 'nfts' ||
+            (
+              tabTo === 'nfts' ||
               tabTo === 'releases' ||
-              tabTo === 'recommended')
+              tabTo === 'recommended'
+            )
           ) {
             this.tab = tabTo;
-            switch (tabTo) {
-              case 'nfts':
-                this.tabLabel = 'Marketplace';
-                break;
-              case 'releases':
-                this.tabLabel = 'Releases';
-                break;
-              case 'recommended':
-                this.tabLabel = 'Recommended';
-                break;
-            }
+            this.TabLabelSetter(tabTo);
           }
         }
       },
       immediate: true,
     },
+    tab: {
+      handler(val) {
+        switch (val) {
+          case 'nfts':
+            this.$router.push({ path: 'marketplace', query: { tab: 'nfts' } });
+            this.tabLabel = 'Marketplace';
+            break;
+          case 'releases':
+            this.$router.push({ path: 'marketplace', query: { tab: 'releases' } });
+            this.tabLabel = 'Releases';
+            break;
+          case 'recommended':
+            this.$router.push({ path: 'marketplace', query: { tab: 'recommended' } });
+            this.tabLabel = 'Recommended';
+            break;
+        }
+      },
+    },
+  },
+
+  mounted() {
+    const tab = this.tab;
+    this.TabLabelSetter(tab);
   },
 
   methods: {
@@ -158,6 +175,22 @@ export default defineComponent({
     onScroll() {
       if (!!this.marketplaceDropdown) {
         this.marketplaceDropdown = false;
+      }
+    },
+    TabLabelSetter(tab: string) {
+      switch (tab) {
+        case 'nfts':
+          this.tabLabel = 'Marketplace';
+          break;
+        case 'releases':
+          this.tabLabel = 'Releases';
+          break;
+        case 'recommended':
+          this.tabLabel = 'Recommended';
+          break;
+        default:
+          this.tabLabel = 'Marketplace';
+          break;
       }
     },
   },
