@@ -79,7 +79,7 @@
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
-            <img src="../../../assets/info-icon.svg" />
+            <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
               After the expiration, the NFT will be removed from the listing and
               will be available for listing in DWC.
@@ -204,7 +204,7 @@
             </span>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
-            <img src="../../../assets/info-icon.svg" />
+            <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
               After the expiration, the NFT will be removed from the listing and
               will be available for listing in DWC.

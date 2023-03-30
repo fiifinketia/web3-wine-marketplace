@@ -79,7 +79,7 @@ import EmptyOrders from '../EmptyOrders.vue';
 import TransactionHeaderLg from '../Headers/TransactionHeaderLg.vue';
 import TransactionHeaderSm from '../Headers/TransactionHeaderSm.vue';
 import { useUserStore } from 'src/stores/user-store';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import TransactionsColumns from '../Columns/TransactionsColumns.vue';
 import TransactionsRows from '../Rows/TransactionsRows.vue';
 import { mapState } from 'pinia';
