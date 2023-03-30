@@ -3,19 +3,19 @@
     v-if="!isLoading && !erroredOut"
     class="row fit q-mt-xs"
     :class="
-      nfts.length >= 4 && $q.screen.width > 600
+      nftSelections.length >= 4 && $q.screen.width > 600
         ? 'justify-between'
-        : nfts.length == 3 && $q.screen.width > 600
+        : nftSelections.length == 3 && $q.screen.width > 600
         ? 'justify-evenly'
         : $q.screen.width > 600
         ? 'justify-start q-gutter-x-md'
-        : nfts.length >= 2
+        : nftSelections.length >= 2
         ? 'justify-around'
         : 'justify-start q-ml-xs'
     "
   >
     <div
-      v-for="token in nfts"
+      v-for="token in nftSelections"
       :key="
         token.tokenID + ',' + token.network + ',' + token.smartContractAddress
       "
