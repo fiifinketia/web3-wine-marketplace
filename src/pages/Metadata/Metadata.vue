@@ -1,7 +1,7 @@
 <template>
   <div v-if="!loadingMetadata">
     <div v-if="tokenExists">
-      <WineMetadata :nft="nft" @open-wallet="openWalletSideBar" />
+      <WineTrade :nft="nft" @open-wallet="openWalletSideBar" />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
         <q-tab name="history" label="NFT history" />
         <q-tab class="tab-text-not-clicked" name="about" label="About" />
@@ -19,11 +19,11 @@
         transition-next="jump-left"
       >
         <q-tab-panel name="history">
-          <NFTHistory :nft-txn-history="nft.nftHistory" />
+          <WineHistory :nft-txn-history="nft.nftHistory" />
         </q-tab-panel>
 
         <q-tab-panel name="about">
-          <About :nft="nft" />
+          <WineDetails :nft="nft" />
         </q-tab-panel>
 
         <q-tab-panel name="wine-maker">
@@ -43,9 +43,9 @@ import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { NFTWithListingAndFavorites } from './models/Metadata';
 import { GetMetadata } from './services/Metadata';
-import NFTHistory from './components/NFTHistory.vue';
-import WineMetadata from './components/WineMetadata.vue';
-import About from './components/About.vue';
+import WineHistory from './components/WineHistory.vue';
+import WineTrade from './components/WineTrade.vue';
+import WineDetails from './components/WineDetails.vue';
 import WineMaker from './components/WineMaker.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -60,10 +60,10 @@ import LoadingMetadata from './components/LoadingMetadata.vue';
 export default defineComponent({
   name: 'MetadataPage',
   components: {
-    NFTHistory,
-    About,
+    WineHistory,
+    WineDetails,
     WineMaker,
-    WineMetadata,
+    WineTrade,
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
   },
