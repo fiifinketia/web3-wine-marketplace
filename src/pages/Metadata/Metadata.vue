@@ -81,11 +81,11 @@ export default defineComponent({
   },
 
   async mounted() {
-    await this.getMetadata();
+    await this.ValidateAndFetchNFT();
   },
 
   methods: {
-    async getMetadata() {
+    async ValidateAndFetchNFT() {
       const { id, contractAddress, network } = this.$route.query;
       if (
         typeof id === 'string' &&
@@ -98,14 +98,14 @@ export default defineComponent({
           network
         );
         if (!!tokenExistCheck) {
-          await this.FetchMetadata(id, contractAddress, network);
+          await this.SetNFTView(id, contractAddress, network);
           this.tokenExists = true;
         }
         this.loadingMetadata = false;
       }
     },
 
-    async FetchMetadata(id: string, contractAddress: string, network: string) {
+    async SetNFTView(id: string, contractAddress: string, network: string) {
       try {
         const nft = await GetMetadata({
           id,

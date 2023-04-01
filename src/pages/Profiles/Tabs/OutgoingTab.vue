@@ -70,6 +70,7 @@
           :order-hash="singleOffer.orderHash"
           :smart-contract-address="singleOffer.contractAddress"
           :token-i-d="singleOffer.identifierOrCriteria"
+          :is-edit="true"
           @outgoing-edit-close="openEditDialog = false"
           @remove-offer="val => RemoveRow(val)"
           @outgoing-error-dialog="HandleError"
