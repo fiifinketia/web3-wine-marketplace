@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loadingMetadata">
+  <q-page v-if="!loadingMetadata">
     <div v-if="tokenExists">
       <WineTrade :nft="nft" @open-wallet="openWalletSideBar" />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
@@ -32,10 +32,10 @@
       </q-tab-panels>
     </div>
     <UnavailableNFT v-else />
-  </div>
-  <div v-else>
+  </q-page>
+  <q-page v-else>
     <LoadingMetadata />
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts">

@@ -52,7 +52,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue-demi';
 import { NFTWithListingAndFavorites } from '../models/Metadata';
-import '../../../css/Metadata/About.css';
+import '../../../css/Metadata/WineDetails.css';
 export default defineComponent({
   name: 'AboutWine',
   props: {

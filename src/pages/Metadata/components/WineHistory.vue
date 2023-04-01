@@ -141,9 +141,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, createApp, PropType, ref } from 'vue-demi';
+import { defineComponent, createApp, PropType, ref } from 'vue';
 import ApexCharts from 'apexcharts';
-import '../../../css/Metadata/NFTHistory.css';
+import '../../../css/Metadata/WineHistory.css';
 import App from '../../../App.vue';
 import VueApexCharts from 'vue3-apexcharts';
 import { SeaportTransactionsModel } from '../models/Metadata';
@@ -155,7 +155,7 @@ declare module '@vue/runtime-core' {
   }
 }
 export default defineComponent({
-  name: 'NFTHistory',
+  name: 'WineHistory',
   components: { apexchart: VueApexCharts },
   props: {
     nftTxnHistory: {
