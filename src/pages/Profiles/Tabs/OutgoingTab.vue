@@ -60,38 +60,43 @@
             @edit-offer="offer => OpenEditDialog(offer)"
           />
         </div>
-        <OutgoingDialogEdit
-          v-model="openEditDialog"
-          :brand="singleOffer.brand"
-          :highest-offer="singleOffer.highestOffer"
-          :highest-offer-currency="singleOffer.highestOfferCurrency"
-          :image="singleOffer.image"
-          :network="singleOffer.network"
-          :order-hash="singleOffer.orderHash"
-          :smart-contract-address="singleOffer.contractAddress"
-          :token-i-d="singleOffer.identifierOrCriteria"
-          :is-edit="true"
-          @outgoing-edit-close="openEditDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <OutgoingDialogDelete
-          v-model="openDeleteDialog"
-          :order-hash="singleOffer.orderHash"
-          @outgoing-delete-close="openDeleteDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <ErrorDialog
-          v-model="openErrorDialog"
-          :error-type="errorType"
-          :error-title="errorTitle"
-          :error-message="errorMessage"
-        />
       </div>
       <div v-else class="column items-center">
         <EmptyView :empty-text="'You have not made any offers yet.'" />
       </div>
+      <OutgoingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleOffer.brand"
+        :highest-offer="singleOffer.highestOffer"
+        :highest-offer-currency="singleOffer.highestOfferCurrency"
+        :image="singleOffer.image"
+        :network="singleOffer.network"
+        :order-hash="singleOffer.orderHash"
+        :smart-contract-address="singleOffer.contractAddress"
+        :token-i-d="singleOffer.identifierOrCriteria"
+        :is-edit="true"
+        @outgoing-edit-close="openEditDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+        @offer-created="SetTimeoutOnOfferProcessedDialog()"
+      />
+      <OutgoingDialogDelete
+        v-model="openDeleteDialog"
+        :order-hash="singleOffer.orderHash"
+        @outgoing-delete-close="openDeleteDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
+      <OutgoingProcessedDialog
+        v-model="openOrderCompletedDialog"
+        :order-type="'offer'"
+      />
     </div>
   </q-page>
 </template>
@@ -112,6 +117,7 @@ import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
+import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 
 export default defineComponent({
   components: {
@@ -121,6 +127,7 @@ export default defineComponent({
     EmptyView: EmptyOrders,
     OutgoingDialogEdit: OutgoingEdit,
     OutgoingDialogDelete: OutgoingDelete,
+    OutgoingProcessedDialog: OrderProcessed,
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
     OutgoingRows: OutgoingRows,
@@ -147,7 +154,8 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
+      openErrorDialog: false,
+      openOrderCompletedDialog: false
     };
   },
   computed: {
@@ -186,6 +194,12 @@ export default defineComponent({
     this.loadingRequest = true;
   },
   methods: {
+    SetTimeoutOnOfferProcessedDialog() {
+      this.openOrderCompletedDialog = true;
+      setTimeout(() => {
+        this.openOrderCompletedDialog = false
+      }, 3000);
+    },
     async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;

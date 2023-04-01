@@ -331,6 +331,8 @@ export default defineComponent({
               listingPrice: this.listingPrice,
             };
             this.$emit('listable-nft-listed', token);
+          } else {
+            this.$emit('listable-nft-listed');
           }
         } catch (err) {
           this.BuildErrorDialog(err);

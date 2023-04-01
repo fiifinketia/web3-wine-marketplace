@@ -212,6 +212,7 @@
 
     <AcceptedOrderDialog
       v-model="openOrderAccepted"
+      :order-accepted="'listing'"
     />
   </div>
 </template>

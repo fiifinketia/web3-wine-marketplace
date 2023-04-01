@@ -10,11 +10,17 @@
         width="50%"
       />
       <q-card-section class="column q-gutter-y-md">
-        <span class="order-completed-blue-text">
+        <span v-if="orderAccepted == 'listing'" class="order-completed-blue-text">
           NFT will be in your cellar shortly!
         </span>
-        <span class="order-completed-black-text">
+        <span v-else class="order-completed-blue-text">
+          Buyer will receive the NFT and funds will be in your wallet shortly!
+        </span>
+        <span v-if="orderAccepted == 'listing'" class="order-completed-black-text">
           You can monitor its growth in your. <a> Digital Wine Cellar </a>
+        </span>
+        <span v-else class="order-completed-black-text">
+          You can check the transaction status in your Metamask wallet.
         </span>
       </q-card-section>
     </div>
@@ -23,9 +29,15 @@
 
 <script>
 import 'src/css/Metadata/Dialog.css';
-export default {
-
-}
+import { defineComponent } from 'vue';
+export default defineComponent({
+  props: {
+    orderAccepted: {
+      type: String,
+      required: true
+    }
+  }
+})
 </script>
 
 <style>

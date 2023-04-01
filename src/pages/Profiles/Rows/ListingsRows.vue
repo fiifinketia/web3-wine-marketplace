@@ -32,7 +32,7 @@
         class="row items-center listings-column-price"
       >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-        <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
+        <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
           anchor="top start"
@@ -70,7 +70,7 @@
       <div v-if="$q.screen.width <= 600" class="listings-column-yours column">
         <div class="row q-pb-xs">
           <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-          <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
+          <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight">
           {{ listing.endTime }}

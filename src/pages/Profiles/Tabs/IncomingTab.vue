@@ -94,6 +94,10 @@
       <div v-else class="column items-center">
         <EmptyView :empty-text="'You do not have incoming offers yet.'" />
       </div>
+      <AcceptedOfferDialog
+        v-model="openAcceptedOrderDialog"
+        :order-accepted="'offer'"
+      />
     </div>
   </q-page>
 </template>
@@ -118,6 +122,7 @@ import AcceptOffer from '../../SharedPopups/AcceptOffer.vue';
 import IncomingColumns from '../Columns/IncomingColumns.vue';
 import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 
 const nftStore = useNFTStore();
 
@@ -129,6 +134,7 @@ export default defineComponent({
     EmptyView: Empty,
     ErrorDialog: ProfileErrors,
     ConfirmView: AcceptOffer,
+    AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
   },
@@ -154,6 +160,7 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
       openConfirmDialog: false,
+      openAcceptedOrderDialog: false,
 
       orderHash: '',
       brand: '',
@@ -221,6 +228,10 @@ export default defineComponent({
         await FulfillBasicOrder(orderHash, brand, true, address, image);
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
+        this.openAcceptedOrderDialog = true;
+        setTimeout(() => {
+          this.openAcceptedOrderDialog = false;
+        }, 3000);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError(err);

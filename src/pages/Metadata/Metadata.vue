@@ -198,7 +198,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .q-tab-panel {
   padding: 3rem 0 4rem !important;
 }
