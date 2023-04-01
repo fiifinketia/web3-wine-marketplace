@@ -66,7 +66,10 @@
         </div>
       </div>
       <div v-else class="column items-center">
-        <EmptyView :empty-text="'You have not made any listings yet.'" />
+        <EmptyView
+          :empty-text="'You have not made any listings yet.'"
+          @open-listable-container="openNewListingDialog = true"
+        />
       </div>
       <ListingDialogEdit
         v-model="openEditDialog"
