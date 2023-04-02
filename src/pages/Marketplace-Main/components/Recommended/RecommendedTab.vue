@@ -10,7 +10,7 @@
         class="releases-tab-icons"
       />
       <span class="text-uppercase text-weight-bold">{{
-        String(key).split(':')[1]
+        String(key).toUpperCase()
       }}</span>
       <q-img
         src="../../../../assets/small-bottle.svg"
@@ -38,6 +38,7 @@ import '../../../../css/Releases/Releases-Selections.css';
 import axios from 'axios';
 import { useUserStore } from 'src/stores/user-store';
 import { customAllSettled } from 'src/utils'
+import { RecommendationResponse } from '../../models/Response.models/recommendation.model';
 
 export default defineComponent({
   components: {
@@ -51,7 +52,7 @@ export default defineComponent({
       errorPage: false,
       groupedTokens: {} as {[key: string]: ListingWithPricingAndImage[]| undefined},
       erroredText: 'wines',
-      groups: [] as string[],
+      groups: [] as RecommendationResponse[],
 			totalView: 4,
 			userStore
     };
@@ -59,7 +60,7 @@ export default defineComponent({
   async mounted() {
 		try {
 			const suggestionsApiUrl = process.env.GET_ALL_RECOMMENDATIONS
-			const { data } = await axios.get(`${suggestionsApiUrl}/${this.userStore.walletAddress}?include_public=true`)
+			const { data } = await axios.get<RecommendationResponse[]>(`${suggestionsApiUrl}?wallet_address=${this.userStore.walletAddress}`)
 			this.groups = data;
 			await this.FetchAllWines();
 		} catch (error) {
@@ -73,20 +74,19 @@ export default defineComponent({
       const promises = this.groups.map(
         async group => await this.FetchWineByGroup(group)
       );
-			const results: {[key: string]: ListingWithPricingAndImage[] | undefined} = {}
+			const results: {[key: string]: ListingWithPricingAndImage[]} = {}
       const res = await customAllSettled(promises);
 			res.forEach((settled, index) => {
 				const group = this.groups[index]
-				if(settled.status === 'fulfilled' && settled.value.length > 0) results[group] = settled.value
+				if(settled.status === 'fulfilled' && settled.value.length > 0) results[group.metadataValue] = settled.value
 			})
 
 			this.groupedTokens = results
 			this.isLoading = false;
     },
-    async FetchWineByGroup(group: string) {
-      const [groupName, groupValue] = group.split(':');
+    async FetchWineByGroup(group: RecommendationResponse) {
       return (
-        await RetrieveFilteredNFTs(`${groupName}[]=${groupValue}`)
+        await RetrieveFilteredNFTs(`${group.metadataField}[]=${group.metadataValue}`)
       ).result.slice(0, 4);
     },
 		reloadPage() {
