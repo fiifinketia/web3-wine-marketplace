@@ -59,8 +59,8 @@ export default defineComponent({
   },
   async mounted() {
 		try {
-			const suggestionsApiUrl = process.env.GET_ALL_RECOMMENDATIONS
-			const { data } = await axios.get<RecommendationResponse[]>(`${suggestionsApiUrl}?wallet_address=${this.userStore.walletAddress}`)
+			const recommendationsApiUrl = process.env.RETRIEVE_RECOMMENDATIONS_URL
+			const { data } = await axios.get<RecommendationResponse[]>(`${recommendationsApiUrl}?wallet_address=${this.userStore.walletAddress}`)
 			this.groups = data;
 			await this.FetchAllWines();
 		} catch (error) {
