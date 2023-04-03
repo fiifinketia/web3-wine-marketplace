@@ -2,7 +2,7 @@
   <div class="column items-center q-gutter-y-md">
     <span class="unavailable-nft-header"> Ooops </span>
     <span class="unavailable-nft-subheader">
-      Can't find wines for "Search"
+      There are currently no NFTs available for this page.
     </span>
     <q-img
       class="empty-nft-icon q-mt-lg q-mb-md"

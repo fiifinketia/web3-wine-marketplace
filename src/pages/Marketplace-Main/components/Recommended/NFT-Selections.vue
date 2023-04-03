@@ -3,19 +3,19 @@
     v-if="!isLoading && !erroredOut"
     class="row fit q-mt-xs"
     :class="
-      nftSelections.length >= 4 && $q.screen.width > 600
+      nfts.length >= 4 && $q.screen.width > 600
         ? 'justify-between'
-        : nftSelections.length == 3 && $q.screen.width > 600
+        : nfts.length == 3 && $q.screen.width > 600
         ? 'justify-evenly'
         : $q.screen.width > 600
         ? 'justify-start q-gutter-x-md'
-        : nftSelections.length >= 2
+        : nfts.length >= 2
         ? 'justify-around'
         : 'justify-start q-ml-xs'
     "
   >
     <div
-      v-for="token in nftSelections"
+      v-for="token in nfts"
       :key="
         token.tokenID + ',' + token.network + ',' + token.smartContractAddress
       "
@@ -202,11 +202,11 @@ export default defineComponent({
     const userStore = useUserStore();
     return {
       userStore,
-      nfts: [] as ListingWithPricingAndImage[],
+      nfts: new Array<ListingWithPricingAndImage>(),
       loadingNFTs: [0, 1, 2, 3],
     };
   },
-  beforeUpdate() {
+  beforeMount() {
     this.nfts = this.nftSelections;
   },
   methods: {
