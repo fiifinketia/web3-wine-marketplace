@@ -1,47 +1,60 @@
 <template>
-  <div
-    class="flex column justify-center items-center q-mt-xl"
-    @click="openModal === true ? 'modal' : 'content'"
-  >
+  <div class="column justify-center items-center q-mt-xl">
     <div class="brand-name">{{ nft.brand }}</div>
     <div class="wine-name">{{ nft.name }}</div>
-    <div class="row q-pt-lg metadata-container">
-      <div class="metadata-nft-container col-sm-6 col-xs-12">
-        <q-img :src="nft.image" class="picture" />
-      </div>
+    <div :class="$q.screen.width > 600 ? 'row justify-center q-pt-lg q-px-sm metadata-container' : 'column items-center metadata-container'">
+      <img :src="nft.image" class="metadata-nft-image"/>
 
-      <div class="column info col-sm-6 col-xs-12 q-pa-sm">
-        <div class="flex row">
+      <div class="column nft-takeaways-container q-pa-sm">
+        <div class="row">
           <q-img
             src="../../../../public/images/profile-icon.svg"
             width="40px"
             height="40px"
             style="border-radius: 50%"
           />
-          <div class="flex column q-pl-sm">
+          <div class="column q-pl-sm">
             <div class="owned-by">Owned by</div>
             <div class="user-id">WiV</div>
           </div>
         </div>
-        <div class="metadata q-py-md">
-          <div class="row justify-between q-pb-sm">
-            <div class="metadata-text">{{ nft.type }} wine</div>
+        <div class="q-py-md">
+          <div v-if="$q.screen.width > 600" class="row justify-between q-pb-sm">
+            <span class="metadata-text">{{ nft.type }} wine</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
-            <div class="metadata-text">{{ nft.maturity }} yrs</div>
+            <span class="metadata-text">{{ nft.maturity }} yrs</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
-            <div class="metadata-text">{{ nft.productionCountry }}</div>
+            <span class="metadata-text">{{ nft.productionCountry }}</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
-            <div class="metadata-text">{{ nft.region }}</div>
+            <span class="metadata-text">{{ nft.region }}</span>
+          </div>
+          <div v-else class="column justify-start q-pb-lg q-gutter-y-sm">
+            <div class="row">
+              <span class="metadata-text">{{ nft.type }} wine</span>
+              <q-separator spaced="lg" size="1px" vertical color="accent" />
+              <span class="metadata-text">{{ nft.maturity }} yrs</span>
+            </div>
+            <div class="row">
+              <span class="metadata-text">{{ nft.productionCountry }}</span>
+              <q-separator spaced="lg" size="1px" vertical color="accent" />
+              <span class="metadata-text">{{ nft.region }}</span>
+            </div>
           </div>
           <div class="wine-description">
             {{ nft.description || 'No description' }}
           </div>
-          <div class="q-pt-lg metadata-price-wrapper">
-            <div class="flex column">
+          <div
+            class="q-pt-lg metadata-price-wrapper"
+            :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
+          >
+            <div
+              class="column"
+              :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
+            >
               <div class="starting-from">Price</div>
               <div
                 v-if="!!ongoingListingTransaction"
-                class="flex row items-center"
+                class="row items-center"
               >
                 <q-img src="../../../assets/processing.svg" width="30px" />
                 <div class="price1-blue">Processing price</div>
@@ -51,7 +64,7 @@
                   !!nft.listingDetails?.listingPrice &&
                   !!nft.listingDetails.transactionStatus
                 "
-                class="flex row items-center"
+                class="row items-center"
               >
                 <div>
                   <q-img src="../../../assets/usdc.svg" width="28px" />
@@ -62,22 +75,25 @@
               </div>
               <div
                 v-else-if="nft.listingDetails?.listingPrice == null"
-                class="flex row items-center"
+                class="row items-center"
               >
                 <div class="price1">Not Available</div>
               </div>
-              <div v-else class="flex row items-center">
+              <div v-else class="row items-center">
                 <q-img src="../../../assets/processing.svg" width="30px" />
                 <div class="price1-blue">Processing price</div>
               </div>
             </div>
-            <div class="flex column">
+            <div
+              class="column"
+              :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
+            >
               <div class="bid-text">Highest bid from</div>
-              <div class="flex row items-center q-pt-sm">
+              <div class="row items-center q-pt-sm">
                 <div>
                   <q-img src="../../../assets/usdc.svg" width="20px" />
                 </div>
-                <div class="bid-price1">
+                <div class="bid-price">
                   {{ nft.offerDetails?.highestBid || '--.--' }}
                 </div>
               </div>
@@ -86,36 +102,38 @@
         </div>
       </div>
     </div>
-    <div v-if="walletAddress" class="q-pt-lg row modal-container">
-      <div
-        v-if="nft.isOwner"
-        class="q-pt-lg flex row justify-center modal-container"
-      >
-        <div v-if="!nft.listingDetails.orderHash" class="q-pr-sm">
-          <q-btn
-            class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
-            no-caps
-            flat
-            @click="openCreateListingDialog = true"
-          >
-            List For Sale
-          </q-btn>
-        </div>
-        <div v-else class="q-pr-sm">
-          <q-btn
-            class="buy-now-button_outline flex items-center justify-center cursor-pointer buy-now-text_outline"
-            no-caps
-            outline
-            flat
-            @click="openDeleteListingDialog = true"
-          >
-            Unlist
-          </q-btn>
-        </div>
-      </div>
-      <div v-else class="row metadata-button-container">
+    <div
+      v-if="walletAddress"
+      class=""
+      :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'"
+    >
+      <div v-if="nft.isOwner" class="column items-center full-width q-px-md">
         <q-btn
-          class="buy-now-button flex items-center justify-center cursor-pointer buy-now-text"
+          v-if="!nft.listingDetails.orderHash"
+          class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
+          no-caps
+          flat
+          @click="openCreateListingDialog = true"
+        >
+          List For Sale
+        </q-btn>
+        <q-btn
+          v-else
+          class="unlist-btn items-center justify-center metadata-btn-text_outline"
+          no-caps
+          outline
+          flat
+          @click="openDeleteListingDialog = true"
+        >
+          Unlist
+        </q-btn>
+      </div>
+      <div
+        v-else
+        :class="$q.screen.width > 600 ? 'row q-gutter-x-md' : 'column items-center full-width q-px-md q-gutter-y-sm'"
+      >
+        <q-btn
+          class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
           :disable="
@@ -129,24 +147,34 @@
         <q-btn
           no-caps
           flat
-          class="make-offer-button flex items-center justify-center cursor-pointer buy-now-text"
+          class="offer-btn items-center justify-center metadata-btn-text"
           @click="openCreateOfferDialog = true"
         >
           Make an offer
         </q-btn>
       </div>
     </div>
-    <div v-else class="q-pt-lg row modal-container">
+    <div v-else class="q-pt-lg row">
       <div class="q-pr-sm text-warning text-bold">
         Please Connect Wallet to view actions.
       </div>
     </div>
-    <button class="q-mt-lg row items-center update-metadata-button" flat>
-      <div class="q-pr-sm cursor-pointer">
-        <q-img src="../../../../public/images/refresh.svg" width="24px" />
+    <q-btn
+      class="q-pt-lg"
+      flat
+      unelevated
+      dense
+      no-caps
+      @click="RefreshMetadataPage()"
+    >
+      <div class="row items-center q-gutter-x-xs">
+        <span class="update-metadata-text">Update metadata</span>
+        <img
+          src="../../../../public/images/refresh.svg"
+          style="width: 24px;"
+        />
       </div>
-      <div class="update-metadata-text">Update metadata</div>
-    </button>
+    </q-btn>
 
     <CreateListingDialog
       v-model="openCreateListingDialog"
@@ -221,7 +249,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { NFTWithListingAndFavorites } from '../models/Metadata';
-import '../../../css/Metadata/WineMetadata.css';
+import 'src/css/Metadata/WineMetadata.css';
 import ListingEdit from 'src/pages/SharedPopups/ListingEdit.vue';
 import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
@@ -251,7 +279,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet'],
+  emits: ['openWallet', 'refresh-metadata'],
   data() {
     return {
       openCreateListingDialog: false,
@@ -323,6 +351,9 @@ export default defineComponent({
         this.openConfirmDialog = false;
       }
     },
+    RefreshMetadataPage() {
+      this.$emit('refresh-metadata');
+    }
   },
 });
 </script>

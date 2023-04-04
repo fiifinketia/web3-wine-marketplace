@@ -3,15 +3,21 @@
 }
 
 .price-history {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
+	font-family: 'Obviously-Bold';
 	font-size: 20px;
-	line-height: 31px;
-	display: flex;
 	align-items: center;
 	color: #212131;
-	padding-bottom: 20px;
+}
+
+.chart-timeline-options {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+	color: #9d9d9d;
+}
+
+[aria-checked="true"] {
+  font-family: 'ProximaNova-Bold';
+	color: #212131;
 }
 
 .chart-container {
@@ -39,61 +45,12 @@
 	margin-right: 5px;
 }
 
-.clicked-radio-button {
-	width: 16px;
-	height: 16px;
-	border: 5px solid #3586ff;
-	border-radius: 50%;
-	margin-right: 5px;
-}
-
-.radio-button-text {
-	font-family: 'Proxima Nova';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 24px;
-
-	display: flex;
-	align-items: center;
-	text-align: center;
-	color: #9d9d9d;
-}
-
 .average-price {
-	font-family: 'Proxima Nova';
-	font-style: normal;
-	font-weight: 400;
+	font-family: 'ProximaNova-Regular';
 	font-size: 16px;
 	line-height: 19px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.5px;
+	align-self:flex-end;
 	color: #9d9d9d;
-	padding-left: 35px;
-}
-
-.price1 {
-	font-family: 'Proxima Nova';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 20px;
-	line-height: 24px;
-	display: flex;
-	align-items: center;
-	color: #212131;
-}
-
-.price2 {
-	font-family: 'Proxima Nova';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 14px;
-	display: flex;
-	align-items: center;
-	color: #9d9d9d;
-	padding-top: 3px;
 }
 
 .price-container {

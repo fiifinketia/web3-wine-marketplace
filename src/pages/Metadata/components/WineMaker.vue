@@ -1,9 +1,9 @@
 <template>
   <div class="flex justify-center">
     <div class="flex column winemaker-container">
-      <div class="winemaker-text">Wine-maker</div>
-      <div class="flex table-container column items-center">
-        <div class="flex row table-container items-center">
+      <div class="winemaker-text q-pb-lg">Wine-maker</div>
+      <div class="table-container column items-center">
+        <!-- <div class="column table-container items-center">
           <div
             v-for="property in wineMakerProperties"
             :key="property"
@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

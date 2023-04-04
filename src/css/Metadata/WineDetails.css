@@ -3,45 +3,23 @@
 }
 
 .about-title {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
+	font-family: 'Obviously-Bold';
 	font-size: 20px;
-	line-height: 31px;
-	display: flex;
 	align-items: center;
-
-	/* Secondary/dark blue */
-
 	color: #212131;
 }
 
 .paragraph {
 	width: 70%;
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 18px;
 	line-height: 27px;
-	text-align: left;
 	color: #212131;
 }
 
 .properties-container {
 	width: 80%;
 	padding-top: 50px;
-}
-
-.property-value {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
-	font-size: 18px;
-	line-height: 28px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.02em;
-	color: #212131;
 }
 
 .table-container {
@@ -53,24 +31,21 @@
 }
 
 .property-container {
-	width: 80%;
-	/* border-bottom: 1px solid rgba(94, 151, 236, 0.27); */
-}
-
-.property {
-	width: 80%;
+	width: 24%;
 }
 
 .property-name {
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 18px;
 	line-height: 22px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.5px;
 	color: #9d9d9d;
+}
+
+.property-value {
+	font-family: 'Obviously-Bold';
+	font-size: 18px;
+	line-height: 28px;
+	color: #212131;
 }
 
 #border {
@@ -86,22 +61,12 @@
 }
 
 @media screen and (max-width: 600px) {
-	.property {
-		width: 85%;
-	}
-	.property-container {
-		width: 85%;
-	}
-}
-
-@media screen and (max-width: 400px) {
-	.paragraph {
+	.properties-container, .about-container {
 		width: 100%;
-	}
-	.property {
-		width: 95%;
+		padding-left: 16px;
+		padding-right: 16px;
 	}
 	.property-container {
-		width: 95%;
+		width: 50%;
 	}
 }

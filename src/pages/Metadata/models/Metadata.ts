@@ -78,6 +78,4 @@ interface FavoritesAndOrderDetails {
   };
 }
 
-export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails {
-  nftHistory: SeaportTransactionsModel[];
-}
+export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails {}

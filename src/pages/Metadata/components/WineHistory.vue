@@ -1,76 +1,21 @@
 <template>
   <div class="column items-center justify-center">
     <div class="flex items-start history-container column q-mb-xl">
-      <div class="price-history">Price history</div>
-      <div class="flex column chart-container">
+      <div class="price-history q-pb-lg">Price history</div>
+      <div class="column chart-container q-pa-md">
         <div class="flex row items-center justify-between chart1">
-          <div style="color: white" class="flex row items-center q-mb-sm">
-            <div
-              id="three_months"
-              class="radio-button"
-              @click="updateData('three_months', true)"
-            >
-              <div
-                :class="
-                  currentTimeline === 'three_months'
-                    ? 'clicked-radio-button q-mx-md'
-                    : 'border q-mx-md'
-                "
-              />
-              <div class="radio-button-text">3 months</div>
-            </div>
-            <div
-              id="six_months"
-              class="radio-button"
-              @click="updateData('six_months', true)"
-            >
-              <div
-                :class="
-                  currentTimeline === 'six_months'
-                    ? 'clicked-radio-button q-mx-md'
-                    : 'border q-mx-md'
-                "
-              />
-              <div class="radio-button-text">6 months</div>
-            </div>
-            <div
-              id="one_year"
-              class="radio-button"
-              @click="updateData('one_year', true)"
-            >
-              <div
-                :class="
-                  currentTimeline === 'one_year'
-                    ? 'clicked-radio-button q-mx-md'
-                    : 'border q-mx-md'
-                "
-              />
-              <div class="radio-button-text">1 year</div>
-            </div>
-            <div
-              id="five_years"
-              class="radio-button"
-              title="three_months"
-              @click="updateData('five_years', true)"
-            >
-              <div
-                :class="
-                  currentTimeline === 'five_years'
-                    ? 'clicked-radio-button q-mx-md'
-                    : 'border q-mx-md'
-                "
-              />
-              <div class="radio-button-text">5 years</div>
-            </div>
+          <div class="row items-center q-mb-sm q-gutter-x-md">
+            <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 months </q-radio>
+            <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 months </q-radio>
+            <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 year </q-radio>
+            <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 years </q-radio>
           </div>
-
-          <div class="flex column price-container">
-            <div class="flex row">
-              <!-- <q-img src="../../../assets/.png" width="20px" /> -->
-              <div class="price1">00.00</div>
-              <div class="price2 q-pl-sm">/ $ 00.00</div>
+          <div class="column q-pr-lg">
+            <div class="row items-center">
+              <span class="price1">00.00</span>
+              <span class="price2 q-pl-sm">/ $ 00.00</span>
             </div>
-            <div class="average-price q-pt-sm">Average price</div>
+            <span class="average-price">Average price</span>
           </div>
         </div>
         <div class="real-chart">
@@ -129,7 +74,7 @@
                   }}</span>
                 </p>
                 <p class="col-2 text-right date-of-transaction">
-                  {{ timestamptoDate(col.value.timestamp) }}
+                  {{ TimestampToDate(col.value.timestamp) }}
                 </p>
               </div>
             </q-td>
@@ -166,18 +111,15 @@ export default defineComponent({
 
   data() {
     return {
-      items: {
-        name: '3 months',
-      },
       currentTimeline: '',
       pagination: ref({
         rowsPerPage: 10,
       }),
-      three_months: Number(),
-      six_months: Number(),
-      one_year: Number(),
-      five_years: Number(),
-      selectedDate: Number(),
+      three_months: 0,
+      six_months: 0,
+      one_year: 0,
+      five_years: 0,
+      selectedDate: 0,
       series: [
         {
           data: [
@@ -299,6 +241,16 @@ export default defineComponent({
           axisBorder: {
             show: false,
           },
+          labels: {
+            style: {
+              colors: '#212131',
+              fontSize: '16px',
+              fontFamily: 'Inter',
+              fontWeight: 400,
+              lineHeight: '19px',
+              cssClass: 'apexcharts-xaxis-label',
+            },
+          },
 
           legend: {
             show: true,
@@ -339,11 +291,11 @@ export default defineComponent({
     };
   },
   methods: {
-    timestamptoDate(timestamp: number) {
+    TimestampToDate(timestamp: number) {
       const date = new Date(timestamp * 1000);
       return date.toDateString();
     },
-    updateData(timeline: string, isMobile: boolean) {
+    UpdateData(timeline: string, isMobile: boolean) {
       this.selection = timeline;
       this.currentTimeline = timeline;
       let original = new Date(this.selectedDate);

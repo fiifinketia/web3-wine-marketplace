@@ -1,25 +1,23 @@
 <template>
   <q-page v-if="!loadingMetadata">
     <div v-if="tokenExists">
-      <WineTrade :nft="nft" @open-wallet="openWalletSideBar" />
+      <WineTrade
+        :nft="nft" @open-wallet="openWalletSideBar"
+        @refresh-metadata="ValidateAndFetchNFT()"
+      />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
         <q-tab name="history" label="NFT history" />
-        <q-tab class="tab-text-not-clicked" name="about" label="About" />
-        <q-tab
-          name="wine-maker"
-          class="tab-text-not-clicked"
-          label="Wine-maker"
-        />
+        <q-tab name="about" label="About" />
+        <q-tab name="wine-maker" label="Wine-maker"/>
       </q-tabs>
       <q-tab-panels
         v-model="tab"
         animated
-        swipeable
         transition-prev="jump-right"
         transition-next="jump-left"
       >
         <q-tab-panel name="history">
-          <WineHistory :nft-txn-history="nft.nftHistory" />
+          <WineHistory :nft-txn-history="txnHistory" />
         </q-tab-panel>
 
         <q-tab-panel name="about">
@@ -41,8 +39,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NFTWithListingAndFavorites } from './models/Metadata';
-import { GetMetadata } from './services/Metadata';
+import { NFTWithListingAndFavorites, SeaportTransactionsModel } from './models/Metadata';
+import { GetMetadata, GetTokenTXNHistory } from './services/Metadata';
 import WineHistory from './components/WineHistory.vue';
 import WineTrade from './components/WineTrade.vue';
 import WineDetails from './components/WineDetails.vue';
@@ -73,6 +71,7 @@ export default defineComponent({
     const userStore = useUserStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
+      txnHistory: [] as SeaportTransactionsModel[],
       userStore,
       tab: ref('history'),
       tokenExists: false,
@@ -86,6 +85,8 @@ export default defineComponent({
 
   methods: {
     async ValidateAndFetchNFT() {
+      this.loadingMetadata = true;
+      this.tokenExists = false;
       const { id, contractAddress, network } = this.$route.query;
       if (
         typeof id === 'string' &&
@@ -105,10 +106,10 @@ export default defineComponent({
       }
     },
 
-    async SetNFTView(id: string, contractAddress: string, network: string) {
+    async SetNFTView(identifierOrCriteria: string, contractAddress: string, network: string) {
       try {
         const nft = await GetMetadata({
-          id,
+          identifierOrCriteria,
           contractAddress,
           network,
           walletAddress: this.userStore.walletAddress,
@@ -117,13 +118,23 @@ export default defineComponent({
           nft.isOwner = await this.CheckOwnership(
             this.userStore.walletAddress,
             contractAddress,
-            id
+            identifierOrCriteria
           );
         }
         this.nft = nft;
+        this.GetNFTTXNHistory(identifierOrCriteria, contractAddress, network);
       } catch (error) {
         throw error;
       }
+    },
+
+    async GetNFTTXNHistory(identifierOrCriteria: string, contractAddress: string, network: string) {
+      const txnHistory = await GetTokenTXNHistory({
+        identifierOrCriteria,
+        contractAddress,
+        network
+      })
+      this.txnHistory = txnHistory;
     },
 
     async CheckTokenExistence(

@@ -29,18 +29,10 @@
 }
 
 .winemaker-text {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
+	font-family: 'Obviously-Bold';
 	font-size: 20px;
-	line-height: 31px;
-	display: flex;
 	align-items: center;
 	color: #212131;
-	padding-bottom: 20px;
-}
-
-.column1 {
 }
 
 @media screen and (max-width: 600px) {
