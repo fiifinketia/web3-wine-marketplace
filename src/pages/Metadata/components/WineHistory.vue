@@ -2,15 +2,18 @@
   <div class="column items-center justify-center">
     <div class="flex items-start history-container column q-mb-xl">
       <div class="price-history q-pb-lg">Price history</div>
-      <div class="column chart-container q-pa-md">
-        <div class="flex row items-center justify-between chart1">
-          <div class="row items-center q-mb-sm q-gutter-x-md">
-            <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 months </q-radio>
-            <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 months </q-radio>
-            <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 year </q-radio>
-            <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 years </q-radio>
+      <div
+        class="column chart-container"
+        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
+      >
+        <div class="row items-center justify-between chart1">
+          <div v-if="$q.screen.width > 600" class="row items-center q-mb-sm q-gutter-x-sm">
+            <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 mos. </q-radio>
+            <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 mos. </q-radio>
+            <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 yr. </q-radio>
+            <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 yrs. </q-radio>
           </div>
-          <div class="column q-pr-lg">
+          <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between'">
             <div class="row items-center">
               <span class="price1">00.00</span>
               <span class="price2 q-pl-sm">/ $ 00.00</span>
@@ -25,15 +28,21 @@
             :options="chartOptions"
             :series="series"
             height="250"
-            width="98%"
+            width="100%"
           />
+        </div>
+        <div v-if="$q.screen.width <= 600" class="row items-center q-mb-sm q-gutter-x-sm">
+          <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 months </q-radio>
+          <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 months </q-radio>
+          <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 year </q-radio>
+          <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 years </q-radio>
         </div>
       </div>
     </div>
     <div class="flex items-start history-container column">
       <div class="price-history q-pb-lg">Transaction history</div>
       <q-table
-        class="price-table"
+        :class="$q.screen.width > 600 ? 'price-table' : ''"
         style="height: auto; width: 100%; max-height: 80vh"
         title=""
         hide-header

@@ -2,6 +2,12 @@
 	color: #3586ff;
 }
 
+[aria-selected="false"] > .q-tab__indicator {
+	color: #9D9D9D;
+	opacity: 1;
+	height: 1px;
+}
+
 .q-tab--active .q-tab__label {
 	color: #3586ff;
 }
@@ -11,14 +17,8 @@
 }
 
 .tabs-menu {
-	width: 80%;
+	width: 95%;
 	margin: 2.5rem auto 0;
 	font-family: 'Obviously-Bold' !important;
 	color: #9D9D9D;
-}
-
-@media screen and (max-width: 400px) {
-	.tabs-menu {
-		width: 95%;
-	}
 }

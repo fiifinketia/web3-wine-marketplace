@@ -5,10 +5,9 @@
         :nft="nft" @open-wallet="openWalletSideBar"
         @refresh-metadata="ValidateAndFetchNFT()"
       />
-      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
+      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="history" label="NFT history" />
         <q-tab name="about" label="About" />
-        <q-tab name="wine-maker" label="Wine-maker"/>
       </q-tabs>
       <q-tab-panels
         v-model="tab"
@@ -22,10 +21,6 @@
 
         <q-tab-panel name="about">
           <WineDetails :nft="nft" />
-        </q-tab-panel>
-
-        <q-tab-panel name="wine-maker">
-          <WineMaker :nft="nft" />
         </q-tab-panel>
       </q-tab-panels>
     </div>
@@ -44,7 +39,7 @@ import { GetMetadata, GetTokenTXNHistory } from './services/Metadata';
 import WineHistory from './components/WineHistory.vue';
 import WineTrade from './components/WineTrade.vue';
 import WineDetails from './components/WineDetails.vue';
-import WineMaker from './components/WineMaker.vue';
+// import WineMaker from './components/WineMaker.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
@@ -60,7 +55,7 @@ export default defineComponent({
   components: {
     WineHistory,
     WineDetails,
-    WineMaker,
+    // WineMaker,
     WineTrade,
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
@@ -211,6 +206,6 @@ export default defineComponent({
 
 <style scoped>
 .q-tab-panel {
-  padding: 3rem 0 4rem !important;
+  padding: 3rem 0 0 !important;
 }
 </style>
