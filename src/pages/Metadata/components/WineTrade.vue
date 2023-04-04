@@ -102,11 +102,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="walletAddress"
-      class=""
-      :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'"
-    >
+    <div :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'">
       <div v-if="nft.isOwner" class="column items-center full-width q-px-md">
         <q-btn
           v-if="!nft.listingDetails.orderHash"
@@ -140,7 +136,7 @@
             !nft.listingDetails.orderHash ||
             !nft.listingDetails.transactionStatus
           "
-          @click="openConfirmDialog = true"
+          @click="OpenFulFillOrOfferDialog('fulfill')"
         >
           Buy now
         </q-btn>
@@ -148,15 +144,10 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="openCreateOfferDialog = true"
+          @click="OpenFulFillOrOfferDialog('offer')"
         >
           Make an offer
         </q-btn>
-      </div>
-    </div>
-    <div v-else class="q-pt-lg row">
-      <div class="q-pr-sm text-warning text-bold">
-        Please Connect Wallet to view actions.
       </div>
     </div>
     <q-btn
@@ -279,7 +270,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet', 'refresh-metadata'],
+  emits: ['openWallet', 'refresh-metadata', 'connect-wallet'],
   data() {
     return {
       openCreateListingDialog: false,
@@ -301,10 +292,34 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useUserStore, {
-      walletAddress: store => store.getWalletAddress
+      walletAddress: store => store.getWalletAddress()
     }),
   },
+  watch: {
+    walletAddress: {
+      handler(val: string | null) {
+        if (!!val) {
+          this.$emit('refresh-metadata');
+        }
+      }
+    }
+  },
   methods: {
+    OpenFulFillOrOfferDialog(dialog: string) {
+      if (!this.walletAddress) {
+        this.$emit('connect-wallet');
+        return
+      } else {
+        switch (dialog) {
+          case 'offer':
+            this.openCreateOfferDialog = true;
+            break;
+          case 'fulfill':
+            this.openConfirmDialog = true;
+            break;
+        }
+      }
+    },
     SetTimeoutOnCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
@@ -333,7 +348,7 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
-      const address = this.walletAddress();
+      const address = this.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, true, address, image);
         this.openOrderAccepted = true;

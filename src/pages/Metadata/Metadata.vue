@@ -4,6 +4,7 @@
       <WineTrade
         :nft="nft" @open-wallet="openWalletSideBar"
         @refresh-metadata="ValidateAndFetchNFT()"
+        @connect-wallet="ConnectWallet()"
       />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="history" label="NFT history" />
@@ -60,7 +61,7 @@ export default defineComponent({
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
   },
-  emits: ['openWalletSidebar'],
+  emits: ['openWalletSidebar', 'openConnectWallet'],
 
   data() {
     const userStore = useUserStore();
@@ -200,6 +201,10 @@ export default defineComponent({
     openWalletSideBar() {
       this.$emit('openWalletSidebar');
     },
+
+    ConnectWallet() {
+      this.$emit('openConnectWallet');
+    }
   },
 });
 </script>
