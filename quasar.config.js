@@ -31,7 +31,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-    boot: ['i18n', 'axios'],
+    boot: ['i18n', 'axios', 'shepherd'],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ['app.scss', 'fonts.css'],
@@ -79,6 +79,15 @@ module.exports = configure(function (ctx) {
         const nodePolyfillWebpackPlugin = require('node-polyfill-webpack-plugin');
         chain.plugin('node-polyfill').use(nodePolyfillWebpackPlugin);
       },
+
+			// Add vue-shepherd to the webpack config
+			// This is needed to make vue-shepherd work with quasar
+			// By default, vue-shepherd is not included in the webpack config
+			// So we need to add it manually by extending the webpack config
+			// extendWebpack (cfg) {
+			// 	cfg.resolve.alias.vue$ = 'vue/dist/vue.esm-bundler.js'
+			// 	cfg.resolve.alias['@popperjs/core$'] = '@popperjs/core/dist/umd/popper.min.js'
+			// }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
