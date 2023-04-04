@@ -17,11 +17,11 @@
         transition-next="jump-left"
       >
         <q-tab-panel name="history">
-          <WineHistory :nft-txn-history="txnHistory" />
+          <WineHistory :nft-txn-history="txnHistory" style="padding-bottom: 3rem"/>
         </q-tab-panel>
 
         <q-tab-panel name="about">
-          <WineDetails :nft="nft" />
+          <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
         </q-tab-panel>
       </q-tab-panels>
     </div>
