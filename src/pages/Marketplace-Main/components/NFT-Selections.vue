@@ -324,6 +324,8 @@ export default defineComponent({
           contractAddress: token.smartContractAddress,
         },
       });
+			this.$shepherd.removeStep('marketplace-nfts')
+			this.$shepherd.next();
       switch (where) {
         case 'here':
           this.$router.push({
@@ -387,6 +389,18 @@ export default defineComponent({
           const { result: nfts } = await RetrieveFilteredNFTs(
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
+					// TODO: IMplement in backend API Place NFTs with prices first
+					nfts.sort((a, b) => {
+						if (a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
+							return 0;
+						} else if (a.orderDetails?.listingPrice && !b.orderDetails?.listingPrice) {
+							return -1;
+						} else if (!a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
+							return 1;
+						} else {
+							return 0;
+						}
+					});
           this.$emit('totalTokens', nfts.length);
           this.allNFTs = nfts;
           this.erroredOut = false; // change

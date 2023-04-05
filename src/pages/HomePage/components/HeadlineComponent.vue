@@ -12,7 +12,7 @@
       class="grape-mobile"
       src="../../../../public/images/Grape-mobile.svg"
     />
-    <h1 class="headline-title q-mb-xs">WiV Marketplace</h1>
+    <h1 id="welcome-step" class="headline-title q-mb-xs">WiV Marketplace</h1>
     <p class="headline-paragraph q-mb-lg">
       We offer the best fine wine investments
     </p>

@@ -77,7 +77,7 @@
           flat
           @click="wineFiltersStore.removeAllFilters()"
         />
-        <div class="hidden-b-1023 q-pr-md">
+        <div id="marketplace-sidebar-sm" class="hidden-b-1023 q-pr-md">
           <span
             class="q-pa-sm text-weight-bolder text-h6"
             style="vertical-align: middle"
@@ -99,6 +99,7 @@
 
     <SidebarDesktop
       v-if="$q.screen.width > 1023"
+      id="marketplace-sidebar-lg"
       :style="qChipRows > 1 ? calculateExtraHeightSidebar(qChipRows) : ''"
       class="col-sm-3 q-mt-sm"
     />
@@ -107,12 +108,14 @@
 
     <!-- List Section -->
     <NFTSelections
+      id="marketplace-nfts"
       class="col-md-9 col-sm-12"
       :style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
       style="padding-top: 0px !important"
       @total-tokens="updateTokenCount"
     />
     <q-page-sticky
+      id="marketplace-sidebar-xs"
       class="hidden-b-599 q-mr-md"
       position="bottom-right"
       :offset="[18, 18]"
@@ -152,6 +155,7 @@ import 'src/css/Marketplace/header.css';
 import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
+import { useTourStore } from 'src/stores/tour-state';
 
 export default defineComponent({
   components: {
@@ -164,6 +168,7 @@ export default defineComponent({
   data() {
     const wineFiltersStore = useWineFilters();
     const generalSearchStore = useGeneralSearch();
+    const tourStore = useTourStore();
 
     return {
       showToogleButton: this.isMobile() ? ref(true) : ref(false),
@@ -174,6 +179,7 @@ export default defineComponent({
       totalNFTs: ref(0),
       generalSearch: '',
       qChipRows: 0,
+      tourStore,
     };
   },
 
@@ -182,6 +188,14 @@ export default defineComponent({
       handler() {
         this.showToogleButton = this.isMobile() ? true : false;
         this.CheckFilterMode();
+      },
+    },
+    totalNFTs: {
+      handler() {
+        if (!this.tourStore.completed && this.totalNFTs > 0) {
+          // cons
+          this.marketplaceTour();
+        }
       },
     },
   },
@@ -246,6 +260,58 @@ export default defineComponent({
     calculateExtraHeightSidebar(rows: number) {
       const extraHeight = rows * 32 - 32;
       return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
+    },
+    marketplaceTour() {
+      this.$shepherd.removeStep('welcome-step');
+      this.$shepherd.removeStep('go-to-marketplace');
+      let screenSize = '';
+      if (this.$q.screen.width > 1023) screenSize = 'lg';
+      else if (this.$q.screen.width > 599) screenSize = 'sm';
+      else screenSize = 'xs';
+      this.$shepherd.addSteps([
+        {
+          id: 'marketplace-sidebar',
+          attachTo: {
+            element: `#marketplace-sidebar-${screenSize}`,
+            on: screenSize === 'xs' ? 'top' : 'left',
+          },
+          text: 'You can filter out the particular metadata here.',
+          buttons: [
+            {
+              text: 'Continue',
+              action: () => {
+                this.$shepherd.next();
+								this.$shepherd.removeStep('marketplace-sidebar');
+              },
+            },
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+        },
+        {
+          id: 'marketplace-nfts',
+          attachTo: {
+            element: '#marketplace-nfts',
+            on: 'top',
+          },
+          text: 'You can select any NFTs here.',
+          buttons: [
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+        },
+      ]);
+      this.$shepherd.start();
     },
   },
 });

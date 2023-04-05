@@ -43,10 +43,11 @@
     </div>
     <div class="go-to-marketplace-wrapper row justify-center">
       <q-btn
+				id="go-to-marketplace"
         class="go-to-marketplace q-mt-lg"
         unelevated
         no-caps
-        @click="$router.push('marketplace?tab=nfts')"
+        @click="$router.push('marketplace?tab=nfts'); $shepherd.next();"
       >
         Go to Marketplace
       </q-btn>

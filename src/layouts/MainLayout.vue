@@ -107,7 +107,6 @@
   <SuggestedWines v-model="suggestedWinesDialog" />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
-
   <q-layout view="lHh Lpr lFf">
     <q-header
       class="nav-bar q-py-xs"
@@ -173,7 +172,10 @@
                 <q-item
                   v-close-popup
                   clickable
-                  :to="{ path: '/marketplace', query: { tab: 'recommended' } }"
+                  :to="{
+                    path: '/marketplace',
+                    query: { tab: 'recommended' },
+                  }"
                 >
                   <q-item-section>
                     <q-item-label>Recommended</q-item-label>
@@ -196,10 +198,7 @@
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
             >
-              <img
-                src="../../public/images/favs-icon.svg"
-                class="icons"
-              />
+              <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
             <q-btn
               v-if="!!walletAddress"
@@ -209,10 +208,7 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
             >
-              <img
-                src="../../public/images/bell-icon.svg"
-                class="icons"
-              />
+              <img src="../../public/images/bell-icon.svg" class="icons" />
             </q-btn>
             <q-btn
               class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
@@ -256,7 +252,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'listings' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'listings' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -268,7 +267,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'incoming' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'incoming' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -280,7 +282,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'outgoing' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'outgoing' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -292,7 +297,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'transactions' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'transactions' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -392,7 +400,7 @@
     <q-page-container>
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
-        @openConnectWallet="showConnectWallet = true"
+        @open-connect-wallet="showConnectWallet = true"
       />
     </q-page-container>
   </q-layout>
@@ -414,6 +422,7 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { useTourStore } from 'src/stores/tour-state';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -456,8 +465,8 @@ export default defineComponent({
     'userStore.walletAddress': {
       handler: function (walletAddress: string) {
         this.walletAddress = walletAddress;
-      }
-    }
+      },
+    },
   },
 
   async mounted() {
