@@ -9,8 +9,8 @@
         <div class="row items-center justify-between chart1">
           <div v-if="$q.screen.width > 600" class="row items-center q-mb-sm q-gutter-x-sm">
             <q-radio
-              :disable="isLoading ? true : false"
               v-model="currentTimeline"
+              :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
               val="three_months"
@@ -19,8 +19,8 @@
               3 mos.
             </q-radio>
             <q-radio
-              :disable="isLoading ? true : false"
               v-model="currentTimeline"
+              :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
               val="three_months"
@@ -29,8 +29,8 @@
               6 mos.
             </q-radio>
             <q-radio
-              :disable="isLoading ? true : false"
               v-model="currentTimeline"
+              :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
               val="three_months"
@@ -39,8 +39,8 @@
               1 yr.
             </q-radio>
             <q-radio
-              :disable="isLoading ? true : false"
               v-model="currentTimeline"
+              :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
               val="three_months"
@@ -68,14 +68,25 @@
               <div class="loading-label-box" />
               <div class="loading-x-axis">
                 <div v-if="index == 3">
-                  <div class="tick" v-for="tick in [0, 30, 60, 90]" :key="tick" :style="{ left: tick + '%' }"></div>
+                  <div
+                    v-for="tick in [0, 30, 60, 90]"
+                    :key="tick"
+                    class="tick"
+                    :style="{ left: tick + '%' }"
+                  />
                 </div>
               </div>
             </div>
             <div class="row full-width">
               <div class="loading-label-box-inv" />
               <div class="row" style="margin-left: 15px; flex: 1; position: relative">
-                <div v-for="loading in [0,30,60,90]" :key="loading" class="loading-label-box" :style="{ left: 'calc(' + loading + '% - 30px)' }" style="position: absolute"/>
+                <div
+                  v-for="loading in [0,30,60,90]"
+                  :key="loading"
+                  class="loading-label-box"
+                  :style="{ left: 'calc(' + loading + '% - 30px)' }"
+                  style="position: absolute"
+                />
               </div>
             </div>
           </div>
@@ -91,8 +102,8 @@
         </div>
         <div v-if="$q.screen.width <= 600" class="row items-center q-mb-sm q-gutter-x-sm">
           <q-radio
-            :disable="isLoading ? true : false"
             v-model="currentTimeline"
+            :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
             val="three_months"
@@ -101,8 +112,8 @@
             3 mos.
           </q-radio>
           <q-radio
-            :disable="isLoading ? true : false"
             v-model="currentTimeline"
+            :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
             val="three_months"
@@ -111,8 +122,8 @@
             6 mos.
           </q-radio>
           <q-radio
-            :disable="isLoading ? true : false"
             v-model="currentTimeline"
+            :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
             val="three_months"
@@ -121,8 +132,8 @@
             1 yr.
           </q-radio>
           <q-radio
-            :disable="isLoading ? true : false"
             v-model="currentTimeline"
+            :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
             val="three_months"
