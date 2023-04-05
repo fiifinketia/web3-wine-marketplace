@@ -175,6 +175,43 @@ import RemoveDialog from './RemoveDialog.vue';
 import ErrorFavorites from './ErrorFavorites.vue';
 import MissingFavorites from './MissingFavorites.vue';
 
+// amplitude
+// import * as amplitude from '@amplitude/analytics-node';
+import * as amplitude from '@amplitude/analytics-browser';
+
+// // client-side connection
+// amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7');
+// // API token tMRL7vva59X5AMUGvEb-2SU4X_KAnW8m
+
+amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7', undefined, {
+  defaultTracking: {
+    sessions: true,
+    pageViews: true,
+  },
+});
+
+// amplitude.setUserId('a_third_user@amplitude.com');
+amplitude.setSessionId(Date.now());
+// amplitude.setDeviceId(uuid());
+
+// const eventProperties = {
+//   favoriteName: 'NFT_wine1',
+//   favoriteId: '000001',
+//   inUserFavorites: true,
+// };
+
+// amplitude.track('test button click', eventProperties, {
+//   device_id: '98sdf3',
+//   user_id: 'another amp user',
+// });
+
+// user properties
+// const identifyEvent = new amplitude.Identify();
+// identifyEvent.add('favorites visit count', 1);
+// amplitude.identify(identifyEvent);
+
+amplitude.track('pageVisitationTracker');
+
 export default defineComponent({
   name: 'FavouritesPage',
   components: {

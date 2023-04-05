@@ -153,6 +153,19 @@ import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
 
+// amplitude
+import * as amplitude from '@amplitude/analytics-browser';
+
+amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7', undefined, {
+  defaultTracking: {
+    sessions: true,
+    pageViews: true,
+  },
+});
+
+amplitude.setSessionId(Date.now());
+amplitude.track('Marketplace Tab Clicked');
+
 export default defineComponent({
   components: {
     NFTSelections: NFTSelections,

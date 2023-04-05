@@ -32,6 +32,31 @@ import { RetrieveFilteredNFTs } from '../../services/RetrieveTokens';
 import NFTSelectionsVue from './NFT-Selections.vue';
 import '../../../../css/Releases/Releases-Selections.css';
 
+// amplitude
+// import * as amplitude from '@amplitude/analytics-node';
+import * as amplitude from '@amplitude/analytics-browser';
+
+// client-side connection
+// amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7');
+// API token tMRL7vva59X5AMUGvEb-2SU4X_KAnW8m
+// how to track a specific user
+
+amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7', undefined, {
+  defaultTracking: {
+    sessions: true,
+    pageViews: true,
+  },
+});
+
+amplitude.setSessionId(Date.now());
+
+// user properties
+// const identifyEvent = new amplitude.Identify();
+// identifyEvent.add('marketplace visit count', 1);
+// amplitude.identify(identifyEvent);
+
+amplitude.track('Recommended NFTs Tab Clicked');
+
 export default defineComponent({
   components: {
     NFTSelections: NFTSelectionsVue,
