@@ -49,6 +49,32 @@
 	position: relative;
 }
 
+.loading-event-box-clear,
+.loading-event-box-colored {
+	width: 20%;
+	height: 38px;
+	border: 1px solid #8CBAFF;
+	border-radius: 6px;
+}
+
+.loading-date-box-clear,
+.loading-date-box-colored {
+	width: 60px;
+	height: 18px;
+	border: 1px solid #8CBAFF;
+	border-radius: 2px;
+}
+
+.loading-event-box-clear,
+.loading-date-box-clear {
+	background: #FFFFFF;
+}
+
+.loading-event-box-colored,
+.loading-date-box-colored {
+	background: rgba(217, 232, 255, 0.3);
+}
+
 .tick {
 	position: absolute;
   bottom: -10px;
@@ -117,11 +143,8 @@ td {
 .each-price-row {
 	padding: 10px 12px;
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 18px;
 	line-height: 22px;
-
 	color: #212131;
 }
 

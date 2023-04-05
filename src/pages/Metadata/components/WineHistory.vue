@@ -146,8 +146,9 @@
     </div>
     <div class="flex items-start history-container column">
       <div class="price-history q-pb-lg">Transaction history</div>
-      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''">
+      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''" :style="isLoading ? 'padding-bottom: 16px' : ''">
         <q-table
+          v-if="!isLoading"
           style="height: auto; width: 100%; max-height: 80vh"
           title=""
           flat
@@ -168,6 +169,7 @@
             <q-tr
               :key="`e_${props.row.index}`"
               :props="props"
+              no-hover
               class="each-price-row price-history-rows"
             >
               <q-td
@@ -196,6 +198,16 @@
             </q-tr>
           </template>
         </q-table>
+        <div v-else class="full-width column">
+          <div
+            v-for="loading in [0,1,2,3,4]"
+            :key="loading"
+            class="row full-width justify-between items-center each-price-row price-history-rows"
+          >
+            <div :class="loading % 2 == 1 ? 'loading-event-box-colored' : 'loading-event-box-clear'"/>
+            <div :class="loading % 2 == 1 ? 'loading-date-box-colored' : 'loading-date-box-clear'"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
