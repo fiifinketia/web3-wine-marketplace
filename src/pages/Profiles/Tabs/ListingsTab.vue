@@ -1,12 +1,17 @@
 <template>
   <q-page
     class="column items-center"
-    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    :class="loadingRequest || emptyRequest ? 'justify-center' : ''"
     style="flex-wrap: nowrap"
   >
-    <div v-if="!loadingRequest" class="column items-center">
+    <div v-if="loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your listings'" />
     </div>
+    <ErrorView
+      v-else-if="!!errorOverall"
+      :tab-error="'listings'"
+      @reload-tab="FetchListings(listingSortKey, listingBrandFilter)"
+    />
     <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
@@ -127,6 +132,7 @@ import ListingEdit from '../../SharedPopups/ListingEdit.vue';
 import ListingUnlist from '../../SharedPopups/ListingUnlist.vue';
 import { ListingsResponse } from '../models/response.models';
 import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
+import LoadingError from '../LoadingError.vue';
 import ListingsColumns from '../Columns/ListingsColumns.vue';
 import ListingsRows from '../Rows/ListingsRows.vue';
 import ListingNew from '../Popups/New Listing/ListingNew.vue';
@@ -147,6 +153,7 @@ export default defineComponent({
     ListingHeaderSm: ListingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
+    ErrorView: LoadingError,
     ListingDialogEdit: ListingEdit,
     ListingDialogUnlist: ListingUnlist,
     ListingProcessedDialog: OrderProcessed,
@@ -172,7 +179,7 @@ export default defineComponent({
 
       listingBrandFilter: store.getListingBrandFilter,
 
-      loadingRequest: false,
+      loadingRequest: true,
       emptyRequest: false,
 
       openEditDialog: false,
@@ -183,6 +190,7 @@ export default defineComponent({
 
       singleListing: {} as ListingsResponse,
 
+      errorOverall: false,
       errorType: '',
       errorTitle: '',
       errorMessage: '',
@@ -205,12 +213,9 @@ export default defineComponent({
         this.store.setListingSortKey(sortKey);
         if (!this.store.listingBrandFilterStatus) {
           await this.FetchListings(sortKey, '');
-          this.loadingRequest = true;
         } else {
           await this.FetchListings(sortKey, this.listingBrandFilter);
-          this.loadingRequest = true;
         }
-        this.loadingRequest = true;
       },
     },
     listingBrandFilter: {
@@ -226,13 +231,12 @@ export default defineComponent({
       await this.RefetchNFTs();
       await this.FetchListings('', '');
       await this.SetListableNFTs();
-      this.loadingRequest = true;
     } else {
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
       this.listableNFTs = this.listableFiltersStore.getFilteredListableTokens;
+      this.loadingRequest = false;
     }
-    this.loadingRequest = true;
   },
 
   methods: {
@@ -243,21 +247,27 @@ export default defineComponent({
       }, 3000);
     },
     async FetchListings(sortKey: string, brandFilter: string) {
-      this.loadingRequest = false;
+      this.loadingRequest = true;
       const address = this.userStore.walletAddress;
-      await this.store.setListings(address, sortKey, brandFilter);
-      if (
-        this.store.getListings.length == 0 &&
-        this.store.listingBrandFilterStatus == true
-      ) {
-        this.HandleMissingBrand();
-      } else if (this.store.listingBrandFilterStatus == true) {
-        this.brandSearched = true;
-        this.loadingRequest = true;
-      } else {
-        this.brandSearched = false;
-        this.$emit('listingsAmount', this.listings.length);
-        this.CheckForEmptyRequest();
+      try {
+        await this.store.setListings(address, sortKey, brandFilter);
+        if (
+          this.store.getListings.length == 0 &&
+          this.store.listingBrandFilterStatus == true
+        ) {
+          this.HandleMissingBrand();
+        } else if (this.store.listingBrandFilterStatus == true) {
+          this.brandSearched = true;
+        } else {
+          this.brandSearched = false;
+          this.$emit('listingsAmount', this.listings.length);
+          this.CheckForEmptyRequest();
+        }
+        this.errorOverall = false;
+      } catch {
+        this.errorOverall = true;
+      } finally {
+        this.loadingRequest = false;
       }
     },
     OpenDeleteDialog(listing: ListingsResponse) {
@@ -276,7 +286,6 @@ export default defineComponent({
       if (this.listings.length == 0) {
         this.emptyRequest = true;
       }
-      this.loadingRequest = true;
     },
     HandleError(err: {
       errorType: string;
@@ -294,7 +303,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetListings();
       this.listingBrandFilter = this.store.listingBrandFilter;
-      this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your orders',
@@ -302,7 +310,6 @@ export default defineComponent({
       });
     },
     async RefetchNFTs() {
-      this.loadingRequest = false;
       this.nftStore.ownedNFTs = [] as TokenIdentifier[];
       await this.nftStore.fetchNFTs(this.userStore.walletAddress);
     },
