@@ -69,7 +69,7 @@
               <div class="loading-x-axis">
                 <div v-if="index == 3">
                   <div
-                    v-for="tick in [0, 30, 60, 90]"
+                    v-for="tick in ReturnLoadingTicks($q.screen.width)"
                     :key="tick"
                     class="tick"
                     :style="{ left: tick + '%' }"
@@ -81,7 +81,7 @@
               <div class="loading-label-box-inv" />
               <div class="row" style="margin-left: 15px; flex: 1; position: relative">
                 <div
-                  v-for="loading in [0,30,60,90]"
+                  v-for="loading in ReturnLoadingTicks($q.screen.width)"
                   :key="loading"
                   class="loading-label-box"
                   :style="{ left: 'calc(' + loading + '% - 30px)' }"
@@ -146,7 +146,7 @@
     </div>
     <div class="flex items-start history-container column">
       <div class="price-history q-pb-lg">Transaction history</div>
-      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''" :style="isLoading ? 'padding-bottom: 16px' : ''">
+      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''" :style="isLoading ? 'padding-bottom: 16px; width: 100%' : ''">
         <q-table
           v-if="!isLoading"
           style="height: auto; width: 100%; max-height: 80vh"
@@ -520,6 +520,12 @@ export default defineComponent({
         default:
       }
     },
+    ReturnLoadingTicks(width: number) {
+      if (width > 600) {
+        return [0, 30, 60, 90]
+      }
+      return [0, 40, 80]
+    }
   },
 });
 </script>
