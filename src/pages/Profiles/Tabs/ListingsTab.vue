@@ -106,7 +106,10 @@
       <CreateListing
         v-model="openNewListingDialog"
         :listable-n-f-ts="listableNFTs"
+        :is-loading="loadingNewListingDialog"
+        :errored-out="errorNewListingDialog"
         @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
+        @refetch-nfts="SetListableNFTs()"
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
@@ -188,6 +191,9 @@ export default defineComponent({
       openNewListingDialog: false,
       enableListingDialog: false,
 
+      loadingNewListingDialog: true,
+      errorNewListingDialog: true,
+
       singleListing: {} as ListingsResponse,
 
       errorOverall: false,
@@ -228,9 +234,8 @@ export default defineComponent({
   async mounted() {
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
-      await this.RefetchNFTs();
       await this.FetchListings('', '');
-      await this.SetListableNFTs();
+      this.SetListableNFTs();
     } else {
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
@@ -314,45 +319,50 @@ export default defineComponent({
       await this.nftStore.fetchNFTs(this.userStore.walletAddress);
     },
     async SetListableNFTs() {
-      const currentListings = this.listings;
-      const ownedNFTs = this.nftStore.ownedNFTs;
-
-      if (ownedNFTs.length > currentListings.length) {
-        const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
-
-        ownedNFTs.forEach(f => {
-          const {
-            identifierOrCriteria: id,
-            contractAddress: address,
-            network,
-          } = f;
-          const key = `${id},${address},${network}`;
-          ownedNFTsMap.set(key, {
-            identifierOrCriteria: id,
-            contractAddress: address,
-            network: network,
+      try {
+        this.loadingNewListingDialog = true;
+        await this.RefetchNFTs()
+        const currentListings = this.listings;
+        const ownedNFTs = this.nftStore.ownedNFTs;
+        if (ownedNFTs.length > currentListings.length) {
+          const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
+          ownedNFTs.forEach(f => {
+            const {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network,
+            } = f;
+            const key = `${id},${address},${network}`;
+            ownedNFTsMap.set(key, {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network: network,
+            });
           });
-        });
-
-        currentListings.forEach(f => {
-          const {
-            identifierOrCriteria: id,
-            contractAddress: address,
-            network,
-          } = f;
-          const key = `${id},${address},${network}`;
-          if (ownedNFTsMap.has(key)) {
-            ownedNFTsMap.delete(key);
+          currentListings.forEach(f => {
+            const {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network,
+            } = f;
+            const key = `${id},${address},${network}`;
+            if (ownedNFTsMap.has(key)) {
+              ownedNFTsMap.delete(key);
+            }
+          });
+          if (ownedNFTsMap.size > 0) {
+            const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
+            const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
+            this.listableFiltersStore.setParentListableTokens(listableTokens);
+            this.listableFiltersStore.setAllFilters(this.listableNFTs);
+            this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
           }
-        });
-
-        if (ownedNFTsMap.size > 0) {
-          const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
-          const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
-          this.listableFiltersStore.setParentListableTokens(listableTokens);
-          this.listableFiltersStore.setAllFilters(this.listableNFTs);
-          this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
+          this.errorNewListingDialog = false;
         }
+      } catch {
+        this.errorNewListingDialog = true;
+      } finally {
+        this.loadingNewListingDialog = false;
       }
     },
     UpdateListableNFTWithPrice(listed: ListableToken) {

@@ -5,7 +5,77 @@
     :maximized="$q.screen.width > 600 ? false : true"
   >
     <q-card
-      v-if="listableNFTs.length > 0"
+      v-if="isLoading"
+      class="new-list-container q-py-md column items-center"
+      :class="$q.screen.width > 600 ? 'q-px-md' : ''"
+      style="flex-wrap: nowrap"
+    >
+      <div class="full-width row items-start justify-center q-pb-sm">
+        <div class="column items-center q-gutter-y-sm">
+          <span class="new-list-header-text"> Listing NFT </span>
+        </div>
+        <q-btn
+          v-close-popup
+          flat
+          dense
+          unelevated
+          class="exit-btn btn--no-hover"
+        >
+          <img src="../../../../assets/exit-light.svg" />
+        </q-btn>
+      </div>
+      <div
+        class="row q-pt-md q-px-sm q-gutter-y-md"
+        :class="$q.screen.width > 600 ? 'justify-between' : 'justify-around'"
+      >
+        <div
+          v-for="loading in loadingNFTs"
+          :key="loading"
+          class="new-list-card-container"
+        >
+          <div>
+            <q-card class="q-ma-md" flat>
+              <img
+                src="../../../../assets/loading-card.svg"
+                class="new-list-card-image"
+              />
+              <img
+                src="../../../../assets/loading-brand.svg"
+                :style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
+                class="q-my-md"
+              />
+              <img src="../../../../assets/loading-pricebox.svg" />
+            </q-card>
+          </div>
+        </div>
+      </div>
+    </q-card>
+    <q-card
+      v-else-if="erroredOut"
+      class="new-list-container q-py-md column items-center"
+      :class="$q.screen.width > 600 ? 'q-px-md' : ''"
+      style="flex-wrap: nowrap"
+    >
+      <div class="full-width row items-start justify-center q-pb-sm">
+        <div class="column items-center q-gutter-y-sm">
+          <span class="new-list-header-text"> Listing NFT </span>
+        </div>
+        <q-btn
+          v-close-popup
+          flat
+          dense
+          unelevated
+          class="exit-btn btn--no-hover"
+        >
+          <img src="../../../../assets/exit-light.svg" />
+        </q-btn>
+      </div>
+      <NewListingError
+        @refetch-nfts="ReFetchNFTs()"
+      />
+    </q-card>
+    <q-card
+      v-else-if="listableNFTs.length > 0"
       class="new-list-container q-py-md"
       :class="$q.screen.width > 600 ? 'q-px-md' : ''"
     >
@@ -128,6 +198,7 @@ import SidebarNormal from '../Sidebar/SidebarNormal.vue';
 import SidebarMobile from '../Sidebar/SidebarMobile.vue';
 import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
+import ListingNewError from './ListingNewError.vue';
 
 export default defineComponent({
   components: {
@@ -135,17 +206,21 @@ export default defineComponent({
     NewListingNFTs: ListingNewNFTs,
     NewListingDialog: ListingEdit,
     NewListingEmpty: ListingNewEmpty,
+    NewListingError: ListingNewError,
     ErrorDialog: ProfileErrors,
     SidebarNormal: SidebarNormal,
     SidebarMobile: SidebarMobile,
   },
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] },
+    erroredOut: { type: Boolean, default: false },
+    isLoading: { type: Boolean, default: false }
   },
-  emits: ['listable-nft-listed'],
+  emits: ['listable-nft-listed', 'refetch-nfts'],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
+      loadingNFTs: [0, 1, 2],
       openListingDialog: false,
       image: '',
       brand: '',
@@ -188,6 +263,9 @@ export default defineComponent({
     RemoveListableNFT(listed: ListableToken) {
       this.$emit('listable-nft-listed', listed);
     },
+    ReFetchNFTs() {
+      this.$emit('refetch-nfts')
+    }
   },
 });
 </script>
