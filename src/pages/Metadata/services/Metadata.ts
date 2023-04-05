@@ -36,9 +36,15 @@ async function GetTokenTXNHistory(req: {
   identifierOrCriteria: string,
   contractAddress: string,
   network: string
-}) : Promise<SeaportTransactionsModel[]> {
+}) : Promise<{
+  txns: SeaportTransactionsModel[],
+  chartData: number[][]
+}> {
   try {
-    let txnHistory: SeaportTransactionsModel[] = [];
+    let txnHistory = {} as {
+      txns: SeaportTransactionsModel[],
+      chartData: number[][]
+    };
     const { identifierOrCriteria, contractAddress, network } = req;
     const body = {
       apiKey: APIKeyString,

@@ -8,21 +8,79 @@
       >
         <div class="row items-center justify-between chart1">
           <div v-if="$q.screen.width > 600" class="row items-center q-mb-sm q-gutter-x-sm">
-            <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 mos. </q-radio>
-            <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 mos. </q-radio>
-            <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 yr. </q-radio>
-            <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 yrs. </q-radio>
+            <q-radio
+              :disable="isLoading ? true : false"
+              v-model="currentTimeline"
+              keep-color
+              :color="isLoading ? 'blue-1' : ''"
+              val="three_months"
+              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            >
+              3 mos.
+            </q-radio>
+            <q-radio
+              :disable="isLoading ? true : false"
+              v-model="currentTimeline"
+              keep-color
+              :color="isLoading ? 'blue-1' : ''"
+              val="three_months"
+              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            >
+              6 mos.
+            </q-radio>
+            <q-radio
+              :disable="isLoading ? true : false"
+              v-model="currentTimeline"
+              keep-color
+              :color="isLoading ? 'blue-1' : ''"
+              val="three_months"
+              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            >
+              1 yr.
+            </q-radio>
+            <q-radio
+              :disable="isLoading ? true : false"
+              v-model="currentTimeline"
+              keep-color
+              :color="isLoading ? 'blue-1' : ''"
+              val="three_months"
+              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            >
+              5 yrs.
+            </q-radio>
           </div>
-          <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between'">
+          <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between q-mb-sm'">
             <div class="row items-center">
-              <span class="price1">00.00</span>
-              <span class="price2 q-pl-sm">/ $ 00.00</span>
+              <span v-if="!isLoading" class="price1">00.00</span>
+              <div v-else class="loading-price-box" />
+              <span v-if="!isLoading" class="price2 q-pl-sm">/ $ 00.00</span>
+              <div v-else class="row">
+                <span class="slash-loading q-px-sm"> / </span>
+                <div class="loading-price-box" />
+              </div>
             </div>
             <span class="average-price">Average price</span>
           </div>
         </div>
         <div class="real-chart">
+          <div v-if="isLoading" class="full-width">
+            <div v-for="(loading, index) in [0,1,2,3]" :key="loading" class="row full-width q-pb-md">
+              <div class="loading-label-box" />
+              <div class="loading-x-axis">
+                <div v-if="index == 3">
+                  <div class="tick" v-for="tick in [0, 30, 60, 90]" :key="tick" :style="{ left: tick + '%' }"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row full-width">
+              <div class="loading-label-box-inv" />
+              <div class="row" style="margin-left: 15px; flex: 1; position: relative">
+                <div v-for="loading in [0,30,60,90]" :key="loading" class="loading-label-box" :style="{ left: 'calc(' + loading + '% - 30px)' }" style="position: absolute"/>
+              </div>
+            </div>
+          </div>
           <apexchart
+            v-else
             id="chart"
             ref="chart"
             :options="chartOptions"
@@ -32,64 +90,102 @@
           />
         </div>
         <div v-if="$q.screen.width <= 600" class="row items-center q-mb-sm q-gutter-x-sm">
-          <q-radio v-model="currentTimeline" val="three_months" class="chart-timeline-options"> 3 months </q-radio>
-          <q-radio v-model="currentTimeline" val="six_months" class="chart-timeline-options"> 6 months </q-radio>
-          <q-radio v-model="currentTimeline" val="one_year" class="chart-timeline-options"> 1 year </q-radio>
-          <q-radio v-model="currentTimeline" val="five_years" class="chart-timeline-options"> 5 years </q-radio>
+          <q-radio
+            :disable="isLoading ? true : false"
+            v-model="currentTimeline"
+            keep-color
+            :color="isLoading ? 'blue-1' : ''"
+            val="three_months"
+            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+          >
+            3 mos.
+          </q-radio>
+          <q-radio
+            :disable="isLoading ? true : false"
+            v-model="currentTimeline"
+            keep-color
+            :color="isLoading ? 'blue-1' : ''"
+            val="three_months"
+            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+          >
+            6 mos.
+          </q-radio>
+          <q-radio
+            :disable="isLoading ? true : false"
+            v-model="currentTimeline"
+            keep-color
+            :color="isLoading ? 'blue-1' : ''"
+            val="three_months"
+            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+          >
+            1 yr.
+          </q-radio>
+          <q-radio
+            :disable="isLoading ? true : false"
+            v-model="currentTimeline"
+            keep-color
+            :color="isLoading ? 'blue-1' : ''"
+            val="three_months"
+            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+          >
+            5 yrs.
+          </q-radio>
         </div>
       </div>
     </div>
     <div class="flex items-start history-container column">
       <div class="price-history q-pb-lg">Transaction history</div>
-      <q-table
-        :class="$q.screen.width > 600 ? 'price-table' : ''"
-        style="height: auto; width: 100%; max-height: 80vh"
-        title=""
-        hide-header
-        :rows="nftTxnHistory"
-        :columns="[
-          {
-            name: 'Transactions',
-            required: false,
-            label: '',
-            align: 'left',
-            field: row => row,
-          },
-        ]"
-        row-key="index"
-      >
-        <template #body="props">
-          <q-tr
-            :key="`e_${props.row.index}`"
-            :props="props"
-            class="each-price-row price-history-rows"
-          >
-            <q-td
-              v-for="col in props.cols"
-              :key="col.name"
+      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''">
+        <q-table
+          style="height: auto; width: 100%; max-height: 80vh"
+          title=""
+          flat
+          hide-header
+          :rows="nftTxnHistory"
+          :columns="[
+            {
+              name: 'Transactions',
+              required: false,
+              label: '',
+              align: 'left',
+              field: row => row,
+            },
+          ]"
+          row-key="index"
+        >
+          <template #body="props">
+            <q-tr
+              :key="`e_${props.row.index}`"
               :props="props"
-              colspan="100%"
+              class="each-price-row price-history-rows"
             >
-              <div class="row">
-                <p
-                  class="col-10 text-left"
-                  style="word-wrap: break-word; white-space: initial"
-                >
-                  <span class="user-ids-bold">{{ col.value.event }}</span> by
-                  <span class="user-ids-bold">{{ col.value.from }}</span>
-                  <span v-if="col.value.to"> to </span>
-                  <span v-if="col.value.to" class="user-ids-bold">{{
-                    col.value.to
-                  }}</span>
-                </p>
-                <p class="col-2 text-right date-of-transaction">
-                  {{ TimestampToDate(col.value.timestamp) }}
-                </p>
-              </div>
-            </q-td>
-          </q-tr>
-        </template>
-      </q-table>
+              <q-td
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+                colspan="100%"
+              >
+                <div class="row">
+                  <div
+                    class="col-10 text-left"
+                    style="word-wrap: break-word; white-space: initial"
+                  >
+                    <span class="user-ids-bold">{{ col.value.event }}</span> by
+                    <span class="user-ids-bold">{{ col.value.from }}</span>
+                    <span v-if="col.value.to"> to </span>
+                    <span v-if="col.value.to" class="user-ids-bold">{{
+                      col.value.to
+                    }}</span>
+                  </div>
+                  <div class="col-2 text-right date-of-transaction">
+                    {{ TimestampToDate(col.value.timestamp) }}
+                  </div>
+                </div>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +212,14 @@ export default defineComponent({
       type: [Object] as PropType<SeaportTransactionsModel[]>,
       required: true,
     },
+    nftChartData: {
+      type: [] as PropType<number[][]>,
+      required: true
+    },
+    isLoading: {
+      type: Boolean,
+      default: true
+    }
   },
 
   data() {
@@ -129,33 +233,10 @@ export default defineComponent({
       one_year: 0,
       five_years: 0,
       selectedDate: 0,
-      series: [
-        {
-          data: [
-            [1327359600000, 30.95],
-            [1327446000000, 31.34],
-            [1327532400000, 31.18],
-            [1327618800000, 31.05],
-            [1327878000000, 31.0],
-            [1327964400000, 30.95],
-            [1328050800000, 31.24],
-            [1328137200000, 31.29],
-            [1328223600000, 31.85],
-            [1328482800000, 31.86],
-            [1328569200000, 32.28],
-            [1328655600000, 32.1],
-            [1328742000000, 32.65],
-            [1328828400000, 32.21],
-          ],
-          name: 'Overall Value',
-        },
-      ],
+
       chartOptions: {
         chart: {
           id: 'chart',
-          zoom: {
-            autoScaleYaxis: true,
-          },
           background: 'transparent',
           toolbar: {
             show: false,
@@ -163,6 +244,9 @@ export default defineComponent({
               download: false,
             },
           },
+          zoom: {
+            enabled: false
+          }
         },
         grid: {
           show: true,
@@ -205,7 +289,7 @@ export default defineComponent({
             height: 1,
           },
           labels: {
-            format: 'dd/MM/yyyy',
+            format: 'dd/MM/yy',
             show: true,
             overwriteCategories: false,
             rotate: -45,
@@ -215,7 +299,7 @@ export default defineComponent({
             trim: false,
             minHeight: undefined,
             maxHeight: 120,
-            datetimeUTC: false,
+            datetimeUTC: true,
             style: {
               colors: '#212131',
               fontSize: '16px',
@@ -295,9 +379,28 @@ export default defineComponent({
             format: 'dd/MM/yyyy',
           },
         },
+        selection: {
+          enabled: false
+        },
+        pan: {
+          enabled: false
+        },
+        zoom: {
+          enabled: false
+        }
       },
       selection: 'three_months',
     };
+  },
+  computed: {
+    series() {
+      return [
+        {
+          data: this.nftChartData,
+          name: 'Sold at'
+        }
+      ]
+    }
   },
   methods: {
     TimestampToDate(timestamp: number) {

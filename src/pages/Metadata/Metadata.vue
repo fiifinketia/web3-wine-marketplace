@@ -17,7 +17,12 @@
         transition-next="jump-left"
       >
         <q-tab-panel name="history">
-          <WineHistory :nft-txn-history="txnHistory" style="padding-bottom: 3rem"/>
+          <WineHistory
+            :nft-txn-history="txnHistory"
+            :nft-chart-data="chartData"
+            :is-loading="loadingPrices"
+            style="padding-bottom: 3rem"
+          />
         </q-tab-panel>
 
         <q-tab-panel name="about">
@@ -68,10 +73,12 @@ export default defineComponent({
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
+      chartData: [] as number[][],
       userStore,
       tab: ref('history'),
       tokenExists: false,
       loadingMetadata: true,
+      loadingPrices: true
     };
   },
 
@@ -130,7 +137,10 @@ export default defineComponent({
         contractAddress,
         network
       })
-      this.txnHistory = txnHistory;
+      const { txns, chartData } = txnHistory;
+      this.txnHistory = txns;
+      this.chartData = chartData;
+      this.loadingPrices = false;
     },
 
     async CheckTokenExistence(
