@@ -50,14 +50,10 @@
             </q-radio>
           </div>
           <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between q-mb-sm'">
-            <div class="row items-center">
-              <span v-if="!isLoading" class="price1">00.00</span>
+            <div class="row items-center justify-end q-gutter-x-xs">
+              <img src="../../../../public/images/USDT-black.svg"/>
+              <span v-if="!isLoading" class="price1">{{ averagePrice }}</span>
               <div v-else class="loading-price-box" />
-              <span v-if="!isLoading" class="price2 q-pl-sm">/ $ 00.00</span>
-              <div v-else class="row">
-                <span class="slash-loading q-px-sm"> / </span>
-                <div class="loading-price-box" />
-              </div>
             </div>
             <span class="average-price">Average price</span>
           </div>
@@ -237,7 +233,8 @@ export default defineComponent({
     },
     nftChartData: {
       type: [] as PropType<number[][]>,
-      required: true
+      required: true,
+      default: []
     },
     isLoading: {
       type: Boolean,
@@ -423,6 +420,12 @@ export default defineComponent({
           name: 'Sold at'
         }
       ]
+    },
+    averagePrice() {
+      const temp = this.nftChartData;
+      if (temp.length > 0) {
+        return (temp.reduce((acc, val) => acc + val[1], 0)/temp.length).toFixed(2)
+      } else return '00.00'
     }
   },
   methods: {
