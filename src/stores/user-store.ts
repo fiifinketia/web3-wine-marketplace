@@ -85,6 +85,10 @@ export const useUserStore = defineStore(
       return Number(balanceInETH) * maticToUsdcRate;
     };
 
+    const getWalletAddress = () => {
+      return walletAddress.value
+    };
+
     const $reset = () => {
       (walletAddress.value = ''), (user.value = null);
     };
@@ -94,6 +98,7 @@ export const useUserStore = defineStore(
       walletAddress,
       connectWallet,
       getWalletBalance,
+      getWalletAddress,
       checkConnection,
       user,
       // isConnected,

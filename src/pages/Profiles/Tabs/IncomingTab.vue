@@ -2,11 +2,12 @@
   <q-page
     class="column items-center"
     :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
   >
     <div v-if="!loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your incoming offers'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -93,6 +94,10 @@
       <div v-else class="column items-center">
         <EmptyView :empty-text="'You do not have incoming offers yet.'" />
       </div>
+      <AcceptedOfferDialog
+        v-model="openAcceptedOrderDialog"
+        :order-accepted="'offer'"
+      />
     </div>
   </q-page>
 </template>
@@ -111,11 +116,13 @@ import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { IncomingOffersResponse } from '../models/response.models';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import { ErrorMessageBuilder } from 'src/shared/error.msg.helper';
-import AcceptOffer from '../Popups/AcceptOffer.vue';
+import AcceptOffer from '../../SharedPopups/AcceptOffer.vue';
 import IncomingColumns from '../Columns/IncomingColumns.vue';
 import IncomingRows from '../Rows/IncomingRows.vue';
+import { mapState } from 'pinia';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 
 const nftStore = useNFTStore();
 
@@ -127,6 +134,7 @@ export default defineComponent({
     EmptyView: Empty,
     ErrorDialog: ProfileErrors,
     ConfirmView: AcceptOffer,
+    AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
   },
@@ -140,7 +148,6 @@ export default defineComponent({
       store,
       nftStore,
       userStore,
-      incomingOffers: store.incomingOffers,
       incomingSortKey: store.getIncomingSortKey,
 
       incomingBrandFilter: store.getIncomingBrandFilter,
@@ -153,14 +160,20 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
       openConfirmDialog: false,
+      openAcceptedOrderDialog: false,
 
       orderHash: '',
       brand: '',
       image: '',
-      token: {} as TokenIdentifier,
-
-      brandSearched: false,
+      token: {} as TokenIdentifier
     };
+  },
+
+  computed: {
+    ...mapState(ordersStore, {
+      incomingOffers: store => store.getIncomingOffers,
+      brandSearched: store => store.getIncomingBrandFilterStatus
+    }),
   },
 
   watch: {
@@ -184,6 +197,7 @@ export default defineComponent({
   },
 
   async mounted() {
+    this.store.setIncomingBrandFilterStatus(false);
     await this.FetchIncomingOffers('', '');
   },
 
@@ -214,6 +228,10 @@ export default defineComponent({
         await FulfillBasicOrder(orderHash, brand, true, address, image);
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
+        this.openAcceptedOrderDialog = true;
+        setTimeout(() => {
+          this.openAcceptedOrderDialog = false;
+        }, 3000);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError(err);
@@ -276,11 +294,6 @@ export default defineComponent({
       return actualIncomingOffers;
     },
     RemoveRow(token: TokenIdentifier) {
-      const tokenKey = `${token.identifierOrCriteria},${token.contractAddress},${token.network}`;
-      this.incomingOffers = this.incomingOffers.filter(f => {
-        const offersKey = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`;
-        return offersKey !== tokenKey;
-      });
       this.store.filterIncomingOffers(token);
       this.CheckForEmptyRequest();
     },

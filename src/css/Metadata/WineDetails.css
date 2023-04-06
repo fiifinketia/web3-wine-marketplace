@@ -1,0 +1,83 @@
+.about-container {
+	width: 95%;
+}
+
+.about-title {
+	font-family: 'Obviously-Bold';
+	font-size: 20px;
+	align-items: center;
+	color: #212131;
+}
+
+.paragraph {
+	width: 70%;
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
+	line-height: 27px;
+	color: #212131;
+}
+
+.properties-container {
+	width: 95%;
+	padding-top: 50px;
+}
+
+.about-maker-container {
+	width: 95%;
+}
+
+.table-container {
+	background: #ffffff;
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	border-radius: 18px;
+	width: 100%;
+	height: auto;
+}
+
+.property-container {
+	width: 24%;
+}
+
+.maker-container {
+	width: 32%;
+}
+
+.property-name {
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
+	text-align: center;
+	line-height: 22px;
+	color: #9d9d9d;
+}
+
+.property-value {
+	font-family: 'Obviously-Bold';
+	font-size: 18px;
+	text-align: center;
+	line-height: 28px;
+	color: #212131;
+}
+
+#border {
+	width: 90%;
+	position: relative;
+	border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+}
+
+@media screen and (max-width: 992px) {
+	.paragraph {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.properties-container, .about-container, .about-maker-container {
+		width: 100%;
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	.property-container,
+	.maker-container {
+		width: 50%;
+	}
+}

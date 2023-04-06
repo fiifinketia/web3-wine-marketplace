@@ -55,6 +55,7 @@ export const useListableFilters = defineStore('listableFilters', {
     filterKey: 0,
 
     filteredListableTokens: [] as ListableToken[],
+    parentListableTokens: [] as ListableToken[]
   }),
   getters: {
     getType: state => state.type,
@@ -87,6 +88,9 @@ export const useListableFilters = defineStore('listableFilters', {
     getFilteredListableTokens: state => {
       return state.filteredListableTokens;
     },
+    getParentListableTokens: state => {
+      return state.parentListableTokens;
+    }
   },
   actions: {
     setType(type: string[]) {
@@ -118,6 +122,9 @@ export const useListableFilters = defineStore('listableFilters', {
     },
     indexFilterKey() {
       this.filterKey = this.filterKey + 1;
+    },
+    setParentListableTokens(listableTokens: ListableToken[]) {
+      this.parentListableTokens = listableTokens;
     },
     removeFilter(value: string) {
       this.type = this.type.filter(i => i !== value);

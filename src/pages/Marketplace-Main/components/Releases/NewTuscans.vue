@@ -20,6 +20,7 @@ export default defineComponent({
   components: {
     NFTSelections: NFTSelectionsVue
   },
+  emits: ['empty-section'],
   data() {
     const userStore = useUserStore();
     return {
@@ -39,6 +40,9 @@ export default defineComponent({
       try {
         this.isLoading = true;
         this.newNFTs = await GetNFTsFromRegion(this.userStore.walletAddress, 'Tuscany');
+        if (this.newNFTs.length == 0) {
+          this.$emit('empty-section');
+        }
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;

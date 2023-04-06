@@ -2,11 +2,12 @@
   <q-page
     class="column items-center"
     :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
   >
     <div v-if="!loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your transactions'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -78,9 +79,10 @@ import EmptyOrders from '../EmptyOrders.vue';
 import TransactionHeaderLg from '../Headers/TransactionHeaderLg.vue';
 import TransactionHeaderSm from '../Headers/TransactionHeaderSm.vue';
 import { useUserStore } from 'src/stores/user-store';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import TransactionsColumns from '../Columns/TransactionsColumns.vue';
 import TransactionsRows from '../Rows/TransactionsRows.vue';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   components: {
@@ -110,10 +112,13 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false,
-
-      brandSearched: false,
+      openErrorDialog: false
     };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      brandSearched: store => store.getTransactionBrandFilterStatus
+    }),
   },
   watch: {
     transactionSortKey: {
@@ -130,7 +135,6 @@ export default defineComponent({
     transactionBrandFilter: {
       handler: function (brandFilter) {
         this.store.setTransactionBrandFilter(brandFilter);
-        this.store.setTransactionBrandFilterStatus(false);
       },
     },
   },
@@ -189,7 +193,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetTransactions();
       this.transactionBrandFilter = this.store.transactionBrandFilter;
-      this.store.setTransactionBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',

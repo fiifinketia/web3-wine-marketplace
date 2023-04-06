@@ -255,7 +255,7 @@ export default defineComponent({
   props: {
     orderHash: {
       type: String,
-      required: true,
+      default: '',
     },
     image: {
       type: String,
@@ -285,8 +285,17 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    isEdit: {
+      type: Boolean,
+      required: true
+    }
   },
-  emits: ['remove-offer', 'outgoing-edit-close', 'outgoing-error-dialog'],
+  emits: [
+    'remove-offer',
+    'outgoing-edit-close',
+    'outgoing-error-dialog',
+    'offer-created'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -301,8 +310,10 @@ export default defineComponent({
   methods: {
     async CreateNewOrder() {
       try {
-        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
-        this.$emit('remove-offer', this.orderHash);
+        if (!!this.isEdit) {
+          await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
+          this.$emit('remove-offer', this.orderHash);
+        }
         try {
           await CreateERC721Offer(
             this.tokenID,
@@ -313,6 +324,7 @@ export default defineComponent({
             this.offerPrice,
             this.offerExpirationDate
           );
+          this.$emit('offer-created');
         } catch (err) {
           this.BuildErrorDialog(err);
         }

@@ -8,7 +8,7 @@
         style="width: 100%"
       >
         <img
-          src="../../../../../../public/images/WiV-logo.svg"
+          src="../../../../../public/images/WiV-logo.svg"
           style="width: 100px"
         />
         <q-btn
@@ -18,7 +18,7 @@
           unelevated
           class="exit-btn btn--no-hover"
         >
-          <img src="../../../../../assets/exit.svg" />
+          <img src="../../../../assets/exit.svg" />
         </q-btn>
       </q-card>
       <q-scroll-area

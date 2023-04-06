@@ -2,11 +2,12 @@
   <q-page
     class="column items-center"
     :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
   >
     <div v-if="!loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your outgoing offers'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -59,37 +60,43 @@
             @edit-offer="offer => OpenEditDialog(offer)"
           />
         </div>
-        <OutgoingDialogEdit
-          v-model="openEditDialog"
-          :brand="singleOffer.brand"
-          :highest-offer="singleOffer.highestOffer!"
-          :highest-offer-currency="singleOffer.highestOfferCurrency!"
-          :image="singleOffer.image"
-          :network="singleOffer.network"
-          :order-hash="singleOffer.orderHash"
-          :smart-contract-address="singleOffer.contractAddress"
-          :token-i-d="singleOffer.identifierOrCriteria"
-          @outgoing-edit-close="openEditDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <OutgoingDialogDelete
-          v-model="openDeleteDialog"
-          :order-hash="singleOffer.orderHash"
-          @outgoing-delete-close="openDeleteDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <ErrorDialog
-          v-model="openErrorDialog"
-          :error-type="errorType"
-          :error-title="errorTitle"
-          :error-message="errorMessage"
-        />
       </div>
       <div v-else class="column items-center">
         <EmptyView :empty-text="'You have not made any offers yet.'" />
       </div>
+      <OutgoingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleOffer.brand"
+        :highest-offer="singleOffer.highestOffer"
+        :highest-offer-currency="singleOffer.highestOfferCurrency"
+        :image="singleOffer.image"
+        :network="singleOffer.network"
+        :order-hash="singleOffer.orderHash"
+        :smart-contract-address="singleOffer.contractAddress"
+        :token-i-d="singleOffer.identifierOrCriteria"
+        :is-edit="true"
+        @outgoing-edit-close="openEditDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+        @offer-created="SetTimeoutOnOfferProcessedDialog()"
+      />
+      <OutgoingDialogDelete
+        v-model="openDeleteDialog"
+        :order-hash="singleOffer.orderHash"
+        @outgoing-delete-close="openDeleteDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
+      <OutgoingProcessedDialog
+        v-model="openOrderCompletedDialog"
+        :order-type="'offer'"
+      />
     </div>
   </q-page>
 </template>
@@ -103,12 +110,14 @@ import OutgoingHeaderSm from '../Headers/OutgoingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
-import OutgoingEdit from '../Popups/OutgoingEdit.vue';
-import OutgoingDelete from '../Popups/OutgoingDelete.vue';
+import OutgoingEdit from '../../SharedPopups/OutgoingEdit.vue';
+import OutgoingDelete from '../../SharedPopups/OutgoingDelete.vue';
 import { OutgoingOffersResponse } from '../models/response.models';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
+import { mapState } from 'pinia';
+import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 
 export default defineComponent({
   components: {
@@ -118,6 +127,7 @@ export default defineComponent({
     EmptyView: EmptyOrders,
     OutgoingDialogEdit: OutgoingEdit,
     OutgoingDialogDelete: OutgoingDelete,
+    OutgoingProcessedDialog: OrderProcessed,
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
     OutgoingRows: OutgoingRows,
@@ -129,7 +139,6 @@ export default defineComponent({
     return {
       store,
       userStore,
-      outgoingOffers: store.outgoingOffers,
       outgoingSortKey: store.getOutgoingSortKey,
 
       outgoingBrandFilter: store.getOutgoingBrandFilter,
@@ -146,9 +155,14 @@ export default defineComponent({
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-
-      brandSearched: false,
+      openOrderCompletedDialog: false
     };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      outgoingOffers: store => store.getOutgoingOffers,
+      brandSearched: store => store.getOutgoingBrandFilterStatus
+    }),
   },
   watch: {
     outgoingSortKey: {
@@ -165,7 +179,6 @@ export default defineComponent({
     outgoingBrandFilter: {
       handler: function (brandFilter) {
         this.store.setOutgoingBrandFilter(brandFilter);
-        this.store.setOutgoingBrandFilterStatus(false);
       },
     },
   },
@@ -181,6 +194,12 @@ export default defineComponent({
     this.loadingRequest = true;
   },
   methods: {
+    SetTimeoutOnOfferProcessedDialog() {
+      this.openOrderCompletedDialog = true;
+      setTimeout(() => {
+        this.openOrderCompletedDialog = false
+      }, 3000);
+    },
     async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
@@ -196,7 +215,6 @@ export default defineComponent({
         this.loadingRequest = true;
       } else {
         this.brandSearched = false;
-        this.outgoingOffers = this.store.getOutgoingOffers;
         this.$emit('outgoingAmount', this.outgoingOffers.length);
         this.CheckForEmptyRequest();
         this.loadingRequest = true;
@@ -211,9 +229,6 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.outgoingOffers = this.outgoingOffers.filter(
-        f => f.orderHash !== orderHash
-      );
       this.store.filterOutgoingOffers(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -238,7 +253,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetOutgoingOffers();
       this.outgoingBrandFilter = this.store.outgoingBrandFilter;
-      this.store.setOutgoingBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
