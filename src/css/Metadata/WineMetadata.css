@@ -117,6 +117,7 @@
 	font-size: 18px;
 	line-height: 22px;
 	letter-spacing: 0.02em;
+	text-align: center;
 	color: #212131;
 	opacity: 0.6;
 }
@@ -242,5 +243,18 @@
 	.offer-btn {
 		width: 100%;
 		max-width: 500px;
+	}
+	.wine-name {
+		font-size: 20px;
+		line-height: 30px;
+	}
+	.brand-name, .wine-name {
+		width: 90%;
+	}
+	.wine-description {
+		font-size: 16px;
+	}
+	.metadata-btn-text, .metadata-btn-text_outline {
+		font-size: 18px;
 	}
 }

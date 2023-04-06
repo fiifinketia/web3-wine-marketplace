@@ -5,9 +5,14 @@
       {{ ReturnErrorMessage() }}
     </span>
     <q-img
-      v-if="tabError == 'listings' || tabError == 'trading'"
+      v-if="tabError == 'listings'"
       class="profile-error-icon"
       src="../../assets/notepad.svg"
+    />
+    <q-img
+      v-if="tabError == 'trading'"
+      class="profile-error-icon"
+      src="../../assets/notebook.svg"
     />
     <q-img
       v-else

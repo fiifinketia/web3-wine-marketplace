@@ -407,6 +407,7 @@ import transakSDK from '@transak/transak-sdk';
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';
 import '../css/MainLayout/MyWallet.css';
+import 'src/css/reusable.css';
 
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';

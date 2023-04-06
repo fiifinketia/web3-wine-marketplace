@@ -9,6 +9,13 @@
 	color: #212131;
 }
 
+.metadata-missing-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	text-align: center;
+	color: #3586FF;
+}
+
 .chart-timeline-options {
   font-family: 'ProximaNova-Regular';
   font-size: 16px;

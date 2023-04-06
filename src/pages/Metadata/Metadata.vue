@@ -21,7 +21,9 @@
             :nft-txn-history="txnHistory"
             :nft-chart-data="chartData"
             :is-loading="loadingPrices"
+            :errored-out="errorLoadingHistory"
             style="padding-bottom: 3rem"
+            @refetch-history="GetNFTTXNHistory(nft.tokenID, nft.smartContractAddress, nft.network)"
           />
         </q-tab-panel>
 
@@ -78,7 +80,8 @@ export default defineComponent({
       tab: ref('history'),
       tokenExists: false,
       loadingMetadata: true,
-      loadingPrices: true
+      loadingPrices: true,
+      errorLoadingHistory: false
     };
   },
 
@@ -132,15 +135,22 @@ export default defineComponent({
     },
 
     async GetNFTTXNHistory(identifierOrCriteria: string, contractAddress: string, network: string) {
-      const txnHistory = await GetTokenTXNHistory({
-        identifierOrCriteria,
-        contractAddress,
-        network
-      })
-      const { txns, chartData } = txnHistory;
-      this.txnHistory = txns;
-      this.chartData = chartData;
-      this.loadingPrices = false;
+      try {
+        this.loadingPrices = true;
+        this.errorLoadingHistory = false;
+        const txnHistory = await GetTokenTXNHistory({
+          identifierOrCriteria,
+          contractAddress,
+          network
+        })
+        const { txns, chartData } = txnHistory;
+        this.txnHistory = txns;
+        this.chartData = chartData;
+      } catch {
+        this.errorLoadingHistory = true;
+      } finally {
+        this.loadingPrices = false;
+      }
     },
 
     async CheckTokenExistence(
