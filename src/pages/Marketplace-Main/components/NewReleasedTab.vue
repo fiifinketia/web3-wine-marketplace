@@ -1,17 +1,14 @@
 <template>
   <div class="fit column items-center">
     <!-- Newly Listed Section -->
-    <div v-if="listedSectionExists" class="releases-tab-container column justify-center">
+    <div
+      v-if="listedSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
-        <q-img
-          src="../../../assets/small-bag.svg"
-          class="releases-tab-icons"
-        />
+        <q-img src="../../../assets/small-bag.svg" class="releases-tab-icons" />
         <span> SALE </span>
-        <q-img
-          src="../../../assets/small-box.svg"
-          class="releases-tab-icons"
-        />
+        <q-img src="../../../assets/small-box.svg" class="releases-tab-icons" />
       </div>
     </div>
     <NewlyListedSection
@@ -21,7 +18,10 @@
     />
 
     <!-- Newly Minted Section -->
-    <div v-if="mintedSectionExists" class="releases-tab-container column justify-center">
+    <div
+      v-if="mintedSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -41,7 +41,10 @@
     />
 
     <!-- Super Tuscans Section -->
-    <div v-if="tuscansSectionExists" class="releases-tab-container column justify-center">
+    <div
+      v-if="tuscansSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -61,7 +64,10 @@
     />
 
     <!-- Exceptional Bordeaux Section -->
-    <div v-if="bordeauxSectionExists" class="releases-tab-container column justify-center">
+    <div
+      v-if="bordeauxSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -89,13 +95,24 @@ import NewlyListed from './Releases/NewlyListed.vue';
 import NewTuscans from './Releases/NewTuscans.vue';
 import 'src/css/Releases/Releases-page.css';
 import NewBordeaux from './Releases/NewBordeaux.vue';
+import * as amplitude from '@amplitude/analytics-browser';
+
+amplitude.init(<string>process.env.AMP_API_KEY, undefined, {
+  defaultTracking: {
+    sessions: true,
+    pageViews: true,
+  },
+});
+
+amplitude.setSessionId(Date.now());
+amplitude.track('Releases Tab Clicked');
 
 export default defineComponent({
   components: {
     NewlyMintedSection: NewlyMinted,
     NewlyListedSection: NewlyListed,
     SuperTuscans: NewTuscans,
-    ExceptionalBordeaux: NewBordeaux
+    ExceptionalBordeaux: NewBordeaux,
   },
   emits: ['totalTokens'],
   data() {
@@ -103,9 +120,9 @@ export default defineComponent({
       listedSectionExists: true,
       mintedSectionExists: true,
       tuscansSectionExists: true,
-      bordeauxSectionExists: true
-    }
-  }
+      bordeauxSectionExists: true,
+    };
+  },
 });
 </script>
 

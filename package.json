@@ -13,6 +13,7 @@
     "dev": "cross-env QENV=development quasar dev"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.9.3",
     "@metamask/onboarding": "^1.0.1",
     "@opensea/seaport-js": "^1.0.8",
     "@quasar/extras": "^1.0.0",
