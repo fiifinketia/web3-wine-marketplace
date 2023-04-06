@@ -31,7 +31,7 @@
         class="row items-center outgoing-column-own-offer"
       >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-        <span class="profile-nft-number"> {{ offer.offer }} </span>
+        <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
           anchor="top start"
@@ -55,7 +55,7 @@
       >
         <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
         <span class="profile-nft-number">
-          {{ !!offer.highestOffer ? offer.highestOffer : '0.00' }}
+          {{ !!offer.highestOffer ? parseFloat(offer.highestOffer).toFixed(1) : '0.00' }}
         </span>
       </div>
       <div
@@ -70,7 +70,7 @@
       >
         <div class="row q-pb-xs">
           <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-          <span class="profile-nft-number"> {{ offer.offer }} </span>
+          <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
       </div>
@@ -132,7 +132,7 @@ export default defineComponent({
     OpenNFTDialog(offer: OutgoingOffersResponse) {
       this.image = offer.image;
       this.brand = offer.brand;
-      this.highestOffer = !!offer.highestOffer ? offer.highestOffer : '0.00';
+      this.highestOffer = !!offer.highestOffer ? parseFloat(offer.highestOffer).toFixed(1) : '0.00';
       this.offerEndTime = offer.endTime;
       this.showNFTPopup = true;
     },

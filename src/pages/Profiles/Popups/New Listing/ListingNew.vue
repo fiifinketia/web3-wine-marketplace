@@ -122,10 +122,10 @@ import 'src/css/Profile/Component/newListing.css';
 import ListingNewHeader from './ListingNewHeader.vue';
 import ListingNewNFTs from './ListingNewNFTs.vue';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
-import ListingEdit from '../ListingEdit.vue';
-import ProfileErrors from '../ProfileErrors.vue';
-import SidebarNormal from './Sidebar/SidebarNormal.vue';
-import SidebarMobile from './Sidebar/SidebarMobile.vue';
+import ListingEdit from '../../../SharedPopups/ListingEdit.vue';
+import ProfileErrors from '../../../SharedPopups/ProfileErrors.vue';
+import SidebarNormal from '../Sidebar/SidebarNormal.vue';
+import SidebarMobile from '../Sidebar/SidebarMobile.vue';
 import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 

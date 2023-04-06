@@ -7,7 +7,7 @@
     <div v-if="!loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your listings'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -64,41 +64,49 @@
             @edit-listing="listing => OpenEditDialog(listing)"
           />
         </div>
-        <ListingDialogEdit
-          v-model="openEditDialog"
-          :brand="singleListing.brand"
-          :image="singleListing.image"
-          :order-hash="singleListing.orderHash"
-          :network="singleListing.network"
-          :smart-contract-address="singleListing.contractAddress"
-          :token-i-d="singleListing.identifierOrCriteria"
-          :is-edit="true"
-          @listing-edit-close="openEditDialog = false"
-          @remove-listing="val => RemoveRow(val)"
-          @listing-error-dialog="HandleError"
-        />
-        <ListingDialogUnlist
-          v-model="openDeleteDialog"
-          :order-hash="singleListing.orderHash"
-          @listing-delete-close="openDeleteDialog = false"
-          @remove-listing="val => RemoveRow(val)"
-          @listing-error-dialog="HandleError"
-        />
-        <ErrorDialog
-          v-model="openErrorDialog"
-          :error-type="errorType"
-          :error-title="errorTitle"
-          :error-message="errorMessage"
-        />
-        <CreateListing
-          v-model="openNewListingDialog"
-          :listable-n-f-ts="listableNFTs"
-          @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
-        />
       </div>
       <div v-else class="column items-center">
-        <EmptyView :empty-text="'You have not made any listings yet.'" />
+        <EmptyView
+          :empty-text="'You have not made any listings yet.'"
+          @open-listable-container="openNewListingDialog = true"
+        />
       </div>
+      <ListingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleListing.brand"
+        :image="singleListing.image"
+        :order-hash="singleListing.orderHash"
+        :network="singleListing.network"
+        :smart-contract-address="singleListing.contractAddress"
+        :token-i-d="singleListing.identifierOrCriteria"
+        :is-edit="true"
+        @listing-edit-close="openEditDialog = false"
+        @remove-listing="val => RemoveRow(val)"
+        @listing-error-dialog="HandleError"
+        @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
+      />
+      <ListingDialogUnlist
+        v-model="openDeleteDialog"
+        :order-hash="singleListing.orderHash"
+        @listing-delete-close="openDeleteDialog = false"
+        @remove-listing="val => RemoveRow(val)"
+        @listing-error-dialog="HandleError"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
+      <CreateListing
+        v-model="openNewListingDialog"
+        :listable-n-f-ts="listableNFTs"
+        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
+      />
+      <ListingProcessedDialog
+        v-model="openOrderCompletedDialog"
+        :order-type="'listing'"
+      />
     </div>
   </q-page>
 </template>
@@ -115,10 +123,10 @@ import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
-import ListingEdit from '../Popups/ListingEdit.vue';
-import ListingUnlist from '../Popups/ListingUnlist.vue';
+import ListingEdit from '../../SharedPopups/ListingEdit.vue';
+import ListingUnlist from '../../SharedPopups/ListingUnlist.vue';
 import { ListingsResponse } from '../models/response.models';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import ListingsColumns from '../Columns/ListingsColumns.vue';
 import ListingsRows from '../Rows/ListingsRows.vue';
 import ListingNew from '../Popups/New Listing/ListingNew.vue';
@@ -128,6 +136,8 @@ import {
   ListableToken,
 } from 'src/shared/models/entities/NFT.model';
 import { ReturnMissingNFTDetails } from '../orders.requests';
+import { mapState } from 'pinia';
+import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -139,6 +149,7 @@ export default defineComponent({
     EmptyView: EmptyOrders,
     ListingDialogEdit: ListingEdit,
     ListingDialogUnlist: ListingUnlist,
+    ListingProcessedDialog: OrderProcessed,
     ErrorDialog: ProfileErrors,
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
@@ -157,7 +168,6 @@ export default defineComponent({
       nftStore,
       listableFiltersStore,
 
-      listings: store.listings,
       listingSortKey: store.getListingSortKey,
 
       listingBrandFilter: store.getListingBrandFilter,
@@ -172,17 +182,23 @@ export default defineComponent({
       enableListingDialog: false,
 
       singleListing: {} as ListingsResponse,
-      listableNFTs: [] as ListableToken[],
 
       errorType: '',
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-
-      brandSearched: false,
+      openOrderCompletedDialog: false
     };
   },
-
+  computed: {
+    ...mapState(ordersStore, {
+      listings: store => store.getListings,
+      brandSearched: store => store.getListingBrandFilterStatus
+    }),
+    ...mapState(useListableFilters, {
+      listableNFTs: store => store.getParentListableTokens
+    })
+  },
   watch: {
     listingSortKey: {
       handler: async function (sortKey) {
@@ -200,7 +216,6 @@ export default defineComponent({
     listingBrandFilter: {
       handler: async function (brandFilter) {
         this.store.setListingBrandFilter(brandFilter);
-        this.store.setListingBrandFilterStatus(false);
       },
     },
   },
@@ -215,11 +230,18 @@ export default defineComponent({
     } else {
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
+      this.listableNFTs = this.listableFiltersStore.getFilteredListableTokens;
     }
     this.loadingRequest = true;
   },
 
   methods: {
+    SetTimeoutOnListingProcessedDialog() {
+      this.openOrderCompletedDialog = true;
+      setTimeout(() => {
+        this.openOrderCompletedDialog = false
+      }, 3000);
+    },
     async FetchListings(sortKey: string, brandFilter: string) {
       this.loadingRequest = false;
       const address = this.userStore.walletAddress;
@@ -234,7 +256,6 @@ export default defineComponent({
         this.loadingRequest = true;
       } else {
         this.brandSearched = false;
-        this.listings = this.store.getListings;
         this.$emit('listingsAmount', this.listings.length);
         this.CheckForEmptyRequest();
       }
@@ -248,7 +269,6 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
       this.store.filterListings(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -274,7 +294,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetListings();
       this.listingBrandFilter = this.store.listingBrandFilter;
-      this.store.setListingBrandFilterStatus(false);
       this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
@@ -322,17 +341,15 @@ export default defineComponent({
 
         if (ownedNFTsMap.size > 0) {
           const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
-          this.listableNFTs = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
+          this.listableFiltersStore.setParentListableTokens(listableTokens);
           this.listableFiltersStore.setAllFilters(this.listableNFTs);
           this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
-          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
-          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
-          // this.listableNFTs = this.listableNFTs.concat(this.listableNFTs);
         }
       }
-      // console.log('Listable NFTs Set', this.listableNFTs)
     },
     UpdateListableNFTWithPrice(listed: ListableToken) {
+      this.SetTimeoutOnListingProcessedDialog();
       const listedIndex = this.listableNFTs.findIndex(
         nft =>
           nft.contractAddress == listed.contractAddress &&

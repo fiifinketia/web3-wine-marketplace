@@ -1,17 +1,27 @@
 <template>
   <div class="fit column items-center">
     <!-- Newly Listed Section -->
-    <div class="releases-tab-container column justify-center">
+    <div
+      v-if="listedSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img src="../../../assets/small-bag.svg" class="releases-tab-icons" />
         <span> SALE </span>
         <q-img src="../../../assets/small-box.svg" class="releases-tab-icons" />
       </div>
     </div>
-    <NewlyListedSection class="q-pa-md" />
+    <NewlyListedSection
+      v-if="listedSectionExists"
+      class="q-pa-md"
+      @empty-section="listedSectionExists = false"
+    />
 
     <!-- Newly Minted Section -->
-    <div class="releases-tab-container column justify-center">
+    <div
+      v-if="mintedSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -24,10 +34,17 @@
         />
       </div>
     </div>
-    <NewlyMintedSection class="q-pa-md" />
+    <NewlyMintedSection
+      v-if="mintedSectionExists"
+      class="q-pa-md"
+      @empty-section="mintedSectionExists = false"
+    />
 
     <!-- Super Tuscans Section -->
-    <div class="releases-tab-container column justify-center">
+    <div
+      v-if="tuscansSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -40,10 +57,17 @@
         />
       </div>
     </div>
-    <SuperTuscans class="q-pa-md" />
+    <SuperTuscans
+      v-if="tuscansSectionExists"
+      class="q-pa-md"
+      @empty-section="tuscansSectionExists = false"
+    />
 
     <!-- Exceptional Bordeaux Section -->
-    <div class="releases-tab-container column justify-center">
+    <div
+      v-if="bordeauxSectionExists"
+      class="releases-tab-container column justify-center"
+    >
       <div class="row items-center justify-center q-gutter-x-lg">
         <q-img
           src="../../../assets/small-wine.svg"
@@ -56,7 +80,11 @@
         />
       </div>
     </div>
-    <ExceptionalBordeaux class="q-pa-md" />
+    <ExceptionalBordeaux
+      v-if="bordeauxSectionExists"
+      class="q-pa-md"
+      @empty-section="bordeauxSectionExists = false"
+    />
   </div>
 </template>
 
@@ -87,6 +115,14 @@ export default defineComponent({
     ExceptionalBordeaux: NewBordeaux,
   },
   emits: ['totalTokens'],
+  data() {
+    return {
+      listedSectionExists: true,
+      mintedSectionExists: true,
+      tuscansSectionExists: true,
+      bordeauxSectionExists: true,
+    };
+  },
 });
 </script>
 
