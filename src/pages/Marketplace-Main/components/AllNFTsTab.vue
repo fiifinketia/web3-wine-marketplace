@@ -156,7 +156,7 @@ import SidebarMobile from './SidebarMobile.vue';
 // amplitude
 import * as amplitude from '@amplitude/analytics-browser';
 
-amplitude.init('286edfa9633aaf8f494a67e9e5d4d2a7', undefined, {
+amplitude.init(<string>process.env.AMP_API_KEY, undefined, {
   defaultTracking: {
     sessions: true,
     pageViews: true,
