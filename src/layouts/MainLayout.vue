@@ -456,6 +456,9 @@ export default defineComponent({
     'userStore.walletAddress': {
       handler: function (walletAddress: string) {
         this.walletAddress = walletAddress;
+        if (!!walletAddress) {
+          this.ReInitAmplitude(walletAddress);
+        }
       }
     }
   },
@@ -465,6 +468,7 @@ export default defineComponent({
     if (!this.walletAddress) {
       this.ClearStore();
     } else {
+      this.ReInitAmplitude(this.walletAddress);
       this.balance = await this.userStore.getWalletBalance();
     }
   },
@@ -496,6 +500,15 @@ export default defineComponent({
       // );
       transak.close();
       // This is so that the balance is updated after new funds are imported
+    },
+    ReInitAmplitude(walletAddress: string) {
+      // console.log(process.env.AMP_API_KEY, walletAddress)
+      this.$amplitude.init(<string>process.env.AMP_API_KEY, walletAddress, {
+        defaultTracking: {
+          sessions: true,
+          pageViews: true,
+        },
+      })
     },
     async connectWallet() {
       this.showConnectWallet = false;

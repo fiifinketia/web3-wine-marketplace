@@ -152,19 +152,7 @@ import 'src/css/Marketplace/header.css';
 import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
-
-// amplitude
-import * as amplitude from '@amplitude/analytics-browser';
-
-amplitude.init(<string>process.env.AMP_API_KEY, undefined, {
-  defaultTracking: {
-    sessions: true,
-    pageViews: true,
-  },
-});
-
-amplitude.setSessionId(Date.now());
-amplitude.track('Marketplace Tab Clicked');
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -199,6 +187,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    SetSessionID('Marketplace Tab Clicked');
     this.CheckFilterMode();
   },
 

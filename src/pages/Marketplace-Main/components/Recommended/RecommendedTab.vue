@@ -31,17 +31,7 @@ import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { RetrieveFilteredNFTs } from '../../services/RetrieveTokens';
 import NFTSelectionsVue from './NFT-Selections.vue';
 import 'src/css/Releases/ReleasesSelections.css';
-import * as amplitude from '@amplitude/analytics-browser';
-
-amplitude.init(<string>process.env.AMP_API_KEY, undefined, {
-  defaultTracking: {
-    sessions: true,
-    pageViews: true,
-  },
-});
-
-amplitude.setSessionId(Date.now());
-amplitude.track('Recommended NFTs Tab Clicked');
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -66,6 +56,7 @@ export default defineComponent({
     };
   },
   async mounted() {
+    SetSessionID('Recommended NFTs Tab Clicked');
     await this.FetchAllWines();
   },
 

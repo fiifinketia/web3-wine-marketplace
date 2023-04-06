@@ -174,17 +174,7 @@ import EmptyFavorites from './EmptyFavorites.vue';
 import RemoveDialog from './RemoveDialog.vue';
 import ErrorFavorites from './ErrorFavorites.vue';
 import MissingFavorites from './MissingFavorites.vue';
-import * as amplitude from '@amplitude/analytics-browser';
-
-amplitude.init(<string>process.env.AMP_API_KEY, undefined, {
-  defaultTracking: {
-    sessions: true,
-    pageViews: true,
-  },
-});
-
-amplitude.setSessionId(Date.now());
-amplitude.track('pageVisitationTracker');
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -210,6 +200,7 @@ export default defineComponent({
     };
   },
   mounted() {
+    SetSessionID('pageVisitationTracker');
     this.getAllFavoritesWithoutBrand();
   },
   methods: {
@@ -366,7 +357,7 @@ export default defineComponent({
         },
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);
-    },
+    }
   },
 });
 </script>
