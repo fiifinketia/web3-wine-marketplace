@@ -47,7 +47,7 @@
         class="go-to-marketplace q-mt-lg"
         unelevated
         no-caps
-        @click="$router.push('marketplace?tab=nfts'); $shepherd.next();"
+        @click="$router.push('marketplace?tab=nfts'); $shepherd.removeStep('go-to-marketplace');"
       >
         Go to Marketplace
       </q-btn>

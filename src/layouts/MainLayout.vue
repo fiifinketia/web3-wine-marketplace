@@ -422,7 +422,6 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { useTourStore } from 'src/stores/tour-state';
 
 export default defineComponent({
   name: 'MainLayout',

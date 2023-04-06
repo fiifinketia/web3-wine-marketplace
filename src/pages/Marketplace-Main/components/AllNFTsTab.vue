@@ -113,6 +113,7 @@
       :style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
       style="padding-top: 0px !important"
       @total-tokens="updateTokenCount"
+      @loading-completed="nftLoadingCompleted = true"
     />
     <q-page-sticky
       id="marketplace-sidebar-xs"
@@ -180,9 +181,9 @@ export default defineComponent({
       generalSearch: '',
       qChipRows: 0,
       tourStore,
+      nftLoadingCompleted: false,
     };
   },
-
   watch: {
     '$q.screen.width': {
       handler() {
@@ -190,17 +191,10 @@ export default defineComponent({
         this.CheckFilterMode();
       },
     },
-    totalNFTs: {
-      handler() {
-        if (!this.tourStore.completed && this.totalNFTs > 0) {
-          // cons
-          this.marketplaceTour();
-        }
-      },
-    },
   },
   mounted() {
     this.CheckFilterMode();
+		if(!this.tourStore.metadataCompleted) this.marketplaceTour();
   },
 
   methods: {
@@ -262,8 +256,6 @@ export default defineComponent({
       return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
     },
     marketplaceTour() {
-      this.$shepherd.removeStep('welcome-step');
-      this.$shepherd.removeStep('go-to-marketplace');
       let screenSize = '';
       if (this.$q.screen.width > 1023) screenSize = 'lg';
       else if (this.$q.screen.width > 599) screenSize = 'sm';
@@ -280,14 +272,14 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-                this.$shepherd.next();
-								this.$shepherd.removeStep('marketplace-sidebar');
+								if(this.totalNFTs > 0) this.$shepherd.next();
+                this.$shepherd.removeStep('marketplace-sidebar');
               },
             },
             {
               text: 'Skip',
               action: () => {
-                this.tourStore.setCompleted();
+                this.tourStore.setMarketplaceCompleted();
                 this.$shepherd.cancel();
               },
             },
@@ -302,9 +294,15 @@ export default defineComponent({
           text: 'You can select any NFTs here.',
           buttons: [
             {
+              text: 'Continue',
+              action: () => {
+                this.$shepherd.removeStep('marketplace-nfts');
+              },
+            },
+            {
               text: 'Skip',
               action: () => {
-                this.tourStore.setCompleted();
+                this.tourStore.setMarketplaceCompleted();
                 this.$shepherd.cancel();
               },
             },
@@ -312,6 +310,7 @@ export default defineComponent({
         },
       ]);
       this.$shepherd.start();
+      this.tourStore.setMarketplaceCompleted();
     },
   },
 });

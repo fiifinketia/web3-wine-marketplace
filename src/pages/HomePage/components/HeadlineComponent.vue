@@ -29,11 +29,79 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import '../../../css/Homepage/HeadlineComponent.css';
+import { useTourStore } from 'src/stores/tour-state';
+import { StepOptions } from 'vue-shepherd';
 
 export default defineComponent({
   name: 'HeadlineComponent',
   data() {
-    return {};
+    const tourStore = useTourStore();
+
+    return {
+      tourStore,
+    };
+  },
+  mounted() {
+    if (!this.tourStore.homeCompleted) {
+			setTimeout(()=>{
+				this.tourHomepage();
+			}, 3000)
+    }
+  },
+  methods: {
+    tourHomepage() {
+      // Adding steps to the tour
+      const steps: StepOptions[] = [
+        {
+          id: 'welcome-step',
+          attachTo: {
+            element: '#welcome-step',
+            on: 'bottom',
+          },
+          text: 'Welcome to the WiV Marketplace',
+          buttons: [
+            {
+              text: 'Continue',
+              action: () => {
+                this.$shepherd.next();
+                this.$shepherd.removeStep('welcome-step');
+              },
+            },
+          ],
+        },
+        {
+          id: 'go-to-marketplace',
+          attachTo: {
+            element: '#go-to-marketplace',
+            on: 'bottom',
+          },
+          text: 'Click here to go to the marketplace',
+          scrollTo: {
+            // Make sure the element is in the viewport
+            behavior: 'smooth',
+            block: 'end',
+          },
+          buttons: [
+						{
+							text: 'Continue',
+              action: () => {
+                this.$shepherd.removeStep('go-to-marketplace');
+              },
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.$shepherd.cancel();
+                this.tourStore.setHomeCompleted();
+              },
+            },
+          ],
+        },
+      ];
+
+      this.$shepherd.addSteps(steps);
+			this.$shepherd.start();
+    },
   },
 });
 </script>

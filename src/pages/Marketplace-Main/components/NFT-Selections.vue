@@ -191,7 +191,7 @@ export default defineComponent({
     ErrorView: ErrorViewVue,
     EmptyView: EmptyView,
   },
-  emits: ['totalTokens'],
+  emits: ['totalTokens', 'loadingCompleted'],
   data() {
     const userStore = useUserStore();
 
@@ -223,6 +223,13 @@ export default defineComponent({
         }
       },
     },
+		'isLoading': {
+			handler(val) {
+				if (!val) {
+					this.$emit('loadingCompleted');
+				}
+			}
+		},
     'generalSearchStore.generalSearchKey': {
       async handler(val) {
         if (val != 0) {
@@ -324,8 +331,6 @@ export default defineComponent({
           contractAddress: token.smartContractAddress,
         },
       });
-			this.$shepherd.removeStep('marketplace-nfts')
-			this.$shepherd.next();
       switch (where) {
         case 'here':
           this.$router.push({

@@ -2,8 +2,14 @@
   <div class="column justify-center items-center q-mt-xl">
     <div class="brand-name">{{ nft.brand }}</div>
     <div class="wine-name">{{ nft.name }}</div>
-    <div :class="$q.screen.width > 600 ? 'row justify-center q-pt-lg q-px-sm metadata-container' : 'column items-center metadata-container'">
-      <img :src="nft.image" class="metadata-nft-image"/>
+    <div
+      :class="
+        $q.screen.width > 600
+          ? 'row justify-center q-pt-lg q-px-sm metadata-container'
+          : 'column items-center metadata-container'
+      "
+    >
+      <img :src="nft.image" class="metadata-nft-image" />
 
       <div class="column nft-takeaways-container q-pa-sm">
         <div class="row">
@@ -18,7 +24,7 @@
             <div class="user-id">WiV</div>
           </div>
         </div>
-        <div class="q-py-md">
+        <div id="metadata-details" class="q-py-md">
           <div v-if="$q.screen.width > 600" class="row justify-between q-pb-sm">
             <span class="metadata-text">{{ nft.type }} wine</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
@@ -48,14 +54,12 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
+							id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
               <div class="starting-from">Price</div>
-              <div
-                v-if="!!ongoingListingTransaction"
-                class="row items-center"
-              >
+              <div v-if="!!ongoingListingTransaction" class="row items-center">
                 <q-img src="../../../assets/processing.svg" width="30px" />
                 <div class="price1-blue">Processing price</div>
               </div>
@@ -85,6 +89,7 @@
               </div>
             </div>
             <div
+							id="metadata-bidding-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
@@ -126,7 +131,12 @@
       </div>
       <div
         v-else
-        :class="$q.screen.width > 600 ? 'row q-gutter-x-md' : 'column items-center full-width q-px-md q-gutter-y-sm'"
+				id="metadata-checkout-buttons"
+        :class="
+          $q.screen.width > 600
+            ? 'row q-gutter-x-md'
+            : 'column items-center full-width q-px-md q-gutter-y-sm'
+        "
       >
         <q-btn
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
@@ -160,10 +170,7 @@
     >
       <div class="row items-center q-gutter-x-xs">
         <span class="update-metadata-text">Update metadata</span>
-        <img
-          src="../../../../public/images/refresh.svg"
-          style="width: 24px;"
-        />
+        <img src="../../../../public/images/refresh.svg" style="width: 24px" />
       </div>
     </q-btn>
 
@@ -222,10 +229,10 @@
       :token="{
         identifierOrCriteria: nft.tokenID,
         contractAddress: nft.smartContractAddress,
-        network: nft.network
+        network: nft.network,
       }"
       @accept-offer="
-        req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
+        req => AcceptOffer(req.orderHash, req.brand, req.image)
       "
     />
 
@@ -251,6 +258,8 @@ import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
+import { useTourStore } from 'src/stores/tour-state';
+import { StepOptions } from 'vue-shepherd';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -262,7 +271,7 @@ export default defineComponent({
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
     ConfirmOrderDialog: AcceptOffer,
-    AcceptedOrderDialog: OrderAccepted
+    AcceptedOrderDialog: OrderAccepted,
   },
   props: {
     nft: {
@@ -272,6 +281,7 @@ export default defineComponent({
   },
   emits: ['openWallet', 'refresh-metadata', 'connect-wallet'],
   data() {
+    const tourStore = useTourStore();
     return {
       openCreateListingDialog: false,
       openDeleteListingDialog: false,
@@ -287,12 +297,13 @@ export default defineComponent({
 
       orderType: '',
 
-      ongoingListingTransaction: false
-    }
+      ongoingListingTransaction: false,
+      tourStore,
+    };
   },
   computed: {
     ...mapState(useUserStore, {
-      walletAddress: store => store.getWalletAddress()
+      walletAddress: store => store.getWalletAddress(),
     }),
   },
   watch: {
@@ -301,14 +312,19 @@ export default defineComponent({
         if (!!val) {
           this.$emit('refresh-metadata');
         }
-      }
+      },
+    },
+  },
+  mounted() {
+    if (!this.tourStore.metadataCompleted && !this.nft.isOwner) {
+      this.metadataTour();
     }
   },
   methods: {
     OpenFulFillOrOfferDialog(dialog: string) {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
-        return
+        return;
       } else {
         switch (dialog) {
           case 'offer':
@@ -320,14 +336,14 @@ export default defineComponent({
         }
       }
     },
-    SetTimeoutOnCompletedDialog(orderType: string) {
+    SetTimeoutOnmetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
         this.ongoingListingTransaction = true;
       }
       this.openOrderCompletedDialog = true;
       setTimeout(() => {
-        this.openOrderCompletedDialog = false
+        this.openOrderCompletedDialog = false;
       }, 3000);
     },
     HandleError(err: {
@@ -343,11 +359,7 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    async AcceptOffer(
-      orderHash: string,
-      brand: string,
-      image: string
-    ) {
+    async AcceptOffer(orderHash: string, brand: string, image: string) {
       const address = this.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, true, address, image);
@@ -355,12 +367,13 @@ export default defineComponent({
         setTimeout(() => {
           this.openOrderAccepted = false;
         }, 3000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
+          errorMessage:
+            'It may be due to not having enough balance, rejected transaction, etc.',
         });
       } finally {
         this.openConfirmDialog = false;
@@ -368,7 +381,114 @@ export default defineComponent({
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');
-    }
+    },
+    metadataTour() {
+			const steps: StepOptions[] = [
+				{
+					id: 'metadata-details',
+					attachTo: {
+            element: '#metadata-details',
+            on: 'top',
+          },
+          text: 'You can read the brief details of the wine',
+          buttons: [
+						{
+							text: 'Continue',
+							action: () => {
+								this.$shepherd.next()
+								this.$shepherd.removeStep('metadata-details')
+							}
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-listing-price',
+					attachTo: {
+            element: '#metadata-listing-price',
+            on: 'top',
+          },
+          text: 'This is the listing price of the wine if you want to purchase immediatly',
+          buttons: [
+						{
+							text: 'Continue',
+							action: () => {
+								this.$shepherd.next()
+								this.$shepherd.removeStep('metadata-listing-price')
+							}
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-bidding-price',
+					attachTo: {
+            element: '#metadata-bidding-price',
+            on: 'top',
+          },
+          text: 'This is the bidding price of the wine if you want to bid for the wine.',
+          buttons: [
+						{
+							text: 'Continue',
+							action: () => {
+								this.$shepherd.next()
+								this.$shepherd.removeStep('metadata-bidding-price')
+							}
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-checkout-buttons',
+					attachTo: {
+            element: '#metadata-checkout-buttons',
+            on: 'top',
+          },
+					scrollTo: {
+            // Make sure the element is in the viewport
+            behavior: 'smooth',
+            block: 'end',
+          },
+          text: 'Use any of these buttons to purchase the wine depending on your preference',
+          buttons: [
+						{
+							text: 'Continue',
+							action: () => {
+								this.$shepherd.removeStep('metadata-checkout-buttons')
+							}
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+			]
+
+			this.$shepherd.addSteps(steps)
+			this.$shepherd.start()
+		},
   },
 });
 </script>
