@@ -30,7 +30,7 @@ import { defineComponent } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { RetrieveFilteredNFTs } from '../../services/RetrieveTokens';
 import NFTSelectionsVue from './NFT-Selections.vue';
-import '../../../../css/Releases/Releases-Selections.css';
+import 'src/css/Releases/ReleasesSelections.css';
 
 export default defineComponent({
   components: {

@@ -87,7 +87,7 @@ import { defineComponent } from 'vue';
 import NewlyMinted from './Releases/NewlyMinted.vue';
 import NewlyListed from './Releases/NewlyListed.vue';
 import NewTuscans from './Releases/NewTuscans.vue';
-import 'src/css/Releases/Releases-page.css';
+import 'src/css/Releases/ReleasesPage.css';
 import NewBordeaux from './Releases/NewBordeaux.vue';
 
 export default defineComponent({
