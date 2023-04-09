@@ -1,12 +1,17 @@
 <template>
   <q-page
     class="column items-center"
-    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    :class="loadingRequest || emptyRequest ? 'justify-center' : ''"
     style="flex-wrap: nowrap"
   >
-    <div v-if="!loadingRequest" class="column items-center">
+    <div v-if="loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your transactions'" />
     </div>
+    <ErrorView
+      v-else-if="!!errorOverall"
+      :tab-error="'trading'"
+      @reload-tab="FetchTransactions(transactionSortKey, transactionBrandFilter)"
+    />
     <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
@@ -76,6 +81,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import 'src/css/Profile/Component/transaction.css';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
+import LoadingError from '../LoadingError.vue';
 import TransactionHeaderLg from '../Headers/TransactionHeaderLg.vue';
 import TransactionHeaderSm from '../Headers/TransactionHeaderSm.vue';
 import { useUserStore } from 'src/stores/user-store';
@@ -90,6 +96,7 @@ export default defineComponent({
     TransactionHeaderSm: TransactionHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
+    ErrorView: LoadingError,
     ErrorDialog: ProfileErrors,
     TransactionsColumns: TransactionsColumns,
     TransactionsRows: TransactionsRows,
@@ -109,6 +116,7 @@ export default defineComponent({
       loadingRequest: false,
       emptyRequest: false,
 
+      errorOverall: false,
       errorType: '',
       errorTitle: '',
       errorMessage: '',
@@ -129,7 +137,6 @@ export default defineComponent({
         } else {
           await this.FetchTransactions(sortKey, this.transactionBrandFilter);
         }
-        this.loadingRequest = true;
       },
     },
     transactionBrandFilter: {
@@ -145,31 +152,36 @@ export default defineComponent({
     } else {
       this.$emit('transactionsAmount', this.transactions.length);
       this.CheckForEmptyRequest();
+      this.loadingRequest = false;
     }
-    this.loadingRequest = true;
   },
   methods: {
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`;
     },
     async FetchTransactions(sortKey: string, brandFilter: string) {
-      this.loadingRequest = false;
+      this.loadingRequest = true;
       const address = this.userStore.walletAddress;
-      await this.store.setTransactions(address, sortKey, brandFilter);
-      if (
-        this.store.getTransactions.length == 0 &&
-        this.store.transactionBrandFilterStatus == true
-      ) {
-        this.HandleMissingBrand();
-      } else if (this.store.transactionBrandFilterStatus == true) {
-        this.brandSearched = true;
-        this.loadingRequest = true;
-      } else {
-        this.brandSearched = false;
-        this.transactions = this.store.getTransactions;
-        this.$emit('transactionsAmount', this.transactions.length);
-        this.CheckForEmptyRequest();
-        this.loadingRequest = true;
+      try {
+        await this.store.setTransactions(address, sortKey, brandFilter);
+        if (
+          this.store.getTransactions.length == 0 &&
+          this.store.transactionBrandFilterStatus == true
+        ) {
+          this.HandleMissingBrand();
+        } else if (this.store.transactionBrandFilterStatus == true) {
+          this.brandSearched = true;
+        } else {
+          this.brandSearched = false;
+          this.transactions = this.store.getTransactions;
+          this.$emit('transactionsAmount', this.transactions.length);
+          this.CheckForEmptyRequest();
+        }
+        this.errorOverall = false;
+      } catch {
+        this.errorOverall = true;
+      } finally {
+        this.loadingRequest = false;
       }
     },
     HandleError(err: {
@@ -193,7 +205,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetTransactions();
       this.transactionBrandFilter = this.store.transactionBrandFilter;
-      this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your transactions',

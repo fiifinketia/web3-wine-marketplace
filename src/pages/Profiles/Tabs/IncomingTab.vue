@@ -1,12 +1,17 @@
 <template>
   <q-page
     class="column items-center"
-    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    :class="loadingRequest || emptyRequest ? 'justify-center' : ''"
     style="flex-wrap: nowrap"
   >
-    <div v-if="!loadingRequest" class="column items-center">
+    <div v-if="loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your incoming offers'" />
     </div>
+    <ErrorView
+      v-else-if="!!errorOverall"
+      :tab-error="'trading'"
+      @reload-tab="FetchIncomingOffers(incomingSortKey, incomingBrandFilter)"
+    />
     <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
@@ -110,6 +115,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import IncomingHeaderLg from '../Headers/IncomingHeaderLg.vue';
 import IncomingHeaderSm from '../Headers/IncomingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
+import LoadingError from '../LoadingError.vue';
 import Empty from '../EmptyOrders.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
@@ -132,6 +138,7 @@ export default defineComponent({
     IncomingHeaderSm: IncomingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: Empty,
+    ErrorView: LoadingError,
     ErrorDialog: ProfileErrors,
     ConfirmView: AcceptOffer,
     AcceptedOfferDialog: OrderAccepted,
@@ -155,6 +162,7 @@ export default defineComponent({
       loadingRequest: false,
       emptyRequest: false,
 
+      errorOverall: false,
       errorType: '',
       errorTitle: '',
       errorMessage: '',
@@ -185,7 +193,6 @@ export default defineComponent({
         } else {
           await this.FetchIncomingOffers(sortKey, this.incomingBrandFilter);
         }
-        this.loadingRequest = true;
       },
     },
     incomingBrandFilter: {
@@ -240,34 +247,39 @@ export default defineComponent({
       }
     },
     async FetchIncomingOffers(sortKey: string, brandFilter: string) {
-      this.loadingRequest = false;
-      await this.RefetchNFTs();
-      await this.store.setIncomingOffers(
-        nftStore.ownedNFTs,
-        sortKey,
-        brandFilter
-      );
-      if (
-        this.store.getIncomingOffers.length == 0 &&
-        this.store.incomingBrandFilterStatus == true
-      ) {
-        this.HandleMissingBrand();
-      } else if (this.store.incomingBrandFilterStatus == true) {
-        this.brandSearched = true;
-        this.loadingRequest = true;
-      } else {
-        this.brandSearched = false;
-        this.incomingOffers = this.EnsureIncomingOffersAreOwned();
-        this.$emit('incomingAmount', this.incomingOffers.length);
-        this.CheckForEmptyRequest();
-        this.loadingRequest = true;
+      this.loadingRequest = true;
+      try {
+        // TODO WHEN TO REFETCH?
+        await this.RefetchNFTs();
+        await this.store.setIncomingOffers(
+          nftStore.ownedNFTs,
+          sortKey,
+          brandFilter
+        );
+        if (
+          this.store.getIncomingOffers.length == 0 &&
+          this.store.incomingBrandFilterStatus == true
+        ) {
+          this.HandleMissingBrand();
+        } else if (this.store.incomingBrandFilterStatus == true) {
+          this.brandSearched = true;
+        } else {
+          this.brandSearched = false;
+          this.incomingOffers = this.EnsureIncomingOffersAreOwned();
+          this.$emit('incomingAmount', this.incomingOffers.length);
+          this.CheckForEmptyRequest();
+        }
+        this.errorOverall = false;
+      } catch {
+        this.errorOverall = true;
+      } finally {
+        this.loadingRequest = false;
       }
     },
     CheckForEmptyRequest() {
       if (this.incomingOffers.length == 0) {
         this.emptyRequest = true;
       }
-      this.loadingRequest = true;
     },
     EnsureIncomingOffersAreOwned(): IncomingOffersResponse[] {
       const incomingOffers = this.store.getIncomingOffers;
@@ -317,7 +329,6 @@ export default defineComponent({
       this.store.resetIncomingOffers();
       this.incomingBrandFilter = this.store.incomingBrandFilter;
       this.store.setIncomingBrandFilterStatus(false);
-      this.loadingRequest = true;
 
       this.errorType = 'filter';
       this.errorTitle = 'Unable to fetch your orders';

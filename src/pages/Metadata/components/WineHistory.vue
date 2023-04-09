@@ -3,6 +3,27 @@
     <div class="flex items-start history-container column q-mb-xl">
       <div class="price-history q-pb-lg">Price history</div>
       <div
+        v-if="isError"
+        class="column items-center chart-container"
+        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
+      >
+        <span class="error-header"> Ooops </span>
+        <span class="error-subheader q-py-lg"> The price history is not available at the moment. </span>
+        <span class="error-subheader q-pb-md"> Let's try to load again. </span>
+        <q-btn
+          dense
+          flat
+          unelevated
+          :ripple="false"
+          no-caps
+          class="error-btn"
+          @click="TryAgain()"
+        >
+          Try Again
+        </q-btn>
+      </div>
+      <div
+        v-else-if="!isChartEmpty"
         class="column chart-container"
         :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
       >
@@ -50,14 +71,10 @@
             </q-radio>
           </div>
           <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between q-mb-sm'">
-            <div class="row items-center">
-              <span v-if="!isLoading" class="price1">00.00</span>
+            <div class="row items-center justify-end q-gutter-x-xs">
+              <img src="../../../../public/images/USDT-black.svg"/>
+              <span v-if="!isLoading" class="price1">{{ averagePrice }}</span>
               <div v-else class="loading-price-box" />
-              <span v-if="!isLoading" class="price2 q-pl-sm">/ $ 00.00</span>
-              <div v-else class="row">
-                <span class="slash-loading q-px-sm"> / </span>
-                <div class="loading-price-box" />
-              </div>
             </div>
             <span class="average-price">Average price</span>
           </div>
@@ -143,10 +160,43 @@
           </q-radio>
         </div>
       </div>
+      <div
+        v-else
+        class="column items-center chart-container"
+        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
+      >
+        <img src="../../../assets/analytics.svg" class="q-py-lg"/>
+        <span class="metadata-missing-text"> This wine has no price history yet. </span>
+      </div>
     </div>
     <div class="flex items-start history-container column">
       <div class="price-history q-pb-lg">Transaction history</div>
-      <div :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''" :style="isLoading ? 'padding-bottom: 16px; width: 100%' : ''">
+      <div
+        v-if="isError"
+        class="column items-center chart-container"
+        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
+      >
+        <span class="error-header"> Ooops </span>
+        <span class="error-subheader q-py-lg"> The transaction history is not available at the moment. </span>
+        <img src="../../../assets/notebook.svg"/>
+        <span class="error-subheader q-py-md"> Let's try to load again. </span>
+        <q-btn
+          dense
+          flat
+          unelevated
+          :ripple="false"
+          no-caps
+          class="error-btn"
+          @click="TryAgain()"
+        >
+          Try Again
+        </q-btn>
+      </div>
+      <div
+        v-else-if="!isTxnsEmpty"
+        :class="$q.screen.width > 600 ? 'price-table q-px-md q-pt-md' : ''"
+        :style="isLoading ? 'padding-bottom: 16px; width: 100%' : ''"
+      >
         <q-table
           v-if="!isLoading"
           style="height: auto; width: 100%; max-height: 80vh"
@@ -209,6 +259,14 @@
           </div>
         </div>
       </div>
+      <div
+        v-else
+        class="column items-center chart-container"
+        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
+      >
+        <img src="../../../assets/notebook.svg" class="q-py-lg"/>
+        <span class="metadata-missing-text"> This wine has no transaction history yet. </span>
+      </div>
     </div>
   </div>
 </template>
@@ -237,13 +295,19 @@ export default defineComponent({
     },
     nftChartData: {
       type: [] as PropType<number[][]>,
-      required: true
+      required: true,
+      default: []
     },
     isLoading: {
       type: Boolean,
       default: true
+    },
+    erroredOut: {
+      type: Boolean,
+      default: false
     }
   },
+  emits: ['refetch-history'],
 
   data() {
     return {
@@ -423,6 +487,27 @@ export default defineComponent({
           name: 'Sold at'
         }
       ]
+    },
+    averagePrice() {
+      const temp = this.nftChartData;
+      if (temp.length > 0) {
+        return (temp.reduce((acc, val) => acc + val[1], 0)/temp.length).toFixed(2)
+      } else return '00.00'
+    },
+    isChartEmpty() {
+      if (this.isLoading || this.nftChartData.length > 0) {
+        return false;
+      }
+      return true
+    },
+    isTxnsEmpty() {
+      if (this.isLoading || this.nftTxnHistory.length > 0) {
+        return false;
+      }
+      return true
+    },
+    isError() {
+      return this.erroredOut
     }
   },
   methods: {
@@ -525,6 +610,9 @@ export default defineComponent({
         return [0, 30, 60, 90]
       }
       return [0, 40, 80]
+    },
+    TryAgain() {
+      this.$emit('refetch-history')
     }
   },
 });

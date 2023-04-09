@@ -12,7 +12,7 @@
 import { GetNewListings } from '../../services/RetrieveReleased';
 import { defineComponent } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
-import '../../../../css/Releases/Releases-Selections.css';
+import 'src/css/Releases/ReleasesSelections.css';
 import { useUserStore } from 'src/stores/user-store';
 import NFTSelectionsVue from './NFT-Selections.vue';
 

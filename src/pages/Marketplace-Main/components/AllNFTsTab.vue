@@ -157,6 +157,7 @@ import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
 import { useTourStore } from 'src/stores/tour-state';
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -193,6 +194,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    SetSessionID('Marketplace Tab Clicked');
     this.CheckFilterMode();
 		if(!this.tourStore.metadataCompleted) this.marketplaceTour();
   },

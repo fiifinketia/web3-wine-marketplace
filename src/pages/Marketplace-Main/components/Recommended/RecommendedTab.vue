@@ -38,11 +38,12 @@ import LoadingView from '../LoadingView.vue';
 import { RetrieveFilteredNFTs } from '../../services/RetrieveTokens';
 import NFTSelectionsVue from './NFT-Selections.vue';
 import ErrorView from '../ErrorView.vue';
-import '../../../../css/Releases/Releases-Selections.css';
 import axios from 'axios';
 import { useUserStore } from 'src/stores/user-store';
 import { RecommendationResponse } from '../../models/Response.models/recommendation.model';
 import { Recommendation } from '../../services/Recommendations';
+import 'src/css/Releases/ReleasesSelections.css';
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -79,6 +80,7 @@ export default defineComponent({
   async mounted() {
     this.isLoading = true;
     await this.fetchRecommendations();
+    SetSessionID('Recommended NFTs Tab Clicked');
     this.isLoading = false;
   },
 

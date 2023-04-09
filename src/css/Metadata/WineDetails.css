@@ -76,8 +76,14 @@
 		padding-left: 16px;
 		padding-right: 16px;
 	}
+	.properties-container {
+		padding-bottom: 50px;
+	}
 	.property-container,
 	.maker-container {
 		width: 50%;
+	}
+	.paragraph, .property-name, .property-value {
+		font-size: 16px;
 	}
 }
