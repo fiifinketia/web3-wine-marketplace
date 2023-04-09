@@ -202,11 +202,11 @@ export default defineComponent({
     const userStore = useUserStore();
     return {
       userStore,
-      nfts: [] as ListingWithPricingAndImage[],
+      nfts: new Array<ListingWithPricingAndImage>(),
       loadingNFTs: [0, 1, 2, 3],
     };
   },
-  beforeUpdate() {
+  beforeMount() {
     this.nfts = this.nftSelections;
   },
   methods: {

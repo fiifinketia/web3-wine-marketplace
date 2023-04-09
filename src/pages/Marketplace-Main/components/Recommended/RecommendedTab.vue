@@ -1,83 +1,131 @@
 <template>
-  <div v-for="(group, i) in groups" :key="group" class="q-pb-md">
-    <q-banner
-      class="bg-primary text-white justify-center"
-      style="display: grid"
+  <LoadingView v-if="isLoading" loading-text="Loading Recommendations..." />
+  <EmptyView v-else-if="isEmpty" />
+  <ErrorView v-else-if="errorPage" @retrieve-again="retrieveAgain()" />
+  <div v-else>
+    <div
+      v-for="(token, index) in recommendations"
+      :key="'fields-' + index + recommendations"
+      class="q-pb-md"
     >
-      <q-img
-        src="../../../../assets/small-wine.svg"
-        class="releases-tab-icons"
+      <q-banner
+        class="bg-primary text-white justify-center"
+        style="display: grid"
+      >
+        <q-img
+          src="../../../../assets/small-wine.svg"
+          class="releases-tab-icons"
+        />
+        <span class="text-uppercase text-weight-bold">{{
+          token.title + ' Wines'
+        }}</span>
+        <q-img
+          src="../../../../assets/small-bottle.svg"
+          class="releases-tab-icons"
+        />
+      </q-banner>
+      <NFTSelections
+        :nft-selections="token.nfts"
+        :is-loading="isLoading"
       />
-      <span class="text-uppercase text-weight-bold">{{
-        group.split(':')[1]
-      }}</span>
-      <q-img
-        src="../../../../assets/small-bottle.svg"
-        class="releases-tab-icons"
-      />
-    </q-banner>
-    <NFTSelections
-      :nft-selections="groupedTokens[i]"
-      :is-loading="isLoading"
-      :errored-out="!isLoading && groupedTokens[i].length === 0"
-      :section-error="group + ' ' + erroredText"
-      @refetch="FetchAllWines()"
-    />
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ListingWithPricingAndImage } from '../../models/Response.models';
+import EmptyView from '../EmptyView.vue';
+import LoadingView from '../LoadingView.vue';
 import { RetrieveFilteredNFTs } from '../../services/RetrieveTokens';
 import NFTSelectionsVue from './NFT-Selections.vue';
+import ErrorView from '../ErrorView.vue';
 import 'src/css/Releases/ReleasesSelections.css';
 import { SetSessionID } from 'src/shared/amplitude-service';
+import axios from 'axios';
+import { useUserStore } from 'src/stores/user-store';
+import { RecommendationResponse } from '../../models/Response.models/recommendation.model';
+import { Recommendation } from '../../services/Recommendations';
 
 export default defineComponent({
   components: {
     NFTSelections: NFTSelectionsVue,
+    ErrorView: ErrorView,
+    EmptyView: EmptyView,
+    LoadingView: LoadingView,
   },
   data: () => {
+    const userStore = useUserStore();
     return {
       isLoading: true,
-      groupedTokens: new Array<ListingWithPricingAndImage[]>(),
+      isEmpty: false,
+      errorPage: false,
+      recommendations: [] as Recommendation[],
       erroredText: 'wines',
-      groups: [
-        'type:Red',
-        'productionCountry:Spain',
-        'region:Tuscany',
-        'type:Champagne',
-        'productionCountry:Italy',
-        'region:Napa Valley',
-        'region:Bordeaux',
-        'productionCountry:France',
-        'type:Sparkling',
-      ],
+      totalView: 4,
+      userStore,
     };
   },
+	watch: {
+		'recommendations': {
+			handler: function() {
+				if(!this.recommendations) {
+					this.isEmpty = true;
+				}
+				else {
+					this.isEmpty = false
+				}
+			},
+			deep: true
+		}
+	},
   async mounted() {
+    this.isLoading = true;
     SetSessionID('Recommended NFTs Tab Clicked');
-    await this.FetchAllWines();
+    await this.fetchRecommendations();
+    this.isLoading = false;
   },
 
   methods: {
-    async FetchAllWines() {
-      const promises = this.groups.map(
-        async group => await this.FetchWineByGroup(group)
-      );
+    async FetchWineByGroup(group: RecommendationResponse) {
+      return (
+        await RetrieveFilteredNFTs(
+          `${group.metadataField}[]=${group.metadataValue}`
+        )
+      ).result;
+    },
+
+    async fetchRecommendations() {
       try {
-        this.groupedTokens = await Promise.all(promises);
-      } catch {
-        this.isLoading = false;
+        const recommendationsApiUrl = process.env.RETRIEVE_RECOMMENDATIONS_URL;
+        const { data } = await axios.get<RecommendationResponse[]>(
+          `${recommendationsApiUrl}?wallet_address=${this.userStore.walletAddress}`
+        );
+        // Check if data is empty
+        if (data.length === 0) {
+          this.isEmpty = true;
+          return;
+        }
+        data.map(async res => {
+          // Check if the metadataField is already in the recommendations object
+          const nfts = await this.FetchWineByGroup(res);
+          if (nfts.length > 0) {
+            this.recommendations.push({
+              title: res.metadataValue.toUpperCase() + ' ' + res.metadataField.toUpperCase() + ' Wines',
+              metadataField: res.metadataField,
+              metadataValue: res.metadataValue,
+              nfts: nfts.slice(0, this.totalView),
+            });
+          }
+        });
+      } catch (error) {
+        this.errorPage = true;
       } finally {
         this.isLoading = false;
       }
     },
-    async FetchWineByGroup(group: string) {
-      const [groupName, groupValue] = group.split(':');
-      return (
-        await RetrieveFilteredNFTs(`${groupName}[]=${groupValue}`)
-      ).result.slice(0, 4);
+    async retrieveAgain() {
+      this.errorPage = false;
+      this.isLoading = true;
+      await this.fetchRecommendations();
     },
   },
 });
