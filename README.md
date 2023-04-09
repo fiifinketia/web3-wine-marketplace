@@ -55,6 +55,9 @@ RETRIEVE_TRANSACTIONS_URL=http://localhost:8080/api/orders/allTransactions
 # Users Microservice
 MARKETPLACE_USERS_API=http://0.0.0.0:8080/api/users
 
+# Suggestions Microservice
+RETRIEVE_RECOMMENDATIONS_URL=http://localhost:8080/api/recommendations
+
 # Seaport Constants
 WIV_FEE=250
 WIV_FEE_RECEIVER=0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A
