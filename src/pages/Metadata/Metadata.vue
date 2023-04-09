@@ -1,52 +1,53 @@
 <template>
-  <div v-if="!loadingMetadata">
+  <q-page v-if="!loadingMetadata">
     <div v-if="tokenExists">
-      <WineMetadata :nft="nft" @open-wallet="openWalletSideBar" />
-      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
+      <WineTrade
+        :nft="nft" @open-wallet="openWalletSideBar"
+        @refresh-metadata="ValidateAndFetchNFT()"
+        @connect-wallet="ConnectWallet()"
+      />
+      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="history" label="NFT history" />
-        <q-tab class="tab-text-not-clicked" name="about" label="About" />
-        <q-tab
-          name="wine-maker"
-          class="tab-text-not-clicked"
-          label="Wine-maker"
-        />
+        <q-tab name="about" label="About" />
       </q-tabs>
       <q-tab-panels
         v-model="tab"
         animated
-        swipeable
         transition-prev="jump-right"
         transition-next="jump-left"
       >
         <q-tab-panel name="history">
-          <NFTHistory :nft-txn-history="nft.nftHistory" />
+          <WineHistory
+            :nft-txn-history="txnHistory"
+            :nft-chart-data="chartData"
+            :is-loading="loadingPrices"
+            :errored-out="errorLoadingHistory"
+            style="padding-bottom: 3rem"
+            @refetch-history="GetNFTTXNHistory(nft.tokenID, nft.smartContractAddress, nft.network)"
+          />
         </q-tab-panel>
 
         <q-tab-panel name="about">
-          <About :nft="nft" />
-        </q-tab-panel>
-
-        <q-tab-panel name="wine-maker">
-          <WineMaker :nft="nft" />
+          <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
         </q-tab-panel>
       </q-tab-panels>
     </div>
     <UnavailableNFT v-else />
-  </div>
-  <div v-else>
+  </q-page>
+  <q-page v-else>
     <LoadingMetadata />
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import { NFTWithListingAndFavorites } from './models/Metadata';
-import { GetMetadata } from './services/Metadata';
-import NFTHistory from './components/NFTHistory.vue';
-import WineMetadata from './components/WineMetadata.vue';
-import About from './components/About.vue';
-import WineMaker from './components/WineMaker.vue';
+import { NFTWithListingAndFavorites, SeaportTransactionsModel } from './models/Metadata';
+import { GetMetadata, GetTokenTXNHistory } from './services/Metadata';
+import WineHistory from './components/WineHistory.vue';
+import WineTrade from './components/WineTrade.vue';
+import WineDetails from './components/WineDetails.vue';
+// import WineMaker from './components/WineMaker.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
@@ -60,32 +61,38 @@ import LoadingMetadata from './components/LoadingMetadata.vue';
 export default defineComponent({
   name: 'MetadataPage',
   components: {
-    NFTHistory,
-    About,
-    WineMaker,
-    WineMetadata,
+    WineHistory,
+    WineDetails,
+    // WineMaker,
+    WineTrade,
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
   },
-  emits: ['openWalletSidebar'],
+  emits: ['openWalletSidebar', 'openConnectWallet'],
 
   data() {
     const userStore = useUserStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
+      txnHistory: [] as SeaportTransactionsModel[],
+      chartData: [] as number[][],
       userStore,
       tab: ref('history'),
       tokenExists: false,
       loadingMetadata: true,
+      loadingPrices: true,
+      errorLoadingHistory: false
     };
   },
 
   async mounted() {
-    await this.getMetadata();
+    await this.ValidateAndFetchNFT();
   },
 
   methods: {
-    async getMetadata() {
+    async ValidateAndFetchNFT() {
+      this.loadingMetadata = true;
+      this.tokenExists = false;
       const { id, contractAddress, network } = this.$route.query;
       if (
         typeof id === 'string' &&
@@ -98,17 +105,17 @@ export default defineComponent({
           network
         );
         if (!!tokenExistCheck) {
-          await this.FetchMetadata(id, contractAddress, network);
+          await this.SetNFTView(id, contractAddress, network);
           this.tokenExists = true;
         }
         this.loadingMetadata = false;
       }
     },
 
-    async FetchMetadata(id: string, contractAddress: string, network: string) {
+    async SetNFTView(identifierOrCriteria: string, contractAddress: string, network: string) {
       try {
         const nft = await GetMetadata({
-          id,
+          identifierOrCriteria,
           contractAddress,
           network,
           walletAddress: this.userStore.walletAddress,
@@ -117,12 +124,32 @@ export default defineComponent({
           nft.isOwner = await this.CheckOwnership(
             this.userStore.walletAddress,
             contractAddress,
-            id
+            identifierOrCriteria
           );
         }
         this.nft = nft;
+        this.GetNFTTXNHistory(identifierOrCriteria, contractAddress, network);
       } catch (error) {
         throw error;
+      }
+    },
+
+    async GetNFTTXNHistory(identifierOrCriteria: string, contractAddress: string, network: string) {
+      try {
+        this.loadingPrices = true;
+        this.errorLoadingHistory = false;
+        const txnHistory = await GetTokenTXNHistory({
+          identifierOrCriteria,
+          contractAddress,
+          network
+        })
+        const { txns, chartData } = txnHistory;
+        this.txnHistory = txns;
+        this.chartData = chartData;
+      } catch {
+        this.errorLoadingHistory = true;
+      } finally {
+        this.loadingPrices = false;
       }
     },
 
@@ -194,12 +221,16 @@ export default defineComponent({
     openWalletSideBar() {
       this.$emit('openWalletSidebar');
     },
+
+    ConnectWallet() {
+      this.$emit('openConnectWallet');
+    }
   },
 });
 </script>
 
-<style>
+<style scoped>
 .q-tab-panel {
-  padding: 3rem 0 4rem !important;
+  padding: 3rem 0 0 !important;
 }
 </style>

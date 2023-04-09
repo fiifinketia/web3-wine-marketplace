@@ -4,12 +4,12 @@
       <q-card-section class="column justify-center items-center">
         <q-img
           v-if="errorType == 'accept'"
-          src="../../../assets/purchase_failed.svg"
+          src="../../assets/purchase_failed.svg"
           :style="$q.screen.width > 360 ? 'width: 20%' : 'width: 25vw'"
         />
         <q-img
           v-else
-          src="../../../assets/make_offer_failed.svg"
+          src="../../assets/make_offer_failed.svg"
           :style="$q.screen.width > 360 ? 'width: 20%' : 'width: 25vw'"
         />
       </q-card-section>

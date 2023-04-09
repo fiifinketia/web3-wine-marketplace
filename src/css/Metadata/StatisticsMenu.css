@@ -1,56 +1,23 @@
-.tab-text-clicked {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
-	font-size: 18px;
-	line-height: 28px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 1px;
-
+.tabs-menu * .q-tab__indicator {
 	color: #3586ff;
 }
 
-.tab-text-not-clicked {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
-	font-size: 18px;
-	line-height: 28px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 1px;
-
-	color: #9d9d9d;
+.tabs-menu * [aria-selected="false"] > .q-tab__indicator {
+	color: #9D9D9D !important;
+	opacity: 0.5;
+	height: 1px;
 }
 
-.q-tab__indicator {
+.tabs-menu * .q-tab--active .q-tab__label {
 	color: #3586ff;
 }
 
-.q-tab__label {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
+.tabs-menu * .q-tab__label {
 	font-size: 18px;
-	line-height: 28px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 1px;
-
-	color: #9d9d9d;
 }
 
-.q-tab--active .q-tab__label {
-	color: #3586ff;
-}
 .tabs-menu {
-	width: 80%;
-	margin: 2.5rem auto 0;
-}
-
-@media screen and (max-width: 400px) {
-	.tabs-menu {
-		width: 95%;
-	}
+	margin: 2.5rem 20px 0;
+	font-family: 'Obviously-Bold' !important;
+	color: #9D9D9D;
 }

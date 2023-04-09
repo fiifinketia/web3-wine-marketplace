@@ -1,12 +1,18 @@
 <template>
   <q-page
     class="column items-center"
-    :class="!loadingRequest || emptyRequest ? 'justify-center' : ''"
+    :class="loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
   >
-    <div v-if="!loadingRequest" class="column items-center">
+    <div v-if="loadingRequest" class="column items-center">
       <LoadingView :loading-text="'Loading your outgoing offers'" />
     </div>
-    <div v-else class="column items-center full-width q-mx-none">
+    <ErrorView
+      v-else-if="!!errorOverall"
+      :tab-error="'outgoing'"
+      @reload-tab="FetchOutgoingOffers(outgoingSortKey, outgoingBrandFilter)"
+    />
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -59,37 +65,43 @@
             @edit-offer="offer => OpenEditDialog(offer)"
           />
         </div>
-        <OutgoingDialogEdit
-          v-model="openEditDialog"
-          :brand="singleOffer.brand"
-          :highest-offer="singleOffer.highestOffer!"
-          :highest-offer-currency="singleOffer.highestOfferCurrency!"
-          :image="singleOffer.image"
-          :network="singleOffer.network"
-          :order-hash="singleOffer.orderHash"
-          :smart-contract-address="singleOffer.contractAddress"
-          :token-i-d="singleOffer.identifierOrCriteria"
-          @outgoing-edit-close="openEditDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <OutgoingDialogDelete
-          v-model="openDeleteDialog"
-          :order-hash="singleOffer.orderHash"
-          @outgoing-delete-close="openDeleteDialog = false"
-          @remove-offer="val => RemoveRow(val)"
-          @outgoing-error-dialog="HandleError"
-        />
-        <ErrorDialog
-          v-model="openErrorDialog"
-          :error-type="errorType"
-          :error-title="errorTitle"
-          :error-message="errorMessage"
-        />
       </div>
       <div v-else class="column items-center">
         <EmptyView :empty-text="'You have not made any offers yet.'" />
       </div>
+      <OutgoingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleOffer.brand"
+        :highest-offer="singleOffer.highestOffer"
+        :highest-offer-currency="singleOffer.highestOfferCurrency"
+        :image="singleOffer.image"
+        :network="singleOffer.network"
+        :order-hash="singleOffer.orderHash"
+        :smart-contract-address="singleOffer.contractAddress"
+        :token-i-d="singleOffer.identifierOrCriteria"
+        :is-edit="true"
+        @outgoing-edit-close="openEditDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+        @offer-created="SetTimeoutOnOfferProcessedDialog()"
+      />
+      <OutgoingDialogDelete
+        v-model="openDeleteDialog"
+        :order-hash="singleOffer.orderHash"
+        @outgoing-delete-close="openDeleteDialog = false"
+        @remove-offer="val => RemoveRow(val)"
+        @outgoing-error-dialog="HandleError"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
+      <OutgoingProcessedDialog
+        v-model="openOrderCompletedDialog"
+        :order-type="'offer'"
+      />
     </div>
   </q-page>
 </template>
@@ -102,13 +114,16 @@ import OutgoingHeaderLg from '../Headers/OutgoingHeaderLg.vue';
 import OutgoingHeaderSm from '../Headers/OutgoingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
+import LoadingError from '../LoadingError.vue';
 import { useUserStore } from 'src/stores/user-store';
-import OutgoingEdit from '../Popups/OutgoingEdit.vue';
-import OutgoingDelete from '../Popups/OutgoingDelete.vue';
+import OutgoingEdit from '../../SharedPopups/OutgoingEdit.vue';
+import OutgoingDelete from '../../SharedPopups/OutgoingDelete.vue';
 import { OutgoingOffersResponse } from '../models/response.models';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
 import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
+import { mapState } from 'pinia';
+import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 
 export default defineComponent({
   components: {
@@ -116,8 +131,10 @@ export default defineComponent({
     OutgoingHeaderSm: OutgoingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
+    ErrorView: LoadingError,
     OutgoingDialogEdit: OutgoingEdit,
     OutgoingDialogDelete: OutgoingDelete,
+    OutgoingProcessedDialog: OrderProcessed,
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
     OutgoingRows: OutgoingRows,
@@ -129,12 +146,11 @@ export default defineComponent({
     return {
       store,
       userStore,
-      outgoingOffers: store.outgoingOffers,
       outgoingSortKey: store.getOutgoingSortKey,
 
       outgoingBrandFilter: store.getOutgoingBrandFilter,
 
-      loadingRequest: false,
+      loadingRequest: true,
       emptyRequest: false,
 
       openEditDialog: false,
@@ -142,13 +158,19 @@ export default defineComponent({
 
       singleOffer: {} as OutgoingOffersResponse,
 
+      errorOverall: false,
       errorType: '',
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-
-      brandSearched: false,
+      openOrderCompletedDialog: false
     };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      outgoingOffers: store => store.getOutgoingOffers,
+      brandSearched: store => store.getOutgoingBrandFilterStatus
+    }),
   },
   watch: {
     outgoingSortKey: {
@@ -159,13 +181,11 @@ export default defineComponent({
         } else {
           await this.FetchOutgoingOffers(sortKey, this.outgoingBrandFilter);
         }
-        this.loadingRequest = true;
       },
     },
     outgoingBrandFilter: {
       handler: function (brandFilter) {
         this.store.setOutgoingBrandFilter(brandFilter);
-        this.store.setOutgoingBrandFilterStatus(false);
       },
     },
   },
@@ -177,29 +197,39 @@ export default defineComponent({
     } else {
       this.$emit('outgoingAmount', this.outgoingOffers.length);
       this.CheckForEmptyRequest();
+      this.loadingRequest = false;
     }
-    this.loadingRequest = true;
   },
   methods: {
+    SetTimeoutOnOfferProcessedDialog() {
+      this.openOrderCompletedDialog = true;
+      setTimeout(() => {
+        this.openOrderCompletedDialog = false
+      }, 3000);
+    },
     async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
-      this.loadingRequest = false;
+      this.loadingRequest = true;
       const address = this.userStore.walletAddress;
-      await this.store.setOutgoingOffers(address, sortKey, brandFilter);
-      // Checks whether a brand filter was used
-      if (
-        this.store.getOutgoingOffers.length == 0 &&
-        this.store.outgoingBrandFilterStatus == true
-      ) {
-        this.HandleMissingBrand();
-      } else if (this.store.outgoingBrandFilterStatus == true) {
-        this.brandSearched = true;
-        this.loadingRequest = true;
-      } else {
-        this.brandSearched = false;
-        this.outgoingOffers = this.store.getOutgoingOffers;
-        this.$emit('outgoingAmount', this.outgoingOffers.length);
-        this.CheckForEmptyRequest();
-        this.loadingRequest = true;
+      try {
+        await this.store.setOutgoingOffers(address, sortKey, brandFilter);
+        // Checks whether a brand filter was used
+        if (
+          this.store.getOutgoingOffers.length == 0 &&
+          this.store.outgoingBrandFilterStatus == true
+        ) {
+          this.HandleMissingBrand();
+        } else if (this.store.outgoingBrandFilterStatus == true) {
+          this.brandSearched = true;
+        } else {
+          this.brandSearched = false;
+          this.$emit('outgoingAmount', this.outgoingOffers.length);
+          this.CheckForEmptyRequest();
+        }
+        this.errorOverall = false;
+      } catch {
+        this.errorOverall = true;
+      } finally {
+        this.loadingRequest = false;
       }
     },
     OpenDeleteDialog(offer: OutgoingOffersResponse) {
@@ -211,9 +241,6 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.outgoingOffers = this.outgoingOffers.filter(
-        f => f.orderHash !== orderHash
-      );
       this.store.filterOutgoingOffers(orderHash);
       this.CheckForEmptyRequest();
     },
@@ -238,8 +265,6 @@ export default defineComponent({
     HandleMissingBrand() {
       this.store.resetOutgoingOffers();
       this.outgoingBrandFilter = this.store.outgoingBrandFilter;
-      this.store.setOutgoingBrandFilterStatus(false);
-      this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your orders',

@@ -152,6 +152,7 @@ import 'src/css/Marketplace/header.css';
 import 'src/css/Marketplace/sidebar.css';
 import SidebarTablet from './SidebarTablet.vue';
 import SidebarMobile from './SidebarMobile.vue';
+import { SetSessionID } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -186,6 +187,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    SetSessionID('Marketplace Tab Clicked');
     this.CheckFilterMode();
   },
 
