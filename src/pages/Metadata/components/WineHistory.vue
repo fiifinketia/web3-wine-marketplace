@@ -272,7 +272,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, createApp, PropType, ref } from 'vue';
+import { defineComponent, createApp, PropType } from 'vue';
 import ApexCharts, { ApexOptions } from 'apexcharts';
 import '../../../css/Metadata/WineHistory.css';
 import App from '../../../App.vue';
@@ -536,7 +536,7 @@ export default defineComponent({
       chart.updateOptions({
         xaxis: {
           labels: {
-            format: timeline.includes('months') ? 'MM/yyyy' : 'yyyy',
+            format: timeline.includes('months') ? 'MM/yy' : 'yyyy',
           },
         }
       })
