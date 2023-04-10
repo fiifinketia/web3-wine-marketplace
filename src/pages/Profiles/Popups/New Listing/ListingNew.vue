@@ -103,7 +103,6 @@
       />
       <NewListingNFTs
         class="scroll"
-        @click="showFilterSidebar = false"
         @open-listing-dialog="token => OpenListingDialog(token)"
       />
       <NewListingDialog
@@ -128,6 +127,7 @@
         v-if="$q.screen.width > 600"
         v-model="showFilterSidebar"
         :listable-n-f-ts="listableNFTs"
+        @close-sidebar="showFilterSidebar = false"
       />
       <SidebarMobile
         v-else
