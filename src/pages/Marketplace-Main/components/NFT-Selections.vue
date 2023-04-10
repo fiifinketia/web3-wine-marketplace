@@ -35,11 +35,38 @@
             {{ truncateText(token.brand) }}
           </span>
         </div>
-        <q-card-section
-          class="column items-start main-marketplace-price-container q-py-sm"
-        >
-          <div class="row justify-between" style="width: 100%">
+        <q-card-section class="row justify-between main-marketplace-price-container q-py-sm">
+          <div class="column items-start justify-evenly">
             <span class="main-marketplace-price-header q-pb-xs"> Price </span>
+            <div
+              v-if="
+                !!token.orderDetails?.listingPrice &&
+                !!token.orderDetails?.transactionStatus
+              "
+              class="row items-center justify-between full-width"
+              @click.stop
+            >
+              <div class="row items-center q-gutter-x-xs q-pt-xs">
+                <q-img
+                  src="../../../assets/icons/currencies/USDC-Icon.svg"
+                  :style="
+                    $q.screen.width > 350
+                      ? 'height: 20px; width: 20px'
+                      : 'height: 15px; width: 16px'
+                  "
+                />
+                <span class="main-marketplace-price-text-b-active">
+                  {{ ToInt(token.orderDetails.listingPrice) }}
+                </span>
+              </div>
+            </div>
+            <div v-else class="q-pt-sm" style="display: flex">
+              <span class="main-marketplace-price-text-b-inactive">
+                Not Listed
+              </span>
+            </div>
+          </div>
+          <div class="column items-center justify-between q-gutter-y-xs">
             <q-img
               v-if="!!userStore.walletAddress && !!token.favoriteLoading"
               src="../../../assets/loading-heart.gif"
@@ -79,32 +106,28 @@
                 )
               "
             />
-          </div>
-          <div
-            v-if="
-              !!token.orderDetails?.listingPrice &&
-              !!token.orderDetails?.transactionStatus
-            "
-          >
-            <div class="row items-center q-gutter-x-xs q-pt-xs">
-              <q-img
-                src="../../../assets/icons/currencies/USDC-Icon.svg"
-                :style="
-                  $q.screen.width > 350
-                    ? 'height: 20px; width: 20px'
-                    : 'height: 15px; width: 16px'
-                "
+            <q-btn
+              v-if="!token.isOwned && !!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus"
+              dense
+              unelevated
+              flat
+              no-caps
+              :ripple="false"
+              class="q-pa-none"
+              @click.stop="AcceptOffer(token.orderDetails.orderHash, token.brand, token.image, token)"
+            >
+              <img
+                src="../../../../src/assets/small-bag-btn.svg"
+                style="border-radius: 0 !important"
               />
-              <span class="main-marketplace-price-text-b-active">
-                {{ ToInt(token.orderDetails.listingPrice) }}
-              </span>
-            </div>
+            </q-btn>
+            <img
+              v-if="!!token.isOwned"
+              src="../../../../src/assets/owned-tick.svg"
+              style="border-radius: 0 !important; padding-top: 6px"
+            />
           </div>
-          <div v-else class="q-pt-sm" style="display: flex">
-            <span class="main-marketplace-price-text-b-inactive">
-              Not available
-            </span>
-          </div>
+
         </q-card-section>
         <q-menu touch-position context-menu>
           <q-list dense style="min-width: 100px">
@@ -135,6 +158,10 @@
           </q-list>
         </q-menu>
       </q-card>
+      <AcceptedOrderDialog
+        v-model="openOrderAccepted"
+        :order-accepted="'listing'"
+      />
     </div>
   </div>
   <div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
@@ -171,6 +198,7 @@
   </div>
 </template>
 
+
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
@@ -186,30 +214,46 @@ import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
 import EmptyView from './EmptyView.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import AcceptOffer from 'src/pages/SharedPopups/AcceptOffer.vue';
+import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+
 export default defineComponent({
   components: {
     ErrorView: ErrorViewVue,
     EmptyView: EmptyView,
+    AcceptedOrderDialog: OrderAccepted
   },
   emits: ['totalTokens'],
   data() {
     const userStore = useUserStore();
-
+    const nftStore = useNFTStore();
     const wineFiltersStore = useWineFilters();
     const generalSearchStore = useGeneralSearch();
 
     return {
-      allNFTs: new Array<ListingWithPricingAndImage>(),
+      allNFTs: new Array<ListingWithPricingAndImage & { isOwned?: boolean }>(),
       loadingNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
       isLoading: true,
       card: ref(false),
       stars: ref(3),
       selected: ref(),
+
       userStore,
       wineFiltersStore,
       generalSearchStore,
+      nftStore,
+
+      openOrderAccepted: false,
+      openErrorDialog: false,
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
+
       filterListenersEnabled: true,
-      erroredOut: false, // change
+      erroredOut: false,
       filterKey: wineFiltersStore.filterKey,
       nftEnums: {} as DynamicKeyWithCount,
       subscription: Function(),
@@ -247,6 +291,9 @@ export default defineComponent({
     },
   },
   async mounted() {
+    if (!this.nftStore.fetchNFTsStatus && this.userStore.walletAddress) {
+      await this.nftStore.fetchNFTs(this.userStore.walletAddress);
+    }
     await this.RetrieveTokens(null);
 
     const filterOptions = await RetrieveFilterDetails();
@@ -388,7 +435,7 @@ export default defineComponent({
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
           this.$emit('totalTokens', nfts.length);
-          this.allNFTs = nfts;
+          this.AssignAndCompareResponse(nfts);
           this.erroredOut = false; // change
         } catch {
           this.erroredOut = true;
@@ -399,7 +446,7 @@ export default defineComponent({
             `generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
           );
           this.$emit('totalTokens', nfts.length);
-          this.allNFTs = nfts;
+          this.AssignAndCompareResponse(nfts);
           this.erroredOut = false; // change
           this.nftEnums = nftEnums;
         } catch {
@@ -432,7 +479,70 @@ export default defineComponent({
         } else return text;
       }
     },
+    AssignAndCompareResponse(retrievedNFTs: ListingWithPricingAndImage[]) {
+      const nftsFetched = this.nftStore.fetchNFTsStatus;
+      if (!!nftsFetched) {
+        const ownedNFTs = this.nftStore.ownedNFTs;
+        const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
+        ownedNFTs.forEach(f => {
+          const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`
+          ownedNFTsMap.set(key, f);
+        })
+
+        const retrievedNFTsMap: Map<string, ListingWithPricingAndImage & { isOwned?: boolean }> = new Map();
+        retrievedNFTs.forEach(f => {
+          const key = `${f.tokenID},${f.smartContractAddress},${f.network}`
+          retrievedNFTsMap.set(key, f);
+        })
+
+        ownedNFTsMap.forEach((v, k) => {
+          const ownedInSelection = retrievedNFTsMap.get(k);
+          if (!!ownedInSelection) {
+            ownedInSelection.isOwned = true;
+          }
+        })
+
+        this.allNFTs = Array.from(retrievedNFTsMap.values());
+      } else {
+        this.allNFTs = retrievedNFTs;
+      }
+    },
+    async AcceptOffer(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
+      const address = this.userStore.walletAddress;
+      try {
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        this.openOrderAccepted = true;
+        setTimeout(() => {
+          this.openOrderAccepted = false;
+        }, 3000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        this.HandleError({
+          errorType: 'accept',
+          errorTitle: 'Sorry, the purchase failed',
+          errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
+        });
+      }
+    },
+    HandleError(err: {
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
+    },
   },
+
 });
 </script>
 

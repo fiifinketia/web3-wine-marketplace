@@ -136,7 +136,7 @@
             !nft.listingDetails.orderHash ||
             !nft.listingDetails.transactionStatus
           "
-          @click="OpenFulFillOrOfferDialog('fulfill')"
+          @click="AcceptOffer(nft.listingDetails.orderHash, nft.brand, nft.image)"
         >
           Buy now
         </q-btn>
@@ -144,7 +144,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenFulFillOrOfferDialog('offer')"
+          @click="OpenOfferDialog()"
         >
           Make an offer
         </q-btn>
@@ -214,21 +214,6 @@
       :error-message="errorMessage"
     />
 
-    <ConfirmOrderDialog
-      v-model="openConfirmDialog"
-      :order-hash="nft.listingDetails.orderHash"
-      :brand="nft.brand"
-      :image="nft.image"
-      :token="{
-        identifierOrCriteria: nft.tokenID,
-        contractAddress: nft.smartContractAddress,
-        network: nft.network
-      }"
-      @accept-offer="
-        req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
-      "
-    />
-
     <AcceptedOrderDialog
       v-model="openOrderAccepted"
       :order-accepted="'listing'"
@@ -246,7 +231,6 @@ import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import AcceptOffer from 'src/pages/SharedPopups/AcceptOffer.vue';
 import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
@@ -261,7 +245,6 @@ export default defineComponent({
 
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
-    ConfirmOrderDialog: AcceptOffer,
     AcceptedOrderDialog: OrderAccepted
   },
   props: {
@@ -278,7 +261,6 @@ export default defineComponent({
       openCreateOfferDialog: false,
       openOrderCompletedDialog: false,
       openErrorDialog: false,
-      openConfirmDialog: false,
       openOrderAccepted: false,
 
       errorType: '',
@@ -305,19 +287,12 @@ export default defineComponent({
     }
   },
   methods: {
-    OpenFulFillOrOfferDialog(dialog: string) {
+    OpenOfferDialog() {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
         return
       } else {
-        switch (dialog) {
-          case 'offer':
-            this.openCreateOfferDialog = true;
-            break;
-          case 'fulfill':
-            this.openConfirmDialog = true;
-            break;
-        }
+        this.openCreateOfferDialog = true;
       }
     },
     SetTimeoutOnCompletedDialog(orderType: string) {
@@ -350,7 +325,7 @@ export default defineComponent({
     ) {
       const address = this.walletAddress;
       try {
-        await FulfillBasicOrder(orderHash, brand, true, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
@@ -362,8 +337,6 @@ export default defineComponent({
           errorTitle: 'Sorry, the purchase failed',
           errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
         });
-      } finally {
-        this.openConfirmDialog = false;
       }
     },
     RefreshMetadataPage() {
