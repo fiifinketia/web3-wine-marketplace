@@ -157,6 +157,16 @@
           </q-list>
         </q-menu>
       </q-card>
+      <AcceptedOrderDialog
+        v-model="openOrderAccepted"
+        :order-accepted="'listing'"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
     </div>
   </div>
   <ErrorView
@@ -198,10 +208,15 @@ import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { AddFavorites, RemoveFavorites } from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
+import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   components: {
-    ErrorView: NewlyError
+    ErrorView: NewlyError,
+    AcceptedOrderDialog: OrderAccepted,
+    ErrorDialog: ProfileErrors
   },
   props: {
     nftSelections: {
@@ -229,7 +244,14 @@ export default defineComponent({
     return {
       userStore,
       nfts: [] as ListingWithPricingAndImage[],
-      loadingNFTs: [0, 1, 2, 3]
+      loadingNFTs: [0, 1, 2, 3],
+
+      openOrderAccepted: false,
+      openErrorDialog: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: ''
     };
   },
   beforeUpdate() {
@@ -351,7 +373,41 @@ export default defineComponent({
     },
     RefetchSection() {
       this.$emit('refetch-release')
-    }
+    },
+    async AcceptOffer(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
+      const address = this.userStore.walletAddress;
+      try {
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        this.openOrderAccepted = true;
+        setTimeout(() => {
+          this.openOrderAccepted = false;
+        }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        this.HandleError({
+          errorType: 'accept',
+          errorTitle: 'Sorry, the purchase failed',
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
+        });
+      }
+    },
+    HandleError(err: {
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2500);
+    },
   }
 })
 </script>

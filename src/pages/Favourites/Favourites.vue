@@ -147,6 +147,16 @@
             </q-list>
           </q-menu>
         </q-card>
+        <AcceptedOrderDialog
+          v-model="openOrderAccepted"
+          :order-accepted="'listing'"
+        />
+        <ErrorDialog
+          v-model="openErrorDialog"
+          :error-type="errorType"
+          :error-title="errorTitle"
+          :error-message="errorMessage"
+        />
       </div>
     </div>
     <div
@@ -201,6 +211,9 @@ import MissingFavorites from './MissingFavorites.vue';
 import { SetSessionID } from 'src/shared/amplitude-service';
 import { useNFTStore } from 'src/stores/nft-store';
 import { AssociateOwned } from 'src/shared/association.helper';
+import { FulfillBasicOrder } from '../Metadata/services/Orders';
+import OrderAccepted from '../SharedPopups/OrderAccepted.vue';
+import ProfileErrors from '../SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -210,6 +223,8 @@ export default defineComponent({
     FavsEmpty: EmptyFavorites,
     FavsError: ErrorFavorites,
     FavsMissing: MissingFavorites,
+    AcceptedOrderDialog: OrderAccepted,
+    ErrorDialog: ProfileErrors
   },
   data() {
     const userStore = useUserStore();
@@ -225,6 +240,13 @@ export default defineComponent({
       nftStore,
       removeDialog: false,
       erroredOut: false,
+
+      openOrderAccepted: false,
+      openErrorDialog: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: ''
     };
   },
   mounted() {
@@ -393,7 +415,42 @@ export default defineComponent({
         },
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);
-    }
+    },
+
+    async AcceptOffer(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
+      const address = this.userStore.walletAddress;
+      try {
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        this.openOrderAccepted = true;
+        setTimeout(() => {
+          this.openOrderAccepted = false;
+        }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        this.HandleError({
+          errorType: 'accept',
+          errorTitle: 'Sorry, the purchase failed',
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
+        });
+      }
+    },
+    HandleError(err: {
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2500);
+    },
   },
 });
 </script>

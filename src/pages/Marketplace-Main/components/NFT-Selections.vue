@@ -162,6 +162,12 @@
         v-model="openOrderAccepted"
         :order-accepted="'listing'"
       />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
     </div>
   </div>
   <div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
@@ -218,12 +224,14 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { AssociateOwned } from 'src/shared/association.helper';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   components: {
     ErrorView: ErrorViewVue,
     EmptyView: EmptyView,
-    AcceptedOrderDialog: OrderAccepted
+    AcceptedOrderDialog: OrderAccepted,
+    ErrorDialog: ProfileErrors
   },
   emits: ['totalTokens'],
   data() {
@@ -497,13 +505,13 @@ export default defineComponent({
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
-        }, 3000);
+        }, 2000);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
       }
     },
@@ -518,7 +526,7 @@ export default defineComponent({
       this.openErrorDialog = true;
       setTimeout(() => {
         this.openErrorDialog = false;
-      }, 2000);
+      }, 2500);
     },
   },
 

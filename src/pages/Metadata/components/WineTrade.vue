@@ -329,13 +329,13 @@ export default defineComponent({
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
-        }, 3000);
+        }, 2500);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
       }
     },

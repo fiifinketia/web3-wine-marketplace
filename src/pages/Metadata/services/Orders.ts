@@ -277,6 +277,9 @@ export async function FulfillBasicOrder(
   address: string,
   image: string
 ) {
+	if (!address) {
+		throw 'Check Metamask connection.'
+	}
 	const { seaport } = await GetWeb3();
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const body = {
