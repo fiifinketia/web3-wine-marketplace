@@ -253,6 +253,7 @@ import { defineComponent } from 'vue';
 import {
   CreateERC721Listing,
   CancelSingleOrder,
+  InspectListingStatus
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
@@ -306,6 +307,15 @@ export default defineComponent({
   },
   methods: {
     async CreateNewOrder() {
+      const existingListing = await InspectListingStatus({
+        contractAddress: this.smartContractAddress,
+        network: this.network,
+        identifierOrCriteria: this.tokenID
+      })
+      if (!!existingListing) {
+        // TODO add an emit for error handling
+        return
+      }
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);

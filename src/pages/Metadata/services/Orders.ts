@@ -15,6 +15,7 @@ import {
   OrderParameters,
 } from '@opensea/seaport-js/lib/types';
 import { APIKeyString } from 'src/boot/axios';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: any; // eslint-disable-line
@@ -121,6 +122,17 @@ export async function CreateERC721Listing(
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
+}
+
+export async function InspectListingStatus(nft: TokenIdentifier) {
+	const url = <string> process.env.RETRIEVE_LISTING_STATUS;
+	let status = false;
+	await axios
+		.post(url, {...nft, apiKey: APIKeyString})
+		.then(res => {
+			status = res.data;
+		});
+	return status;
 }
 
 export async function CreateERC1155Listing(
