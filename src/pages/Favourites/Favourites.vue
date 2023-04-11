@@ -37,44 +37,26 @@
         <q-card class="q-ma-xs" flat>
           <img
             class="favorites-card-image clickable-image"
-            :src="nft.nftDetails.image"
+            :src="nft.image"
           />
           <div
             class="q-pb-sm favorites-brand column justify-center"
             style="text-align: left"
           >
             <span>
-              {{ truncateText(nft.nftDetails.brand) }}
+              {{ truncateText(nft.brand) }}
             </span>
           </div>
-          <div class="favorites-price-container column q-pa-sm">
-            <div class="row justify-between">
-              <span class="favorites-price-text">Price</span>
-              <q-img
-                v-if="!!nft.favoriteLoading"
-                src="../../assets/loading-heart.gif"
-                :style="
-                  $q.screen.width > 350
-                    ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
-                    : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
-                "
-              />
-              <q-img
-                v-else
-                :width="$q.screen.width > 350 ? '20px' : '16px'"
-                :height="$q.screen.width > 350 ? '20px' : '16px'"
-                src="../../../public/images/heart.svg"
-                class="clickable-image"
-                @click.stop="
-                  removeNFT(nft.tokenID, nft.contractAddress, nft.network)
-                "
-              />
-            </div>
+          <q-card-section class="row justify-between q-py-sm favorites-price-container">
+          <div class="column items-start justify-evenly">
+            <span class="favorites-price-text q-pb-xs"> Price </span>
             <div
               v-if="
-                !!nft.nftDetails.orderDetails?.listingPrice &&
-                !!nft.nftDetails.orderDetails?.transactionStatus
+                !!nft.orderDetails?.listingPrice &&
+                !!nft.orderDetails?.transactionStatus
               "
+              class="row items-center justify-between full-width"
+              @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
                 <q-img
@@ -86,14 +68,56 @@
                   "
                 />
                 <span class="favorites-b-text-active">
-                  {{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
+                  {{ ToInt(nft.orderDetails.listingPrice) }}
                 </span>
               </div>
             </div>
             <div v-else class="q-pt-sm" style="display: flex">
-              <span class="favorites-b-text-inactive"> Not available </span>
+              <span class="favorites-b-text-inactive">
+                Not Listed
+              </span>
             </div>
           </div>
+          <div class="column items-center justify-between q-gutter-y-xs">
+            <q-img
+              v-if="!!nft.favoriteLoading"
+              src="../../assets/loading-heart.gif"
+              :style="
+                $q.screen.width > 350
+                  ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
+                  : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
+              "
+            />
+            <q-img
+              v-else
+              src="../../../public/images/heart.svg"
+              class="clickable-image"
+              :width="$q.screen.width > 350 ? '20px' : '16px'"
+              :height="$q.screen.width > 350 ? '20px' : '16px'"
+              @click.stop="removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)"
+            />
+            <q-btn
+              v-if="!nft.isOwned && !!nft.orderDetails?.listingPrice && !!nft.orderDetails?.transactionStatus"
+              dense
+              unelevated
+              flat
+              no-caps
+              :ripple="false"
+              class="q-pa-none"
+              @click.stop="AcceptOffer(nft.orderDetails.orderHash, nft.brand, nft.image, nft)"
+            >
+              <img
+                src="../../assets/small-bag-btn.svg"
+                style="border-radius: 0 !important"
+              />
+            </q-btn>
+            <img
+              v-if="!!nft.isOwned"
+              src="../../assets/owned-tick.svg"
+              style="border-radius: 0 !important; padding-top: 6px"
+            />
+          </div>
+          </q-card-section>
           <q-menu touch-position context-menu>
             <q-list dense style="min-width: 100px">
               <q-item v-close-popup clickable>
@@ -167,7 +191,7 @@ import { FavoritesModel } from './models/Response';
 import {
   RemoveFavorites,
   GetAllFavorites,
-} from '../Marketplace-Main/services/FavoritesFunctions';
+} from './services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
 import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
@@ -175,6 +199,8 @@ import RemoveDialog from './RemoveDialog.vue';
 import ErrorFavorites from './ErrorFavorites.vue';
 import MissingFavorites from './MissingFavorites.vue';
 import { SetSessionID } from 'src/shared/amplitude-service';
+import { useNFTStore } from 'src/stores/nft-store';
+import { AssociateOwned } from 'src/shared/association.helper';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -187,14 +213,16 @@ export default defineComponent({
   },
   data() {
     const userStore = useUserStore();
+    const nftStore = useNFTStore();
     return {
-      favNFTs: Array<FavoritesModel>(),
+      favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
       loadingFavNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
       isLoading: true,
       emptyRequest: false,
       emptySearch: false,
       brandSearch: '',
       userStore,
+      nftStore,
       removeDialog: false,
       erroredOut: false,
     };
@@ -208,7 +236,7 @@ export default defineComponent({
       this.isLoading = true;
       try {
         const { result: nfts } = await GetAllFavorites(walletAddress, brand);
-        this.favNFTs = nfts;
+        this.IncorporateOwnedNFTs(nfts);
         this.CheckForEmptiness(this.favNFTs, brand);
         this.erroredOut = false;
       } catch {
@@ -217,10 +245,18 @@ export default defineComponent({
         this.isLoading = false;
       }
     },
+    IncorporateOwnedNFTs(nfts: FavoritesModel[]) {
+      const nftsFetched = this.nftStore.fetchNFTsStatus;
+      if (!!nftsFetched) {
+        this.favNFTs = AssociateOwned(nfts, this.nftStore.ownedNFTs);
+      } else {
+        this.favNFTs = nfts;
+      }
+    },
     async removeNFT(tokenID: string, cAddress: string, network: string) {
       const nftIndex = this.favNFTs.findIndex(
         nft =>
-          nft.contractAddress == cAddress &&
+          nft.smartContractAddress == cAddress &&
           nft.tokenID == tokenID &&
           nft.network == network
       );
@@ -308,7 +344,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.contractAddress,
+          contractAddress: token.smartContractAddress,
         },
       });
       switch (where) {
@@ -318,7 +354,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.contractAddress,
+              contractAddress: token.smartContractAddress,
             },
           });
           break;
@@ -338,7 +374,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.contractAddress,
+              contractAddress: token.smartContractAddress,
             },
           });
           break;
@@ -353,7 +389,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.contractAddress,
+          contractAddress: token.smartContractAddress,
         },
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);

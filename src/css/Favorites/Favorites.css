@@ -215,6 +215,8 @@
 .favorites-price-container {
 	border: 1px solid rgba(94, 151, 236, 0.27) !important;
 	border-radius: 6px !important;
+	padding-left: 8px;
+	padding-right: 8px;
 }
 
 .un-favour-btn .q-focus-helper {

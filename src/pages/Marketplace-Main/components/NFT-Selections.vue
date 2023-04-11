@@ -209,15 +209,14 @@ import {
   ListingWithPricingAndImage,
 } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
-import { AddFavorites, RemoveFavorites } from '../services/FavoritesFunctions';
+import { AddFavorites, RemoveFavorites } from '../../Favourites/services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
 import EmptyView from './EmptyView.vue';
 import { useNFTStore } from 'src/stores/nft-store';
-import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import AcceptOffer from 'src/pages/SharedPopups/AcceptOffer.vue';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import { AssociateOwned } from 'src/shared/association.helper';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 
 export default defineComponent({
@@ -435,8 +434,8 @@ export default defineComponent({
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
           this.$emit('totalTokens', nfts.length);
-          this.AssignAndCompareResponse(nfts);
-          this.erroredOut = false; // change
+          this.IncorporateOwnedNFTs(nfts);
+          this.erroredOut = false;
         } catch {
           this.erroredOut = true;
         }
@@ -446,8 +445,8 @@ export default defineComponent({
             `generalSearch=${genSearch}&walletAddress=${this.userStore.walletAddress}`
           );
           this.$emit('totalTokens', nfts.length);
-          this.AssignAndCompareResponse(nfts);
-          this.erroredOut = false; // change
+          this.IncorporateOwnedNFTs(nfts);
+          this.erroredOut = false;
           this.nftEnums = nftEnums;
         } catch {
           this.erroredOut = true;
@@ -479,30 +478,10 @@ export default defineComponent({
         } else return text;
       }
     },
-    AssignAndCompareResponse(retrievedNFTs: ListingWithPricingAndImage[]) {
+    IncorporateOwnedNFTs(retrievedNFTs: ListingWithPricingAndImage[]) {
       const nftsFetched = this.nftStore.fetchNFTsStatus;
       if (!!nftsFetched) {
-        const ownedNFTs = this.nftStore.ownedNFTs;
-        const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
-        ownedNFTs.forEach(f => {
-          const key = `${f.identifierOrCriteria},${f.contractAddress},${f.network}`
-          ownedNFTsMap.set(key, f);
-        })
-
-        const retrievedNFTsMap: Map<string, ListingWithPricingAndImage & { isOwned?: boolean }> = new Map();
-        retrievedNFTs.forEach(f => {
-          const key = `${f.tokenID},${f.smartContractAddress},${f.network}`
-          retrievedNFTsMap.set(key, f);
-        })
-
-        ownedNFTsMap.forEach((v, k) => {
-          const ownedInSelection = retrievedNFTsMap.get(k);
-          if (!!ownedInSelection) {
-            ownedInSelection.isOwned = true;
-          }
-        })
-
-        this.allNFTs = Array.from(retrievedNFTsMap.values());
+        this.allNFTs = AssociateOwned(retrievedNFTs, this.nftStore.ownedNFTs);
       } else {
         this.allNFTs = retrievedNFTs;
       }

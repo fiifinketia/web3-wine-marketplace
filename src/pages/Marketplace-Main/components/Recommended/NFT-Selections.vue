@@ -172,7 +172,7 @@ import { ListingWithPricingAndImage } from '../../models/Response.models';
 import {
   AddFavorites,
   RemoveFavorites,
-} from '../../services/FavoritesFunctions';
+} from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
 
 export default defineComponent({
