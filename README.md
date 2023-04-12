@@ -28,6 +28,12 @@ npm run lint
 quasar build
 ```
 
+## Install dependencies for Amplitude
+
+```bash
+npm install @amplitude/analytics-browser
+```
+
 # ENV File Variables
 
 ```
@@ -87,5 +93,7 @@ TO_BLOCK=99999999
 # TRANSAK
 TRANSAK_API_KEY=
 
-
+# AMPLITUDE
+AMP_API_KEY=286edfa9633aaf8f494a67e9e5d4d2a7
+API_TOKEN=tMRL7vva59X5AMUGvEb-2SU4X_KAnW8m
 ```
