@@ -256,6 +256,7 @@ import {
   InspectListingStatus
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
+import { useListingStore } from 'src/stores/listing-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
@@ -298,17 +299,30 @@ export default defineComponent({
   ],
   data() {
     const userStore = useUserStore();
+    const listingsStore = useListingStore();
     return {
       userStore,
+      listingsStore,
       listingPrice: '',
       listingExpirationDate: '',
       fee: '',
       acceptTerms: false,
-      loadingListing: false
+      // loadingListing: listingsStore.getNFTListingStatus(this.nftKey())
     };
+  },
+  computed: {
+    loadingListing() {
+      if (!!this.acceptTerms) {
+        const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
+        return this.listingsStore.getNFTListingStatus(nftKey);
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     async CreateNewOrder() {
+      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
@@ -330,7 +344,9 @@ export default defineComponent({
           }
         }
         try {
-          this.loadingListing = true;
+          if (!this.loadingListing) {
+            this.AddListingStatusState(nftKey);
+          }
           await CreateERC721Listing(
             this.tokenID,
             this.smartContractAddress,
@@ -355,14 +371,30 @@ export default defineComponent({
           }
         } catch (err) {
           this.BuildErrorDialog(err);
-        } finally {
-          this.loadingListing = false;
         }
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
+        this.RemoveListingStatusState(nftKey);
         this.$emit('listing-edit-close');
       }
+    },
+    ManageListingStatusState(nftKey: string) {
+      const isOngoing = this.listingsStore.getNFTListingStatus(nftKey);
+      console.log(isOngoing)
+      if (isOngoing) {
+        // this.loadingListing = true;
+      };
+    },
+    AddListingStatusState(nftKey: string) {
+      console.log('adding..')
+      this.listingsStore.setNFTListingStatus(nftKey);
+      // this.loadingListing = true;
+    },
+    RemoveListingStatusState(nftKey: string) {
+      console.log('deleting..')
+      this.listingsStore.removeNFTListingStatus(nftKey);
+      this.loadingListing = false;
     },
     ResetData() {
       this.listingPrice = '';
