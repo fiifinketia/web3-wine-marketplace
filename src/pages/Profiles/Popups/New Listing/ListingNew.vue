@@ -205,6 +205,7 @@ import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 import ListingNewError from './ListingNewError.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import { useListingStore } from 'src/stores/listing-store';
 
 export default defineComponent({
   components: {
@@ -226,6 +227,7 @@ export default defineComponent({
   emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing'],
   data() {
     const listableFiltersStore = useListableFilters();
+    const listingsStore = useListingStore();
     return {
       loadingNFTs: [0, 1, 2],
       openListingDialog: false,
@@ -243,9 +245,23 @@ export default defineComponent({
       showFilterSidebar: false,
 
       listableFiltersStore,
+      listingsStore,
 
       openListingStatusDialog: false
     };
+  },
+  created() {
+    // create a new BroadcastChannel
+    const channel = new BroadcastChannel('listingStore');
+    // listen for messages on the channel
+    channel.addEventListener('message', event => {
+      const { action, payload } = event.data;
+      if (action === 'setNFTListingStatus') {
+        this.listingsStore.setNFTListingStatus(payload);
+      } else if (action === 'removeNFTListingStatus') {
+        this.listingsStore.removeNFTListingStatus(payload);
+      }
+    });
   },
   methods: {
     OpenListingDialog(token: ListableToken) {

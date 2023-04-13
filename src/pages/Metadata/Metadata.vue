@@ -64,6 +64,7 @@ import {
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
 import ListingExists from '../SharedPopups/ListingExists.vue';
+import { useListingStore } from 'src/stores/listing-store';
 
 export default defineComponent({
   name: 'MetadataPage',
@@ -80,11 +81,13 @@ export default defineComponent({
 
   data() {
     const userStore = useUserStore();
+    const listingsStore = useListingStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
       chartData: [] as number[][],
       userStore,
+      listingsStore,
       tab: ref('history'),
       tokenExists: false,
       loadingMetadata: true,
@@ -98,6 +101,20 @@ export default defineComponent({
 
   async mounted() {
     await this.ValidateAndFetchNFT();
+  },
+
+  created() {
+    // create a new BroadcastChannel
+    const channel = new BroadcastChannel('listingStore');
+    // listen for messages on the channel
+    channel.addEventListener('message', event => {
+      const { action, payload } = event.data;
+      if (action === 'setNFTListingStatus') {
+        this.listingsStore.setNFTListingStatus(payload);
+      } else if (action === 'removeNFTListingStatus') {
+        this.listingsStore.removeNFTListingStatus(payload);
+      }
+    });
   },
 
   methods: {
