@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FavoritesModel } from '../../Favourites/models/Response';
+import { FavoritesModel } from '../models/Response';
 import { APIKeyString } from 'src/boot/axios';
 
 async function AddFavorites(body: object) {

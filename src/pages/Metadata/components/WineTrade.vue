@@ -110,7 +110,7 @@
     <div :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'">
       <div v-if="nft.isOwner" class="column items-center full-width q-px-md">
         <q-btn
-          v-if="!nft.listingDetails.orderHash"
+          v-if="!nft.listingDetails?.orderHash"
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
@@ -143,10 +143,10 @@
           no-caps
           flat
           :disable="
-            !nft.listingDetails.orderHash ||
-            !nft.listingDetails.transactionStatus
+            !nft.listingDetails?.orderHash ||
+            !nft.listingDetails?.transactionStatus
           "
-          @click="OpenFulFillOrOfferDialog('fulfill')"
+          @click="AcceptOffer(nft.listingDetails?.orderHash!, nft.brand, nft.image)"
         >
           Buy now
         </q-btn>
@@ -154,7 +154,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenFulFillOrOfferDialog('offer')"
+          @click="OpenOfferDialog()"
         >
           Make an offer
         </q-btn>
@@ -184,14 +184,14 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnmetadataCompletedDialog('listing')"
     />
 
     <CreateOfferDialog
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
-      :highest-offer="nft.offerDetails.highestBid"
-      :highest-offer-currency="nft.offerDetails.highestBidCurrency"
+      :highest-offer="nft.offerDetails?.highestBid!"
+      :highest-offer-currency="nft.offerDetails?.highestBidCurrency!"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -199,12 +199,12 @@
       :is-edit="false"
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
-      @offer-created="SetTimeoutOnCompletedDialog('offer')"
+      @offer-created="SetTimeoutOnmetadataCompletedDialog('offer')"
     />
 
     <DeleteListingDialog
       v-model="openDeleteListingDialog"
-      :order-hash="nft.listingDetails.orderHash"
+      :order-hash="nft.listingDetails?.orderHash!"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
     />
@@ -219,21 +219,6 @@
       :error-type="errorType"
       :error-title="errorTitle"
       :error-message="errorMessage"
-    />
-
-    <ConfirmOrderDialog
-      v-model="openConfirmDialog"
-      :order-hash="nft.listingDetails.orderHash"
-      :brand="nft.brand"
-      :image="nft.image"
-      :token="{
-        identifierOrCriteria: nft.tokenID,
-        contractAddress: nft.smartContractAddress,
-        network: nft.network,
-      }"
-      @accept-offer="
-        req => AcceptOffer(req.orderHash, req.brand, req.image)
-      "
     />
 
     <AcceptedOrderDialog
@@ -253,7 +238,6 @@ import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import AcceptOffer from 'src/pages/SharedPopups/AcceptOffer.vue';
 import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
@@ -270,8 +254,7 @@ export default defineComponent({
 
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
-    ConfirmOrderDialog: AcceptOffer,
-    AcceptedOrderDialog: OrderAccepted,
+    AcceptedOrderDialog: OrderAccepted
   },
   props: {
     nft: {
@@ -288,7 +271,6 @@ export default defineComponent({
       openCreateOfferDialog: false,
       openOrderCompletedDialog: false,
       openErrorDialog: false,
-      openConfirmDialog: false,
       openOrderAccepted: false,
 
       errorType: '',
@@ -321,19 +303,12 @@ export default defineComponent({
     }
   },
   methods: {
-    OpenFulFillOrOfferDialog(dialog: string) {
+    OpenOfferDialog() {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
         return;
       } else {
-        switch (dialog) {
-          case 'offer':
-            this.openCreateOfferDialog = true;
-            break;
-          case 'fulfill':
-            this.openConfirmDialog = true;
-            break;
-        }
+        this.openCreateOfferDialog = true;
       }
     },
     SetTimeoutOnmetadataCompletedDialog(orderType: string) {
@@ -362,21 +337,18 @@ export default defineComponent({
     async AcceptOffer(orderHash: string, brand: string, image: string) {
       const address = this.walletAddress;
       try {
-        await FulfillBasicOrder(orderHash, brand, true, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
-        }, 3000);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }, 2500);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage:
-            'It may be due to not having enough balance, rejected transaction, etc.',
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
-      } finally {
-        this.openConfirmDialog = false;
       }
     },
     RefreshMetadataPage() {

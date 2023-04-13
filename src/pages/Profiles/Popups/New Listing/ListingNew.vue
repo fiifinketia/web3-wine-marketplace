@@ -103,7 +103,6 @@
       />
       <NewListingNFTs
         class="scroll"
-        @click="showFilterSidebar = false"
         @open-listing-dialog="token => OpenListingDialog(token)"
       />
       <NewListingDialog
@@ -116,7 +115,12 @@
         :is-edit="false"
         @listing-error-dialog="HandleError"
         @listing-edit-close="openListingDialog = false"
-        @listable-nft-listed="listed => RemoveListableNFT(listed)"
+        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
+        @listing-exists="alreadyListed => UpdateListableNFT(alreadyListed)"
+      />
+      <ListingStatusDialog
+        v-model="openListingStatusDialog"
+        :transaction-status="false"
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -128,6 +132,7 @@
         v-if="$q.screen.width > 600"
         v-model="showFilterSidebar"
         :listable-n-f-ts="listableNFTs"
+        @close-sidebar="showFilterSidebar = false"
       />
       <SidebarMobile
         v-else
@@ -191,7 +196,7 @@ import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/newListing.css';
 import ListingNewHeader from './ListingNewHeader.vue';
 import ListingNewNFTs from './ListingNewNFTs.vue';
-import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { ListableToken, TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import ListingEdit from '../../../SharedPopups/ListingEdit.vue';
 import ProfileErrors from '../../../SharedPopups/ProfileErrors.vue';
 import SidebarNormal from '../Sidebar/SidebarNormal.vue';
@@ -199,6 +204,7 @@ import SidebarMobile from '../Sidebar/SidebarMobile.vue';
 import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 import ListingNewError from './ListingNewError.vue';
+import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 
 export default defineComponent({
   components: {
@@ -210,13 +216,14 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     SidebarNormal: SidebarNormal,
     SidebarMobile: SidebarMobile,
+    ListingStatusDialog: ListingExists
   },
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] },
     erroredOut: { type: Boolean, default: false },
     isLoading: { type: Boolean, default: false }
   },
-  emits: ['listable-nft-listed', 'refetch-nfts'],
+  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing'],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
@@ -236,6 +243,8 @@ export default defineComponent({
       showFilterSidebar: false,
 
       listableFiltersStore,
+
+      openListingStatusDialog: false
     };
   },
   methods: {
@@ -260,8 +269,22 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    RemoveListableNFT(listed: ListableToken) {
+    UpdateListableNFTWithPrice(listed: ListableToken) {
       this.$emit('listable-nft-listed', listed);
+    },
+    UpdateListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      // If still processing, emit listing-warning-processing
+      if (!listed.transactionStatus) {
+        this.$emit('listing-warning-processing', listed);
+        this.openListingStatusDialog = true;
+        setTimeout(() => {
+          this.openListingStatusDialog = false;
+        }, 2000);
+      }
+      // If already processed, emit listing-warning-processed
+      else {
+        this.$emit('listing-warning-processed', listed);
+      }
     },
     ReFetchNFTs() {
       this.$emit('refetch-nfts')

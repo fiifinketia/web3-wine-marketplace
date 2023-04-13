@@ -22,10 +22,7 @@
       class="releases-card-container"
       @click="openNFT(token)"
     >
-      <q-card
-        class="q-ma-xs releases-nft-card"
-        flat
-      >
+      <q-card class="q-ma-xs releases-nft-card" flat>
         <img
           :src="token.image"
           class="releases-card-image clickable-image"
@@ -38,11 +35,38 @@
             {{ truncateText(token.brand) }}
           </span>
         </div>
-        <q-card-section
-          class="column items-start releases-price-container q-py-sm"
-        >
-          <div class="row justify-between" style="width: 100%">
+        <q-card-section class="row justify-between releases-price-container q-py-sm">
+          <div class="column items-start justify-evenly">
             <span class="releases-price-header q-pb-xs"> Price </span>
+            <div
+              v-if="
+                !!token.orderDetails?.listingPrice &&
+                !!token.orderDetails?.transactionStatus
+              "
+              class="row items-center justify-between full-width"
+              @click.stop
+            >
+              <div class="row items-center q-gutter-x-xs q-pt-xs">
+                <q-img
+                  src="../../../../assets/icons/currencies/USDC-Icon.svg"
+                  :style="
+                    $q.screen.width > 350
+                      ? 'height: 20px; width: 20px'
+                      : 'height: 15px; width: 16px'
+                  "
+                />
+                <span class="releases-price-text-b-active">
+                  {{ ToInt(token.orderDetails.listingPrice) }}
+                </span>
+              </div>
+            </div>
+            <div v-else class="q-pt-sm" style="display: flex">
+              <span class="releases-price-text-b-inactive">
+                Not Listed
+              </span>
+            </div>
+          </div>
+          <div class="column items-center justify-between q-gutter-y-xs">
             <q-img
               v-if="!!userStore.walletAddress && !!token.favoriteLoading"
               src="../../../../assets/loading-heart.gif"
@@ -82,31 +106,26 @@
                 )
               "
             />
-          </div>
-          <div
-            v-if="
-              !!token.orderDetails?.listingPrice &&
-              !!token.orderDetails?.transactionStatus
-            "
-          >
-            <div class="row items-center q-gutter-x-xs q-pt-xs">
-              <q-img
-                src="../../../../assets/icons/currencies/USDC-Icon.svg"
-                :style="
-                  $q.screen.width > 350
-                    ? 'height: 20px; width: 20px'
-                    : 'height: 15px; width: 16px'
-                "
+            <q-btn
+              v-if="!token.isOwned && !!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus"
+              dense
+              unelevated
+              flat
+              no-caps
+              :ripple="false"
+              class="q-pa-none"
+              @click.stop="AcceptOffer(token.orderDetails.orderHash, token.brand, token.image, token)"
+            >
+              <img
+                src="../../../../assets/small-bag-btn.svg"
+                style="border-radius: 0 !important"
               />
-              <span class="releases-price-text-b-active">
-                {{ ToInt(token.orderDetails.listingPrice) }}
-              </span>
-            </div>
-          </div>
-          <div v-else class="q-pt-sm" style="display: flex">
-            <span class="releases-price-text-b-inactive">
-              Not available
-            </span>
+            </q-btn>
+            <img
+              v-if="!!token.isOwned"
+              src="../../../../assets/owned-tick.svg"
+              style="border-radius: 0 !important; padding-top: 6px"
+            />
           </div>
         </q-card-section>
         <q-menu touch-position context-menu>
@@ -138,6 +157,16 @@
           </q-list>
         </q-menu>
       </q-card>
+      <AcceptedOrderDialog
+        v-model="openOrderAccepted"
+        :order-accepted="'listing'"
+      />
+      <ErrorDialog
+        v-model="openErrorDialog"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
     </div>
   </div>
   <ErrorView
@@ -177,12 +206,17 @@
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
-import { AddFavorites, RemoveFavorites } from '../../services/FavoritesFunctions';
+import { AddFavorites, RemoveFavorites } from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
+import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   components: {
-    ErrorView: NewlyError
+    ErrorView: NewlyError,
+    AcceptedOrderDialog: OrderAccepted,
+    ErrorDialog: ProfileErrors
   },
   props: {
     nftSelections: {
@@ -210,7 +244,14 @@ export default defineComponent({
     return {
       userStore,
       nfts: [] as ListingWithPricingAndImage[],
-      loadingNFTs: [0, 1, 2, 3]
+      loadingNFTs: [0, 1, 2, 3],
+
+      openOrderAccepted: false,
+      openErrorDialog: false,
+
+      errorType: '',
+      errorTitle: '',
+      errorMessage: ''
     };
   },
   beforeUpdate() {
@@ -332,7 +373,41 @@ export default defineComponent({
     },
     RefetchSection() {
       this.$emit('refetch-release')
-    }
+    },
+    async AcceptOffer(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
+      const address = this.userStore.walletAddress;
+      try {
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        this.openOrderAccepted = true;
+        setTimeout(() => {
+          this.openOrderAccepted = false;
+        }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        this.HandleError({
+          errorType: 'accept',
+          errorTitle: 'Sorry, the purchase failed',
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
+        });
+      }
+    },
+    HandleError(err: {
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2500);
+    },
   }
 })
 </script>

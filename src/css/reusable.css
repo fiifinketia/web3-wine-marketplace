@@ -12,6 +12,18 @@
   text-align: center;
 }
 
+.error-subtext {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  text-align: center;
+  color: #212131;
+}
+
+.error-subtext img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .error-btn {
   justify-content: center;
   align-items: center;

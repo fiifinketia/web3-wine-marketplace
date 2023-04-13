@@ -44,7 +44,7 @@
               :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
-              val="three_months"
+              val="six_months"
               :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               6 mos.
@@ -54,7 +54,7 @@
               :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
-              val="three_months"
+              val="one_year"
               :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               1 yr.
@@ -64,7 +64,7 @@
               :disable="isLoading ? true : false"
               keep-color
               :color="isLoading ? 'blue-1' : ''"
-              val="three_months"
+              val="five_years"
               :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               5 yrs.
@@ -133,7 +133,7 @@
             :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
-            val="three_months"
+            val="six_months"
             :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             6 mos.
@@ -143,7 +143,7 @@
             :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
-            val="three_months"
+            val="one_year"
             :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             1 yr.
@@ -153,7 +153,7 @@
             :disable="isLoading ? true : false"
             keep-color
             :color="isLoading ? 'blue-1' : ''"
-            val="three_months"
+            val="five_years"
             :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             5 yrs.
@@ -272,8 +272,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, createApp, PropType, ref } from 'vue';
-import ApexCharts from 'apexcharts';
+import { defineComponent, createApp, PropType } from 'vue';
+import ApexCharts, { ApexOptions } from 'apexcharts';
 import '../../../css/Metadata/WineHistory.css';
 import App from '../../../App.vue';
 import VueApexCharts from 'vue3-apexcharts';
@@ -312,15 +312,6 @@ export default defineComponent({
   data() {
     return {
       currentTimeline: '',
-      pagination: ref({
-        rowsPerPage: 10,
-      }),
-      three_months: 0,
-      six_months: 0,
-      one_year: 0,
-      five_years: 0,
-      selectedDate: 0,
-
       chartOptions: {
         chart: {
           id: 'chart',
@@ -347,24 +338,6 @@ export default defineComponent({
               show: true,
             },
           },
-        },
-        annotations: {
-          yaxis: [
-            {
-              y: 0,
-              borderColor: 'transparent',
-              fillColor: '#cc3c7c',
-            },
-          ],
-          xaxis: [
-            {
-              type: 'datetime',
-              categories: [],
-              x: [Number()],
-              tickPlacement: 'on',
-              borderColor: 'transparent',
-            },
-          ],
         },
         xaxis: {
           type: 'datetime',
@@ -474,9 +447,27 @@ export default defineComponent({
         },
         zoom: {
           enabled: false
-        }
-      },
-      selection: 'three_months',
+        },
+        responsive: [{
+          breakpoint: 600,
+          options: {
+            xaxis: {
+              labels: {
+                style: {
+                  fontSize: '14px'
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  fontSize: '14px'
+                }
+              }
+            },
+          },
+        }]
+      } as ApexOptions,
     };
   },
   computed: {
@@ -510,100 +501,45 @@ export default defineComponent({
       return this.erroredOut
     }
   },
+  watch: {
+    currentTimeline: {
+      handler(timeline: string) {
+        this.UpdateData(timeline)
+      }
+    }
+  },
   methods: {
     TimestampToDate(timestamp: number) {
       const date = new Date(timestamp * 1000);
       return date.toDateString();
     },
-    UpdateData(timeline: string, isMobile: boolean) {
-      this.selection = timeline;
-      this.currentTimeline = timeline;
-      let original = new Date(this.selectedDate);
-      if (this.currentTimeline === 'three_months') {
-        this.three_months = original.setMonth(original.getMonth() - 3);
-      } else if (this.currentTimeline === 'six_months') {
-        this.six_months = original.setMonth(original.getMonth() - 6);
-      } else if (this.currentTimeline === 'one_year') {
-        this.one_year = original.setMonth(original.getMonth() - 12);
-      } else {
-        this.five_years = original.setMonth(original.getMonth() - 60);
-      }
-      //TODO: Fix variables here
-      const options = [
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.$refs.overallChart as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.$refs.overallChartMobile as any,
-      ];
-      let chosenOption;
-      if (isMobile) {
-        chosenOption = options[1];
-      } else {
-        chosenOption = options[0];
-      }
+    UpdateData(timeline: string) {
+      const lastDate = this.nftChartData[this.nftChartData.length - 1][0];
+      let convertedLastDate = new Date(lastDate);
+      let dateAsked = 0;
       switch (timeline) {
         case 'three_months':
-          chosenOption.zoomX(this.three_months, this.selectedDate);
-          chosenOption.updateOptions({
-            xaxis: {
-              labels: {
-                format: 'MM/yyyy',
-              },
-            },
-            tooltip: {
-              x: {
-                format: 'MM/yyyy',
-              },
-            },
-          });
+          dateAsked = convertedLastDate.setMonth(convertedLastDate.getMonth() - 3);
           break;
         case 'six_months':
-          chosenOption.zoomX(this.six_months, this.selectedDate);
-          chosenOption.updateOptions({
-            xaxis: {
-              labels: {
-                format: 'MM/yyyy',
-              },
-            },
-            tooltip: {
-              x: {
-                format: 'MM/yyyy',
-              },
-            },
-          });
+          dateAsked = convertedLastDate.setMonth(convertedLastDate.getMonth() - 6);
           break;
         case 'one_year':
-          chosenOption.zoomX(this.one_year, this.selectedDate);
-          chosenOption.updateOptions({
-            xaxis: {
-              labels: {
-                format: 'yyyy',
-              },
-            },
-            tooltip: {
-              x: {
-                format: 'yyyy',
-              },
-            },
-          });
+          dateAsked = convertedLastDate.setMonth(convertedLastDate.getMonth() - 12);
           break;
         case 'five_years':
-          chosenOption.zoomX(this.five_years, this.selectedDate);
-          chosenOption.updateOptions({
-            xaxis: {
-              labels: {
-                format: 'yyyy',
-              },
-            },
-            tooltip: {
-              x: {
-                format: 'yyyy',
-              },
-            },
-          });
+          dateAsked = convertedLastDate.setMonth(convertedLastDate.getMonth() - 60);
           break;
-        default:
       }
+      const chart = this.$refs.chart as ApexCharts;
+      chart.zoomX(dateAsked, lastDate);
+      chart.updateOptions({
+        xaxis: {
+          labels: {
+            format: timeline.includes('months') ? 'MM/yy' : 'yyyy',
+          },
+        }
+      })
     },
     ReturnLoadingTicks(width: number) {
       if (width > 600) {
