@@ -5,6 +5,12 @@
         :nft="nft" @open-wallet="openWalletSideBar"
         @refresh-metadata="ValidateAndFetchNFT()"
         @connect-wallet="ConnectWallet()"
+        @listing-exists="listed => UpdateListingStatus(listed)"
+        @nft-listed="nft.listingDetails.transactionStatus = false"
+      />
+      <ListingStatusDialog
+        v-model="openListingStatusDialog"
+        :transaction-status="listingTransactionStatus"
       />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="history" label="NFT history" />
@@ -57,6 +63,7 @@ import {
 } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
+import ListingExists from '../SharedPopups/ListingExists.vue';
 
 export default defineComponent({
   name: 'MetadataPage',
@@ -67,6 +74,7 @@ export default defineComponent({
     WineTrade,
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
+    ListingStatusDialog: ListingExists
   },
   emits: ['openWalletSidebar', 'openConnectWallet'],
 
@@ -81,7 +89,10 @@ export default defineComponent({
       tokenExists: false,
       loadingMetadata: true,
       loadingPrices: true,
-      errorLoadingHistory: false
+      errorLoadingHistory: false,
+
+      openListingStatusDialog: false,
+      listingTransactionStatus: false
     };
   },
 
@@ -132,6 +143,19 @@ export default defineComponent({
       } catch (error) {
         throw error;
       }
+    },
+
+    UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      this.nft.listingDetails.listingPrice = listed.listingPrice;
+      this.nft.listingDetails.transactionStatus = listed.transactionStatus;
+      this.listingTransactionStatus = listed.transactionStatus;
+      this.nft.listingDetails.currency = listed.currency;
+
+      this.listingTransactionStatus = listed.transactionStatus;
+      this.openListingStatusDialog = true;
+      setTimeout(() => {
+        this.openListingStatusDialog = false;
+      }, 2000);
     },
 
     async GetNFTTXNHistory(identifierOrCriteria: string, contractAddress: string, network: string) {
