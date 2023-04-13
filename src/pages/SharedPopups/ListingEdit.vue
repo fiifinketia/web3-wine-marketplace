@@ -294,6 +294,7 @@ export default defineComponent({
     'listable-nft-listed',
     'listing-edit-close',
     'listing-error-dialog',
+    'listing-exists'
   ],
   data() {
     const userStore = useUserStore();
@@ -307,19 +308,25 @@ export default defineComponent({
   },
   methods: {
     async CreateNewOrder() {
-      const existingListing = await InspectListingStatus({
-        contractAddress: this.smartContractAddress,
-        network: this.network,
-        identifierOrCriteria: this.tokenID
-      })
-      if (!!existingListing) {
-        // TODO add an emit for error handling
-        return
-      }
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
           this.$emit('remove-listing', this.orderHash);
+        } else {
+          const existingListing = await InspectListingStatus({
+            contractAddress: this.smartContractAddress,
+            network: this.network,
+            identifierOrCriteria: this.tokenID
+          })
+          if (!!existingListing) {
+            this.$emit('listing-exists', {
+              ...existingListing,
+              contractAddress: this.smartContractAddress,
+              identifierOrCriteria: this.tokenID,
+              network: this.network
+            });
+            return
+          }
         }
         try {
           await CreateERC721Listing(

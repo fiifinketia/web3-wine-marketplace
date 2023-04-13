@@ -124,7 +124,7 @@ export async function CreateERC721Listing(
 	axios.post(createOrderURL, OrderRequest);
 }
 
-export async function InspectListingStatus(nft: TokenIdentifier) {
+export async function InspectListingStatus(nft: TokenIdentifier) : Promise <false | { listingPrice: string, currency: string, transactionStatus: boolean }> {
 	const url = <string> process.env.RETRIEVE_LISTING_STATUS;
 	let status = false;
 	await axios

@@ -3,11 +3,10 @@
     transition-show="slide-up"
     transition-hide="slide-down"
   >
-    <div class="q-pa-md column items-center order-completed-dialog">
+    <div class="q-pa-md column items-center dialog-confirm-box">
       <img
         src="../../assets/light_bulb.svg"
         class="light-bulb-icon q-py-lg"
-        width="50%"
       />
       <q-card-section class="column q-gutter-y-md">
         <span v-if="orderType == 'listing'" class="order-completed-blue-text">

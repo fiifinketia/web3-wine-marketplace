@@ -2,12 +2,6 @@
   width: 70px;
 }
 
-.order-completed-dialog {
-  width: 425px;
-  border-radius: 16px !important;
-  background-color: white;
-}
-
 .order-completed-blue-text {
   font-family: 'ProximaNova-Bold';
   font-size: 20px;

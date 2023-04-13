@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { ListableToken, TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export const useListableFilters = defineStore('listableFilters', {
   state: () => ({
@@ -302,7 +302,9 @@ export const useListableFilters = defineStore('listableFilters', {
         );
       }
     },
-    UpdateListableNFTPriceInDuplicate(listed: ListableToken) {
+    UpdateListableNFTPriceInDuplicate(
+      listed: ListableToken | TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }
+    ) {
       const listedIndex = this.filteredListableTokens.findIndex(
         nft =>
           nft.contractAddress == listed.contractAddress &&
@@ -312,6 +314,17 @@ export const useListableFilters = defineStore('listableFilters', {
       if (!!listedIndex) {
         this.filteredListableTokens[listedIndex].listingPrice =
           listed.listingPrice;
+      }
+    },
+    RemoveListableNFTInDuplicate(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      const listedIndex = this.filteredListableTokens.findIndex(
+        nft =>
+          nft.contractAddress == listed.contractAddress &&
+          nft.identifierOrCriteria == listed.identifierOrCriteria &&
+          nft.network == listed.network
+      );
+      if (!!listedIndex) {
+        this.filteredListableTokens.splice(listedIndex, 1);
       }
     },
   },

@@ -158,17 +158,17 @@
           </q-list>
         </q-menu>
       </q-card>
-      <AcceptedOrderDialog
-        v-model="openOrderAccepted"
-        :order-accepted="'listing'"
-      />
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :error-type="errorType"
-        :error-title="errorTitle"
-        :error-message="errorMessage"
-      />
     </div>
+    <AcceptedOrderDialog
+      v-model="openOrderAccepted"
+      :order-accepted="'listing'"
+    />
+    <ErrorDialog
+      v-model="openErrorDialog"
+      :error-type="errorType"
+      :error-title="errorTitle"
+      :error-message="errorMessage"
+    />
   </div>
   <div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
     <EmptyView />
