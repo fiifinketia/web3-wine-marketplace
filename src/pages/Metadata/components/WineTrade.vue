@@ -355,6 +355,7 @@ export default defineComponent({
       this.$emit('refresh-metadata');
     },
     metadataTour() {
+			this.$shepherd.complete()
 			const steps: StepOptions[] = [
 				{
 					id: 'metadata-details',
@@ -460,6 +461,7 @@ export default defineComponent({
 
 			this.$shepherd.addSteps(steps)
 			this.$shepherd.start()
+			this.tourStore.setMetadataCompleted();
 		},
   },
 });

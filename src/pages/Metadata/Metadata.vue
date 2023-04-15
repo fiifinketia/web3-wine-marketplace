@@ -7,8 +7,8 @@
         @connect-wallet="ConnectWallet()"
       />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
-        <q-tab name="history" label="NFT history" />
         <q-tab name="about" label="About" />
+        <q-tab name="history" label="NFT history" />
       </q-tabs>
       <q-tab-panels
         v-model="tab"
@@ -16,6 +16,9 @@
         transition-prev="jump-right"
         transition-next="jump-left"
       >
+			<q-tab-panel name="about">
+          <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
+        </q-tab-panel>
         <q-tab-panel name="history">
           <WineHistory
             :nft-txn-history="txnHistory"
@@ -25,10 +28,6 @@
             style="padding-bottom: 3rem"
             @refetch-history="GetNFTTXNHistory(nft.tokenID, nft.smartContractAddress, nft.network)"
           />
-        </q-tab-panel>
-
-        <q-tab-panel name="about">
-          <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
         </q-tab-panel>
       </q-tab-panels>
     </div>
@@ -77,7 +76,7 @@ export default defineComponent({
       txnHistory: [] as SeaportTransactionsModel[],
       chartData: [] as number[][],
       userStore,
-      tab: ref('history'),
+      tab: ref('about'),
       tokenExists: false,
       loadingMetadata: true,
       loadingPrices: true,

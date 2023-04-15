@@ -11,6 +11,7 @@
 	color: #212131;
 }
 
+
 .card-title-text {
 	font-family: 'Obviously';
 	font-style: normal;
@@ -22,8 +23,21 @@
 }
 
 .exclusive-offer-container {
-	width: 75%;
+max-width: 100%;
+overflow-x: scroll;
+overflow-y: scroll;
+
 	margin: 0 auto;
+}
+
+.exclusive-offer-container::-webkit-scrollbar {
+  width: 0px;
+  height: 8px; /* Optional: add a height to increase the clickable area */
+}
+
+.exclusive-card-container {
+  min-width: 150px !important;
+  min-height: 150px !important;
 }
 
 .card-starting-from-title {
@@ -38,30 +52,9 @@
 	color: #9d9d9d;
 }
 
-.currency {
-	font-family: 'ProximaNova-Bold';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 20px;
-	line-height: 24px;
-	display: flex;
-	align-items: center;
-	color: #212131;
-}
-
-.border {
-	border: 1px solid rgba(94, 151, 236, 0.27) !important;
-	border-radius: 6px !important;
-	padding: 8px;
-}
-
-.circle {
-	width: 100%;
-}
-
-.like {
-	width: 20px;
-	margin-right: 6px;
+.exclusive-price-container {
+  border: 1px solid rgba(94, 151, 236, 0.27) !important;
+  border-radius: 6px !important;
 }
 
 .go-to-marketplace {
@@ -88,78 +81,55 @@
 	margin: 0 auto;
 }
 
-.wine-name {
+.exclusive-wine-name {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 460;
-	font-size: 18px;
-	line-height: 27px;
-	/* or 150% */
+line-height: 1;
 
-	letter-spacing: 0.02em;
 
-	/* Secondary/dark blue */
+letter-spacing: 0.02em;
+
+
+
 
 	color: #212131;
-	width: 90%;
+order: 1;
+align-self: stretch;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 1;
+max-height: 1;
+
 }
 
-@media screen and (max-width: 1255px) {
+.exclusive-starting-from {
+	font-family: 'ProximaNova-All';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 19px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.5px;
+	color: #9d9d9d;
+}
+
+.exclusive-price {
+	font-family: 'ProximaNova-Bold';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+color: #212131;
+
+}
+
+
+/* @media screen and (max-width: 1255px) {
 	.exclusive-offer-container {
 		width: 95%;
 	}
-}
+} */
 
-@media screen and (max-width: 992px) {
-	.one {
-		display: none;
-	}
-	.exclusive-offer-title {
-		flex-direction: row;
-	}
-}
-
-@media screen and (max-width: 768px) {
-	.two {
-		display: none;
-	}
-}
-
-@media screen and (max-width: 576px) {
-	.exclusive-offer-title {
-		font-size: 28px;
-	}
-	.go-to-marketplace {
-		width: 100%;
-	}
-	.card-starting-from-title {
-		font-size: 14px;
-	}
-	.currency {
-		font-size: 15px;
-	}
-	.usdc {
-		width: 15px;
-		height: 15px;
-	}
-	.like {
-		width: 15px;
-		height: 15px;
-	}
-	.currency {
-		font-size: 18px;
-	}
-}
-
-@media screen and (max-width: 400px) {
-	.three {
-		display: none;
-	}
-	.wine-name {
-		font-size: 16px;
-	}
-
-	.currency {
-		font-size: 18px;
-	}
-}

@@ -193,10 +193,10 @@ export default defineComponent({
       },
     },
   },
-  mounted() {
+  async mounted() {
     SetSessionID('Marketplace Tab Clicked');
     this.CheckFilterMode();
-		if(!this.tourStore.metadataCompleted) this.marketplaceTour();
+    await this.marketplaceTour();
   },
 
   methods: {
@@ -257,11 +257,14 @@ export default defineComponent({
       const extraHeight = rows * 32 - 32;
       return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
     },
-    marketplaceTour() {
+    async marketplaceTour() {
+			if(this.tourStore.marketplaceCompleted) return;
       let screenSize = '';
       if (this.$q.screen.width > 1023) screenSize = 'lg';
       else if (this.$q.screen.width > 599) screenSize = 'sm';
       else screenSize = 'xs';
+      this.$shepherd.complete();
+      await this.waitForLoad();
       this.$shepherd.addSteps([
         {
           id: 'marketplace-sidebar',
@@ -274,8 +277,7 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-								if(this.totalNFTs > 0) this.$shepherd.next();
-                this.$shepherd.removeStep('marketplace-sidebar');
+                this.$shepherd.next();
               },
             },
             {
@@ -298,21 +300,34 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-                this.$shepherd.removeStep('marketplace-nfts');
-              },
-            },
-            {
-              text: 'Skip',
-              action: () => {
+                this.$shepherd.complete();
                 this.tourStore.setMarketplaceCompleted();
-                this.$shepherd.cancel();
               },
             },
+            // {
+            //   text: 'Skip',
+            //   action: () => {
+            //     this.tourStore.setMarketplaceCompleted();
+            //     this.$shepherd.cancel();
+            //   },
+            // },
           ],
         },
       ]);
       this.$shepherd.start();
-      this.tourStore.setMarketplaceCompleted();
+			this.tourStore.setMarketplaceCompleted();
+    },
+    waitForLoad() {
+      return new Promise<void>(resolve => {
+        const checkValue = () => {
+          if (!this.tourStore.suggestedWinesDialog && !!this.totalNFTs) {
+            resolve();
+          } else {
+            setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
+          }
+        };
+        checkValue();
+      });
     },
   },
 });

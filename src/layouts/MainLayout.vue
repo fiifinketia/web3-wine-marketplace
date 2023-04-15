@@ -104,7 +104,7 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
   />
-  <SuggestedWines v-model="suggestedWinesDialog" />
+  <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
   <q-layout view="lHh Lpr lFf">
@@ -129,6 +129,7 @@
           <span
             v-else-if="$router.currentRoute.value.path === '/marketplace'"
             class="logo-replacement-text"
+            @click="$router.push('/')"
           >
             Marketplace
           </span>
@@ -423,6 +424,7 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { useTourStore } from 'src/stores/tour-state';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -434,6 +436,7 @@ export default defineComponent({
     const userStore = useUserStore();
     const nftStore = useNFTStore();
     const orderStore = ordersStore();
+		const tourStore = useTourStore()
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
     return {
@@ -447,7 +450,7 @@ export default defineComponent({
       walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
       balance: 0,
-      suggestedWinesDialog: false,
+			tourStore,
     };
   },
   watch: {

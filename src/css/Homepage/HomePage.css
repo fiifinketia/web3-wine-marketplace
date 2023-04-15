@@ -1,10 +1,12 @@
 .partnership {
-	margin-top: 220px;
+margin-top: 20px;
+
 }
 
 .faq {
-	margin-top: 250px;
-	margin-bottom: 200px;
+margin-top: 25px;
+margin-bottom: 20px;
+
 }
 
 @media screen and (min-width: 1512px) {

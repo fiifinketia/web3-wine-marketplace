@@ -38,14 +38,14 @@
         <q-card class="q-ma-xs" flat>
           <img
             class="favorites-card-image clickable-image"
-            :src="nft.image"
+            :src="nft.nftDetails.image"
           />
           <div
             class="q-pb-sm favorites-brand column justify-center"
             style="text-align: left"
           >
             <span>
-              {{ truncateText(nft.brand) }}
+              {{ truncateText(nft.nftDetails.brand) }}
             </span>
           </div>
           <q-card-section class="row justify-between q-py-sm favorites-price-container">
@@ -53,8 +53,8 @@
             <span class="favorites-price-text q-pb-xs"> Price </span>
             <div
               v-if="
-                !!nft.orderDetails?.listingPrice &&
-                !!nft.orderDetails?.transactionStatus
+                !!nft.nftDetails.orderDetails?.listingPrice &&
+                !!nft.nftDetails.orderDetails?.transactionStatus
               "
               class="row items-center justify-between full-width"
               @click.stop
@@ -69,7 +69,7 @@
                   "
                 />
                 <span class="favorites-b-text-active">
-                  {{ ToInt(nft.orderDetails.listingPrice) }}
+                  {{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
                 </span>
               </div>
             </div>
@@ -95,17 +95,17 @@
               class="clickable-image remove-favorite"
               :width="$q.screen.width > 350 ? '20px' : '16px'"
               :height="$q.screen.width > 350 ? '20px' : '16px'"
-              @click.stop="removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)"
+              @click.stop="removeNFT(nft.tokenID, nft.contractAddress, nft.network)"
             />
             <q-btn
-              v-if="!nft.isOwned && !!nft.orderDetails?.listingPrice && !!nft.orderDetails?.transactionStatus"
+              v-if="!nft.isOwned && !!nft.nftDetails.orderDetails?.listingPrice && !!nft.nftDetails.orderDetails?.transactionStatus"
               dense
               unelevated
               flat
               no-caps
               :ripple="false"
               class="q-pa-none"
-              @click.stop="AcceptOffer(nft.orderDetails?.orderHash as string, nft.brand, nft.image)"
+              @click.stop="AcceptOffer(nft.nftDetails.orderDetails?.orderHash as string, nft.nftDetails.brand, nft.nftDetails.image)"
             >
               <img
                 src="../../assets/small-bag-btn.svg"
@@ -283,7 +283,7 @@ export default defineComponent({
     async removeNFT(tokenID: string, cAddress: string, network: string) {
       const nftIndex = this.favNFTs.findIndex(
         nft =>
-          nft.smartContractAddress == cAddress &&
+          nft.contractAddress == cAddress &&
           nft.tokenID == tokenID &&
           nft.network == network
       );
@@ -371,7 +371,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.smartContractAddress,
+          contractAddress: token.contractAddress,
         },
       });
       switch (where) {
@@ -381,7 +381,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.smartContractAddress,
+              contractAddress: token.contractAddress,
             },
           });
           break;
@@ -401,7 +401,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.smartContractAddress,
+              contractAddress: token.contractAddress,
             },
           });
           break;
@@ -416,7 +416,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.smartContractAddress,
+          contractAddress: token.contractAddress,
         },
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);
@@ -424,20 +424,7 @@ export default defineComponent({
     async startPageTour() {
       if (this.tourStore.favoritesCompleted) return;
 
-			const waitForLoad = () => {
-        return new Promise<void>(resolve => {
-          const checkValue = () => {
-            if (this.isLoading === false) {
-              resolve();
-            } else {
-              setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
-            }
-          };
-          checkValue();
-        });
-      };
-
-      await waitForLoad();
+      await this.waitForLoad();
 
 			if(this.emptyRequest || this.emptySearch || this.erroredOut) return;
 
@@ -560,7 +547,21 @@ export default defineComponent({
       setTimeout(() => {
         this.$shepherd.start();
       }, 3000);
+			this.tourStore.setFavoritesCompleted();
 		},
+
+		async waitForLoad () {
+        return new Promise<void>(resolve => {
+          const checkValue = () => {
+            if (this.isLoading === false && this.tourStore.suggestedWinesDialog) {
+              resolve();
+            } else {
+              setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
+            }
+          };
+          checkValue();
+        });
+      },
 
     async AcceptOffer(
       orderHash: string,
