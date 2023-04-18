@@ -184,7 +184,7 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnmetadataCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
     />
 
     <CreateOfferDialog
@@ -199,7 +199,7 @@
       :is-edit="false"
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
-      @offer-created="SetTimeoutOnmetadataCompletedDialog('offer')"
+      @offer-created="SetTimeoutOnMetadataCompletedDialog('offer')"
     />
 
     <DeleteListingDialog
@@ -302,7 +302,7 @@ export default defineComponent({
         this.openCreateOfferDialog = true;
       }
     },
-    SetTimeoutOnmetadataCompletedDialog(orderType: string) {
+    SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
         this.ongoingListingTransaction = true;

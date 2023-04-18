@@ -113,7 +113,6 @@
       :style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
       style="padding-top: 0px !important"
       @total-tokens="updateTokenCount"
-      @loading-completed="nftLoadingCompleted = true"
     />
     <q-page-sticky
       id="marketplace-sidebar-xs"
@@ -182,7 +181,6 @@ export default defineComponent({
       generalSearch: '',
       qChipRows: 0,
       tourStore,
-      nftLoadingCompleted: false,
     };
   },
   watch: {
