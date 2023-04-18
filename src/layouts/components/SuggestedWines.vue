@@ -164,10 +164,11 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.fetchSuggestedWines();
+    this.fetchSuggestedWines(0);
   },
   methods: {
-    async fetchSuggestedWines() {
+    async fetchSuggestedWines(calls: number) {
+			if(!this.tourStore.suggestedWinesDialog) return;
       try {
         const { result: nfts } = await RetrieveFilteredNFTs();
         this.recommendations = this.filterAndSortListedNFTs(nfts).slice(
@@ -178,7 +179,16 @@ export default defineComponent({
       } catch (error) {
         this.errorLoad = true;
 				this.isLoading = true;
-				this.fetchSuggestedWines();
+				if(calls > 3) {
+					// Try again in 30 secs
+					setTimeout(()=> {
+						this.fetchSuggestedWines(0)
+					}, 30000)
+				} else {
+					setTimeout(()=> {
+						this.fetchSuggestedWines(calls + 1)
+					}, 5000)
+				}
       }
     },
 

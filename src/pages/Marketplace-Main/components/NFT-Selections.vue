@@ -289,9 +289,9 @@ export default defineComponent({
           // await so that the filters are properly removed and won't "leak" to the subscriber
           try {
             await this.RetrieveTokens(this.generalSearchStore.generalSearch);
-            await this.wineFiltersStore.removeAllFilters();
+            this.wineFiltersStore.removeAllFilters();
             // tick the brand options related to the NFTs retrieved from general search key
-            await this.wineFiltersStore.setBrandFiltersAfterGenSearch(
+            this.wineFiltersStore.setBrandFiltersAfterGenSearch(
               this.nftEnums
             );
           } catch {

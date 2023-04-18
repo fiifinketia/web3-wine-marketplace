@@ -106,7 +106,7 @@
             />
           </div>
           <q-card-section class="q-pt-none faq-text row">
-            All your wies will be stored in a special place - Digital Wine
+            All your wines will be stored in a special place - Digital Wine
             Cellar. It’s our web app to monitor manage the NFTs you own.
           </q-card-section>
           <q-card-section class="q-pt-none faq-text row">
