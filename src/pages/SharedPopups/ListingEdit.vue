@@ -253,6 +253,7 @@ import { defineComponent } from 'vue';
 import {
   CreateERC721Listing,
   CancelSingleOrder,
+  InspectListingStatus
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
@@ -293,6 +294,7 @@ export default defineComponent({
     'listable-nft-listed',
     'listing-edit-close',
     'listing-error-dialog',
+    'listing-exists'
   ],
   data() {
     const userStore = useUserStore();
@@ -310,6 +312,21 @@ export default defineComponent({
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
           this.$emit('remove-listing', this.orderHash);
+        } else {
+          const existingListing = await InspectListingStatus({
+            contractAddress: this.smartContractAddress,
+            network: this.network,
+            identifierOrCriteria: this.tokenID
+          })
+          if (!!existingListing) {
+            this.$emit('listing-exists', {
+              ...existingListing,
+              contractAddress: this.smartContractAddress,
+              identifierOrCriteria: this.tokenID,
+              network: this.network
+            });
+            return
+          }
         }
         try {
           await CreateERC721Listing(

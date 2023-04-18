@@ -2,8 +2,14 @@
   <div class="column justify-center items-center q-mt-xl">
     <div class="brand-name">{{ nft.brand }}</div>
     <div class="wine-name">{{ nft.name }}</div>
-    <div :class="$q.screen.width > 600 ? 'row justify-center q-pt-lg q-px-sm metadata-container' : 'column items-center metadata-container'">
-      <img :src="nft.image" class="metadata-nft-image"/>
+    <div
+      :class="
+        $q.screen.width > 600
+          ? 'row justify-center q-pt-lg q-px-sm metadata-container'
+          : 'column items-center metadata-container'
+      "
+    >
+      <img :src="nft.image" class="metadata-nft-image" />
 
       <div class="column nft-takeaways-container q-pa-sm">
         <div class="row">
@@ -18,7 +24,7 @@
             <div class="user-id">WiV</div>
           </div>
         </div>
-        <div class="q-py-md">
+        <div id="metadata-details" class="q-py-md">
           <div v-if="$q.screen.width > 600" class="row justify-between q-pb-sm">
             <span class="metadata-text">{{ nft.type }} wine</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
@@ -48,14 +54,12 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
+							id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
               <div class="starting-from">Price</div>
-              <div
-                v-if="!!ongoingListingTransaction"
-                class="row items-center"
-              >
+              <div v-if="!!ongoingListingTransaction" class="row items-center">
                 <q-img src="../../../assets/processing.svg" width="30px" />
                 <div class="price1-blue">Processing price</div>
               </div>
@@ -85,6 +89,7 @@
               </div>
             </div>
             <div
+							id="metadata-bidding-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
@@ -105,7 +110,7 @@
     <div :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'">
       <div v-if="nft.isOwner" class="column items-center full-width q-px-md">
         <q-btn
-          v-if="!nft.listingDetails.orderHash"
+          v-if="!nft.listingDetails?.orderHash"
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
@@ -126,17 +131,22 @@
       </div>
       <div
         v-else
-        :class="$q.screen.width > 600 ? 'row q-gutter-x-md' : 'column items-center full-width q-px-md q-gutter-y-sm'"
+				id="metadata-checkout-buttons"
+        :class="
+          $q.screen.width > 600
+            ? 'row q-gutter-x-md'
+            : 'column items-center full-width q-px-md q-gutter-y-sm'
+        "
       >
         <q-btn
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
           :disable="
-            !nft.listingDetails.orderHash ||
-            !nft.listingDetails.transactionStatus
+            !nft.listingDetails?.orderHash ||
+            !nft.listingDetails?.transactionStatus
           "
-          @click="OpenFulFillOrOfferDialog('fulfill')"
+          @click="AcceptOffer(nft.listingDetails?.orderHash!, nft.brand, nft.image)"
         >
           Buy now
         </q-btn>
@@ -144,7 +154,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenFulFillOrOfferDialog('offer')"
+          @click="OpenOfferDialog()"
         >
           Make an offer
         </q-btn>
@@ -160,10 +170,7 @@
     >
       <div class="row items-center q-gutter-x-xs">
         <span class="update-metadata-text">Update metadata</span>
-        <img
-          src="../../../../public/images/refresh.svg"
-          style="width: 24px;"
-        />
+        <img src="../../../../public/images/refresh.svg" style="width: 24px" />
       </div>
     </q-btn>
 
@@ -177,14 +184,14 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
     />
 
     <CreateOfferDialog
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
-      :highest-offer="nft.offerDetails.highestBid"
-      :highest-offer-currency="nft.offerDetails.highestBidCurrency"
+      :highest-offer="nft.offerDetails?.highestBid!"
+      :highest-offer-currency="nft.offerDetails?.highestBidCurrency!"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -192,12 +199,12 @@
       :is-edit="false"
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
-      @offer-created="SetTimeoutOnCompletedDialog('offer')"
+      @offer-created="SetTimeoutOnMetadataCompletedDialog('offer')"
     />
 
     <DeleteListingDialog
       v-model="openDeleteListingDialog"
-      :order-hash="nft.listingDetails.orderHash"
+      :order-hash="nft.listingDetails?.orderHash!"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
     />
@@ -212,21 +219,6 @@
       :error-type="errorType"
       :error-title="errorTitle"
       :error-message="errorMessage"
-    />
-
-    <ConfirmOrderDialog
-      v-model="openConfirmDialog"
-      :order-hash="nft.listingDetails.orderHash"
-      :brand="nft.brand"
-      :image="nft.image"
-      :token="{
-        identifierOrCriteria: nft.tokenID,
-        contractAddress: nft.smartContractAddress,
-        network: nft.network
-      }"
-      @accept-offer="
-        req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
-      "
     />
 
     <AcceptedOrderDialog
@@ -246,7 +238,6 @@ import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import AcceptOffer from 'src/pages/SharedPopups/AcceptOffer.vue';
 import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
@@ -261,7 +252,6 @@ export default defineComponent({
 
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
-    ConfirmOrderDialog: AcceptOffer,
     AcceptedOrderDialog: OrderAccepted
   },
   props: {
@@ -278,7 +268,6 @@ export default defineComponent({
       openCreateOfferDialog: false,
       openOrderCompletedDialog: false,
       openErrorDialog: false,
-      openConfirmDialog: false,
       openOrderAccepted: false,
 
       errorType: '',
@@ -287,12 +276,12 @@ export default defineComponent({
 
       orderType: '',
 
-      ongoingListingTransaction: false
-    }
+      ongoingListingTransaction: false,
+    };
   },
   computed: {
     ...mapState(useUserStore, {
-      walletAddress: store => store.getWalletAddress()
+      walletAddress: store => store.getWalletAddress(),
     }),
   },
   watch: {
@@ -301,33 +290,26 @@ export default defineComponent({
         if (!!val) {
           this.$emit('refresh-metadata');
         }
-      }
-    }
+      },
+    },
   },
   methods: {
-    OpenFulFillOrOfferDialog(dialog: string) {
+    OpenOfferDialog() {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
-        return
+        return;
       } else {
-        switch (dialog) {
-          case 'offer':
-            this.openCreateOfferDialog = true;
-            break;
-          case 'fulfill':
-            this.openConfirmDialog = true;
-            break;
-        }
+        this.openCreateOfferDialog = true;
       }
     },
-    SetTimeoutOnCompletedDialog(orderType: string) {
+    SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
         this.ongoingListingTransaction = true;
       }
       this.openOrderCompletedDialog = true;
       setTimeout(() => {
-        this.openOrderCompletedDialog = false
+        this.openOrderCompletedDialog = false;
       }, 3000);
     },
     HandleError(err: {
@@ -343,27 +325,21 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    async AcceptOffer(
-      orderHash: string,
-      brand: string,
-      image: string
-    ) {
+    async AcceptOffer(orderHash: string, brand: string, image: string) {
       const address = this.walletAddress;
       try {
-        await FulfillBasicOrder(orderHash, brand, true, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, address, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
-        }, 3000);
+        }, 2500);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to not having enough balance, rejected transaction, etc.'
+          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
-      } finally {
-        this.openConfirmDialog = false;
       }
     },
     RefreshMetadataPage() {

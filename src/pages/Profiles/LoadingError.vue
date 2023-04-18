@@ -10,7 +10,7 @@
       src="../../assets/notepad.svg"
     />
     <q-img
-      v-if="tabError == 'trading'"
+      v-else-if="tabError == 'trading'"
       class="profile-error-icon"
       src="../../assets/notebook.svg"
     />

@@ -3,17 +3,17 @@ interface FavoritesModel {
   network: string;
   tokenID: string;
   walletAddress: string;
-  nftDetails: {
-    image: string;
-    brand: string;
-    orderDetails?: {
-      listingPrice?: string;
-      currency?: string;
-      orderHash?: string;
-      transactionStatus?: boolean;
-      expTime?: number;
-    };
-  };
+	nftDetails: {
+		image: string;
+		brand: string;
+		orderDetails?: {
+			listingPrice?: string;
+			currency?: string;
+			orderHash?: string;
+			transactionStatus?: boolean;
+			expTime?: number;
+		};
+	},
 
   favoriteLoading: null | boolean;
 }

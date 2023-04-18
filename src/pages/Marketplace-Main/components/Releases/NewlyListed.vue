@@ -15,6 +15,8 @@ import { ListingWithPricingAndImage } from '../../models/Response.models';
 import 'src/css/Releases/ReleasesSelections.css';
 import { useUserStore } from 'src/stores/user-store';
 import NFTSelectionsVue from './NFT-Selections.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { AssociateOwned } from 'src/shared/association.helper';
 
 export default defineComponent({
   components: {
@@ -23,9 +25,11 @@ export default defineComponent({
   emits: ['empty-section'],
   data() {
     const userStore = useUserStore();
+    const nftStore = useNFTStore();
     return {
       userStore,
-      newNFTs: new Array<ListingWithPricingAndImage>(),
+      nftStore,
+      newNFTs: new Array<ListingWithPricingAndImage & { isOwned?: boolean }>(),
       isLoading: true,
       erroredOut: false,
       erroredText: 'Newly listed wines'
@@ -39,15 +43,24 @@ export default defineComponent({
     async GetNewlyListed() {
       try {
         this.isLoading = true;
-        this.newNFTs = await GetNewListings(this.userStore.walletAddress)
-        if (this.newNFTs.length == 0) {
+        const newNFTs = await GetNewListings(this.userStore.walletAddress)
+        if (newNFTs.length == 0) {
           this.$emit('empty-section');
         }
+        this.IncorporateOwnedNFTs(newNFTs);
         this.erroredOut = false;
       } catch {
         this.erroredOut = true;
       } finally {
         this.isLoading = false;
+      }
+    },
+    IncorporateOwnedNFTs(newNFTs: ListingWithPricingAndImage[]) {
+      const nftsFetched = this.nftStore.fetchNFTsStatus;
+      if (!!nftsFetched) {
+        this.newNFTs = AssociateOwned(newNFTs, this.nftStore.ownedNFTs);
+      } else {
+        this.newNFTs = newNFTs;
       }
     }
   },

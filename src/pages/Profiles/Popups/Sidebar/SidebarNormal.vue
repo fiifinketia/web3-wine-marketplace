@@ -5,8 +5,14 @@
     transition-show="scale"
     transition-hide="scale"
     class="list-filter-dialog"
+    @show="AddClickOutsideListener()"
+    @hide="RemoveClickOutsideListener()"
   >
-    <div class="no-box-shadow" :class="$q.screen.width < 1154 ? 'q-mr-md' : ''">
+    <div
+      ref="sidebar"
+      class="no-box-shadow"
+      :class="$q.screen.width < 1154 ? 'q-mr-md' : ''"
+    >
       <q-scroll-area
         bordered
         class="main-filter-box dark-blue-border q-px-md"
@@ -82,6 +88,7 @@ export default defineComponent({
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, required: true },
   },
+  emits: ['close-sidebar'],
   data() {
     const listableFiltersStore = useListableFilters();
 
@@ -96,6 +103,20 @@ export default defineComponent({
     ClearFilters() {
       this.listableFiltersStore.clearAllFilters(this.listableNFTs);
     },
+    HandleClickOutside(event: MouseEvent) {
+      if (event.target) {
+        const sidebar = this.$refs.sidebar as HTMLElement;
+        if (sidebar && !sidebar.contains(event.target as Node)) {
+          this.$emit('close-sidebar');
+        }
+      }
+    },
+    AddClickOutsideListener() {
+      document.body.addEventListener('click', this.HandleClickOutside);
+    },
+    RemoveClickOutsideListener() {
+      document.body.removeEventListener('click', this.HandleClickOutside);
+    }
   },
 });
 </script>

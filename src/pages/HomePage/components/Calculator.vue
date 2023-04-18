@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center items-center wine-calculator-container">
+  <div class="row justify-center items-center wine-calculator-container q-my-lg">
     <div class="wine-calculator-image-wrapper">
       <q-img
         src="../../../assets/wineCalculator.svg"

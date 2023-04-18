@@ -108,12 +108,18 @@
         :listable-n-f-ts="listableNFTs"
         :is-loading="loadingNewListingDialog"
         :errored-out="errorNewListingDialog"
-        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
+        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed, false)"
+        @listing-warning-processing="processingListing => UpdateListableNFTWithPrice(processingListing, true)"
+        @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
         @refetch-nfts="SetListableNFTs()"
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
         :order-type="'listing'"
+      />
+      <ListingStatusDialog
+        v-model="openListingStatusDialog"
+        :transaction-status="true"
       />
     </div>
   </q-page>
@@ -147,6 +153,7 @@ import {
 import { ReturnMissingNFTDetails } from '../orders.requests';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
+import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -164,6 +171,7 @@ export default defineComponent({
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
     CreateListing: ListingNew,
+    ListingStatusDialog: ListingExists
   },
   emits: ['listingsAmount'],
 
@@ -201,7 +209,8 @@ export default defineComponent({
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-      openOrderCompletedDialog: false
+      openOrderCompletedDialog: false,
+      openListingStatusDialog: false
     };
   },
   computed: {
@@ -365,8 +374,13 @@ export default defineComponent({
         this.loadingNewListingDialog = false;
       }
     },
-    UpdateListableNFTWithPrice(listed: ListableToken) {
-      this.SetTimeoutOnListingProcessedDialog();
+    UpdateListableNFTWithPrice(
+      listed: ListableToken | TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean },
+      warning: boolean
+    ) {
+      if (!warning) {
+        this.SetTimeoutOnListingProcessedDialog();
+      }
       const listedIndex = this.listableNFTs.findIndex(
         nft =>
           nft.contractAddress == listed.contractAddress &&
@@ -376,6 +390,22 @@ export default defineComponent({
       this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
       this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
     },
+    RemoveListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      this.openNewListingDialog = false;
+      this.openNewListingDialog = false;
+      this.openListingStatusDialog = true;
+      setTimeout(() => {
+        this.openListingStatusDialog = false;
+      }, 2000);
+      const listedIndex = this.listableNFTs.findIndex(
+        nft =>
+          nft.contractAddress == listed.contractAddress &&
+          nft.identifierOrCriteria == listed.identifierOrCriteria &&
+          nft.network == listed.network
+      );
+      this.listableNFTs.splice(listedIndex, 1);
+      this.listableFiltersStore.RemoveListableNFTInDuplicate(listed);
+    }
   },
 });
 </script>

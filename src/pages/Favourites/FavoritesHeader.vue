@@ -80,6 +80,7 @@
       >
         <q-input
           v-model="searchText"
+          input-class="favorites-search-input"
           dense
           outlined
           color="blue-6"
@@ -92,6 +93,7 @@
           </template>
         </q-input>
         <q-btn
+          id="favorites-search-button"
           unelevated
           dense
           :disable="!searchText"

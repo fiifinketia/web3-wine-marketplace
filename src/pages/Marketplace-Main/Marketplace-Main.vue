@@ -105,6 +105,7 @@ export default defineComponent({
     NewlyReleasedTab: NewReleasedTab,
 		RecommendedTab: RecommendedTab,
   },
+	emits: ['openConnectWallet'],
 
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
