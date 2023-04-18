@@ -242,8 +242,6 @@ import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
-import { useTourStore } from 'src/stores/tour-state';
-import { StepOptions } from 'vue-shepherd';
 
 export default defineComponent({
   name: 'WineMetadata',
