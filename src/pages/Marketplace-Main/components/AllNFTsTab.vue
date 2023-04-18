@@ -298,19 +298,12 @@ export default defineComponent({
           text: 'You can select any NFTs here.',
           buttons: [
             {
-              text: 'Continue',
+              text: 'Finish',
               action: () => {
                 this.$shepherd.complete();
                 this.tourStore.setMarketplaceCompleted();
               },
-            },
-            // {
-            //   text: 'Skip',
-            //   action: () => {
-            //     this.tourStore.setMarketplaceCompleted();
-            //     this.$shepherd.cancel();
-            //   },
-            // },
+            }
           ],
         },
       ]);

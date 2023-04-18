@@ -139,6 +139,13 @@
           >
             Favorites
           </span>
+					<span
+            v-else
+            class="logo-replacement-text"
+            @click="$router.push('/')"
+          >
+            WiV
+          </span>
         </div>
         <div class="nav-bar-container-center row items-center">
           <q-btn-dropdown
@@ -185,8 +192,8 @@
               </q-list>
             </div>
           </q-btn-dropdown>
-          <div clickable>Stats</div>
-          <div clickable>Storefront</div>
+          <div clickable class="text-h6">Stats <q-badge size rounded color="red" align="top" label="Soon" /></div>
+          <div clickable class="text-h6">Storefront <q-badge size rounded color="red" align="top" label="Soon" /></div>
         </div>
         <div class="row">
           <div v-if="$q.screen.width > 768" class="row items-center">
@@ -206,6 +213,7 @@
               dense
               :ripple="false"
               unelevated
+							disable
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
             >

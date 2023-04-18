@@ -264,7 +264,6 @@ export default defineComponent({
   },
   emits: ['openWallet', 'refresh-metadata', 'connect-wallet'],
   data() {
-    const tourStore = useTourStore();
     return {
       openCreateListingDialog: false,
       openDeleteListingDialog: false,
@@ -280,7 +279,6 @@ export default defineComponent({
       orderType: '',
 
       ongoingListingTransaction: false,
-      tourStore,
     };
   },
   computed: {
@@ -296,11 +294,6 @@ export default defineComponent({
         }
       },
     },
-  },
-  mounted() {
-    if (!this.tourStore.metadataCompleted && !this.nft.isOwner) {
-      this.metadataTour();
-    }
   },
   methods: {
     OpenOfferDialog() {
@@ -353,116 +346,7 @@ export default defineComponent({
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');
-    },
-    metadataTour() {
-			this.$shepherd.complete()
-			const steps: StepOptions[] = [
-				{
-					id: 'metadata-details',
-					attachTo: {
-            element: '#metadata-details',
-            on: 'top',
-          },
-          text: 'You can read the brief details of the wine',
-          buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-								this.$shepherd.next()
-								this.$shepherd.removeStep('metadata-details')
-							}
-						},
-            {
-              text: 'Skip',
-              action: () => {
-                this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
-              },
-            },
-          ],
-				},
-				{
-					id: 'metadata-listing-price',
-					attachTo: {
-            element: '#metadata-listing-price',
-            on: 'top',
-          },
-          text: 'This is the listing price of the wine if you want to purchase immediatly',
-          buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-								this.$shepherd.next()
-								this.$shepherd.removeStep('metadata-listing-price')
-							}
-						},
-            {
-              text: 'Skip',
-              action: () => {
-                this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
-              },
-            },
-          ],
-				},
-				{
-					id: 'metadata-bidding-price',
-					attachTo: {
-            element: '#metadata-bidding-price',
-            on: 'top',
-          },
-          text: 'This is the bidding price of the wine if you want to bid for the wine.',
-          buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-								this.$shepherd.next()
-								this.$shepherd.removeStep('metadata-bidding-price')
-							}
-						},
-            {
-              text: 'Skip',
-              action: () => {
-                this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
-              },
-            },
-          ],
-				},
-				{
-					id: 'metadata-checkout-buttons',
-					attachTo: {
-            element: '#metadata-checkout-buttons',
-            on: 'top',
-          },
-					scrollTo: {
-            // Make sure the element is in the viewport
-            behavior: 'smooth',
-            block: 'end',
-          },
-          text: 'Use any of these buttons to purchase the wine depending on your preference',
-          buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-								this.$shepherd.removeStep('metadata-checkout-buttons')
-							}
-						},
-            {
-              text: 'Skip',
-              action: () => {
-                this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
-              },
-            },
-          ],
-				},
-			]
-
-			this.$shepherd.addSteps(steps)
-			this.$shepherd.start()
-			this.tourStore.setMetadataCompleted();
-		},
+    }
   },
 });
 </script>

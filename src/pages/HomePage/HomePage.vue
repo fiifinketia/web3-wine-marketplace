@@ -1,19 +1,19 @@
 <template>
   <HeadlineComponent />
   <ExclusiveOffers />
-  <Calculator />
-  <TrendingWines class="trending" />
-  <PartnershipWines class="partnership" />
+  <Calculator/>
+  <!-- <TrendingWines class="trending" />
+  <PartnershipWines class="partnership" /> -->
   <FAQ class="faq" />
   <LandingPageFooter />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PartnershipWines from './components/PartnershipWines.vue';
+// import PartnershipWines from './components/PartnershipWines.vue';
 import Calculator from './components/Calculator.vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
-import TrendingWines from './components/TrendingWines.vue';
+// import TrendingWines from './components/TrendingWines.vue';
 
 import LandingPageFooter from './components/Footer.vue';
 import '../../css/Homepage/HomePage.css';
@@ -30,9 +30,9 @@ export default defineComponent({
     HeadlineComponent,
     ExclusiveOffers,
     Calculator,
-    TrendingWines,
+    // TrendingWines,
     LandingPageFooter,
-    PartnershipWines,
+    // PartnershipWines,
     FAQ,
   },
   data() {
@@ -89,19 +89,12 @@ export default defineComponent({
           },
           buttons: [
             {
-              text: 'Continue',
+              text: 'Finish',
               action: () => {
                 this.$shepherd.complete();
                 this.tourStore.setHomeCompleted();
               },
-            },
-            // {
-            //   text: 'Skip',
-            //   action: () => {
-            //     this.$shepherd.cancel();
-            //     this.tourStore.setHomeCompleted();
-            //   },
-            // },
+            }
           ],
         },
       ];

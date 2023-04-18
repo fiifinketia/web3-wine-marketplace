@@ -523,18 +523,10 @@ export default defineComponent({
             title: 'Remove Favorite',
             buttons: [
               {
-                text: 'Next',
+                text: 'Finish',
                 action: () => {
                   // Cancel and set favoritesCompleted to true
                   this.$shepherd.complete();
-                  this.tourStore.setFavoritesCompleted();
-                },
-              },
-              {
-                text: 'Skip',
-                action: () => {
-                  // Cancel and set favoritesCompleted to true
-                  this.$shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
                 },
               },

@@ -56,6 +56,8 @@ import {
 } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
+import { useTourStore } from 'src/stores/tour-state';
+import { StepOptions } from 'vue-shepherd';
 
 export default defineComponent({
   name: 'MetadataPage',
@@ -71,11 +73,13 @@ export default defineComponent({
 
   data() {
     const userStore = useUserStore();
+		const tourStore = useTourStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
       chartData: [] as number[][],
       userStore,
+			tourStore,
       tab: ref('about'),
       tokenExists: false,
       loadingMetadata: true,
@@ -86,6 +90,9 @@ export default defineComponent({
 
   async mounted() {
     await this.ValidateAndFetchNFT();
+		if (!this.tourStore.metadataCompleted && !this.nft.isOwner) {
+      this.metadataTour();
+    }
   },
 
   methods: {
@@ -223,7 +230,101 @@ export default defineComponent({
 
     ConnectWallet() {
       this.$emit('openConnectWallet');
-    }
+    },
+		metadataTour() {
+			this.$shepherd.complete()
+			const steps: StepOptions[] = [
+				{
+					id: 'metadata-details',
+					attachTo: {
+            element: '#metadata-details',
+            on: 'top',
+          },
+          text: 'You can read the brief details of the wine',
+          buttons: [
+						{
+							text: 'Continue',
+							action: this.$shepherd.next
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-listing-price',
+					attachTo: {
+            element: '#metadata-listing-price',
+            on: 'top',
+          },
+          text: 'This is the listing price of the wine if you want to purchase immediatly',
+          buttons: [
+						{
+							text: 'Continue',
+							action: this.$shepherd.next
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-bidding-price',
+					attachTo: {
+            element: '#metadata-bidding-price',
+            on: 'top',
+          },
+          text: 'This is the bidding price of the wine if you want to bid for the wine.',
+          buttons: [
+						{
+							text: 'Continue',
+							action: this.$shepherd.next
+						},
+            {
+              text: 'Skip',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.cancel();
+              },
+            },
+          ],
+				},
+				{
+					id: 'metadata-checkout-buttons',
+					attachTo: {
+            element: '#metadata-checkout-buttons',
+            on: 'top',
+          },
+					scrollTo: {
+            // Make sure the element is in the viewport
+            behavior: 'smooth',
+            block: 'end',
+          },
+          text: 'Use any of these buttons to purchase the wine depending on your preference',
+          buttons: [
+            {
+              text: 'Finish',
+              action: () => {
+                this.tourStore.setMetadataCompleted();
+                this.$shepherd.complete();
+              },
+            },
+          ],
+				},
+			]
+
+			this.$shepherd.addSteps(steps)
+			this.$shepherd.start()
+			this.tourStore.setMetadataCompleted();
+		},
   },
 });
 </script>
