@@ -15,6 +15,7 @@
     <FavsMissing v-else-if="!isLoading && !!emptySearch" />
     <div
       v-else-if="!isLoading && !emptyRequest"
+      id="favorites-container"
       class="row q-gutter-y-md"
       :class="
         favNFTs.length >= 4 && $q.screen.width > 600
@@ -91,7 +92,7 @@
             <q-img
               v-else
               src="../../../public/images/heart.svg"
-              class="clickable-image"
+              class="clickable-image remove-favorite"
               :width="$q.screen.width > 350 ? '20px' : '16px'"
               :height="$q.screen.width > 350 ? '20px' : '16px'"
               @click.stop="removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)"
@@ -203,6 +204,7 @@ import {
   GetAllFavorites,
 } from './services/FavoritesFunctions';
 import { useUserStore } from 'src/stores/user-store';
+import { useTourStore } from 'src/stores/tour-state';
 import FavoritesHeader from './FavoritesHeader.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
 import RemoveDialog from './RemoveDialog.vue';
@@ -228,6 +230,7 @@ export default defineComponent({
   },
   data() {
     const userStore = useUserStore();
+    const tourStore = useTourStore();
     const nftStore = useNFTStore();
     return {
       favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
@@ -240,6 +243,7 @@ export default defineComponent({
       nftStore,
       removeDialog: false,
       erroredOut: false,
+      tourStore,
 
       openOrderAccepted: false,
       openErrorDialog: false,
@@ -249,9 +253,10 @@ export default defineComponent({
       errorMessage: ''
     };
   },
-  mounted() {
+  async mounted() {
     SetSessionID('pageVisitationTracker');
-    this.getAllFavoritesWithoutBrand();
+    await this.getAllFavoritesWithoutBrand();
+    await this.startPageTour();
   },
   methods: {
     async getAllFavorites(walletAddress: string, brand: string) {
@@ -321,8 +326,8 @@ export default defineComponent({
     getAllFavoritesWithBrand(brand: string) {
       this.getAllFavorites(this.userStore.walletAddress, brand);
     },
-    getAllFavoritesWithoutBrand() {
-      this.getAllFavorites(this.userStore.walletAddress, '');
+    async getAllFavoritesWithoutBrand() {
+      await this.getAllFavorites(this.userStore.walletAddress, '');
     },
     ToInt(price: string) {
       return parseInt(price);
@@ -416,6 +421,139 @@ export default defineComponent({
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);
     },
+    async startPageTour() {
+      if (this.tourStore.favoritesCompleted) return;
+
+      await this.waitForLoad();
+
+			if(this.emptyRequest || this.emptySearch || this.erroredOut) return;
+
+      // Clear all previous steps
+      this.$shepherd.complete();
+
+      // Start the tour
+
+      this.$shepherd.addSteps([
+        {
+          id: 'favorites-search-input',
+          attachTo: {
+            element: '.favorites-search-input',
+            on: 'bottom',
+          },
+          title: 'Search',
+          text: 'Search for your favorite NFTs',
+          buttons: [
+            {
+              text: 'Next',
+              action: this.$shepherd.next,
+            },
+            {
+              text: 'Skip',
+              action: () => {
+                // Cancel and set favoritesCompleted to true
+                this.$shepherd.cancel();
+                this.tourStore.setFavoritesCompleted();
+              },
+            },
+          ],
+        },
+        {
+          id: 'favorites-search-button',
+          attachTo: {
+            element: '#favorites-search-button',
+            on: 'bottom',
+          },
+          title: 'Search',
+          text: 'Click to Search for your favorite NFTs',
+          buttons: [
+            {
+              text: 'Next',
+              action: this.$shepherd.next,
+            },
+            {
+              text: 'Skip',
+              action: () => {
+                // Cancel and set favoritesCompleted to true
+                this.$shepherd.cancel();
+                this.tourStore.setFavoritesCompleted();
+              },
+            },
+          ],
+        },
+      ]);
+
+      // Check if there are any favorites
+      if (this.favNFTs.length > 0) {
+        this.$shepherd.addSteps([
+          {
+            id: 'favorites-item',
+            attachTo: {
+              // Select first element of the children in div id #favorites-container
+              element: document.querySelector(
+                '#favorites-container > div:first-child'
+              ),
+              on: 'bottom',
+            },
+            title: 'Favorite NFT',
+            text: 'Click on the NFT to open it in a new tab',
+            buttons: [
+              {
+                text: 'Next',
+                action: this.$shepherd.next,
+              },
+              {
+                text: 'Skip',
+                action: () => {
+                  // Cancel and set favoritesCompleted to true
+                  this.$shepherd.cancel();
+                  this.tourStore.setFavoritesCompleted();
+                },
+              },
+            ],
+          },
+          {
+            id: 'favorites-item-remove',
+            attachTo: {
+              // Select first element of the children in div id #favorites-container
+              element: document.querySelector(
+                '#favorites-container > div:first-child .remove-favorite'
+              ),
+              on: 'bottom',
+            },
+            title: 'Remove Favorite',
+            buttons: [
+              {
+                text: 'Finish',
+                action: () => {
+                  // Cancel and set favoritesCompleted to true
+                  this.$shepherd.complete();
+                  this.tourStore.setFavoritesCompleted();
+                },
+              },
+            ],
+          },
+        ]);
+      }
+
+      // Start the tour
+      setTimeout(() => {
+        this.$shepherd.start();
+      }, 3000);
+			this.tourStore.setFavoritesCompleted();
+		},
+
+		async waitForLoad () {
+        return new Promise<void>(resolve => {
+          const checkValue = () => {
+            if (this.isLoading === false && this.tourStore.suggestedWinesDialog) {
+              resolve();
+            } else {
+              setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
+            }
+          };
+          checkValue();
+        });
+      },
 
     async AcceptOffer(
       orderHash: string,

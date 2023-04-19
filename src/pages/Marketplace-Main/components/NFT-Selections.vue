@@ -233,7 +233,7 @@ export default defineComponent({
     AcceptedOrderDialog: OrderAccepted,
     ErrorDialog: ProfileErrors
   },
-  emits: ['totalTokens'],
+  emits: ['totalTokens', 'loadingCompleted'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
@@ -274,6 +274,13 @@ export default defineComponent({
         }
       },
     },
+		'isLoading': {
+			handler(val) {
+				if (!val) {
+					this.$emit('loadingCompleted');
+				}
+			}
+		},
     'generalSearchStore.generalSearchKey': {
       async handler(val) {
         if (val != 0) {
@@ -282,9 +289,9 @@ export default defineComponent({
           // await so that the filters are properly removed and won't "leak" to the subscriber
           try {
             await this.RetrieveTokens(this.generalSearchStore.generalSearch);
-            await this.wineFiltersStore.removeAllFilters();
+            this.wineFiltersStore.removeAllFilters();
             // tick the brand options related to the NFTs retrieved from general search key
-            await this.wineFiltersStore.setBrandFiltersAfterGenSearch(
+            this.wineFiltersStore.setBrandFiltersAfterGenSearch(
               this.nftEnums
             );
           } catch {
@@ -441,6 +448,18 @@ export default defineComponent({
           const { result: nfts } = await RetrieveFilteredNFTs(
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
+					// TODO: IMplement in backend API Place NFTs with prices first
+					nfts.sort((a, b) => {
+						if (a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
+							return 0;
+						} else if (a.orderDetails?.listingPrice && !b.orderDetails?.listingPrice) {
+							return -1;
+						} else if (!a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
+							return 1;
+						} else {
+							return 0;
+						}
+					});
           this.$emit('totalTokens', nfts.length);
           this.IncorporateOwnedNFTs(nfts);
           this.erroredOut = false;

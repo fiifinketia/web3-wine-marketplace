@@ -12,15 +12,15 @@
       class="grape-mobile"
       src="../../../../public/images/Grape-mobile.svg"
     />
-    <h1 class="headline-title q-mb-xs">WiV Marketplace</h1>
+    <h1 id="welcome-step" class="headline-title q-mb-xs">WiV Marketplace</h1>
     <p class="headline-paragraph q-mb-lg">
       We offer the best fine wine investments
     </p>
     <div class="headline-buttons-container row q-mt-md">
-      <q-btn class="headline-buttons" unelevated color="primary" no-caps
+      <q-btn class="headline-buttons" unelevated color="primary" no-caps @click="$router.push('/marketplace?tab=nfts')"
         >Start collection</q-btn
       >
-      <q-btn class="headline-buttons" unelevated color="primary" outline no-caps
+      <q-btn class="headline-buttons" unelevated color="primary" outline no-caps disable
         >Learn about WiV</q-btn
       >
     </div>
@@ -32,9 +32,6 @@ import '../../../css/Homepage/HeadlineComponent.css';
 
 export default defineComponent({
   name: 'HeadlineComponent',
-  data() {
-    return {};
-  },
 });
 </script>
 

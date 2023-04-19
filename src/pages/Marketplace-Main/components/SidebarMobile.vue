@@ -4,7 +4,7 @@
     :transition-show="$q.screen.width > 600 ? 'slide-left' : 'slide-up'"
     :transition-hide="$q.screen.width > 600 ? 'slide-right' : 'slide-down'"
   >
-    <div class="column bg-white items-center">
+    <div class="column bg-white items-center no-wrap">
       <q-card
         flat
         square

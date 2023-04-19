@@ -17,7 +17,7 @@
           class="releases-tab-icons"
         />
         <span class="text-uppercase text-weight-bold">{{
-          token.title + ' Wines'
+          token.metadataValue + ' Wines'
         }}</span>
         <q-img
           src="../../../../assets/small-bottle.svg"
@@ -109,7 +109,7 @@ export default defineComponent({
           const nfts = await this.FetchWineByGroup(res);
           if (nfts.length > 0) {
             this.recommendations.push({
-              title: res.metadataValue.toUpperCase() + ' ' + res.metadataField.toUpperCase() + ' Wines',
+              title: res.metadataValue.toUpperCase() + '-' + res.metadataField.toUpperCase() + '-Wines',
               metadataField: res.metadataField,
               metadataValue: res.metadataValue,
               nfts: nfts.slice(0, this.totalView),

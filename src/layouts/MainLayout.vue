@@ -104,10 +104,9 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
   />
-  <SuggestedWines v-model="suggestedWinesDialog" />
+  <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
-
   <q-layout view="lHh Lpr lFf">
     <q-header
       class="nav-bar q-py-xs"
@@ -130,6 +129,7 @@
           <span
             v-else-if="$router.currentRoute.value.path === '/marketplace'"
             class="logo-replacement-text"
+            @click="$router.push('/')"
           >
             Marketplace
           </span>
@@ -138,6 +138,13 @@
             class="logo-replacement-text"
           >
             Favorites
+          </span>
+					<span
+            v-else
+            class="logo-replacement-text"
+            @click="$router.push('/')"
+          >
+            WiV
           </span>
         </div>
         <div class="nav-bar-container-center row items-center">
@@ -173,7 +180,10 @@
                 <q-item
                   v-close-popup
                   clickable
-                  :to="{ path: '/marketplace', query: { tab: 'recommended' } }"
+                  :to="{
+                    path: '/marketplace',
+                    query: { tab: 'recommended' },
+                  }"
                 >
                   <q-item-section>
                     <q-item-label>Recommended</q-item-label>
@@ -182,8 +192,8 @@
               </q-list>
             </div>
           </q-btn-dropdown>
-          <div clickable>Stats</div>
-          <div clickable>Storefront</div>
+          <div clickable class="text-h6">Stats <q-badge size rounded color="red" align="top" label="Soon" /></div>
+          <div clickable class="text-h6">Storefront <q-badge size rounded color="red" align="top" label="Soon" /></div>
         </div>
         <div class="row">
           <div v-if="$q.screen.width > 768" class="row items-center">
@@ -196,23 +206,18 @@
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
             >
-              <img
-                src="../../public/images/favs-icon.svg"
-                class="icons"
-              />
+              <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
             <q-btn
               v-if="!!walletAddress"
               dense
               :ripple="false"
               unelevated
+							disable
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
             >
-              <img
-                src="../../public/images/bell-icon.svg"
-                class="icons"
-              />
+              <img src="../../public/images/bell-icon.svg" class="icons" />
             </q-btn>
             <q-btn
               class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
@@ -256,7 +261,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'listings' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'listings' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -268,7 +276,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'incoming' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'incoming' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -280,7 +291,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'outgoing' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'outgoing' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -292,7 +306,10 @@
                           <q-item
                             v-close-popup
                             clickable
-                            :to="{ path: '/orders', query: { tab: 'transactions' } }"
+                            :to="{
+                              path: '/orders',
+                              query: { tab: 'transactions' },
+                            }"
                           >
                             <q-item-section>
                               <q-item-label class="text-no-wrap">
@@ -392,7 +409,7 @@
     <q-page-container>
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
-        @openConnectWallet="showConnectWallet = true"
+        @open-connect-wallet="showConnectWallet = true"
       />
     </q-page-container>
   </q-layout>
@@ -415,6 +432,7 @@ import SuggestedWines from './components/SuggestedWines.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { useTourStore } from 'src/stores/tour-state';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -426,6 +444,7 @@ export default defineComponent({
     const userStore = useUserStore();
     const nftStore = useNFTStore();
     const orderStore = ordersStore();
+		const tourStore = useTourStore()
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
     return {
@@ -439,7 +458,7 @@ export default defineComponent({
       walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
       balance: 0,
-      suggestedWinesDialog: false,
+			tourStore,
     };
   },
   watch: {

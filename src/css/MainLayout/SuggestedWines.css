@@ -1,20 +1,6 @@
-.suggested-wines-background .q-dialog__inner--minimized {
-	padding: 1.2rem 5rem 4rem;
-	backdrop-filter: blur(5px);
-}
-
 .suggested-wines-background .suggested-wines {
 	border-radius: 20px;
-	box-shadow: none;
-	padding: 0.5rem 1.5rem;
-}
-.suggested-wines-background .q-dialog__inner--minimized > div {
-	min-width: fit-content;
-	min-height: fit-content;
-}
-
-.suggested-wines-background .q-card__section {
-	padding: 1rem;
+	padding: 0.5rem 0.5rem;
 }
 
 .join-wiv-world {
@@ -73,25 +59,35 @@
 .suggested-wines-section {
 	flex-wrap: nowrap;
 	padding-bottom: 0 !important;
+	max-width: 100%;
+	overflow-x: scroll;
+	overflow-y: scroll;
+	/* Hide vertical scroll bar */
+}
+.suggested-wines-section::-webkit-scrollbar {
+	width: 0px;
+	height: 8px; /* Optional: add a height to increase the clickable area */
 }
 
 .suggest-wine-name {
 	font-family: 'Obviously-Bold';
 	font-style: normal;
-	font-weight: 460;
-	font-size: 18px;
-	line-height: 27px;
+	line-height: 1.5;
 	letter-spacing: 0.02em;
 	color: #212131;
-	flex: none;
 	order: 1;
 	align-self: stretch;
-	flex-grow: 0;
-	width: 90%;
+	display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+	text-overflow: ellipsis;
+	max-height: 3;
 }
 
 .suggest-card-individual {
-	width: 224px;
+	min-width: 150px !important;
+	min-height: 150px !important;
 }
 
 .suggest-card-img {
@@ -128,40 +124,17 @@
 	color: #9d9d9d;
 }
 
-.suggested-buttons-container {
-	gap: 1rem;
-}
 
 .suggested-buttons {
-	width: 205px;
 	border-radius: 6px;
-	padding: 0.9rem 0;
 	font-family: 'ProximaNova-Regular';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 20px;
 	line-height: 24px;
-	text-align: center;
-	cursor: pointer;
 	letter-spacing: 0.07rem;
 }
-
-.suggested-show-btn {
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	color: white;
-	border: none;
-}
-
-.suggested-skip-btn {
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-	color: transparent;
-	outline: 1px solid #3586ff;
-	border: none;
-}
-
+/*
 @media screen and (min-width: 1512px) {
 	.suggested-wines {
 		margin: 0 auto;
@@ -272,4 +245,4 @@
 	.suggest-card-img {
 		height: 150px;
 	}
-}
+} */

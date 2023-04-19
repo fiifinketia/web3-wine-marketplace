@@ -2,8 +2,14 @@
   <div class="column justify-center items-center q-mt-xl">
     <div class="brand-name">{{ nft.brand }}</div>
     <div class="wine-name">{{ nft.name }}</div>
-    <div :class="$q.screen.width > 600 ? 'row justify-center q-pt-lg q-px-sm metadata-container' : 'column items-center metadata-container'">
-      <img :src="nft.image" class="metadata-nft-image"/>
+    <div
+      :class="
+        $q.screen.width > 600
+          ? 'row justify-center q-pt-lg q-px-sm metadata-container'
+          : 'column items-center metadata-container'
+      "
+    >
+      <img :src="nft.image" class="metadata-nft-image" />
 
       <div class="column nft-takeaways-container q-pa-sm">
         <div class="row">
@@ -18,7 +24,7 @@
             <div class="user-id">WiV</div>
           </div>
         </div>
-        <div class="q-py-md">
+        <div id="metadata-details" class="q-py-md">
           <div v-if="$q.screen.width > 600" class="row justify-between q-pb-sm">
             <span class="metadata-text">{{ nft.type }} wine</span>
             <q-separator spaced="md" size="1px" vertical color="accent" />
@@ -48,6 +54,7 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
+							id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
@@ -85,6 +92,7 @@
               </div>
             </div>
             <div
+							id="metadata-bidding-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
@@ -127,15 +135,20 @@
       </div>
       <div
         v-else
-        :class="$q.screen.width > 600 ? 'row q-gutter-x-md' : 'column items-center full-width q-px-md q-gutter-y-sm'"
+				id="metadata-checkout-buttons"
+        :class="
+          $q.screen.width > 600
+            ? 'row q-gutter-x-md'
+            : 'column items-center full-width q-px-md q-gutter-y-sm'
+        "
       >
         <q-btn
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
           :disable="
-            !nft.listingDetails.orderHash ||
-            !nft.listingDetails.transactionStatus
+            !nft.listingDetails?.orderHash ||
+            !nft.listingDetails?.transactionStatus
           "
           @click="AcceptOffer(nft.listingDetails.orderHash, nft.brand, nft.image)"
         >
@@ -161,10 +174,7 @@
     >
       <div class="row items-center q-gutter-x-xs">
         <span class="update-metadata-text">Update metadata</span>
-        <img
-          src="../../../../public/images/refresh.svg"
-          style="width: 24px;"
-        />
+        <img src="../../../../public/images/refresh.svg" style="width: 24px" />
       </div>
     </q-btn>
 
@@ -186,7 +196,7 @@
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
       :highest-offer="nft.offerDetails.highestBid"
-      :highest-offer-currency="nft.offerDetails.highestBidCurrency"
+      :highest-offer-currency="nft.offerDetails?.highestBidCurrency"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -194,7 +204,7 @@
       :is-edit="false"
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
-      @offer-created="SetTimeoutOnCompletedDialog('offer')"
+      @offer-created="SetTimeoutOnMetadataCompletedDialog('offer')"
     />
 
     <DeleteListingDialog
@@ -272,12 +282,12 @@ export default defineComponent({
 
       orderType: '',
 
-      ongoingListingTransaction: false
-    }
+      ongoingListingTransaction: false,
+    };
   },
   computed: {
     ...mapState(useUserStore, {
-      walletAddress: store => store.getWalletAddress()
+      walletAddress: store => store.getWalletAddress(),
     }),
   },
   watch: {
@@ -286,19 +296,19 @@ export default defineComponent({
         if (!!val) {
           this.$emit('refresh-metadata');
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     OpenOfferDialog() {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
-        return
+        return;
       } else {
         this.openCreateOfferDialog = true;
       }
     },
-    SetTimeoutOnCompletedDialog(orderType: string) {
+    SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
         this.$emit('nft-listed');
@@ -306,7 +316,7 @@ export default defineComponent({
       }
       this.openOrderCompletedDialog = true;
       setTimeout(() => {
-        this.openOrderCompletedDialog = false
+        this.openOrderCompletedDialog = false;
       }, 3000);
     },
     HandleError(err: {
@@ -322,11 +332,7 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    async AcceptOffer(
-      orderHash: string,
-      brand: string,
-      image: string
-    ) {
+    async AcceptOffer(orderHash: string, brand: string, image: string) {
       const address = this.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, false, address, image);

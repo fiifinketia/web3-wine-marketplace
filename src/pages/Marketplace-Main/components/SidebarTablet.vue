@@ -5,7 +5,7 @@
     transition-show="slide-left"
     transition-hide="slide-right"
   >
-    <div class="column no-box-shadow q-mr-md">
+    <div class="column no-box-shadow q-mr-md no-wrap">
       <q-scroll-area
         bordered
         class="main-filter-box dark-blue-border q-px-md"

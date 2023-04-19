@@ -5,6 +5,15 @@
       &nbsp;my wallet&nbsp;
       {{ userStore.walletAddress.slice(0, 10) }}
     </div>
+		<div
+      class="burger-bolder-text"
+      @click="
+        $router.push('/');
+        $emit('closeBurgerMenu');
+      "
+    >
+      Home
+    </div>
     <div
       class="burger-bolder-text"
       @click="
@@ -24,7 +33,7 @@
     </div>
     <div
       @click="
-        $router.push('/marketplace?tab=releases');
+        $router.push('/marketplace?tab=recommended');
         $emit('closeBurgerMenu');
       "
     >
