@@ -103,20 +103,6 @@ export default defineComponent({
     await this.ValidateAndFetchNFT();
   },
 
-  created() {
-    // create a new BroadcastChannel
-    const channel = new BroadcastChannel('listingStore');
-    // listen for messages on the channel
-    channel.addEventListener('message', event => {
-      const { action, payload } = event.data;
-      if (action === 'setNFTListingStatus') {
-        this.listingsStore.setNFTListingStatus(payload);
-      } else if (action === 'removeNFTListingStatus') {
-        this.listingsStore.removeNFTListingStatus(payload);
-      }
-    });
-  },
-
   methods: {
     async ValidateAndFetchNFT() {
       this.loadingMetadata = true;

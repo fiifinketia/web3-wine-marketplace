@@ -259,6 +259,7 @@ import { useUserStore } from 'src/stores/user-store';
 import { useListingStore } from 'src/stores/listing-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { share } from 'pinia-shared-state';
 export default defineComponent({
   props: {
     orderHash: {
@@ -306,8 +307,7 @@ export default defineComponent({
       listingPrice: '',
       listingExpirationDate: '',
       fee: '',
-      acceptTerms: false,
-      // loadingListing: listingsStore.getNFTListingStatus(this.nftKey())
+      acceptTerms: false
     };
   },
   computed: {
@@ -319,6 +319,9 @@ export default defineComponent({
         return false
       }
     }
+  },
+  mounted() {
+    share('ongoingListings', useListingStore(), { initialize: true });
   },
   methods: {
     async CreateNewOrder() {
@@ -379,20 +382,12 @@ export default defineComponent({
         this.$emit('listing-edit-close');
       }
     },
-    ManageListingStatusState(nftKey: string) {
-      const isOngoing = this.listingsStore.getNFTListingStatus(nftKey);
-      console.log(isOngoing)
-      if (isOngoing) {
-        // this.loadingListing = true;
-      };
-    },
     AddListingStatusState(nftKey: string) {
-      console.log('adding..')
+      // console.log('adding..')
       this.listingsStore.setNFTListingStatus(nftKey);
-      // this.loadingListing = true;
     },
     RemoveListingStatusState(nftKey: string) {
-      console.log('deleting..')
+      // console.log('deleting..')
       this.listingsStore.removeNFTListingStatus(nftKey);
       this.loadingListing = false;
     },
