@@ -125,7 +125,7 @@
             !acceptTerms ||
             listingExpirationDate === '' ||
             parseFloat(listingPrice) <= 0 ||
-            loadingOffer
+            loadingListing
           "
           @click="CreateNewOrder()"
         >
@@ -234,7 +234,7 @@
                 !acceptTerms ||
                 listingExpirationDate === '' ||
                 parseFloat(listingPrice) <= 0 ||
-                loadingOffer
+                loadingListing
               "
               @click="CreateNewOrder()"
             >
@@ -304,6 +304,7 @@ export default defineComponent({
       listingExpirationDate: '',
       fee: '',
       acceptTerms: false,
+      loadingListing: false
     };
   },
   methods: {
@@ -329,6 +330,7 @@ export default defineComponent({
           }
         }
         try {
+          this.loadingListing = true;
           await CreateERC721Listing(
             this.tokenID,
             this.smartContractAddress,
@@ -353,6 +355,8 @@ export default defineComponent({
           }
         } catch (err) {
           this.BuildErrorDialog(err);
+        } finally {
+          this.loadingListing = false;
         }
       } catch (err) {
         this.BuildErrorDialog(err);

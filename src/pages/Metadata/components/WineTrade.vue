@@ -59,13 +59,16 @@
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
               <div class="starting-from">Price</div>
-              <div v-if="!!ongoingListingTransaction" class="row items-center">
+              <div
+                v-if="!!ongoingListingTransaction || nft.listingDetails.transactionStatus == false"
+                class="row items-center"
+              >
                 <q-img src="../../../assets/processing.svg" width="30px" />
                 <div class="price1-blue">Processing price</div>
               </div>
               <div
                 v-else-if="
-                  !!nft.listingDetails?.listingPrice &&
+                  !!nft.listingDetails.listingPrice &&
                   !!nft.listingDetails.transactionStatus
                 "
                 class="row items-center"
@@ -74,11 +77,11 @@
                   <q-img src="../../../assets/usdc.svg" width="28px" />
                 </div>
                 <div class="price1">
-                  {{ nft.listingDetails?.listingPrice }}
+                  {{ nft.listingDetails.listingPrice }}
                 </div>
               </div>
               <div
-                v-else-if="nft.listingDetails?.listingPrice == null"
+                v-else-if="nft.listingDetails.listingPrice == null"
                 class="row items-center"
               >
                 <div class="price1">Not Available</div>
@@ -99,7 +102,7 @@
                   <q-img src="../../../assets/usdc.svg" width="20px" />
                 </div>
                 <div class="bid-price">
-                  {{ nft.offerDetails?.highestBid || '--.--' }}
+                  {{ nft.offerDetails.highestBid || '--.--' }}
                 </div>
               </div>
             </div>
@@ -110,7 +113,7 @@
     <div :class="$q.screen.width > 600 ? 'q-pt-lg' : 'full-width'">
       <div v-if="nft.isOwner" class="column items-center full-width q-px-md">
         <q-btn
-          v-if="!nft.listingDetails?.orderHash"
+          v-if="nft.listingDetails.transactionStatus == null"
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
@@ -120,6 +123,7 @@
         </q-btn>
         <q-btn
           v-else
+          :disable="nft.listingDetails.transactionStatus == false"
           class="unlist-btn items-center justify-center metadata-btn-text_outline"
           no-caps
           outline
@@ -146,7 +150,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="AcceptOffer(nft.listingDetails?.orderHash!, nft.brand, nft.image)"
+          @click="AcceptOffer(nft.listingDetails.orderHash, nft.brand, nft.image)"
         >
           Buy now
         </q-btn>
@@ -184,14 +188,15 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnCompletedDialog('listing')"
+      @listing-exists="listed => UpdateListingStatus(listed)"
     />
 
     <CreateOfferDialog
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
-      :highest-offer="nft.offerDetails?.highestBid!"
-      :highest-offer-currency="nft.offerDetails?.highestBidCurrency!"
+      :highest-offer="nft.offerDetails.highestBid"
+      :highest-offer-currency="nft.offerDetails?.highestBidCurrency"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -204,7 +209,7 @@
 
     <DeleteListingDialog
       v-model="openDeleteListingDialog"
-      :order-hash="nft.listingDetails?.orderHash!"
+      :order-hash="nft.listingDetails.orderHash"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
     />
@@ -242,6 +247,7 @@ import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -260,7 +266,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet', 'refresh-metadata', 'connect-wallet'],
+  emits: ['openWallet', 'refresh-metadata', 'connect-wallet', 'listing-exists', 'nft-listed'],
   data() {
     return {
       openCreateListingDialog: false,
@@ -305,6 +311,7 @@ export default defineComponent({
     SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
+        this.$emit('nft-listed');
         this.ongoingListingTransaction = true;
       }
       this.openOrderCompletedDialog = true;
@@ -341,6 +348,9 @@ export default defineComponent({
           errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
       }
+    },
+    UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      this.$emit('listing-exists', listed);
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');

@@ -10,14 +10,7 @@ interface TokenProperties {
   tokenType?: TOKENTYPE;
 }
 
-interface OrderProperties {
-  listingPrice?: string;
-  currency?: string;
-  orderHash?: string;
-  transactionStatus?: string;
-  expTime?: number;
-}
-export interface NewPolygonNFT extends TokenProperties, OrderProperties {
+export interface NewPolygonNFT extends TokenProperties {
   tokenID: string;
   description: string;
   image: string;
@@ -62,19 +55,19 @@ export interface SeaportTransactionsModel {
 interface FavoritesAndOrderDetails {
   favorited?: null | boolean;
 
-  offerDetails?: {
-    highestBidCurrency: string;
-    highestBid: string;
-    highestBidHash: string;
-    highestBidExpTime: number;
+  offerDetails: {
+    highestBidCurrency?: string;
+    highestBid?: string;
+    highestBidHash?: string;
+    highestBidExpTime?: number;
   };
 
-  listingDetails?: {
-    listingPrice: string;
-    currency: string;
-    orderHash: string;
-    transactionStatus: boolean;
-    expTime: string;
+  listingDetails: {
+    listingPrice?: string;
+    currency?: string;
+    orderHash?: string;
+    transactionStatus?: boolean;
+    expTime?: string;
   };
 }
 

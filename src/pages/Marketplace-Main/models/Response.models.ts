@@ -9,7 +9,6 @@ interface DynamicKeyWithCount {
 
 interface ListingWithPricingAndImage {
   smartContractAddress: string;
-	contractAddress?: string;
   tokenID: string;
   image: string;
   lwin: string;

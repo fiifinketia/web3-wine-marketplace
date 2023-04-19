@@ -11,7 +11,7 @@ function AssociateOwned <T extends FavoritesModel | ListingWithPricingAndImage> 
 
   const retrievedNFTsMap: Map<string, T & { isOwned?: boolean }> = new Map();
   selections.forEach(f => {
-    const key = `${f.tokenID},${f.contractAddress},${f.network}`
+    const key = `${f.tokenID},${f.smartContractAddress},${f.network}`
     retrievedNFTsMap.set(key, f);
   })
 

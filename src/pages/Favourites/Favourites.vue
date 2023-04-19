@@ -38,14 +38,14 @@
         <q-card class="q-ma-xs" flat>
           <img
             class="favorites-card-image clickable-image"
-            :src="nft.nftDetails.image"
+            :src="nft.image"
           />
           <div
             class="q-pb-sm favorites-brand column justify-center"
             style="text-align: left"
           >
             <span>
-              {{ truncateText(nft.nftDetails.brand) }}
+              {{ truncateText(nft.brand) }}
             </span>
           </div>
           <q-card-section class="row justify-between q-py-sm favorites-price-container">
@@ -53,8 +53,8 @@
             <span class="favorites-price-text q-pb-xs"> Price </span>
             <div
               v-if="
-                !!nft.nftDetails.orderDetails?.listingPrice &&
-                !!nft.nftDetails.orderDetails?.transactionStatus
+                !!nft.orderDetails?.listingPrice &&
+                !!nft.orderDetails?.transactionStatus
               "
               class="row items-center justify-between full-width"
               @click.stop
@@ -69,7 +69,7 @@
                   "
                 />
                 <span class="favorites-b-text-active">
-                  {{ ToInt(nft.nftDetails.orderDetails.listingPrice) }}
+                  {{ ToInt(nft.orderDetails.listingPrice) }}
                 </span>
               </div>
             </div>
@@ -95,17 +95,17 @@
               class="clickable-image remove-favorite"
               :width="$q.screen.width > 350 ? '20px' : '16px'"
               :height="$q.screen.width > 350 ? '20px' : '16px'"
-              @click.stop="removeNFT(nft.tokenID, nft.contractAddress, nft.network)"
+              @click.stop="removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)"
             />
             <q-btn
-              v-if="!nft.isOwned && !!nft.nftDetails.orderDetails?.listingPrice && !!nft.nftDetails.orderDetails?.transactionStatus"
+              v-if="!nft.isOwned && !!nft.orderDetails?.listingPrice && !!nft.orderDetails?.transactionStatus"
               dense
               unelevated
               flat
               no-caps
               :ripple="false"
               class="q-pa-none"
-              @click.stop="AcceptOffer(nft.nftDetails.orderDetails?.orderHash as string, nft.nftDetails.brand, nft.nftDetails.image)"
+              @click.stop="AcceptOffer(nft.orderDetails.orderHash, nft.brand, nft.image, nft)"
             >
               <img
                 src="../../assets/small-bag-btn.svg"
@@ -283,7 +283,7 @@ export default defineComponent({
     async removeNFT(tokenID: string, cAddress: string, network: string) {
       const nftIndex = this.favNFTs.findIndex(
         nft =>
-          nft.contractAddress == cAddress &&
+          nft.smartContractAddress == cAddress &&
           nft.tokenID == tokenID &&
           nft.network == network
       );
@@ -371,7 +371,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.contractAddress,
+          contractAddress: token.smartContractAddress,
         },
       });
       switch (where) {
@@ -381,7 +381,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.contractAddress,
+              contractAddress: token.smartContractAddress,
             },
           });
           break;
@@ -401,7 +401,7 @@ export default defineComponent({
             query: {
               id: token.tokenID,
               network: token.network,
-              contractAddress: token.contractAddress,
+              contractAddress: token.smartContractAddress,
             },
           });
           break;
@@ -416,7 +416,7 @@ export default defineComponent({
         query: {
           id: token.tokenID,
           network: token.network,
-          contractAddress: token.contractAddress,
+          contractAddress: token.smartContractAddress,
         },
       });
       navigator.clipboard.writeText(window.location.host + routeData.href);
