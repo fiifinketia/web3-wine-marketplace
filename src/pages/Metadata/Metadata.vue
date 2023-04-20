@@ -65,6 +65,7 @@ import LoadingMetadata from './components/LoadingMetadata.vue';
 import ListingExists from '../SharedPopups/ListingExists.vue';
 import { useTourStore } from 'src/stores/tour-state';
 import { StepOptions } from 'vue-shepherd';
+import { useListingStore } from 'src/stores/listing-store';
 
 export default defineComponent({
   name: 'MetadataPage',
@@ -82,6 +83,7 @@ export default defineComponent({
   data() {
     const userStore = useUserStore();
 		const tourStore = useTourStore();
+    const listingsStore = useListingStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
@@ -89,6 +91,7 @@ export default defineComponent({
       userStore,
 			tourStore,
       tab: ref('about'),
+      listingsStore,
       tokenExists: false,
       loadingMetadata: true,
       loadingPrices: true,

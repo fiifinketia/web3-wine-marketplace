@@ -256,8 +256,10 @@ import {
   InspectListingStatus
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
+import { useListingStore } from 'src/stores/listing-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { share } from 'pinia-shared-state';
 export default defineComponent({
   props: {
     orderHash: {
@@ -298,17 +300,32 @@ export default defineComponent({
   ],
   data() {
     const userStore = useUserStore();
+    const listingsStore = useListingStore();
     return {
       userStore,
+      listingsStore,
       listingPrice: '',
       listingExpirationDate: '',
       fee: '',
-      acceptTerms: false,
-      loadingListing: false
+      acceptTerms: false
     };
+  },
+  computed: {
+    loadingListing() {
+      if (!!this.acceptTerms) {
+        const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
+        return this.listingsStore.getNFTListingStatus(nftKey);
+      } else {
+        return false
+      }
+    }
+  },
+  mounted() {
+    share('ongoingListings', useListingStore(), { initialize: true });
   },
   methods: {
     async CreateNewOrder() {
+      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
@@ -330,7 +347,9 @@ export default defineComponent({
           }
         }
         try {
-          this.loadingListing = true;
+          if (!this.loadingListing) {
+            this.AddListingStatusState(nftKey);
+          }
           await CreateERC721Listing(
             this.tokenID,
             this.smartContractAddress,
@@ -355,14 +374,22 @@ export default defineComponent({
           }
         } catch (err) {
           this.BuildErrorDialog(err);
-        } finally {
-          this.loadingListing = false;
         }
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
+        this.RemoveListingStatusState(nftKey);
         this.$emit('listing-edit-close');
       }
+    },
+    AddListingStatusState(nftKey: string) {
+      // console.log('adding..')
+      this.listingsStore.setNFTListingStatus(nftKey);
+    },
+    RemoveListingStatusState(nftKey: string) {
+      // console.log('deleting..')
+      this.listingsStore.removeNFTListingStatus(nftKey);
+      this.loadingListing = false;
     },
     ResetData() {
       this.listingPrice = '';
