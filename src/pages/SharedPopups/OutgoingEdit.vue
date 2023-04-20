@@ -131,6 +131,7 @@
         </q-btn>
       </div>
     </q-card>
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </q-dialog>
   <q-dialog v-else transition-show="scale" transition-hide="scale">
     <q-card
@@ -239,6 +240,7 @@
         </div>
       </q-card-section>
     </q-card>
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </q-dialog>
 </template>
 
@@ -251,7 +253,11 @@ import {
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
+import TxnOngoing from './TxnOngoing.vue';
 export default defineComponent({
+  components: {
+    OngoingTransactionDialog: TxnOngoing
+  },
   props: {
     orderHash: {
       type: String,
@@ -305,11 +311,26 @@ export default defineComponent({
       fee: '',
       acceptTerms: false,
       loadingOffer: false,
+      ongoingTxn: false
     };
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async CreateNewOrder() {
       try {
+        this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
           this.$emit('remove-offer', this.orderHash);
@@ -331,6 +352,7 @@ export default defineComponent({
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
+        this.SetPreventingExitListener(false);
         this.$emit('outgoing-edit-close');
       }
     },

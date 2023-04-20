@@ -133,6 +133,7 @@
         </q-btn>
       </div>
     </q-card>
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </q-dialog>
 
   <q-dialog v-else transition-show="scale" transition-hide="scale">
@@ -244,6 +245,7 @@
         </div>
       </q-card-section>
     </q-card>
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </q-dialog>
 </template>
 
@@ -260,7 +262,11 @@ import { useListingStore } from 'src/stores/listing-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { share } from 'pinia-shared-state';
+import TxnOngoing from './TxnOngoing.vue';
 export default defineComponent({
+  components: {
+    OngoingTransactionDialog: TxnOngoing
+  },
   props: {
     orderHash: {
       type: String,
@@ -307,7 +313,8 @@ export default defineComponent({
       listingPrice: '',
       listingExpirationDate: '',
       fee: '',
-      acceptTerms: false
+      acceptTerms: false,
+      ongoingTxn: false
     };
   },
   computed: {
@@ -324,8 +331,22 @@ export default defineComponent({
     share('ongoingListings', useListingStore(), { initialize: true });
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async CreateNewOrder() {
       const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
+      this.SetPreventingExitListener(true);
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
@@ -378,6 +399,7 @@ export default defineComponent({
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
+        this.SetPreventingExitListener(false);
         this.RemoveListingStatusState(nftKey);
         this.$emit('listing-edit-close');
       }

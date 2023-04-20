@@ -169,6 +169,7 @@
       :error-title="errorTitle"
       :error-message="errorMessage"
     />
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </div>
   <div v-else-if="!isLoading && allNFTs.length == 0 && !erroredOut">
     <EmptyView />
@@ -225,13 +226,15 @@ import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { AssociateOwned } from 'src/shared/association.helper';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 
 export default defineComponent({
   components: {
     ErrorView: ErrorViewVue,
     EmptyView: EmptyView,
     AcceptedOrderDialog: OrderAccepted,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
   },
   emits: ['totalTokens', 'loadingCompleted'],
   data() {
@@ -264,6 +267,8 @@ export default defineComponent({
       filterKey: wineFiltersStore.filterKey,
       nftEnums: {} as DynamicKeyWithCount,
       subscription: Function(),
+
+      ongoingTxn: false
     };
   },
   watch: {
@@ -328,6 +333,19 @@ export default defineComponent({
   },
 
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async addRemoveFavorites(
       tokenID: string,
       cAddress: string,
@@ -518,6 +536,7 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
+      this.SetPreventingExitListener(true);
       const address = this.userStore.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, false, address, image);
@@ -532,6 +551,7 @@ export default defineComponent({
           errorTitle: 'Sorry, the purchase failed',
           errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
+        this.SetPreventingExitListener(false);
       }
     },
     HandleError(err: {

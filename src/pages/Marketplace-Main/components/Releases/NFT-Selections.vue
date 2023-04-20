@@ -167,6 +167,7 @@
         :error-title="errorTitle"
         :error-message="errorMessage"
       />
+      <OngoingTransactionDialog v-model="ongoingTxn"/>
     </div>
   </div>
   <ErrorView
@@ -211,12 +212,14 @@ import NewlyError from './NewlyError.vue';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 
 export default defineComponent({
   components: {
     ErrorView: NewlyError,
     AcceptedOrderDialog: OrderAccepted,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
   },
   props: {
     nftSelections: {
@@ -251,13 +254,28 @@ export default defineComponent({
 
       errorType: '',
       errorTitle: '',
-      errorMessage: ''
+      errorMessage: '',
+
+      ongoingTxn: false
     };
   },
   beforeUpdate() {
     this.nfts = this.nftSelections;
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async addRemoveFavorites(
       tokenID: string,
       cAddress: string,
@@ -379,6 +397,7 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
+      this.SetPreventingExitListener(true);
       const address = this.userStore.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, false, address, image);
@@ -388,6 +407,7 @@ export default defineComponent({
         }, 2000);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
+        this.SetPreventingExitListener(false);
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',

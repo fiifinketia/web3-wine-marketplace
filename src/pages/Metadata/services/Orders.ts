@@ -18,7 +18,7 @@ import { APIKeyString } from 'src/boot/axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-declare let window: any; // eslint-disable-line
+declare let window: Window;
 
 const RandomIdGenerator = () => {
   return Date.now();

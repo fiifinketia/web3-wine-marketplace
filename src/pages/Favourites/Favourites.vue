@@ -158,6 +158,7 @@
           :error-title="errorTitle"
           :error-message="errorMessage"
         />
+        <OngoingTransactionDialog v-model="ongoingTxn"/>
       </div>
     </div>
     <div
@@ -216,6 +217,7 @@ import { AssociateOwned } from 'src/shared/association.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderAccepted from '../SharedPopups/OrderAccepted.vue';
 import ProfileErrors from '../SharedPopups/ProfileErrors.vue';
+import TxnOngoing from '../SharedPopups/TxnOngoing.vue';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -226,7 +228,8 @@ export default defineComponent({
     FavsError: ErrorFavorites,
     FavsMissing: MissingFavorites,
     AcceptedOrderDialog: OrderAccepted,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
   },
   data() {
     const userStore = useUserStore();
@@ -250,7 +253,9 @@ export default defineComponent({
 
       errorType: '',
       errorTitle: '',
-      errorMessage: ''
+      errorMessage: '',
+
+      ongoingTxn: false
     };
   },
   async mounted() {
@@ -259,6 +264,19 @@ export default defineComponent({
     await this.startPageTour();
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async getAllFavorites(walletAddress: string, brand: string) {
       this.isLoading = true;
       try {
@@ -560,6 +578,7 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
+      this.SetPreventingExitListener(true);
       const address = this.userStore.walletAddress;
       try {
         await FulfillBasicOrder(orderHash, brand, false, address, image);
@@ -574,6 +593,7 @@ export default defineComponent({
           errorTitle: 'Sorry, the purchase failed',
           errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
+        this.SetPreventingExitListener(false);
       }
     },
     HandleError(err: {

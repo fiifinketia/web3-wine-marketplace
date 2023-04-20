@@ -103,6 +103,7 @@
         v-model="openAcceptedOrderDialog"
         :order-accepted="'offer'"
       />
+      <OngoingTransactionDialog v-model="ongoingTxn"/>
     </div>
   </q-page>
 </template>
@@ -129,6 +130,7 @@ import IncomingColumns from '../Columns/IncomingColumns.vue';
 import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 
 const nftStore = useNFTStore();
 
@@ -144,6 +146,7 @@ export default defineComponent({
     AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
+    OngoingTransactionDialog: TxnOngoing
   },
   emits: ['incomingAmount'],
 
@@ -173,7 +176,9 @@ export default defineComponent({
       orderHash: '',
       brand: '',
       image: '',
-      token: {} as TokenIdentifier
+      token: {} as TokenIdentifier,
+
+      ongoingTxn: false
     };
   },
 
@@ -209,6 +214,19 @@ export default defineComponent({
   },
 
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`;
     },
@@ -232,6 +250,7 @@ export default defineComponent({
     ) {
       const address = this.userStore.walletAddress;
       try {
+        this.SetPreventingExitListener(true);
         await FulfillBasicOrder(orderHash, brand, true, address, image);
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
@@ -243,6 +262,7 @@ export default defineComponent({
       } catch (err: any) {
         this.HandleError(err);
       } finally {
+        this.SetPreventingExitListener(false);
         this.openConfirmDialog = false;
       }
     },

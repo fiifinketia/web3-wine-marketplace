@@ -188,7 +188,7 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
       @listing-exists="listed => UpdateListingStatus(listed)"
     />
 
