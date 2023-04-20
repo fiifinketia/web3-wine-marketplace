@@ -157,18 +157,18 @@
           </q-list>
         </q-menu>
       </q-card>
-      <AcceptedOrderDialog
-        v-model="openOrderAccepted"
-        :order-accepted="'listing'"
-      />
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :error-type="errorType"
-        :error-title="errorTitle"
-        :error-message="errorMessage"
-      />
-      <OngoingTransactionDialog v-model="ongoingTxn"/>
     </div>
+    <AcceptedOrderDialog
+      v-model="openOrderAccepted"
+      :order-accepted="'listing'"
+    />
+    <ErrorDialog
+      v-model="openErrorDialog"
+      :error-type="errorType"
+      :error-title="errorTitle"
+      :error-message="errorMessage"
+    />
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </div>
   <ErrorView
     v-else-if="!isLoading && !!erroredOut"
