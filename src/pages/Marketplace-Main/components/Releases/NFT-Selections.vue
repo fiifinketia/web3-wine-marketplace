@@ -48,12 +48,19 @@
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
                 <q-img
-                  src="../../../../assets/icons/currencies/USDC-Icon.svg"
-                  :style="
-                    $q.screen.width > 350
-                      ? 'height: 20px; width: 20px'
-                      : 'height: 15px; width: 16px'
-                  "
+                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDC"
+                  src="../../../../assets/icons/currencies/USDC-icon.svg"
+                  class="currency-logo"
+                />
+                <q-img
+                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDT"
+                  src="../../../../assets/icons/currencies/USDT-icon.svg"
+                  class="currency-logo"
+                />
+                <q-img
+                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.WIVA"
+                  src="../../../../assets/icons/currencies/WIVA-icon.svg"
+                  class="currency-logo"
                 />
                 <span class="releases-price-text-b-active">
                   {{ ToInt(token.orderDetails.listingPrice) }}
@@ -209,6 +216,8 @@ import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { AddFavorites, RemoveFavorites } from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
+import { ReturnCurrency } from 'src/shared/currency.helper';
+import { Currencies } from 'src/shared/models/entities/currency';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
@@ -251,6 +260,8 @@ export default defineComponent({
 
       openOrderAccepted: false,
       openErrorDialog: false,
+      ReturnCurrency,
+      Currencies,
 
       errorType: '',
       errorTitle: '',

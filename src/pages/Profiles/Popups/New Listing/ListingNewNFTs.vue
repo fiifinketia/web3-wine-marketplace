@@ -108,7 +108,7 @@
             class="row items-center q-gutter-x-xs"
           >
             <q-img
-              src="../../../../assets/icons/currencies/USDC-Icon.svg"
+              src="../../../../assets/icons/currencies/USDC-icon.svg"
               :style="
                 $q.screen.width > 350
                   ? 'height: 20px; width: 20px'

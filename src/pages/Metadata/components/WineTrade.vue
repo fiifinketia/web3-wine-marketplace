@@ -74,7 +74,21 @@
                 class="row items-center"
               >
                 <div>
-                  <q-img src="../../../assets/usdc.svg" width="28px" />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
+                    src="../../../assets/icons/currencies/USDC-icon.svg"
+                    width="28px"
+                  />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
+                    src="../../../assets/icons/currencies/USDT-icon.svg"
+                    width="28px"
+                  />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
+                    src="../../../assets/icons/currencies/WIVA-icon.svg"
+                    width="28px"
+                  />
                 </div>
                 <div class="price1">
                   {{ nft.listingDetails.listingPrice }}
@@ -99,7 +113,21 @@
               <div class="bid-text">Highest bid from</div>
               <div class="row items-center q-pt-sm">
                 <div>
-                  <q-img src="../../../assets/usdc.svg" width="20px" />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
+                    src="../../../assets/icons/currencies/USDC-icon.svg"
+                    width="20px"
+                  />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
+                    src="../../../assets/icons/currencies/USDT-icon.svg"
+                    width="20px"
+                  />
+                  <q-img
+                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
+                    src="../../../assets/icons/currencies/WIVA-icon.svg"
+                    width="20px"
+                  />
                 </div>
                 <div class="bid-price">
                   {{ nft.offerDetails.highestBid || '--.--' }}
@@ -248,6 +276,8 @@ import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { ReturnCurrency } from 'src/shared/currency.helper';
+import { Currencies } from 'src/shared/models/entities/currency';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -283,6 +313,9 @@ export default defineComponent({
       orderType: '',
 
       ongoingListingTransaction: false,
+
+      ReturnCurrency,
+      Currencies
     };
   },
   computed: {

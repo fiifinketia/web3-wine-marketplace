@@ -31,7 +31,21 @@
         v-if="$q.screen.width > 600"
         class="row items-center listings-column-price"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-img
+          v-if="ReturnCurrency(listing.currency) == Currencies.USDC"
+          src="../../../assets/icons/currencies/USDC-icon.svg"
+          width="20px"
+        />
+        <q-img
+          v-if="ReturnCurrency(listing.currency) == Currencies.USDT"
+          src="../../../assets/icons/currencies/USDT-icon.svg"
+          width="20px"
+        />
+        <q-img
+          v-if="ReturnCurrency(listing.currency) == Currencies.WIVA"
+          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          width="20px"
+        />
         <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
@@ -44,7 +58,21 @@
             <div class="row items-center justify-between">
               <span class="listing-tooltip-label"> Highest Offer </span>
               <div class="row items-center">
-                <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+                <q-img
+                  v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.USDC"
+                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  width="16px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.USDT"
+                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  width="16px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.WIVA"
+                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  width="16px"
+                />
                 <span class="listing-tooltip-price-highest q-pl-xs">
                   {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
                 </span>
@@ -57,7 +85,21 @@
         v-if="$q.screen.width > 1265"
         class="row items-center listings-column-highestOffer"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-img
+          v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.USDC"
+          src="../../../assets/icons/currencies/USDC-icon.svg"
+          width="20px"
+        />
+        <q-img
+          v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.USDT"
+          src="../../../assets/icons/currencies/USDT-icon.svg"
+          width="20px"
+        />
+        <q-img
+          v-if="ReturnCurrency(listing.highestOfferCurrency) == Currencies.WIVA"
+          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          width="20px"
+        />
         <span class="profile-nft-number-highlight">
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
@@ -69,7 +111,21 @@
       </div>
       <div v-if="$q.screen.width <= 600" class="listings-column-yours column">
         <div class="row q-pb-xs">
-          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <q-img
+            v-if="ReturnCurrency(listing.currency) == Currencies.USDC"
+            src="../../../assets/icons/currencies/USDC-icon.svg"
+            width="20px"
+          />
+          <q-img
+            v-if="ReturnCurrency(listing.currency) == Currencies.USDT"
+            src="../../../assets/icons/currencies/USDT-icon.svg"
+            width="20px"
+          />
+          <q-img
+            v-if="ReturnCurrency(listing.currency) == Currencies.WIVA"
+            src="../../../assets/icons/currencies/WIVA-icon.svg"
+            width="20px"
+          />
           <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight">
@@ -104,6 +160,8 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
+import { ReturnCurrency } from 'src/shared/currency.helper';
+import { Currencies } from 'src/shared/models/entities/currency';
 
 export default defineComponent({
   components: {
@@ -123,6 +181,9 @@ export default defineComponent({
       brand: '',
       highestOffer: '',
       tab: 'listings',
+
+      ReturnCurrency,
+      Currencies
     };
   },
   methods: {

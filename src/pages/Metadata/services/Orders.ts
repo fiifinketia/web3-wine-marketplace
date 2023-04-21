@@ -83,7 +83,7 @@ export async function CreateERC721Listing(
 					amount: listingPrice,
 					recipient: address,
 					// TODO: CHANGE IN PRODUCTION
-					token: process.env.MARKETPLACE_CURRENCY,
+					token: process.env.WIVA_CURRENCY,
 				},
 			],
 			fees: [
@@ -168,7 +168,7 @@ export async function CreateERC1155Listing(
         {
           amount: listingPrice,
           recipient: address,
-          token: process.env.MARKETPLACE_CURRENCY,
+          token: process.env.WIVA_CURRENCY,
         },
       ],
       fees: [
@@ -230,7 +230,7 @@ export async function CreateERC721Offer(
 				// buyer's offer
 				{
 					amount: offerPrice,
-					token: process.env.MARKETPLACE_CURRENCY,
+					token: process.env.WIVA_CURRENCY,
 				},
 			],
 			consideration: [

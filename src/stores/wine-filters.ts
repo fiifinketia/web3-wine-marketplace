@@ -29,6 +29,25 @@ export const useWineFilters = defineStore('wineFilters', {
         value: 'Descending',
       },
     ],
+    currency: [''],
+    currencyOptions: [
+      {
+        label: 'USDC',
+        value: process.env.USDC_CURRENCY,
+        icon: 'app:USDC-icon'
+      },
+      {
+        label: 'USDT',
+        // TODO ADD CURRENCY HERE
+        value: '<USDT_VALUE_HERE>',
+        icon: 'app:USDT-icon'
+      },
+      {
+        label: 'WIVA',
+        value: process.env.WIVA_CURRENCY,
+        icon: 'app:WIVA-icon'
+      },
+    ],
     brand: [''],
     brandOptions: [] as { label: string; value: string }[],
     origin: [''],

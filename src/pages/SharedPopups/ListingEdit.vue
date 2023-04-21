@@ -29,9 +29,9 @@
         />
       </q-card-section>
 
-      <span class="dialog-subtitle" style="align-self: center">{{
-        brand
-      }}</span>
+      <span class="dialog-subtitle" style="align-self: center">
+        {{ brand }}
+      </span>
 
       <q-card-section class="row justify-start">
         <div
@@ -45,19 +45,57 @@
           style="width: 45%"
           :style="$q.screen.width > 600 ? 'width: 45%' : 'width: 100%'"
         >
-          <div class="column">
-            <span class="dialog-label">Your price</span>
-            <q-input
-              v-model="listingPrice"
-              outlined
-              dense
-              type="number"
-              debounce="500"
-              class="dialog-input-box"
-            />
+          <div class="row full-width">
+            <div class="column q-mr-md" style="width: 125px">
+              <span class="dialog-label q-pb-xs">Your price</span>
+              <q-input
+                v-model="listingPrice"
+                outlined
+                dense
+                type="number"
+                debounce="500"
+                class="dialog-input-box"
+              />
+            </div>
+            <div class="column">
+              <span class="dialog-label q-pb-xs">Currency</span>
+              <q-select
+                v-model="currency"
+                :options="filteredCurrencyOptions"
+                dense
+                borderless
+                style="height: 40px"
+                popup-content-class="currency-dropdown"
+                behavior="menu"
+              >
+                <template #selected>
+                  <div
+                    v-if="currency"
+                    dense
+                    square
+                    color="white"
+                    text-color="primary"
+                    class="q-ma-none row items-center"
+                  >
+                    <q-icon :name="currency.icon" size="20px"/>
+                    <span class="currency-label q-ml-xs"> {{ currency.label }} </span>
+                  </div>
+                </template>
+                <template #option="scope">
+                  <q-item
+                    v-bind="scope.itemProps"
+                    dense
+                    class="currency-option q-px-sm row items-center"
+                  >
+                    <q-icon :name="scope.opt.icon" size="20px"/>
+                    <span class="currency-label q-ml-xs">{{ scope.opt.label }}</span>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
           </div>
           <div class="column">
-            <span class="dialog-label"> Expiration date </span>
+            <span class="dialog-label q-pb-xs"> Expiration date </span>
             <q-input
               v-model="listingExpirationDate"
               outlined
@@ -68,15 +106,18 @@
             />
           </div>
           <div class="column">
-            <span class="dialog-label"> Fee </span>
+            <span class="dialog-price-label"> Fee </span>
             <span class="dialog-fee"> 2.5% </span>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
-            <span class="dialog-label"> Total </span>
-            <span class="dialog-total">
-              {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
-            </span>
+            <span class="dialog-price-label"> Total </span>
+            <div class="row items-center">
+              <q-icon :name="currency.icon" size="24px" />
+              <span class="dialog-total q-ml-xs">
+                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+              </span>
+            </div>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
@@ -171,19 +212,57 @@
           class="column justify-between q-my-xs q-gutter-y-md"
           style="width: 45%"
         >
-          <div class="column">
-            <span class="dialog-label">Your price</span>
-            <q-input
-              v-model="listingPrice"
-              outlined
-              dense
-              type="number"
-              debounce="500"
-              class="dialog-input-box"
-            />
+          <div class="row full-width">
+            <div class="column q-mr-md" style="width: 30%">
+              <span class="dialog-label q-pb-xs">Your price</span>
+              <q-input
+                v-model="listingPrice"
+                outlined
+                dense
+                type="number"
+                debounce="500"
+                class="dialog-input-box"
+              />
+            </div>
+            <div class="column">
+              <span class="dialog-label q-pb-xs">Currency</span>
+              <q-select
+                v-model="currency"
+                :options="filteredCurrencyOptions"
+                dense
+                borderless
+                style="height: 40px"
+                popup-content-class="currency-dropdown"
+                behavior="menu"
+              >
+                <template #selected>
+                  <div
+                    v-if="currency"
+                    dense
+                    square
+                    color="white"
+                    text-color="primary"
+                    class="q-ma-none row items-center"
+                  >
+                    <q-icon :name="currency.icon" size="20px"/>
+                    <span class="currency-label q-ml-xs"> {{ currency.label }} </span>
+                  </div>
+                </template>
+                <template #option="scope">
+                  <q-item
+                    v-bind="scope.itemProps"
+                    dense
+                    class="currency-option q-px-sm row items-center"
+                  >
+                    <q-icon :name="scope.opt.icon" size="20px"/>
+                    <span class="currency-label q-ml-xs">{{ scope.opt.label }}</span>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
           </div>
           <div class="column">
-            <span class="dialog-label"> Expiration date </span>
+            <span class="dialog-label q-pb-xs"> Expiration date </span>
             <q-input
               v-model="listingExpirationDate"
               outlined
@@ -194,15 +273,18 @@
             />
           </div>
           <div class="column">
-            <span class="dialog-label"> Fee </span>
+            <span class="dialog-price-label"> Fee </span>
             <span class="dialog-fee"> 2.5% </span>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
-            <span class="dialog-label"> Total </span>
-            <span class="dialog-total">
-              {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
-            </span>
+            <span class="dialog-price-label"> Total </span>
+            <div class="row items-center">
+              <q-icon :name="currency.icon" size="24px" />
+              <span class="dialog-total q-ml-xs">
+                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+              </span>
+            </div>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
@@ -251,7 +333,7 @@
 
 <script lang="ts">
 import 'src/css/Profile/Component/dialog.css';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import {
   CreateERC721Listing,
   CancelSingleOrder,
@@ -312,6 +394,30 @@ export default defineComponent({
       listingsStore,
       listingPrice: '',
       listingExpirationDate: '',
+      currency: ref(
+        {
+          label: 'WIVA',
+          value: process.env.WIVA_CURRENCY,
+          icon: 'app:WIVA-icon'
+        }
+      ),
+      currencyOptions: [
+        {
+          label: 'WIVA',
+          value: process.env.WIVA_CURRENCY,
+          icon: 'app:WIVA-icon'
+        },
+        {
+          label: 'USDC',
+          value: process.env.USDC_CURRENCY,
+          icon: 'app:USDC-icon'
+        },
+        {
+          label: 'USDT',
+          value: process.env.USDT_CURRENCY,
+          icon: 'app:USDT-icon'
+        }
+      ],
       fee: '',
       acceptTerms: false,
       ongoingTxn: false
@@ -325,7 +431,10 @@ export default defineComponent({
       } else {
         return false
       }
-    }
+    },
+    filteredCurrencyOptions() {
+      return this.currencyOptions.filter((option) => option.value !== this.currency.value);
+    },
   },
   mounted() {
     share('ongoingListings', useListingStore(), { initialize: true });
