@@ -3,10 +3,10 @@ import { ethers, utils } from 'ethers';
 import {
   ChainID,
   ItemType,
-  OrderListingModel,
+  OrderModel,
   RetrieveListingResponse,
   SeaportInstance,
-  UpdateListingRequest,
+  FulfillOrderRequest,
 } from '../models/Orders';
 
 import axios from 'axios';
@@ -62,6 +62,7 @@ export async function CreateERC721Listing(
   image: string,
   address: string,
   listingPrice: string,
+	listingCurrency: string,
   expirationDate: string
 ) {
   listingPrice = utils.parseEther(listingPrice).toString();
@@ -82,8 +83,7 @@ export async function CreateERC721Listing(
 				{
 					amount: listingPrice,
 					recipient: address,
-					// TODO: CHANGE IN PRODUCTION
-					token: process.env.WIVA_CURRENCY,
+					token: listingCurrency,
 				},
 			],
 			fees: [
@@ -102,7 +102,7 @@ export async function CreateERC721Listing(
 	const { transact } = seaport.validate([order]);
 	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
-	const db_Order: OrderListingModel = {
+	const db_Order: OrderModel = {
 		parameters: order.parameters,
 		signature: order.signature,
 		orderHash: orderHash,
@@ -187,7 +187,7 @@ export async function CreateERC1155Listing(
   const { transact } = seaport.validate([order]);
   const txn = await transact();
   const orderHash = seaport.getOrderHash({ ...order.parameters });
-  const db_Order: OrderListingModel = {
+  const db_Order: OrderModel = {
     parameters: order.parameters,
     signature: order.signature,
     orderHash: orderHash,
@@ -215,11 +215,10 @@ export async function CreateERC721Offer(
   image: string,
   address: string,
   offerPrice: string,
+	offerCurrency: string,
   expirationDate: string
 ) {
-  // const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
-  // const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-  // const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
+	console.log(tokenID, smartContractAddress, brand, image, address, offerPrice, offerCurrency, expirationDate)
   offerPrice = utils.parseEther(offerPrice).toString();
 
 	const blockNumber = await GetBlockNumber();
@@ -230,7 +229,7 @@ export async function CreateERC721Offer(
 				// buyer's offer
 				{
 					amount: offerPrice,
-					token: process.env.WIVA_CURRENCY,
+					token: offerCurrency,
 				},
 			],
 			consideration: [
@@ -259,7 +258,7 @@ export async function CreateERC721Offer(
 	const { transact } = seaport.validate([order]);
 	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
-	const db_Order: OrderListingModel = {
+	const db_Order: OrderModel = {
 		parameters: order.parameters,
 		signature: order.signature,
 		orderHash: orderHash,
@@ -269,7 +268,8 @@ export async function CreateERC721Offer(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		highestBid: offerPrice,
+		offerPrice: offerPrice,
+		offerCurrency: offerCurrency,
 		nonce: txn.nonce
 	};
 	const OrderRequest = {
@@ -321,7 +321,7 @@ export async function FulfillBasicOrder(
 
   const txn = await executeAllFulfillActions();
 
-	const updateOrder: UpdateListingRequest & { apiKey: string } = {
+	const updateOrder: FulfillOrderRequest & { apiKey: string } = {
 		notificationID: RandomIdGenerator(),
 		identifierOrCriteria: order.identifierOrCriteria,
 		contractAddress: order.contractAddress,

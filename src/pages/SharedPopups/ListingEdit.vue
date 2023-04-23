@@ -487,6 +487,7 @@ export default defineComponent({
             this.image,
             this.userStore.walletAddress,
             this.listingPrice,
+            <string> this.currency.value,
             this.listingExpirationDate
           );
           if (!this.isEdit) {

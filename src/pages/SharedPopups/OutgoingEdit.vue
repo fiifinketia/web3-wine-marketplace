@@ -475,6 +475,7 @@ export default defineComponent({
             this.image,
             this.userStore.walletAddress,
             this.offerPrice,
+            <string> this.currency.value,
             this.offerExpirationDate
           );
           this.$emit('offer-created');

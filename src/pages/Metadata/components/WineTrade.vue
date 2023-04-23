@@ -73,26 +73,22 @@
                 "
                 class="row items-center"
               >
-                <div>
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
-                    src="../../../assets/icons/currencies/USDC-icon.svg"
-                    width="28px"
-                  />
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
-                    src="../../../assets/icons/currencies/USDT-icon.svg"
-                    width="28px"
-                  />
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
-                    src="../../../assets/icons/currencies/WIVA-icon.svg"
-                    width="28px"
-                  />
-                </div>
-                <div class="price1">
-                  {{ nft.listingDetails.listingPrice }}
-                </div>
+                <q-img
+                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
+                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  width="28px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
+                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  width="28px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
+                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  width="28px"
+                />
+                <span class="price1 q-pl-sm"> {{ nft.listingDetails.listingPrice }} </span>
               </div>
               <div
                 v-else-if="nft.listingDetails.listingPrice == null"
@@ -112,26 +108,22 @@
             >
               <div class="bid-text">Highest bid from</div>
               <div class="row items-center q-pt-sm">
-                <div>
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
-                    src="../../../assets/icons/currencies/USDC-icon.svg"
-                    width="20px"
-                  />
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
-                    src="../../../assets/icons/currencies/USDT-icon.svg"
-                    width="20px"
-                  />
-                  <q-img
-                    v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
-                    src="../../../assets/icons/currencies/WIVA-icon.svg"
-                    width="20px"
-                  />
-                </div>
-                <div class="bid-price">
-                  {{ nft.offerDetails.highestBid || '--.--' }}
-                </div>
+                <q-img
+                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDC"
+                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  width="20px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDT"
+                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  width="20px"
+                />
+                <q-img
+                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.WIVA"
+                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  width="20px"
+                />
+                <span class="bid-price q-pl-sm"> {{ nft.offerDetails.highestBid || '--.--' }} </span>
               </div>
             </div>
           </div>
