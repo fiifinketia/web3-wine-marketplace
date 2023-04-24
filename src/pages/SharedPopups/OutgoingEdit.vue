@@ -222,6 +222,31 @@
               <span class="dialog-cancel-gr-text"> Reset </span>
             </q-btn>
             <q-btn
+              v-if="!userStore.user"
+              class="dialog-confirm"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+              unelevated
+              no-caps
+              flat
+              disable
+              size="md"
+            >
+              Please Connect Wallet
+            </q-btn>
+            <router-link
+              v-else-if="
+                userStore.user.verificationStatus === 'NOT_STARTED' ||
+                userStore.user.verificationStatus === 'FAILED' ||
+                userStore.user.verificationStatus === 'PENDING'
+              "
+              :to="'/profile/' + userStore.user.walletAddress + '/kyc'"
+              class="q-ma-sm q-pa-xs text-warning"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+            >
+              Complete KYC to offer
+            </router-link>
+            <q-btn
+              v-else
               class="dialog-confirm"
               no-caps
               flat
@@ -287,14 +312,14 @@ export default defineComponent({
     },
     isEdit: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: [
     'remove-offer',
     'outgoing-edit-close',
     'outgoing-error-dialog',
-    'offer-created'
+    'offer-created',
   ],
   data() {
     const userStore = useUserStore();
@@ -309,6 +334,7 @@ export default defineComponent({
   },
   methods: {
     async CreateNewOrder() {
+      if (!this.userStore.user) throw 'Connect Wallet and Login';
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
@@ -322,7 +348,8 @@ export default defineComponent({
             this.image,
             this.userStore.walletAddress,
             this.offerPrice,
-            this.offerExpirationDate
+            this.offerExpirationDate,
+            this.userStore.user
           );
           this.$emit('offer-created');
         } catch (err) {

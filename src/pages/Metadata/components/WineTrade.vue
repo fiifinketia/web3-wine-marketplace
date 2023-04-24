@@ -283,6 +283,7 @@ export default defineComponent({
       orderType: '',
 
       ongoingListingTransaction: false,
+			userStore: useUserStore()
     };
   },
   computed: {
@@ -333,9 +334,9 @@ export default defineComponent({
       }, 2000);
     },
     async AcceptOffer(orderHash: string, brand: string, image: string) {
-      const address = this.walletAddress;
+			if(!this.userStore.user) throw new Error('User not logged in');
       try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;

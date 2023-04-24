@@ -14,6 +14,11 @@ const customIcons: { [key: string]: string } = {
   'app:heart': 'img:/images/heart.svg',
   'app:search': 'img:/images/search.svg',
   'app:bell-icon': 'img:/images/bell-icon.svg',
+	'app:caution': 'img:/icons/caution-icon.svg',
+	'app:verify-user': 'img:/icons/verify-account-icon.svg',
+	'app:verify-complete': 'img:/icons/verification-completed.svg',
+	'app:verify-pending': 'img:/icons/verification-pending.svg',
+	'app:verify-failed': 'img:/icons/verification-failed.svg'
 };
 export default defineComponent({
   name: 'App',

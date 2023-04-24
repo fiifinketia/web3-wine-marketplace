@@ -188,6 +188,28 @@ body {
   height: 22px;
 }
 
+.wiv-primary-button {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 1rem;
+	line-height: 29px;
+	text-align: center;
+	color: #ffffff;
+	text-decoration: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 25px !important;
+	width: 290px;
+	height: 2.5rem;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+}
+
 @media screen and (min-width: 1512px) {
   .fit {
     /* width: 100% !important;

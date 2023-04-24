@@ -24,7 +24,7 @@
           class="connect-wallet-btns connect-btn"
           :disable="!isMetaMaskInstalled"
           unelevated
-          @click="connectWallet"
+          @click="connectWallet()"
         >
           Connect wallet
         </q-btn>
@@ -44,57 +44,16 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <q-dialog
-    v-model="showMyWallet"
-    position="right"
-    full-height
-    class="my-wallet-background row justify-end"
-  >
-    <q-card class="my-wallet-container column justify-between items-center">
-      <q-card-section class="my-wallet-header row items-center no-wrap">
-        <div class="my-wallet-header-container row">
-          <div>MY WALLET</div>
-          <q-separator spaced="md" size="2px" vertical color="accent" />
-          <img src="../../public/images/metamask-icon.svg" alt="" />
-          <q-separator
-            class="wallet-id"
-            spaced="sm"
-            size="2px"
-            vertical
-            color="accent"
-          />
-          <div class="wallet-id">{{ walletAddress.slice(0, 15) + '...' }}</div>
-        </div>
-        <img
-          class="x-icon"
-          src="../../public/images/x-icon.svg"
-          alt=""
-          @click="showMyWallet = false"
-        />
-      </q-card-section>
-      <div class="id-mobile">{{ walletAddress.slice(0, 20) + '...' }}</div>
-
-      <q-card-section
-        class="my-wallet-ballance-container column justify-center items-center"
-      >
-        <img src="../../public/images/wallet.svg" alt="wallet-icon" />
-        <div class="ballance-wrapper column">
-          <div class="my-wallet-title q-pb-sm">Your balance is</div>
-          <div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
-        </div>
-        <q-btn
-          class="my-wallet-btn no-box-shadow"
-          unelevated
-          @click="fundWallet"
-          >Fund wallet</q-btn
-        >
-      </q-card-section>
-
-      <q-card-section class="my-wallet-logout" @click="logout">
-        LOG OUT
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+  <div v-if="userStore.user && showMyWallet" class="my-wallet-background row justify-end hidden">
+    <WalletDialog
+      v-model="showMyWallet"
+      :user="userStore.user"
+      :balance="balance"
+      @close-my-wallet="showMyWallet = false"
+      @fund-wallet="fundWallet()"
+      @logout="logout"
+    />
+  </div>
 
   <!---------------------------- /MY WALLET ---------------------------->
 
@@ -139,11 +98,7 @@
           >
             Favorites
           </span>
-					<span
-            v-else
-            class="logo-replacement-text"
-            @click="$router.push('/')"
-          >
+          <span v-else class="logo-replacement-text" @click="$router.push('/')">
             WiV
           </span>
         </div>
@@ -192,8 +147,13 @@
               </q-list>
             </div>
           </q-btn-dropdown>
-          <div clickable class="text-h6">Stats <q-badge size rounded color="red" align="top" label="Soon" /></div>
-          <div clickable class="text-h6">Storefront <q-badge size rounded color="red" align="top" label="Soon" /></div>
+          <div clickable class="text-h6">
+            Stats <q-badge size rounded color="red" align="top" label="Soon" />
+          </div>
+          <div clickable class="text-h6">
+            Storefront
+            <q-badge size rounded color="red" align="top" label="Soon" />
+          </div>
         </div>
         <div class="row">
           <div v-if="$q.screen.width > 768" class="row items-center">
@@ -213,7 +173,7 @@
               dense
               :ripple="false"
               unelevated
-							disable
+              disable
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
             >
@@ -429,6 +389,7 @@ import 'src/css/reusable.css';
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
+import WalletDialog from './components/WalletDialog.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -439,16 +400,16 @@ export default defineComponent({
   components: {
     BurgerMenu,
     SuggestedWines,
+    WalletDialog,
   },
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
     const orderStore = ordersStore();
-		const tourStore = useTourStore()
+    const tourStore = useTourStore();
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
 
     return {
-      user: true,
       showBurgerMenu: false,
       showMyWallet: false,
       showConnectWallet: false,
@@ -458,7 +419,7 @@ export default defineComponent({
       walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
       balance: 0,
-			tourStore,
+      tourStore,
     };
   },
   watch: {
@@ -479,8 +440,8 @@ export default defineComponent({
         if (!!walletAddress) {
           this.ReInitAmplitude(walletAddress);
         }
-      }
-    }
+      },
+    },
   },
 
   async mounted() {
@@ -528,7 +489,7 @@ export default defineComponent({
           sessions: true,
           pageViews: true,
         },
-      })
+      });
     },
     async connectWallet() {
       this.showConnectWallet = false;
