@@ -498,6 +498,7 @@ export default defineComponent({
               image: this.image,
               brand: this.brand,
               listingPrice: this.listingPrice,
+              listingCurrency: this.currency.value
             };
             this.$emit('listable-nft-listed', token);
           } else {

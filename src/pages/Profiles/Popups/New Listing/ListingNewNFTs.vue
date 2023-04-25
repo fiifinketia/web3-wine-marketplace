@@ -108,12 +108,19 @@
             class="row items-center q-gutter-x-xs"
           >
             <q-img
+              v-if="ReturnCurrency(token.listingCurrency) == Currencies.USDC"
               src="../../../../assets/icons/currencies/USDC-icon.svg"
-              :style="
-                $q.screen.width > 350
-                  ? 'height: 20px; width: 20px'
-                  : 'height: 15px; width: 16px'
-              "
+              class="currency-logo"
+            />
+            <q-img
+              v-if="ReturnCurrency(token.listingCurrency) == Currencies.USDT"
+              src="../../../../assets/icons/currencies/USDT-icon.svg"
+              class="currency-logo"
+            />
+            <q-img
+              v-if="ReturnCurrency(token.listingCurrency) == Currencies.WIVA"
+              src="../../../../assets/icons/currencies/WIVA-icon.svg"
+              class="currency-logo"
             />
             <span class="new-list-price">
               {{ token.listingPrice }}
@@ -130,6 +137,8 @@ import { mapState } from 'pinia';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { useListableFilters } from 'src/stores/listable-filters';
 import { defineComponent } from 'vue';
+import { ReturnCurrency } from 'src/shared/currency.helper';
+import { Currencies } from 'src/shared/models/entities/currency';
 
 export default defineComponent({
   emits: ['open-listing-dialog'],
@@ -137,6 +146,8 @@ export default defineComponent({
     const listableFiltersStore = useListableFilters();
     return {
       listableFiltersStore,
+      ReturnCurrency,
+      Currencies
     };
   },
   computed: {
