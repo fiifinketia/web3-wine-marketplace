@@ -83,7 +83,6 @@
       <q-card-section
         v-if="
           user.verificationStatus === 'FAILED'
-          // user.verificationStatus === 'PENDING'
         "
         class="row items-center no-wrap"
       >
@@ -183,7 +182,6 @@
 
       <q-card-section
         v-if="
-          // true
           user.verificationStatus === 'PENDING'
         "
         class="row items-center no-wrap"

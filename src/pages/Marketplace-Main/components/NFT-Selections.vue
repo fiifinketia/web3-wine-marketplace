@@ -110,9 +110,8 @@
             />
             <q-btn
               v-if="
-                (user.verificationStatus !== 'NOT_STARTED' ||
-                  user.verificationStatus !== 'FAILED' ||
-                  user.verificationStatus !== 'PENDING') &&
+                userStore.user &&
+                userStore.user.verificationStatus === 'VERIFIED' &&
                 !token.isOwned &&
                 !!token.orderDetails?.listingPrice &&
                 !!token.orderDetails?.transactionStatus

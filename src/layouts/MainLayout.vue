@@ -30,7 +30,7 @@
         </q-btn>
         <q-btn
           class="connect-wallet-btns no-wallet-btn"
-          :disabled="!!isMetaMaskInstalled"
+          :disable="!!isMetaMaskInstalled"
           unelevated
           @click="setupWallet"
         >
@@ -56,6 +56,41 @@
   </div>
 
   <!---------------------------- /MY WALLET ---------------------------->
+
+	<!-- Terms and Conditions -->
+	<q-dialog v-model="showTermsAndConditions" class="terms-and-conditions-background row justify-center items-center">
+		<q-card class="terms-and-conditions-container column justify-center items-center rounded-borders">
+			<q-card-section class="bg-primary full-width">
+				<div class="terms-and-conditions-title text-h6 bold text-white text-center">
+					Terms and Conditions
+				</div>
+			</q-card-section>
+
+			<q-card-section>
+				<div class="terms-and-conditions-content overflow-scroll">
+					<p>
+						By using this website, you agree to the following terms and conditions. If you do not agree to these terms and conditions, you may not use this website.
+					</p>
+					<p>
+						We reserve the right to change these terms and conditions at any time. You should check these terms and conditions regularly to ensure you are aware of any changes made by us. Your continued use of this website will be deemed acceptance of the updated or amended terms and conditions.
+					</p>
+					<p>
+						We may suspend or terminate your access to this website if you breach these terms and conditions or if we are unable to verify or authenticate any information you provide to us.
+					</p>
+				</div>
+			</q-card-section>
+			<q-card-section>
+				<q-btn class="terms-and-conditions-btns q-ma-xs" color="primary" unelevated @click="acceptTermsAndConditions">
+					Agree
+				</q-btn>
+				<q-btn class="terms-and-conditions-btns q-ma-xs" color="primary" unelevated outline @click="showTermsAndConditions = false">
+					Disagree
+				</q-btn>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+
+	<!-- /Terms and Conditions -->
 
   <BurgerMenu
     v-if="showBurgerMenu"
@@ -148,11 +183,11 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge size rounded color="red" align="top" label="Soon" />
+            Stats <q-badge rounded color="red" align="top" label="Soon" />
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge size rounded color="red" align="top" label="Soon" />
+            <q-badge rounded color="red" align="top" label="Soon" />
           </div>
         </div>
         <div class="row">
@@ -413,6 +448,7 @@ export default defineComponent({
       showBurgerMenu: false,
       showMyWallet: false,
       showConnectWallet: false,
+			showTermsAndConditions: false,
       userStore,
       nftStore,
       orderStore,
@@ -493,6 +529,10 @@ export default defineComponent({
     },
     async connectWallet() {
       this.showConnectWallet = false;
+			if(!this.tourStore.termsAndConditionsAgreed) {
+				this.showTermsAndConditions = true;
+				return;
+			}
       //TODO: Catch errors
       await this.userStore.connectWallet();
       if (!this.$route.query?.next) {
@@ -502,6 +542,12 @@ export default defineComponent({
         await this.$router.replace({ path: next, replace: true });
       }
     },
+
+		acceptTermsAndConditions() {
+			this.tourStore.setTermsAndConditionsAgreed();
+			this.showTermsAndConditions = false;
+			this.connectWallet();
+		},
 
     setupWallet() {
       this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;

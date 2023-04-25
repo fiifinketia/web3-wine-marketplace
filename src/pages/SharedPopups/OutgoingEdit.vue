@@ -235,9 +235,7 @@
             </q-btn>
             <router-link
               v-else-if="
-                userStore.user.verificationStatus === 'NOT_STARTED' ||
-                userStore.user.verificationStatus === 'FAILED' ||
-                userStore.user.verificationStatus === 'PENDING'
+                userStore.user.verificationStatus !== 'VERIFIED'
               "
               :to="'/profile/' + userStore.user.walletAddress + '/kyc'"
               class="q-ma-sm q-pa-xs text-warning"

@@ -11,9 +11,7 @@ export enum VerificationStatus {
   NOT_STARTED = 'NOT_STARTED',
   PENDING = 'PENDING',
   FAILED = 'FAILED',
-  STAGE_1 = 'STAGE_1',
-  STAGE_2 = 'STAGE_2',
-  STAGE_3 = 'STAGE_3',
+  VERIFIED = 'VERIFIED',
 }
 
 export interface UserModel {
