@@ -1,7 +1,6 @@
 import { ethers } from 'ethers';
-import NewWivPolygonABI from './ABIs/WiVNewPolygon.abi.json';
-import NewWivMumbaiABI from './ABIs/WiVNewPolygonMUMBAI.abi.json';
-import ERC1155MumbaiABI from './ABIs/WiVERC1155MumbaiContract.abi.json';
+import ERC721ABI from './ABIs/ERC721.json';
+import ERC1155ABI from './ABIs/ERC1155.abi.json';
 import ERC20ABI from './ABIs/ERC20.abi.json';
 
 ////////////////// Return providers here //////////////////
@@ -19,14 +18,14 @@ const Web3PolygonProvider: ethers.providers.JsonRpcProvider =
 const NewPolygonCollectionContract_PolygonInstance: ethers.Contract =
   new ethers.Contract(
     <string>process.env.ERC721_CONTRACT_ADDRESS_POLYGON,
-    NewWivPolygonABI,
+    ERC721ABI,
     Web3PolygonProvider
   );
 
 const NewPolygonCollectionContract_MumbaiInstance: ethers.Contract =
   new ethers.Contract(
     <string>process.env.ERC721_CONTRACT_ADDRESS_MUMBAI,
-    NewWivMumbaiABI,
+    ERC721ABI,
     Web3MumbaiProvider
   );
 
@@ -41,7 +40,7 @@ const ERC20_ContractWithSigner = (currencyAddress: string, signer: ethers.Signer
 const ERC721_ContractWithSigner = (tokenAddress: string, signer: ethers.Signer) => {
   return new ethers.Contract(
     tokenAddress,
-    NewWivPolygonABI,
+    ERC721ABI,
     signer
   )
 }
@@ -49,7 +48,7 @@ const ERC721_ContractWithSigner = (tokenAddress: string, signer: ethers.Signer) 
 const ERC1155PolygonCollectionContract_MumbaiInstance: ethers.Contract =
   new ethers.Contract(
     <string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI,
-    ERC1155MumbaiABI,
+    ERC1155ABI,
     Web3MumbaiProvider
   );
 
@@ -60,7 +59,6 @@ export {
   NewPolygonCollectionContract_MumbaiInstance,
   NewPolygonCollectionContract_PolygonInstance,
   ERC1155PolygonCollectionContract_MumbaiInstance,
-  // CURRENCY CONTRACTS
   ERC20_ContractWithSigner,
   ERC721_ContractWithSigner
 };
