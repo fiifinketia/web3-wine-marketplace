@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../../css/Homepage/Faq.css';
 export default defineComponent({
   name: 'FAQ',

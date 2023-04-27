@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../../css/Homepage/PartnershipWines.css';
 export default defineComponent({
   name: 'PartnershipWines',

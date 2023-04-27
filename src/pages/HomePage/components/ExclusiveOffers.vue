@@ -110,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent, ref } from 'vue';
 import '../../../css/Homepage/ExclusiveOffers.css';
 import {
   AddFavorites,

@@ -13,7 +13,6 @@
     "dev": "cross-env QENV=development quasar dev"
   },
   "dependencies": {
-    "@0xsequence/multicall": "^0.43.26",
     "@amplitude/analytics-browser": "^1.9.3",
     "@metamask/onboarding": "^1.0.1",
     "@opensea/seaport-js": "^1.1.0",

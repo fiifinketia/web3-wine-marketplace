@@ -181,7 +181,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../../css/Homepage/Footer.css';
 export default defineComponent({
   name: 'LandingPageFooter',

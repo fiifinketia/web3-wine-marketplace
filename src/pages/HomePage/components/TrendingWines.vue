@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../../css/Homepage/TrendingWines.css';
 export default defineComponent({
   name: 'TrendingWines',

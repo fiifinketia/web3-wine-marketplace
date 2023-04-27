@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue-demi';
+import { defineComponent, PropType } from 'vue';
 import { NFTWithListingAndFavorites } from '../models/Metadata';
 import '../../../css/Metadata/WineDetails.css';
 export default defineComponent({

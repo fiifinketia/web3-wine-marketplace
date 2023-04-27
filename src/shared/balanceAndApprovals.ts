@@ -25,9 +25,9 @@ export async function balanceAndApprovals (
     const { _hex } = <{ _hex: string; _isBigNumber: true }> (
       await contract.balanceOf(owner)
     );
-    const balance = parseInt(_hex, 16);
-    if (balance < parseInt(<string> amount)) {
-      throw new Error('Owner does not have the balance to fulfill');
+		const balance = +utils.formatUnits(_hex, decimal);
+    if (balance < parseFloat(<string> amount)) {
+      throw new Error('Address does not have the balance to fulfill');
     }
     const { _hex : seaportAllowanceHex } = <{ _hex: string; _isBigNumber: true }> await contract.allowance(owner, seaportAddress);
 
