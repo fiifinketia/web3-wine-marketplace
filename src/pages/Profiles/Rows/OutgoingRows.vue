@@ -32,17 +32,17 @@
       >
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-icon.svg"
+          src="../../../assets/icons/currencies/USDC-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-icon.svg"
+          src="../../../assets/icons/currencies/USDT-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          src="../../../assets/icons/currencies/WIVA-logo.svg"
           width="20px"
         />
         <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
@@ -69,17 +69,17 @@
       >
         <q-img
           v-if="ReturnCurrency(offer.highestOfferCurrency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-icon.svg"
+          src="../../../assets/icons/currencies/USDC-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.highestOfferCurrency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-icon.svg"
+          src="../../../assets/icons/currencies/USDT-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.highestOfferCurrency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          src="../../../assets/icons/currencies/WIVA-logo.svg"
           width="20px"
         />
         <span class="profile-nft-number">
@@ -99,17 +99,17 @@
         <div class="row q-pb-xs">
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-            src="../../../assets/icons/currencies/USDC-icon.svg"
+            src="../../../assets/icons/currencies/USDC-logo.svg"
             width="20px"
           />
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-            src="../../../assets/icons/currencies/USDT-icon.svg"
+            src="../../../assets/icons/currencies/USDT-logo.svg"
             width="20px"
           />
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-            src="../../../assets/icons/currencies/WIVA-icon.svg"
+            src="../../../assets/icons/currencies/WIVA-logo.svg"
             width="20px"
           />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>

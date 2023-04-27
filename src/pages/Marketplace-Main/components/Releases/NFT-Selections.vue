@@ -49,17 +49,17 @@
               <div class="row items-center q-gutter-x-xs q-pt-xs">
                 <q-img
                   v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDC"
-                  src="../../../../assets/icons/currencies/USDC-icon.svg"
+                  src="../../../../assets/icons/currencies/USDC-logo.svg"
                   class="currency-logo"
                 />
                 <q-img
                   v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDT"
-                  src="../../../../assets/icons/currencies/USDT-icon.svg"
+                  src="../../../../assets/icons/currencies/USDT-logo.svg"
                   class="currency-logo"
                 />
                 <q-img
                   v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.WIVA"
-                  src="../../../../assets/icons/currencies/WIVA-icon.svg"
+                  src="../../../../assets/icons/currencies/WIVA-logo.svg"
                   class="currency-logo"
                 />
                 <span class="releases-price-text-b-active">

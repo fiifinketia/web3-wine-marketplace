@@ -75,17 +75,17 @@
               >
                 <q-img
                   v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
-                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  src="../../../assets/icons/currencies/USDC-logo.svg"
                   width="28px"
                 />
                 <q-img
                   v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  src="../../../assets/icons/currencies/USDT-logo.svg"
                   width="28px"
                 />
                 <q-img
                   v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  src="../../../assets/icons/currencies/WIVA-logo.svg"
                   width="28px"
                 />
                 <span class="price1 q-pl-sm"> {{ nft.listingDetails.listingPrice }} </span>
@@ -110,17 +110,17 @@
               <div class="row items-center q-pt-sm">
                 <q-img
                   v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDC"
-                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  src="../../../assets/icons/currencies/USDC-logo.svg"
                   width="20px"
                 />
                 <q-img
                   v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  src="../../../assets/icons/currencies/USDT-logo.svg"
                   width="20px"
                 />
                 <q-img
                   v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  src="../../../assets/icons/currencies/WIVA-logo.svg"
                   width="20px"
                 />
                 <span class="bid-price q-pl-sm"> {{ nft.offerDetails.highestBid || '--.--' }} </span>

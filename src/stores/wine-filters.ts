@@ -34,7 +34,7 @@ export const useWineFilters = defineStore('wineFilters', {
       {
         label: 'USDC',
         value: process.env.USDC_CURRENCY,
-        icon: 'app:USDC-icon'
+        icon: 'app:USDC-logo'
       },
       {
         label: 'USDT',
@@ -45,7 +45,7 @@ export const useWineFilters = defineStore('wineFilters', {
       {
         label: 'WIVA',
         value: process.env.WIVA_CURRENCY,
-        icon: 'app:WIVA-icon'
+        icon: 'app:WIVA-logo'
       },
     ],
     brand: [''],

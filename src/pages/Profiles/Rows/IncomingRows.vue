@@ -33,17 +33,17 @@
       >
         <q-img
           v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-icon.svg"
+          src="../../../assets/icons/currencies/USDC-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-icon.svg"
+          src="../../../assets/icons/currencies/USDT-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          src="../../../assets/icons/currencies/WIVA-logo.svg"
           width="20px"
         />
         <span class="profile-nft-number">
@@ -56,17 +56,17 @@
       >
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-icon.svg"
+          src="../../../assets/icons/currencies/USDC-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-icon.svg"
+          src="../../../assets/icons/currencies/USDT-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          src="../../../assets/icons/currencies/WIVA-logo.svg"
           width="20px"
         />
         <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
@@ -85,17 +85,17 @@
               <span class="incoming-tooltip-label"> Floor Price </span>
               <div class="row items-center">
                 <q-img
-                  src="../../../assets/icons/currencies/USDC-icon.svg"
+                  src="../../../assets/icons/currencies/USDC-logo.svg"
                   width="16px"
                 />
                 <q-img
                   v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-icon.svg"
+                  src="../../../assets/icons/currencies/USDT-logo.svg"
                   width="16px"
                 />
                 <q-img
                   v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-icon.svg"
+                  src="../../../assets/icons/currencies/WIVA-logo.svg"
                   width="16px"
                 />
                 <span class="incoming-tooltip-text q-pl-xs">
@@ -121,17 +121,17 @@
         <div class="row q-pb-xs">
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-            src="../../../assets/icons/currencies/USDC-icon.svg"
+            src="../../../assets/icons/currencies/USDC-logo.svg"
             width="20px"
           />
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-            src="../../../assets/icons/currencies/USDT-icon.svg"
+            src="../../../assets/icons/currencies/USDT-logo.svg"
             width="20px"
           />
           <q-img
             v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-            src="../../../assets/icons/currencies/WIVA-icon.svg"
+            src="../../../assets/icons/currencies/WIVA-logo.svg"
             width="20px"
           />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>

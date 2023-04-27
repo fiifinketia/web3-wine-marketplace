@@ -212,17 +212,17 @@
             <div class="row items-center">
               <q-img
                 v-if="ReturnCurrency(highestOfferCurrency) == Currencies.USDC"
-                src="../../assets/icons/currencies/USDC-icon.svg"
+                src="../../assets/icons/currencies/USDC-logo.svg"
                 width="20px"
               />
               <q-img
                 v-if="ReturnCurrency(highestOfferCurrency) == Currencies.USDT"
-                src="../../assets/icons/currencies/USDT-icon.svg"
+                src="../../assets/icons/currencies/USDT-logo.svg"
                 width="20px"
               />
               <q-img
                 v-if="ReturnCurrency(highestOfferCurrency) == Currencies.WIVA"
-                src="../../assets/icons/currencies/WIVA-icon.svg"
+                src="../../assets/icons/currencies/WIVA-logo.svg"
                 width="20px"
               />
               <span class="dialog-highest-offer-price">
@@ -412,24 +412,24 @@ export default defineComponent({
         {
           label: 'WIVA',
           value: process.env.WIVA_CURRENCY,
-          icon: 'app:WIVA-icon'
+          icon: 'app:WIVA-logo'
         }
       ),
       currencyOptions: [
         {
           label: 'WIVA',
           value: process.env.WIVA_CURRENCY,
-          icon: 'app:WIVA-icon'
+          icon: 'app:WIVA-logo'
         },
         {
           label: 'USDC',
           value: process.env.USDC_CURRENCY,
-          icon: 'app:USDC-icon'
+          icon: 'app:USDC-logo'
         },
         {
           label: 'USDT',
           value: process.env.USDT_CURRENCY,
-          icon: 'app:USDT-icon'
+          icon: 'app:USDT-logo'
         }
       ],
       fee: '',

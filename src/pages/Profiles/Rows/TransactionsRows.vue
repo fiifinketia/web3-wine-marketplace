@@ -39,17 +39,17 @@
       <div class="row items-center transaction-column-price">
         <q-img
           v-if="ReturnCurrency(txn.currency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-icon.svg"
+          src="../../../assets/icons/currencies/USDC-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(txn.currency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-icon.svg"
+          src="../../../assets/icons/currencies/USDT-logo.svg"
           width="20px"
         />
         <q-img
           v-if="ReturnCurrency(txn.currency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-icon.svg"
+          src="../../../assets/icons/currencies/WIVA-logo.svg"
           width="20px"
         />
         <span
