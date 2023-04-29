@@ -67,10 +67,10 @@ export async function CreateERC721Listing(
 	listingCurrency: string,
   expirationDate: string
 ) {
-	const signer = WindowWeb3Provider.getSigner();
+	const signer = WindowWeb3Provider?.getSigner();
+        if(!signer) return;
 	const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
-	const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
-	const decimalOfToken = <number> await ERC20Contract.decimals();
+	const decimalOfToken = <number> await ERC721Contract.decimals();
 
 	await balanceAndApprovals(
 		address,
@@ -159,14 +159,15 @@ export async function CreateERC721Offer(
 	offerCurrency: string,
   expirationDate: string
 ) {
-	const signer = WindowWeb3Provider.getSigner();
+	const signer = WindowWeb3Provider?.getSigner();
+	if(!signer) return;
 	const contract = ERC20_ContractWithSigner(offerCurrency, signer);
 	const decimalOfToken = <number> await contract.decimals();
 
 	await balanceAndApprovals(
 		address,
 		'ERC20',
-		ERC20_ContractWithSigner(offerCurrency, signer),
+		contract,
 		'',
 		offerPrice,
 		decimalOfToken
