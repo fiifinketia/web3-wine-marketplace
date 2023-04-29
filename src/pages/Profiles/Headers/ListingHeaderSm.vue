@@ -2,9 +2,28 @@
   <div v-if="$q.screen.width > 600" class="column q-pb-md" style="width: 100%">
     <div class="row justify-between items-center q-pb-sm">
       <div class="row q-gutter-x-lg">
-        <div v-if="!brandSearched">
-          <span class="profile-header-offer q-pr-xs"> Listings </span>
-          <span class="profile-nft-number"> {{ listingsAmount }} </span>
+        <div
+          v-if="!brandSearched"
+          class="row items-center"
+        >
+          <q-btn
+            dense
+            unelevated
+            flat
+            no-caps
+            :ripple="false"
+            class="profile-back btn--no-hover no-padding q-mr-sm"
+            @click="ResetSearch()"
+          >
+            <img
+              src="../../../assets/refresh-blue.svg"
+              style="height: 23px; width: 23px"
+            />
+          </q-btn>
+          <div>
+            <span class="profile-header-offer q-pr-xs"> Listings </span>
+            <span class="profile-nft-number"> {{ listingsAmount }} </span>
+          </div>
         </div>
         <div v-else>
           <q-btn
