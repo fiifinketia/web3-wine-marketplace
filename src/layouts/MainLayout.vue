@@ -58,10 +58,10 @@
   <!---------------------------- /MY WALLET ---------------------------->
 
 	<!-- Terms and Conditions -->
-	<q-dialog v-model="showTermsAndConditions" class="terms-and-conditions-background row justify-center items-center">
-		<q-card class="terms-and-conditions-container column justify-center items-center rounded-borders">
-			<q-card-section class="bg-primary full-width">
-				<div class="terms-and-conditions-title text-h6 bold text-white text-center">
+	<q-dialog v-model="showTermsAndConditions" position="left" full-height class="terms-and-conditions-background">
+		<q-card class="terms-and-conditions-container column justify-between">
+			<q-card-section class="full-width">
+				<div class="terms-and-conditions-title text-h6 bold text-black text-start">
 					Terms and Conditions
 				</div>
 			</q-card-section>
@@ -79,14 +79,15 @@
 					</p>
 				</div>
 			</q-card-section>
-			<q-card-section>
-				<q-btn class="terms-and-conditions-btns q-ma-xs" color="primary" unelevated @click="acceptTermsAndConditions">
-					Agree
+			<q-card-actions class="row terms-and-conditions-btns justify-end">
+				<q-btn class="terms-and-conditions-btn-decline q-ma-xs" color="primary" size="lg" unelevated no-caps outline @click="showTermsAndConditions = false">
+					Decline
 				</q-btn>
-				<q-btn class="terms-and-conditions-btns q-ma-xs" color="primary" unelevated outline @click="showTermsAndConditions = false">
-					Disagree
+				<q-btn class="terms-and-conditions-btn-accept q-ma-xs" color="primary" size="lg" unelevated no-caps @click="acceptTermsAndConditions">
+					Accept
 				</q-btn>
-			</q-card-section>
+
+			</q-card-actions>
 		</q-card>
 	</q-dialog>
 
