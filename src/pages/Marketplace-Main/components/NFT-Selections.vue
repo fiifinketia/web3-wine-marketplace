@@ -15,7 +15,7 @@
     "
   >
     <div
-      v-for="token in allNFTs"
+      v-for="token in paginatedNFTs"
       :key="
         token.tokenID + ',' + token.network + ',' + token.smartContractAddress
       "
@@ -166,6 +166,9 @@
         </q-menu>
       </q-card>
     </div>
+    <div class="q-px-lg q-py-sm flex flex-center col-12">
+    	<q-pagination v-model="currentPage" :max="totalPages" direction-links />
+    </div>
     <AcceptedOrderDialog
       v-model="openOrderAccepted"
       :order-accepted="'listing'"
@@ -255,6 +258,10 @@ export default defineComponent({
     return {
       allNFTs: new Array<ListingWithPricingAndImage & { isOwned?: boolean }>(),
       loadingNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
+      itemsPerPage: ref(20),
+      totalPages: ref(0),
+      paginatedNFTs: new Array<ListingWithPricingAndImage & { isOwned?: boolean }>(),
+      currentPage: ref(1),
       isLoading: true,
       card: ref(false),
       stars: ref(3),
@@ -297,6 +304,16 @@ export default defineComponent({
 				}
 			}
 		},
+	'allNFTs': {
+		handler() {
+			this.PaginateNFTs();
+		}
+	},
+	'currentPage': {
+		handler() {
+			this.PaginateNFTs();
+		}
+	},
     'generalSearchStore.generalSearchKey': {
       async handler(val) {
         if (val != 0) {
@@ -489,7 +506,7 @@ export default defineComponent({
 							return 0;
 						}
 					});
-          this.$emit('totalTokens', nfts.length);
+	  this.$emit('totalTokens', nfts.length);
           this.IncorporateOwnedNFTs(nfts);
           this.erroredOut = false;
         } catch {
@@ -541,6 +558,13 @@ export default defineComponent({
       } else {
         this.allNFTs = retrievedNFTs;
       }
+    },
+    PaginateNFTs () {
+      const maxItems = this.allNFTs.length;
+      this.totalPages = Math.ceil(maxItems / this.itemsPerPage);
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage as number;
+      const endIndex = startIndex + this.itemsPerPage as number;
+      this.paginatedNFTs = this.allNFTs.slice(startIndex, endIndex)
     },
     async AcceptOffer(
       orderHash: string,
