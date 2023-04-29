@@ -398,19 +398,19 @@ export default defineComponent({
         {
           label: 'WIVA',
           value: process.env.WIVA_CURRENCY,
-          icon: 'app:WIVA-logo'
+          icon: 'app:WIVA-icon'
         }
       ),
       currencyOptions: [
         {
           label: 'WIVA',
           value: process.env.WIVA_CURRENCY,
-          icon: 'app:WIVA-logo'
+          icon: 'app:WIVA-icon'
         },
         {
           label: 'USDC',
           value: process.env.USDC_CURRENCY,
-          icon: 'app:USDC-logo'
+          icon: 'app:USDC-icon'
         },
         {
           label: 'USDT',

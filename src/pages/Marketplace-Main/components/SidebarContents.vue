@@ -60,6 +60,7 @@
         </q-list>
       </q-expansion-item>
 
+      <!-- Currency filter -->
       <q-expansion-item
         label="Listing currencies"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
