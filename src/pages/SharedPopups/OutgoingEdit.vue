@@ -4,6 +4,7 @@
     :maximized="true"
     transition-show="scale"
     transition-hide="scale"
+    persistent
   >
     <q-card class="q-pa-none column">
       <q-card-section class="row items-center q-pb-none">
