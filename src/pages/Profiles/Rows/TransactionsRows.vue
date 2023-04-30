@@ -37,21 +37,7 @@
         </q-btn>
       </div>
       <div class="row items-center transaction-column-price">
-        <q-img
-          v-if="ReturnCurrency(txn.currency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(txn.currency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(txn.currency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-logo.svg"
-          width="20px"
-        />
+        <q-icon :name="`app:${GetCurrencyLabel(txn.currency)}-icon`" size="20px" />
         <span
           class="transaction-number-text"
           :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"
@@ -125,8 +111,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { defineComponent } from 'vue';
 import { TransactionResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   components: {
@@ -147,8 +132,7 @@ export default defineComponent({
       tab: 'transactions',
       txnLinkPrepend: <string>process.env.POLYGON_SCAN_TXN_LINK,
 
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   methods: {

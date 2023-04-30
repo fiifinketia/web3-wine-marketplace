@@ -31,20 +31,10 @@
         v-if="$q.screen.width > 1020"
         class="row items-center incoming-column-price-floor"
       >
-        <q-img
-          v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-logo.svg"
-          width="20px"
+        <q-icon
+          v-if="offer.lowestOffer"
+          :name="`app:${GetCurrencyLabel(offer.lowestOfferCurrency)}-icon`"
+          size="20px"
         />
         <span class="profile-nft-number">
           {{ !!offer.lowestOffer ? parseFloat(offer.lowestOffer).toFixed(1) : '0.00' }}
@@ -54,20 +44,10 @@
         v-if="$q.screen.width > 600"
         class="row items-center incoming-column-price-offered"
       >
-        <q-img
-          v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-          src="../../../assets/icons/currencies/USDC-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-          src="../../../assets/icons/currencies/USDT-logo.svg"
-          width="20px"
-        />
-        <q-img
-          v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-          src="../../../assets/icons/currencies/WIVA-logo.svg"
-          width="20px"
+        <q-icon
+          v-if="offer.offer"
+          :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+          size="20px"
         />
         <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         <q-tooltip
@@ -84,19 +64,10 @@
             >
               <span class="incoming-tooltip-label"> Floor Price </span>
               <div class="row items-center">
-                <q-img
-                  src="../../../assets/icons/currencies/USDC-logo.svg"
-                  width="16px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-logo.svg"
-                  width="16px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(offer.lowestOfferCurrency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-logo.svg"
-                  width="16px"
+                <q-icon
+                  v-if="offer.lowestOffer"
+                  :name="`app:${GetCurrencyLabel(offer.lowestOfferCurrency)}-icon`"
+                  size="16px"
                 />
                 <span class="incoming-tooltip-text q-pl-xs">
                   {{ parseFloat(offer.lowestOffer).toFixed(1) }}
@@ -119,20 +90,10 @@
         class="incoming-column-price-offered column"
       >
         <div class="row q-pb-xs">
-          <q-img
-            v-if="ReturnCurrency(offer.currency) == Currencies.USDC"
-            src="../../../assets/icons/currencies/USDC-logo.svg"
-            width="20px"
-          />
-          <q-img
-            v-if="ReturnCurrency(offer.currency) == Currencies.USDT"
-            src="../../../assets/icons/currencies/USDT-logo.svg"
-            width="20px"
-          />
-          <q-img
-            v-if="ReturnCurrency(offer.currency) == Currencies.WIVA"
-            src="../../../assets/icons/currencies/WIVA-logo.svg"
-            width="20px"
+          <q-icon
+            v-if="offer.offer"
+            :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+            size="20px"
           />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         </div>
@@ -204,8 +165,7 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { defineComponent, PropType } from 'vue';
 import { IncomingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   components: {
@@ -227,8 +187,7 @@ export default defineComponent({
       from: '',
       tab: 'incoming',
 
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   methods: {

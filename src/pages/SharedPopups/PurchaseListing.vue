@@ -41,7 +41,7 @@
         </div>
         <div
           class="column justify-between q-my-xs q-gutter-y-md"
-          style="width: 45%"
+          style="width: 45%; flex-wrap: nowrap"
           :style="$q.screen.width > 600 ? 'width: 45%' : 'width: 100%'"
         >
           <ListingExpTimer
@@ -51,7 +51,7 @@
             <div class="column">
               <span class="dialog-label"> Price </span>
               <div class="row items-center">
-                <q-icon :name="`app:${GetCurrencyIconString(listingCurrency)}-icon`" size="20px" />
+                <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="20px" />
                 <span class="dialog-highest-offer-price q-ml-xs">
                   {{ listingPrice }}
                 </span>
@@ -66,7 +66,7 @@
           <div class="column">
             <span class="dialog-price-label"> Total </span>
             <div class="row items-center">
-              <q-icon :name="`app:${GetCurrencyIconString(listingCurrency)}-icon`" size="24px" />
+              <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="24px" />
               <span class="dialog-total q-ml-xs">
                 {{ parseInt(listingPrice) }}
               </span>
@@ -147,7 +147,7 @@
             <div class="column q-mr-md" style="width: 25%">
               <span class="dialog-label q-pb-xs">Price</span>
               <div class="row items-center">
-                <q-icon :name="`app:${GetCurrencyIconString(listingCurrency)}-icon`" size="20px" />
+                <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="20px" />
                 <span class="dialog-highest-offer-price q-ml-xs">
                   {{ listingPrice }}
                 </span>
@@ -165,7 +165,7 @@
           <div class="column">
             <span class="dialog-price-label"> Total </span>
             <div class="row items-center">
-              <q-icon :name="`app:${GetCurrencyIconString(listingCurrency)}-icon`" size="24px" />
+              <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="24px" />
               <span class="dialog-total q-ml-xs">
                 {{ parseInt(listingPrice) }}
               </span>
@@ -199,8 +199,7 @@
 import 'src/css/Profile/Component/dialog.css';
 import { defineComponent } from 'vue';
 import TxnOngoing from './TxnOngoing.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderExpTimer from './OrderExpTimer.vue';
 
@@ -249,8 +248,7 @@ export default defineComponent({
       acceptTerms: false,
       ongoingTxn: false,
 
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   methods: {

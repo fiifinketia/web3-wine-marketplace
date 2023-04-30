@@ -47,21 +47,7 @@
               @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDC"
-                  src="../../../assets/icons/currencies/USDC-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-logo.svg"
-                  class="currency-logo"
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="main-marketplace-price-text-b-active">
                   {{ ToInt(token.orderDetails.listingPrice) }}
                 </span>
@@ -231,8 +217,7 @@ import EmptyView from './EmptyView.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import { AssociateOwned } from 'src/shared/association.helper';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
@@ -270,8 +255,7 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      ReturnCurrency,
-      Currencies,
+      GetCurrencyLabel,
 
       filterListenersEnabled: true,
       erroredOut: false,

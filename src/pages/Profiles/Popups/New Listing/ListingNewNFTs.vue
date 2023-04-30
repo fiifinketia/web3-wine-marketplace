@@ -107,21 +107,7 @@
             v-else-if="!!token.listingPrice && !token.listingCancellationStatus"
             class="row items-center q-gutter-x-xs"
           >
-            <q-img
-              v-if="ReturnCurrency(token.listingCurrency) == Currencies.USDC"
-              src="../../../../assets/icons/currencies/USDC-logo.svg"
-              class="currency-logo"
-            />
-            <q-img
-              v-if="ReturnCurrency(token.listingCurrency) == Currencies.USDT"
-              src="../../../../assets/icons/currencies/USDT-logo.svg"
-              class="currency-logo"
-            />
-            <q-img
-              v-if="ReturnCurrency(token.listingCurrency) == Currencies.WIVA"
-              src="../../../../assets/icons/currencies/WIVA-logo.svg"
-              class="currency-logo"
-            />
+            <q-icon :name="`app:${GetCurrencyLabel(token.listingCurrency)}-icon`" class="currency-logo" />
             <span class="new-list-price">
               {{ token.listingPrice }}
             </span>
@@ -136,9 +122,8 @@
 import { mapState } from 'pinia';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { useListableFilters } from 'src/stores/listable-filters';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { defineComponent } from 'vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
 
 export default defineComponent({
   emits: ['open-listing-dialog'],
@@ -146,8 +131,7 @@ export default defineComponent({
     const listableFiltersStore = useListableFilters();
     return {
       listableFiltersStore,
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   computed: {

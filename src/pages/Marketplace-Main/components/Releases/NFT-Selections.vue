@@ -47,21 +47,7 @@
               @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDC"
-                  src="../../../../assets/icons/currencies/USDC-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.USDT"
-                  src="../../../../assets/icons/currencies/USDT-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(token.orderDetails.currency) == Currencies.WIVA"
-                  src="../../../../assets/icons/currencies/WIVA-logo.svg"
-                  class="currency-logo"
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="releases-price-text-b-active">
                   {{ ToInt(token.orderDetails.listingPrice) }}
                 </span>
@@ -216,8 +202,7 @@ import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { AddFavorites, RemoveFavorites } from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
@@ -260,8 +245,7 @@ export default defineComponent({
 
       openOrderAccepted: false,
       openErrorDialog: false,
-      ReturnCurrency,
-      Currencies,
+      GetCurrencyLabel,
 
       errorType: '',
       errorTitle: '',

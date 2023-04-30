@@ -54,6 +54,16 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
+              v-if="nft.listingDetails.expTime"
+              :class="$q.screen.width > 600 ? '' : 'column items-center'"
+              style="margin-bottom: 14px;"
+            >
+              <ListingExpTimer
+                :time-left="nft.listingDetails.expTime"
+                style="max-width: 500px;"
+              />
+            </div>
+            <div
 							id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
@@ -73,21 +83,7 @@
                 "
                 class="row items-center"
               >
-                <q-img
-                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDC"
-                  src="../../../assets/icons/currencies/USDC-logo.svg"
-                  width="28px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-logo.svg"
-                  width="28px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.listingDetails.currency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-logo.svg"
-                  width="28px"
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(nft.listingDetails.currency)}-icon`" size="28px"/>
                 <span class="price1 q-pl-sm"> {{ nft.listingDetails.listingPrice }} </span>
               </div>
               <div
@@ -108,20 +104,10 @@
             >
               <div class="bid-text">Highest bid from</div>
               <div class="row items-center q-pt-sm">
-                <q-img
-                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDC"
-                  src="../../../assets/icons/currencies/USDC-logo.svg"
-                  width="20px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.USDT"
-                  src="../../../assets/icons/currencies/USDT-logo.svg"
-                  width="20px"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.offerDetails.highestBidCurrency) == Currencies.WIVA"
-                  src="../../../assets/icons/currencies/WIVA-logo.svg"
-                  width="20px"
+                <q-icon
+                  v-if="!!nft.offerDetails.highestBid"
+                  :name="`app:${GetCurrencyLabel(nft.offerDetails.highestBidCurrency)}-icon`"
+                  size="20px"
                 />
                 <span class="bid-price q-pl-sm"> {{ nft.offerDetails.highestBid || '--.--' }} </span>
               </div>
@@ -216,7 +202,8 @@
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
       :highest-offer="nft.offerDetails.highestBid"
-      :highest-offer-currency="nft.offerDetails?.highestBidCurrency"
+      :highest-offer-currency="nft.offerDetails.highestBidCurrency"
+      :highest-offer-exp-time="nft.offerDetails.highestBidExpTime"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -280,9 +267,9 @@ import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
+import OrderExpTimer from 'src/pages/SharedPopups/OrderExpTimer.vue';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -294,7 +281,8 @@ export default defineComponent({
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
     AcceptedOrderDialog: OrderAccepted,
-    PurchaseListingDialog: PurchaseListing
+    PurchaseListingDialog: PurchaseListing,
+    ListingExpTimer: OrderExpTimer
   },
   props: {
     nft: {
@@ -321,8 +309,7 @@ export default defineComponent({
 
       ongoingListingTransaction: false,
 
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   computed: {

@@ -74,6 +74,7 @@
         :brand="singleOffer.brand"
         :highest-offer="singleOffer.highestOffer"
         :highest-offer-currency="singleOffer.highestOfferCurrency"
+        :highest-offer-exp-time="singleOffer.highestOfferExpTime"
         :image="singleOffer.image"
         :network="singleOffer.network"
         :order-hash="singleOffer.orderHash"

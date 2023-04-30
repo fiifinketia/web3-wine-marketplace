@@ -93,12 +93,16 @@ export default defineComponent({
       }
     },
     StartTimer () {
-      this.intervalID = setInterval(() => {
-        this.remainingTime = this.GetTimeRemaining(this.timeLeft)
-      }, 1000) as any // eslint-disable-line
+      if (!!this.timeLeft) {
+        this.intervalID = setInterval(() => {
+          this.remainingTime = this.GetTimeRemaining(this.timeLeft)
+        }, 1000) as any // eslint-disable-line
+      }
     },
     StopTimer() {
-      clearInterval(this.intervalID);
+      if (!!this.intervalID) {
+        clearInterval(this.intervalID);
+      }
     }
   }
 })

@@ -7,7 +7,9 @@
   >
     <q-card class="q-pa-none column">
       <q-card-section class="row items-center q-pb-none">
-        <div class="dialog-title">Edit Offer</div>
+        <div class="dialog-title">
+          {{ isEdit ? 'Edit Offer' : 'Bid For' }}
+        </div>
         <q-separator
           v-if="$q.screen.width > 600"
           spaced="md"
@@ -43,10 +45,15 @@
           style="width: 45%"
           :style="$q.screen.width > 600 ? 'width: 45%' : 'width: 100%'"
         >
+          <OfferExpTimer
+            v-if="!!highestOffer"
+            :time-left="highestOfferExpTime"
+          />
           <div v-if="!!highestOffer" class="column">
-            <span class="dialog-label"> Highest Offer </span>
+            <span class="dialog-label q-pb-xs"> Highest Offer </span>
             <div class="row items-center">
-              <span class="dialog-highest-offer-price">
+              <q-icon :name="`app:${GetCurrencyLabel(highestOfferCurrency)}-icon`" size="20px" />
+              <span class="dialog-highest-offer-price q-ml-xs">
                 {{ highestOffer }}
               </span>
             </div>
@@ -207,28 +214,19 @@
           class="column justify-between q-my-xs q-gutter-y-md"
           style="width: 45%"
         >
-          <div v-if="!!highestOffer" class="column">
-            <span class="dialog-label q-pb-xs"> Highest Offer </span>
-            <div class="row items-center">
-              <q-img
-                v-if="ReturnCurrency(highestOfferCurrency) == Currencies.USDC"
-                src="../../assets/icons/currencies/USDC-logo.svg"
-                width="20px"
-              />
-              <q-img
-                v-if="ReturnCurrency(highestOfferCurrency) == Currencies.USDT"
-                src="../../assets/icons/currencies/USDT-logo.svg"
-                width="20px"
-              />
-              <q-img
-                v-if="ReturnCurrency(highestOfferCurrency) == Currencies.WIVA"
-                src="../../assets/icons/currencies/WIVA-logo.svg"
-                width="20px"
-              />
-              <span class="dialog-highest-offer-price">
-                {{ highestOffer }}
-              </span>
+          <div v-if="!!highestOffer" class="row items-center justify-between">
+            <div class="column">
+              <span class="dialog-label q-pb-xs"> Highest Offer </span>
+              <div class="row items-center">
+                <q-icon :name="`app:${GetCurrencyLabel(highestOfferCurrency)}-icon`" size="20px" />
+                <span class="dialog-highest-offer-price q-ml-xs">
+                  {{ highestOffer }}
+                </span>
+              </div>
             </div>
+            <OfferExpTimer
+              :time-left="highestOfferExpTime"
+            />
           </div>
           <div class="row full-width">
             <div class="column q-mr-md" style="width: 30%">
@@ -351,12 +349,14 @@ import {
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import TxnOngoing from './TxnOngoing.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
+import OrderExpTimer from './OrderExpTimer.vue';
 
 export default defineComponent({
   components: {
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    OfferExpTimer: OrderExpTimer
   },
   props: {
     orderHash: {
@@ -389,6 +389,10 @@ export default defineComponent({
     },
     highestOfferCurrency: {
       type: String,
+      required: true,
+    },
+    highestOfferExpTime: {
+      type: Number,
       required: true,
     },
     isEdit: {
@@ -437,7 +441,7 @@ export default defineComponent({
       loadingOffer: false,
       ongoingTxn: false,
 
-      ReturnCurrency,
+      GetCurrencyLabel,
       Currencies
     };
   },

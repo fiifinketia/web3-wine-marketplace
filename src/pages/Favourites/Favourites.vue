@@ -60,21 +60,7 @@
               @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-img
-                  v-if="ReturnCurrency(nft.orderDetails.currency) == Currencies.USDC"
-                  src="../../assets/icons/currencies/USDC-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.orderDetails.currency) == Currencies.USDT"
-                  src="../../assets/icons/currencies/USDT-logo.svg"
-                  class="currency-logo"
-                />
-                <q-img
-                  v-if="ReturnCurrency(nft.orderDetails.currency) == Currencies.WIVA"
-                  src="../../assets/icons/currencies/WIVA-logo.svg"
-                  class="currency-logo"
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(nft.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="favorites-b-text-active">
                   {{ ToInt(nft.orderDetails.listingPrice) }}
                 </span>
@@ -225,8 +211,7 @@ import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderAccepted from '../SharedPopups/OrderAccepted.vue';
 import ProfileErrors from '../SharedPopups/ProfileErrors.vue';
 import TxnOngoing from '../SharedPopups/TxnOngoing.vue';
-import { ReturnCurrency } from 'src/shared/currency.helper';
-import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -266,8 +251,7 @@ export default defineComponent({
 
       ongoingTxn: false,
 
-      ReturnCurrency,
-      Currencies
+      GetCurrencyLabel
     };
   },
   async mounted() {
