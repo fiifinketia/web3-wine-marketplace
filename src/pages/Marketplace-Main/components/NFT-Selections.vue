@@ -562,6 +562,7 @@ export default defineComponent({
     PaginateNFTs () {
       const maxItems = this.allNFTs.length;
       this.totalPages = Math.ceil(maxItems / this.itemsPerPage);
+      if(this.currentPage > this.totalPages) this.currentPage = 1;
       const startIndex = (this.currentPage - 1) * this.itemsPerPage as number;
       const endIndex = startIndex + this.itemsPerPage as number;
       this.paginatedNFTs = this.allNFTs.slice(startIndex, endIndex)
