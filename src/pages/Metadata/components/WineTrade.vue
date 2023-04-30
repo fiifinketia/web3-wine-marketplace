@@ -170,7 +170,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="AcceptOffer(nft.listingDetails.orderHash, nft.brand, nft.image)"
+          @click="openPurchaseListingDialog = true"
         >
           Buy now
         </q-btn>
@@ -246,6 +246,19 @@
       :error-message="errorMessage"
     />
 
+    <PurchaseListingDialog
+      v-model="openPurchaseListingDialog"
+      :brand="nft.brand"
+      :image="nft.image"
+      :listing-currency="nft.listingDetails.currency"
+      :listing-price="nft.listingDetails.listingPrice"
+      :order-hash="nft.listingDetails.orderHash"
+      :wallet-address="walletAddress"
+      :listing-exp-date="nft.listingDetails.expTime"
+      @listing-purchase-error="HandleError"
+      @listing-purchased="PurchaseListingSuccess"
+    />
+
     <AcceptedOrderDialog
       v-model="openOrderAccepted"
       :order-accepted="'listing'"
@@ -263,13 +276,13 @@ import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { ReturnCurrency } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
+import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -280,7 +293,8 @@ export default defineComponent({
 
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
-    AcceptedOrderDialog: OrderAccepted
+    AcceptedOrderDialog: OrderAccepted,
+    PurchaseListingDialog: PurchaseListing
   },
   props: {
     nft: {
@@ -296,6 +310,7 @@ export default defineComponent({
       openCreateOfferDialog: false,
       openOrderCompletedDialog: false,
       openErrorDialog: false,
+      openPurchaseListingDialog: false,
       openOrderAccepted: false,
 
       errorType: '',
@@ -357,22 +372,12 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    async AcceptOffer(orderHash: string, brand: string, image: string) {
-      const address = this.walletAddress;
-      try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
-        this.openOrderAccepted = true;
-        setTimeout(() => {
-          this.openOrderAccepted = false;
-        }, 2500);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        this.HandleError({
-          errorType: 'accept',
-          errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
-        });
-      }
+    async PurchaseListingSuccess() {
+      this.openPurchaseListingDialog = false;
+      this.openOrderAccepted = true;
+      setTimeout(() => {
+        this.openOrderAccepted = false;
+      }, 2500);
     },
     UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
       this.$emit('listing-exists', listed);
