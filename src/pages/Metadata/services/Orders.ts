@@ -27,6 +27,12 @@ const RandomIdGenerator = () => {
   return Date.now();
 };
 
+function SetExpDate(expDate: string) : string{
+	return (
+		Math.round(new Date(expDate).getTime() / 1000) + 24 * 60 * 60
+	).toString()
+}
+
 export async function GetBlockNumber(): Promise<number> {
   const web3 = new ethers.providers.Web3Provider(window.ethereum);
   return await web3.getBlockNumber();
@@ -70,7 +76,8 @@ export async function CreateERC721Listing(
 	const signer = WindowWeb3Provider?.getSigner();
   if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
 	const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
-	const decimalOfToken = <number> await ERC721Contract.decimals();
+	const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
+	const decimalOfToken = <number> await ERC20Contract.decimals();
 
 	await balanceAndApprovals(
 		address,
@@ -106,7 +113,7 @@ export async function CreateERC721Listing(
 					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
+			endTime: SetExpDate(expirationDate),
 		},
 		address
 	);
@@ -207,12 +214,10 @@ export async function CreateERC721Offer(
 			fees: [
 				{
 					basisPoints: Number(process.env.WIV_FEE),
-					recipient:
-						process.env.WIV_FEE_RECEIVER ||
-						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
+					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
+			endTime: SetExpDate(expirationDate),
 		},
 		address
 	);
