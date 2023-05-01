@@ -366,22 +366,6 @@ export default defineComponent({
       setTimeout(() => {
         this.openOrderAccepted = false;
       }, 2500);
-    // async AcceptOffer(orderHash: string, brand: string, image: string) {
-		// 	if(!this.userStore.user) throw new Error('User not logged in');
-    //   try {
-    //     await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
-    //     this.openOrderAccepted = true;
-    //     setTimeout(() => {
-    //       this.openOrderAccepted = false;
-    //     }, 2500);
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   } catch (err: any) {
-    //     this.HandleError({
-    //       errorType: 'accept',
-    //       errorTitle: 'Sorry, the purchase failed',
-    //       errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
-    //     });
-    //   }
     },
     UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
       this.$emit('listing-exists', listed);
