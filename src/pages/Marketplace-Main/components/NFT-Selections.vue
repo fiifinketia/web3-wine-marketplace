@@ -35,7 +35,9 @@
             {{ truncateText(token.brand) }}
           </span>
         </div>
-        <q-card-section class="row justify-between main-marketplace-price-container q-py-sm">
+        <q-card-section
+          class="row justify-between main-marketplace-price-container q-py-sm"
+        >
           <div class="column items-start justify-evenly">
             <span class="main-marketplace-price-header q-pb-xs"> Price </span>
             <div
@@ -100,14 +102,27 @@
               "
             />
             <q-btn
-              v-if="!token.isOwned && !!token.orderDetails?.listingPrice && !!token.orderDetails?.transactionStatus"
+              v-if="
+                userStore.user &&
+                userStore.user.verificationStatus === 'VERIFIED' &&
+                !token.isOwned &&
+                !!token.orderDetails?.listingPrice &&
+                !!token.orderDetails?.transactionStatus
+              "
               dense
               unelevated
               flat
               no-caps
               :ripple="false"
               class="q-pa-none"
-              @click.stop="AcceptOffer(token.orderDetails.orderHash, token.brand, token.image, token)"
+              @click.stop="
+                AcceptOffer(
+                  token.orderDetails.orderHash,
+                  token.brand,
+                  token.image,
+                  token
+                )
+              "
             >
               <img
                 src="../../../../src/assets/small-bag-btn.svg"
@@ -120,7 +135,6 @@
               style="border-radius: 0 !important; padding-top: 6px"
             />
           </div>
-
         </q-card-section>
         <q-menu touch-position context-menu>
           <q-list dense style="min-width: 100px">
@@ -198,7 +212,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
@@ -209,7 +222,10 @@ import {
   ListingWithPricingAndImage,
 } from '../models/Response.models';
 import { RetrieveFilteredNFTs } from '../services/RetrieveTokens';
-import { AddFavorites, RemoveFavorites } from '../../Favourites/services/FavoritesFunctions';
+import {
+  AddFavorites,
+  RemoveFavorites,
+} from '../../Favourites/services/FavoritesFunctions';
 import '../../../css/Marketplace/NFT-Selections.css';
 import { RetrieveFilterDetails } from '../services/FilterOptions';
 import ErrorViewVue from './ErrorView.vue';
@@ -274,13 +290,13 @@ export default defineComponent({
         }
       },
     },
-		'isLoading': {
-			handler(val) {
-				if (!val) {
-					this.$emit('loadingCompleted');
-				}
-			}
-		},
+    isLoading: {
+      handler(val) {
+        if (!val) {
+          this.$emit('loadingCompleted');
+        }
+      },
+    },
     'generalSearchStore.generalSearchKey': {
       async handler(val) {
         if (val != 0) {
@@ -291,9 +307,7 @@ export default defineComponent({
             await this.RetrieveTokens(this.generalSearchStore.generalSearch);
             this.wineFiltersStore.removeAllFilters();
             // tick the brand options related to the NFTs retrieved from general search key
-            this.wineFiltersStore.setBrandFiltersAfterGenSearch(
-              this.nftEnums
-            );
+            this.wineFiltersStore.setBrandFiltersAfterGenSearch(this.nftEnums);
           } catch {
             return;
           } finally {
@@ -461,18 +475,24 @@ export default defineComponent({
           const { result: nfts } = await RetrieveFilteredNFTs(
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
-					// TODO: IMplement in backend API Place NFTs with prices first
-					nfts.sort((a, b) => {
-						if (a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
-							return 0;
-						} else if (a.orderDetails?.listingPrice && !b.orderDetails?.listingPrice) {
-							return -1;
-						} else if (!a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
-							return 1;
-						} else {
-							return 0;
-						}
-					});
+          // TODO: IMplement in backend API Place NFTs with prices first
+          nfts.sort((a, b) => {
+            if (a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
+              return 0;
+            } else if (
+              a.orderDetails?.listingPrice &&
+              !b.orderDetails?.listingPrice
+            ) {
+              return -1;
+            } else if (
+              !a.orderDetails?.listingPrice &&
+              b.orderDetails?.listingPrice
+            ) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
           this.$emit('totalTokens', nfts.length);
           this.IncorporateOwnedNFTs(nfts);
           this.erroredOut = false;
@@ -531,20 +551,27 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
+      if (!this.userStore.user) throw new Error('User not logged in');
       this.SetPreventingExitListener(true);
-      const address = this.userStore.walletAddress;
       try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          false,
+          this.userStore.user,
+          image
+        );
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
         }, 2000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
+          errorMessage:
+            'It may be due to insufficient balance, disconnected wallet, etc.',
         });
         this.SetPreventingExitListener(false);
       }
@@ -563,7 +590,6 @@ export default defineComponent({
       }, 2500);
     },
   },
-
 });
 </script>
 

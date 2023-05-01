@@ -8,6 +8,7 @@ export const useTourStore = defineStore(
     const marketplaceCompleted = ref(false);
     const metadataCompleted = ref(false);
 		const favoritesCompleted = ref(false);
+		const termsAndConditionsAgreed = ref(false);
 		const suggestedWinesDialog = ref(true); // Setting this to true will show the dialog on page load
 
 		const suggestionTimeout = ref(Date.now()); // Every day(24/hours) in milliseconds (86400000)
@@ -35,6 +36,10 @@ export const useTourStore = defineStore(
 			favoritesCompleted.value = true;
 		};
 
+		const setTermsAndConditionsAgreed = () => {
+      termsAndConditionsAgreed.value = true;
+    };
+
 		const setSuggestedWinesDialog = () => {
 			suggestedWinesDialog.value = false;
 			suggestionTimeout.value = Date.now();
@@ -42,15 +47,17 @@ export const useTourStore = defineStore(
 
     return {
       homeCompleted,
-			marketplaceCompleted,
-			metadataCompleted,
-			favoritesCompleted,
-			suggestedWinesDialog,
+      marketplaceCompleted,
+      metadataCompleted,
+      favoritesCompleted,
+      termsAndConditionsAgreed,
+      suggestedWinesDialog,
       setHomeCompleted,
-			setMarketplaceCompleted,
-			setMetadataCompleted,
-			setFavoritesCompleted,
-			setSuggestedWinesDialog
+      setMarketplaceCompleted,
+      setMetadataCompleted,
+      setFavoritesCompleted,
+      setTermsAndConditionsAgreed,
+      setSuggestedWinesDialog,
     };
   },
   { persist: true }

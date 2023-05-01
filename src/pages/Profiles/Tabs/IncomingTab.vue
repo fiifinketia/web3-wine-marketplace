@@ -248,10 +248,10 @@ export default defineComponent({
       image: string,
       token: TokenIdentifier
     ) {
-      const address = this.userStore.walletAddress;
+			if(!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        await FulfillBasicOrder(orderHash, brand, true, address, image);
+        await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
         this.openAcceptedOrderDialog = true;

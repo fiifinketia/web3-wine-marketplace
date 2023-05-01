@@ -7,6 +7,13 @@ export interface Meta {
   totalCount: number;
 }
 
+export enum VerificationStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  PENDING = 'PENDING',
+  FAILED = 'FAILED',
+  VERIFIED = 'VERIFIED',
+}
+
 export interface UserModel {
   walletAddress: string;
   avatar?: string;
@@ -16,6 +23,6 @@ export interface UserModel {
   phone?: string;
   dob?: string;
   isLegal: boolean;
-  isVerified: boolean;
+  verificationStatus: VerificationStatus;
   settings: object;
 }

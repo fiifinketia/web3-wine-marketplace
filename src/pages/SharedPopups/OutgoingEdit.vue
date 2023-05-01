@@ -318,6 +318,29 @@
               <span class="dialog-cancel-gr-text"> Reset </span>
             </q-btn>
             <q-btn
+              v-if="!userStore.user"
+              class="dialog-confirm"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+              unelevated
+              no-caps
+              flat
+              disable
+              size="md"
+            >
+              Please Connect Wallet
+            </q-btn>
+            <router-link
+              v-else-if="
+                userStore.user.verificationStatus !== 'VERIFIED'
+              "
+              :to="'/profile/' + userStore.user.walletAddress + '/kyc'"
+              class="q-ma-sm q-pa-xs text-warning"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+            >
+              Complete KYC to offer
+            </router-link>
+            <q-btn
+              v-else
               class="dialog-confirm"
               no-caps
               flat
@@ -397,14 +420,14 @@ export default defineComponent({
     },
     isEdit: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: [
     'remove-offer',
     'outgoing-edit-close',
     'outgoing-error-dialog',
-    'offer-created'
+    'offer-created',
   ],
   data() {
     const userStore = useUserStore();
@@ -465,6 +488,7 @@ export default defineComponent({
       }
     },
     async CreateNewOrder() {
+      if (!this.userStore.user) throw 'Connect Wallet and Login';
       try {
         this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
@@ -480,7 +504,8 @@ export default defineComponent({
             this.userStore.walletAddress,
             this.offerPrice,
             <string> this.currency.value,
-            this.offerExpirationDate
+            this.offerExpirationDate,
+            this.userStore.user
           );
           this.$emit('offer-created');
         } catch (err) {

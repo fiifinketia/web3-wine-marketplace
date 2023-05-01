@@ -18,6 +18,7 @@ import { APIKeyString } from 'src/boot/axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { balanceAndApprovals, HandleFulfillmentApprovals } from 'src/shared/balanceAndApprovals';
 import { ERC20_ContractWithSigner, ERC721_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
+import { UserModel } from 'src/components/models';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: Window;
@@ -26,10 +27,9 @@ const RandomIdGenerator = () => {
   return Date.now();
 };
 
-
 export async function GetBlockNumber(): Promise<number> {
-	const web3 = new ethers.providers.Web3Provider(window.ethereum);
-	return await web3.getBlockNumber();
+  const web3 = new ethers.providers.Web3Provider(window.ethereum);
+  return await web3.getBlockNumber();
 }
 
 export async function GetWeb3(): Promise<SeaportInstance> {
@@ -138,15 +138,17 @@ export async function CreateERC721Listing(
 	axios.post(createOrderURL, OrderRequest);
 }
 
-export async function InspectListingStatus(nft: TokenIdentifier) : Promise <false | { listingPrice: string, currency: string, transactionStatus: boolean }> {
-	const url = <string> process.env.RETRIEVE_LISTING_STATUS;
-	let status = false;
-	await axios
-		.post(url, {...nft, apiKey: APIKeyString})
-		.then(res => {
-			status = res.data;
-		});
-	return status;
+export async function InspectListingStatus(
+  nft: TokenIdentifier
+): Promise<
+  false | { listingPrice: string; currency: string; transactionStatus: boolean }
+> {
+  const url = <string>process.env.RETRIEVE_LISTING_STATUS;
+  let status = false;
+  await axios.post(url, { ...nft, apiKey: APIKeyString }).then(res => {
+    status = res.data;
+  });
+  return status;
 }
 
 export async function CreateERC721Offer(
@@ -157,8 +159,16 @@ export async function CreateERC721Offer(
   address: string,
   offerPrice: string,
 	offerCurrency: string,
-  expirationDate: string
+  expirationDate: string,
+  user: UserModel
 ) {
+  if (
+    user.verificationStatus === 'NOT_STARTED' ||
+    user.verificationStatus === 'FAILED' ||
+    user.verificationStatus === 'PENDING'
+  )
+    throw new Error('User is not verified');
+
 	const signer = WindowWeb3Provider.getSigner();
 	const contract = ERC20_ContractWithSigner(offerCurrency, signer);
 	const decimalOfToken = <number> await contract.decimals();
@@ -238,12 +248,18 @@ export async function FulfillBasicOrder(
   orderHash: string,
   brand: string,
   owner: boolean,
-  address: string,
+  user: UserModel,
   image: string
 ) {
-	if (!address) {
-		throw 'Check Metamask connection.'
-	}
+  if (!user.walletAddress) {
+    throw 'Check Metamask connection.';
+  }
+  if (
+    user.verificationStatus === 'NOT_STARTED' ||
+    user.verificationStatus === 'FAILED' ||
+    user.verificationStatus === 'PENDING'
+  )
+    throw 'User is not verified';
 	const { seaport } = await GetWeb3();
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const body = {
@@ -264,7 +280,7 @@ export async function FulfillBasicOrder(
 		});
 	const blockNumber = await GetBlockNumber();
 
-	await HandleFulfillmentApprovals(owner, address, order);
+	await HandleFulfillmentApprovals(owner, user.walletAddress, order);
 
 	const { executeAllActions: executeAllFulfillActions } =
 		await seaport.fulfillOrder({
@@ -285,7 +301,7 @@ export async function FulfillBasicOrder(
 		network: order.network,
 		brand: brand,
 		isOwner: owner,
-		walletAddress: address,
+		walletAddress: user.walletAddress,
 		offerer: order.parameters.offerer,
 		image: image,
 		nonce: txn.nonce,
@@ -296,34 +312,37 @@ export async function FulfillBasicOrder(
 	axios.post(fulfillOrderURL, updateOrder);
 }
 
-export async function CancelSingleOrder(orderHash: string, walletAddress: string) {
-	if (!!walletAddress) {
-		const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
-		const body = {
-			apiKey: APIKeyString,
-			orderHash: orderHash
-		}
-		const order: OrderComponents = await axios
-			.post(retrieveOrderUrl, body)
-			.then((result) => {
-				const data = result.data;
-				return {
-					...(<OrderParameters & { counter: number }>data.parameters),
-					signature: <string>data.signature,
-				};
-			});
-		const { seaport } = await GetWeb3();
-		const blockNumber = await GetBlockNumber();
-		const { transact } = seaport.cancelOrders([order]);
-		const txn = await transact();
-		const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-		const requestToCancel = {
-			orderHash: orderHash,
-			walletAddress: walletAddress,
-			nonce: txn.nonce,
-			blockNumber: blockNumber,
-			apiKey: APIKeyString
-		};
-		axios.post(cancelOrderURL, requestToCancel);
-	}
+export async function CancelSingleOrder(
+  orderHash: string,
+  walletAddress: string
+) {
+  if (!!walletAddress) {
+    const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
+    const body = {
+      apiKey: APIKeyString,
+      orderHash: orderHash,
+    };
+    const order: OrderComponents = await axios
+      .post(retrieveOrderUrl, body)
+      .then(result => {
+        const data = result.data;
+        return {
+          ...(<OrderParameters & { counter: number }>data.parameters),
+          signature: <string>data.signature,
+        };
+      });
+    const { seaport } = await GetWeb3();
+    const blockNumber = await GetBlockNumber();
+    const { transact } = seaport.cancelOrders([order]);
+    const txn = await transact();
+    const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+    const requestToCancel = {
+      orderHash: orderHash,
+      walletAddress: walletAddress,
+      nonce: txn.nonce,
+      blockNumber: blockNumber,
+      apiKey: APIKeyString,
+    };
+    axios.post(cancelOrderURL, requestToCancel);
+  }
 }

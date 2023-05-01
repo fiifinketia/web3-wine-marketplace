@@ -202,6 +202,7 @@ import TxnOngoing from './TxnOngoing.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderExpTimer from './OrderExpTimer.vue';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   components: {
@@ -244,11 +245,13 @@ export default defineComponent({
     'listing-purchase-error'
   ],
   data() {
+    const userStore = useUserStore();
     return {
       acceptTerms: false,
       ongoingTxn: false,
 
-      GetCurrencyLabel
+      GetCurrencyLabel,
+      userStore
     };
   },
   methods: {
@@ -266,10 +269,10 @@ export default defineComponent({
       }
     },
     async PurchaseListing(orderHash: string, brand: string, image: string) {
-      const address = this.walletAddress;
+      if (!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
         this.$emit('listing-purchased');
       } catch {
         this.$emit('listing-purchase-error', {

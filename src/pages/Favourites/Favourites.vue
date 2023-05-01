@@ -574,10 +574,10 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
+      if(!this.userStore.user) throw new Error('User not logged in');
       this.SetPreventingExitListener(true);
-      const address = this.userStore.walletAddress;
       try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;

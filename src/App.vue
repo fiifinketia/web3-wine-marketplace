@@ -18,6 +18,11 @@ const customIcons: { [key: string]: string } = {
   'app:USDC-icon': 'img:/currencies/USDC-icon.svg',
   'app:USDT-icon': 'img:/currencies/USDT-icon.svg',
   'app:WIVA-icon': 'img:/currencies/WIVA-icon.svg',
+	'app:caution': 'img:/icons/caution-icon.svg',
+	'app:verify-user': 'img:/icons/verify-account-icon.svg',
+	'app:verify-complete': 'img:/icons/verification-completed.svg',
+	'app:verify-pending': 'img:/icons/verification-pending.svg',
+	'app:verify-failed': 'img:/icons/verification-failed.svg'
 };
 export default defineComponent({
   name: 'App',
