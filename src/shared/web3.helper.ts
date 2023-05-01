@@ -4,8 +4,8 @@ import ERC1155ABI from './ABIs/ERC1155.abi.json';
 import ERC20ABI from './ABIs/ERC20.abi.json';
 
 ////////////////// Return providers here //////////////////
-const WindowWeb3Provider: ethers.providers.Web3Provider =
-  new ethers.providers.Web3Provider(window.ethereum);
+const WindowWeb3Provider: ethers.providers.Web3Provider | undefined =
+  window.ethereum ? new ethers.providers.Web3Provider(window.ethereum) : undefined;
 
 const Web3MumbaiProvider: ethers.providers.JsonRpcProvider =
   new ethers.providers.JsonRpcProvider(<string>process.env.MUMBAI_PROVIDER_URL);

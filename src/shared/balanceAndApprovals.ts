@@ -58,7 +58,9 @@ export async function HandleFulfillmentApprovals(owner: boolean, address: string
 		tokenID = order.parameters.consideration[0].identifierOrCriteria
 	}
 
-	const signer = WindowWeb3Provider.getSigner();
+	const signer = WindowWeb3Provider?.getSigner();
+
+	if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
 
 	if (!owner) {
 		const contract = ERC20_ContractWithSigner(ERC20Address, signer);

@@ -67,10 +67,10 @@ export async function CreateERC721Listing(
 	listingCurrency: string,
   expirationDate: string
 ) {
-	const signer = WindowWeb3Provider.getSigner();
+	const signer = WindowWeb3Provider?.getSigner();
+  if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
 	const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
-	const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
-	const decimalOfToken = <number> await ERC20Contract.decimals();
+	const decimalOfToken = <number> await ERC721Contract.decimals();
 
 	await balanceAndApprovals(
 		address,
@@ -103,9 +103,7 @@ export async function CreateERC721Listing(
 			fees: [
 				{
 					basisPoints: Number(process.env.WIV_FEE),
-					recipient:
-						process.env.WIV_FEE_RECEIVER ||
-						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
+					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
 			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
@@ -166,17 +164,19 @@ export async function CreateERC721Offer(
     user.verificationStatus === 'NOT_STARTED' ||
     user.verificationStatus === 'FAILED' ||
     user.verificationStatus === 'PENDING'
-  )
+  ) {
     throw new Error('User is not verified');
+  }
 
-	const signer = WindowWeb3Provider.getSigner();
+	const signer = WindowWeb3Provider?.getSigner();
+	if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
 	const contract = ERC20_ContractWithSigner(offerCurrency, signer);
 	const decimalOfToken = <number> await contract.decimals();
 
 	await balanceAndApprovals(
 		address,
 		'ERC20',
-		ERC20_ContractWithSigner(offerCurrency, signer),
+		contract,
 		'',
 		offerPrice,
 		decimalOfToken
@@ -258,8 +258,9 @@ export async function FulfillBasicOrder(
     user.verificationStatus === 'NOT_STARTED' ||
     user.verificationStatus === 'FAILED' ||
     user.verificationStatus === 'PENDING'
-  )
+  ) {
     throw 'User is not verified';
+  }
 	const { seaport } = await GetWeb3();
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
 	const body = {
@@ -344,5 +345,7 @@ export async function CancelSingleOrder(
       apiKey: APIKeyString,
     };
     axios.post(cancelOrderURL, requestToCancel);
+  } else {
+    throw new Error('Please reconnect/install Metamask wallet to continue')
   }
 }
