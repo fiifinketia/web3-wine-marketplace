@@ -1,5 +1,5 @@
 <template>
-  <q-dialog transition-show="scale" transition-hide="scale">
+  <q-dialog transition-show="scale" transition-hide="scale" persistent>
     <q-card class="q-pa-none dialog-confirm-box column items-center">
       <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
         <img src="../../assets/unlist-order.svg" />

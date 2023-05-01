@@ -1,5 +1,5 @@
 <template>
-  <q-dialog transition-show="scale" transition-hide="scale">
+  <q-dialog transition-show="scale" transition-hide="scale" persistent>
     <q-card class="q-pa-sm dialog-confirm-box-long column items-center">
       <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
         <span class="dialog-delete-action"> Please confirm the action. </span>
