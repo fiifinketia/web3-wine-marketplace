@@ -60,7 +60,7 @@ export async function HandleFulfillmentApprovals(owner: boolean, address: string
 
 	const signer = WindowWeb3Provider?.getSigner();
 
-	if(!signer) return;
+	if(!signer) throw new Error('Please install metamask wallet to continue');
 
 	if (!owner) {
 		const contract = ERC20_ContractWithSigner(ERC20Address, signer);
