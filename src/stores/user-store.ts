@@ -52,6 +52,21 @@ export const useUserStore = defineStore(
       }
     };
 
+    const updateUsername = async (username: string) => {
+    	const updatedUser = await axios.put(
+		'http://localhost:3600/users/' + walletAddress.value,
+		{
+			username,
+		},
+		{
+			headers: {
+				'x-api-key': APIKeyString,
+			}
+		}
+	)
+	user.value = updatedUser.data;
+    }
+
     const checkConnection = async () => {
       const connectedAccounts: string[] = await window.ethereum.request({
         method: 'eth_accounts',
@@ -97,6 +112,7 @@ export const useUserStore = defineStore(
       // provider,
       walletAddress,
       connectWallet,
+      updateUsername,
       getWalletBalance,
       getWalletAddress,
       checkConnection,

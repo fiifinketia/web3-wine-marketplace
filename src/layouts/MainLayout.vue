@@ -56,7 +56,15 @@
   </div>
 
   <!---------------------------- /MY WALLET ---------------------------->
+  <!---------------------------- SETTINGS ---------------------------->
+ <div v-if="userStore.user && showSettings" class="settings-background row justify-end hidden">
+    <SettingsDialog
+      v-model="showSettings"
+      @close-settings="showSettings = false"
+    />
+  </div>
 
+  <!---------------------------- /SETTINGS ---------------------------->
 	<!-- Terms and Conditions -->
 	<q-dialog v-model="showTermsAndConditions" position="left" full-height class="terms-and-conditions-background">
 		<q-card class="terms-and-conditions-container column justify-between">
@@ -97,7 +105,8 @@
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
     @openConnectWallet="showConnectWallet = true"
-    @openMyWallet="showMyWallet = true"
+    openMyWallet="showMyWallet = true"
+    @openSettings="showSettings = true"
   />
   <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
@@ -239,7 +248,7 @@
                     <q-avatar size="24px">
                       <img :src="userStore.user?.avatar" />
                     </q-avatar>
-                    {{ walletAddress.slice(0, 10) }}...
+                    {{ userStore.user.username || walletAddress.slice(0, 10) }}
                   </q-chip>
                 </q-toolbar>
                 <q-list>
@@ -340,7 +349,7 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-close-popup clickable>
+                  <q-item v-close-popup clickable @click="showSettings = true">
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
@@ -426,6 +435,7 @@ import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
 import WalletDialog from './components/WalletDialog.vue';
+import SettingsDialog from './components/SettingsDialog.vue'
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -437,6 +447,7 @@ export default defineComponent({
     BurgerMenu,
     SuggestedWines,
     WalletDialog,
+    SettingsDialog,
   },
   data() {
     const userStore = useUserStore();
@@ -448,6 +459,7 @@ export default defineComponent({
     return {
       showBurgerMenu: false,
       showMyWallet: false,
+      showSettings: false,
       showConnectWallet: false,
 			showTermsAndConditions: false,
       userStore,

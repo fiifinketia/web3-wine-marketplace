@@ -20,6 +20,7 @@ export interface UserModel {
   email?: string;
   firstName?: string;
   lastName?: string;
+  username: string;
   phone?: string;
   dob?: string;
   isLegal: boolean;
