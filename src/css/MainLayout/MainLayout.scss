@@ -188,6 +188,48 @@ body {
   height: 22px;
 }
 
+.wiv-primary-button {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 1rem;
+	line-height: 29px;
+	text-align: center;
+	color: #ffffff;
+	text-decoration: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 25px !important;
+	width: 290px;
+	height: 2.5rem;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+}
+
+.terms-and-conditions-btns {
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.terms-and-conditions-btn-accept {
+	background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) !important;
+	border-radius: 6px;
+	padding-right: 1rem !important;
+	padding-left: 1rem !important;
+}
+
+.terms-and-conditions-btn-decline {
+	color: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);	
+	border-color: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) !important;
+	border-radius: 6px;
+	padding-left: 1rem !important;
+	padding-right: 1rem !important;
+}
+
 @media screen and (min-width: 1512px) {
   .fit {
     /* width: 100% !important;

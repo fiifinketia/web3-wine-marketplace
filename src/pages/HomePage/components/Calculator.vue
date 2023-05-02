@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import '../../../css/Homepage/Calcualtor.css';
 export default defineComponent({
   name: 'WineCalculator',

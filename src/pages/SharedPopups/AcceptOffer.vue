@@ -1,5 +1,5 @@
 <template>
-  <q-dialog transition-show="scale" transition-hide="scale">
+  <q-dialog transition-show="scale" transition-hide="scale" persistent>
     <q-card class="q-pa-sm dialog-confirm-box-long column items-center">
       <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
         <span class="dialog-delete-action"> Please confirm the action. </span>
@@ -25,6 +25,37 @@
           <span class="dialog-cancel-gr-text"> Wait for better offer </span>
         </q-btn>
         <q-btn
+          v-if="!userStore.user"
+          class="dialog-confirm"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+          unelevated
+          no-caps
+          flat
+          disable
+          size="md"
+        >
+          Please Connect Wallet
+        </q-btn>
+        <router-link
+          v-else-if="
+            userStore.user.verificationStatus !== 'VERIFIED'
+          "
+          :to="
+            '/profile/' +
+            userStore.user.walletAddress +
+            '/kyc' +
+            '?redirect=' +
+            $route.path +
+            $route.query +
+            $route.hash
+          "
+          class="q-ma-sm q-pa-xs text-warning"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+        >
+          Complete KYC to offer
+        </router-link>
+        <q-btn
+          v-else
           class="dialog-confirm"
           :style="$q.screen.width > 600 ? '' : 'width: 100%'"
           unelevated
@@ -43,6 +74,7 @@
 import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/dialog.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   props: {
@@ -55,6 +87,11 @@ export default defineComponent({
     },
   },
   emits: ['accept-offer'],
+  data() {
+    return {
+      userStore: useUserStore(),
+    };
+  },
   methods: {
     async AcceptOffer() {
       this.$emit('accept-offer', {

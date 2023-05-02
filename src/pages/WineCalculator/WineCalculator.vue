@@ -481,7 +481,7 @@
 
 <script lang="ts">
 import '../../css/WineCalculator/WineCalculator.css';
-import { defineComponent } from 'vue-demi';
+import { defineComponent } from 'vue';
 import { ref } from 'vue';
 
 function initialData() {

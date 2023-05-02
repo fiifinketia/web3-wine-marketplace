@@ -60,14 +60,7 @@
               @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-img
-                  src="../../assets/icons/currencies/USDC-Icon.svg"
-                  :style="
-                    $q.screen.width > 350
-                      ? 'height: 20px; width: 20px'
-                      : 'height: 15px; width: 16px'
-                  "
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(nft.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="favorites-b-text-active">
                   {{ ToInt(nft.orderDetails.listingPrice) }}
                 </span>
@@ -158,6 +151,7 @@
           :error-title="errorTitle"
           :error-message="errorMessage"
         />
+        <OngoingTransactionDialog v-model="ongoingTxn"/>
       </div>
     </div>
     <div
@@ -216,6 +210,8 @@ import { AssociateOwned } from 'src/shared/association.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderAccepted from '../SharedPopups/OrderAccepted.vue';
 import ProfileErrors from '../SharedPopups/ProfileErrors.vue';
+import TxnOngoing from '../SharedPopups/TxnOngoing.vue';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -226,7 +222,8 @@ export default defineComponent({
     FavsError: ErrorFavorites,
     FavsMissing: MissingFavorites,
     AcceptedOrderDialog: OrderAccepted,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
   },
   data() {
     const userStore = useUserStore();
@@ -250,7 +247,11 @@ export default defineComponent({
 
       errorType: '',
       errorTitle: '',
-      errorMessage: ''
+      errorMessage: '',
+
+      ongoingTxn: false,
+
+      GetCurrencyLabel
     };
   },
   async mounted() {
@@ -259,6 +260,19 @@ export default defineComponent({
     await this.startPageTour();
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async getAllFavorites(walletAddress: string, brand: string) {
       this.isLoading = true;
       try {
@@ -428,9 +442,6 @@ export default defineComponent({
 
 			if(this.emptyRequest || this.emptySearch || this.erroredOut) return;
 
-      // Clear all previous steps
-      this.$shepherd.complete();
-
       // Start the tour
 
       this.$shepherd.addSteps([
@@ -445,13 +456,17 @@ export default defineComponent({
           buttons: [
             {
               text: 'Next',
-              action: this.$shepherd.next,
+              action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-search-input');
+		},
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
                 this.$shepherd.cancel();
+		this.$shepherd.removeStep('favorites-search-input');
                 this.tourStore.setFavoritesCompleted();
               },
             },
@@ -468,7 +483,10 @@ export default defineComponent({
           buttons: [
             {
               text: 'Next',
-              action: this.$shepherd.next,
+              action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-search-button');
+		},
             },
             {
               text: 'Skip',
@@ -476,6 +494,7 @@ export default defineComponent({
                 // Cancel and set favoritesCompleted to true
                 this.$shepherd.cancel();
                 this.tourStore.setFavoritesCompleted();
+		this.$shepherd.removeStep('favorites-search-button');
               },
             },
           ],
@@ -499,7 +518,10 @@ export default defineComponent({
             buttons: [
               {
                 text: 'Next',
-                action: this.$shepherd.next,
+                action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-item');
+		},
               },
               {
                 text: 'Skip',
@@ -507,6 +529,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.$shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
+		this.$shepherd.removeStep('favorites-item');
                 },
               },
             ],
@@ -528,6 +551,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.$shepherd.complete();
                   this.tourStore.setFavoritesCompleted();
+		  this.$shepherd.removeStep('favorites-item-remove');
                 },
               },
             ],
@@ -560,9 +584,10 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
-      const address = this.userStore.walletAddress;
+      if(!this.userStore.user) throw new Error('User not logged in');
+      this.SetPreventingExitListener(true);
       try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
@@ -574,6 +599,7 @@ export default defineComponent({
           errorTitle: 'Sorry, the purchase failed',
           errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
         });
+        this.SetPreventingExitListener(false);
       }
     },
     HandleError(err: {

@@ -65,6 +65,7 @@ import LoadingMetadata from './components/LoadingMetadata.vue';
 import ListingExists from '../SharedPopups/ListingExists.vue';
 import { useTourStore } from 'src/stores/tour-state';
 import { StepOptions } from 'vue-shepherd';
+import { useListingStore } from 'src/stores/listing-store';
 
 export default defineComponent({
   name: 'MetadataPage',
@@ -82,6 +83,7 @@ export default defineComponent({
   data() {
     const userStore = useUserStore();
 		const tourStore = useTourStore();
+    const listingsStore = useListingStore();
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
@@ -89,6 +91,7 @@ export default defineComponent({
       userStore,
 			tourStore,
       tab: ref('about'),
+      listingsStore,
       tokenExists: false,
       loadingMetadata: true,
       loadingPrices: true,
@@ -268,12 +271,16 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+		this.$shepherd.next();
+		this.$shepherd.removeStep('metadata-details');
+}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
+		this.$shepherd.removeStep('metadata-details');
                 this.$shepherd.cancel();
               },
             },
@@ -289,13 +296,17 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+		this.$shepherd.next();
+		this.$shepherd.removeStep('metadata-listing-price');
+		}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
+		this.$shepherd.cancel();
+		this.$shepherd.removeStep('metadata-listing-price');
               },
             },
           ],
@@ -310,13 +321,17 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+	this.$shepherd.next();
+	this.$shepherd.removeStep('metadata-bidding-price');
+}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.$shepherd.cancel();
+	this.$shepherd.removeStep('metadata-bidding-price')
               },
             },
           ],
@@ -339,6 +354,7 @@ export default defineComponent({
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.$shepherd.complete();
+		this.$shepherd.removeStep('metadata-checkout-buttons')
               },
             },
           ],

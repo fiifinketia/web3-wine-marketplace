@@ -31,7 +31,11 @@
         v-if="$q.screen.width > 1020"
         class="row items-center incoming-column-price-floor"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="offer.lowestOffer"
+          :name="`app:${GetCurrencyLabel(offer.lowestOfferCurrency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number">
           {{ !!offer.lowestOffer ? parseFloat(offer.lowestOffer).toFixed(1) : '0.00' }}
         </span>
@@ -40,7 +44,11 @@
         v-if="$q.screen.width > 600"
         class="row items-center incoming-column-price-offered"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="offer.offer"
+          :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
@@ -56,9 +64,13 @@
             >
               <span class="incoming-tooltip-label"> Floor Price </span>
               <div class="row items-center">
-                <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+                <q-icon
+                  v-if="offer.lowestOffer"
+                  :name="`app:${GetCurrencyLabel(offer.lowestOfferCurrency)}-icon`"
+                  size="16px"
+                />
                 <span class="incoming-tooltip-text q-pl-xs">
-                  {{ parseFloat(offer.offer).toFixed(1) }}
+                  {{ parseFloat(offer.lowestOffer).toFixed(1) }}
                 </span>
               </div>
             </div>
@@ -78,7 +90,11 @@
         class="incoming-column-price-offered column"
       >
         <div class="row q-pb-xs">
-          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <q-icon
+            v-if="offer.offer"
+            :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+            size="20px"
+          />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
@@ -149,6 +165,8 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { defineComponent, PropType } from 'vue';
 import { IncomingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
+
 export default defineComponent({
   components: {
     NFTDialog: NFTDetails,
@@ -168,6 +186,8 @@ export default defineComponent({
       floorPrice: '',
       from: '',
       tab: 'incoming',
+
+      GetCurrencyLabel
     };
   },
   methods: {

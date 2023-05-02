@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent, ref } from 'vue';
 import '../../css/NewWine/NewWine.css';
 import { getAllNFTs } from './service/getAllNFTs.service';
 import { sendWineToList } from './service/sendWineToList.service';

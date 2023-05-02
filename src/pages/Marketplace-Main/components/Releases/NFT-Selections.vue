@@ -47,14 +47,7 @@
               @click.stop
             >
               <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-img
-                  src="../../../../assets/icons/currencies/USDC-Icon.svg"
-                  :style="
-                    $q.screen.width > 350
-                      ? 'height: 20px; width: 20px'
-                      : 'height: 15px; width: 16px'
-                  "
-                />
+                <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="releases-price-text-b-active">
                   {{ ToInt(token.orderDetails.listingPrice) }}
                 </span>
@@ -157,17 +150,18 @@
           </q-list>
         </q-menu>
       </q-card>
-      <AcceptedOrderDialog
-        v-model="openOrderAccepted"
-        :order-accepted="'listing'"
-      />
-      <ErrorDialog
-        v-model="openErrorDialog"
-        :error-type="errorType"
-        :error-title="errorTitle"
-        :error-message="errorMessage"
-      />
     </div>
+    <AcceptedOrderDialog
+      v-model="openOrderAccepted"
+      :order-accepted="'listing'"
+    />
+    <ErrorDialog
+      v-model="openErrorDialog"
+      :error-type="errorType"
+      :error-title="errorTitle"
+      :error-message="errorMessage"
+    />
+    <OngoingTransactionDialog v-model="ongoingTxn"/>
   </div>
   <ErrorView
     v-else-if="!isLoading && !!erroredOut"
@@ -208,15 +202,18 @@ import { defineComponent, PropType } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
 import { AddFavorites, RemoveFavorites } from '../../../Favourites/services/FavoritesFunctions';
 import NewlyError from './NewlyError.vue';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 
 export default defineComponent({
   components: {
     ErrorView: NewlyError,
     AcceptedOrderDialog: OrderAccepted,
-    ErrorDialog: ProfileErrors
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
   },
   props: {
     nftSelections: {
@@ -248,16 +245,32 @@ export default defineComponent({
 
       openOrderAccepted: false,
       openErrorDialog: false,
+      GetCurrencyLabel,
 
       errorType: '',
       errorTitle: '',
-      errorMessage: ''
+      errorMessage: '',
+
+      ongoingTxn: false
     };
   },
   beforeUpdate() {
     this.nfts = this.nftSelections;
   },
   methods: {
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
     async addRemoveFavorites(
       tokenID: string,
       cAddress: string,
@@ -379,15 +392,17 @@ export default defineComponent({
       brand: string,
       image: string
     ) {
-      const address = this.userStore.walletAddress;
+			if(!this.userStore.user) throw new Error('User not logged in');
+      this.SetPreventingExitListener(true);
       try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
         }, 2000);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
+        this.SetPreventingExitListener(false);
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',

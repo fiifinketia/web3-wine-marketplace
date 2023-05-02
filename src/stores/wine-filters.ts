@@ -29,6 +29,24 @@ export const useWineFilters = defineStore('wineFilters', {
         value: 'Descending',
       },
     ],
+    currency: [] as string[],
+    currencyOptions: [
+      {
+        label: 'USDC',
+        value: process.env.USDC_CURRENCY,
+        icon: 'app:USDC-icon'
+      },
+      {
+        label: 'USDT',
+        value: process.env.USDT_CURRENCY,
+        icon: 'app:USDT-icon'
+      },
+      {
+        label: 'WIVA',
+        value: process.env.WIVA_CURRENCY,
+        icon: 'app:WIVA-icon'
+      },
+    ],
     brand: [''],
     brandOptions: [] as { label: string; value: string }[],
     origin: [''],
@@ -231,12 +249,26 @@ export const useWineFilters = defineStore('wineFilters', {
                 filters.push('listed[]=0');
               }
             }
+            break;
+          case 'currency':
+            if (state.currency.length > 0) {
+              filters.push('currency[]=' + state.currency.join('&currency[]='))
+            }
         }
       });
       if (state.searchQuery) filters.push('search=' + state.searchQuery);
       return filters.join('&');
     },
     getAllFiltersArray: state => {
+      const currency = state.currency.map(f => {
+        if (f == process.env.WIVA_CURRENCY) {
+          return 'WIVA'
+        } else if (f == process.env.USDC_CURRENCY) {
+          return 'USDC'
+        } else if (f == process.env.USDT_CURRENCY) {
+          return 'USDT'
+        }
+      });
       const filters = [
         ...state.type,
         ...state.brand,
@@ -252,6 +284,7 @@ export const useWineFilters = defineStore('wineFilters', {
         ...state.format,
         ...state.investmentGrade,
         state.listedOnly,
+        ...currency
       ];
       if (!!state.price.min || !!state.price.max) {
         let priceFilter = '';
@@ -276,35 +309,11 @@ export const useWineFilters = defineStore('wineFilters', {
     },
   },
   actions: {
-    setType(type: string[]) {
-      this.type = type;
-    },
-    setSortedAtoZ(sortedAtoZ: string) {
-      this.sortedAtoZ = sortedAtoZ;
-    },
     setBrand(brand: string[]) {
       this.brand = brand;
     },
-    setOrigin(origin: string[]) {
-      this.origin = origin;
-    },
-    setProducer(producer: string[]) {
-      this.producer = producer;
-    },
-    setCountry(country: string[]) {
-      this.country = country;
-    },
-    setRegion(region: string[]) {
-      this.region = region;
-    },
-    setAppelation(appellation: string[]) {
-      this.appellation = appellation;
-    },
     setPrice(price: { min: number; max: number }) {
       this.price = price;
-    },
-    setSearchQuery(searchQuery: string) {
-      this.searchQuery = searchQuery;
     },
     setFilterMode(mode: string) {
       this.filterMode = mode;
@@ -313,6 +322,17 @@ export const useWineFilters = defineStore('wineFilters', {
       this.filterKey = this.filterKey + 1;
     },
     removeFilter(value: string) {
+      switch (value) {
+        case 'WIVA':
+          value = <string> process.env.WIVA_CURRENCY
+          break;
+        case 'USDC':
+          value = <string> process.env.USDC_CURRENCY
+          break;
+        case 'USDT':
+          value = <string> process.env.USDT_CURRENCY
+          break;
+      }
       const checkForPriceFilter = value.split(' ')[0];
       if (checkForPriceFilter == 'from' || checkForPriceFilter == 'to') {
         this.price = {
@@ -330,6 +350,7 @@ export const useWineFilters = defineStore('wineFilters', {
       this.LWIN = this.LWIN.filter(i => i !== value);
       this.wineCase = this.wineCase.filter(i => i !== value);
       this.heritage = this.heritage.filter(i => i !== value);
+      this.currency = this.currency.filter(i => i !== value);
       this.format = this.format.filter(i => i !== value);
       this.investmentGrade = this.investmentGrade.filter(i => i !== value);
       this.listedOnly =
@@ -359,6 +380,7 @@ export const useWineFilters = defineStore('wineFilters', {
       this.heritage = [];
       this.format = [];
       this.investmentGrade = [];
+      this.currency = [];
       this.listedOnly = '';
       this.sortedAtoZ = '';
       this.price = {

@@ -107,14 +107,7 @@
             v-else-if="!!token.listingPrice && !token.listingCancellationStatus"
             class="row items-center q-gutter-x-xs"
           >
-            <q-img
-              src="../../../../assets/icons/currencies/USDC-Icon.svg"
-              :style="
-                $q.screen.width > 350
-                  ? 'height: 20px; width: 20px'
-                  : 'height: 15px; width: 16px'
-              "
-            />
+            <q-icon :name="`app:${GetCurrencyLabel(token.listingCurrency)}-icon`" class="currency-logo" />
             <span class="new-list-price">
               {{ token.listingPrice }}
             </span>
@@ -129,6 +122,7 @@
 import { mapState } from 'pinia';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { useListableFilters } from 'src/stores/listable-filters';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -137,6 +131,7 @@ export default defineComponent({
     const listableFiltersStore = useListableFilters();
     return {
       listableFiltersStore,
+      GetCurrencyLabel
     };
   },
   computed: {

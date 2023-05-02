@@ -60,6 +60,28 @@
         </q-list>
       </q-expansion-item>
 
+      <!-- Currency filter -->
+      <q-expansion-item
+        label="Listing currencies"
+        header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+      >
+        <q-list class="sidebar-active-border rounded-borders q-my-sm">
+          <q-option-group
+            v-model="wineFiltersStore.currency"
+            :options="wineFiltersStore.currencyOptions"
+            type="checkbox"
+            class="sidebar-options"
+          >
+            <template #label="opt">
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon :name="opt.icon" size="1.5em"></q-icon>
+                <span>{{ opt.label }}</span>
+              </div>
+            </template>
+          </q-option-group>
+        </q-list>
+      </q-expansion-item>
+
       <!-- Type filter -->
       <q-expansion-item
         label="Type"

@@ -375,7 +375,7 @@ export default defineComponent({
       }
     },
     UpdateListableNFTWithPrice(
-      listed: ListableToken | TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean },
+      listed: ListableToken,
       warning: boolean
     ) {
       if (!warning) {
@@ -388,6 +388,7 @@ export default defineComponent({
           nft.network == listed.network
       );
       this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
+      this.listableNFTs[listedIndex].listingCurrency = listed.listingCurrency;
       this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
     },
     RemoveListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {

@@ -54,6 +54,16 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
+              v-if="nft.listingDetails.expTime"
+              :class="$q.screen.width > 600 ? '' : 'column items-center'"
+              style="margin-bottom: 14px;"
+            >
+              <ListingExpTimer
+                :time-left="nft.listingDetails.expTime"
+                style="max-width: 500px;"
+              />
+            </div>
+            <div
 							id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
@@ -73,12 +83,8 @@
                 "
                 class="row items-center"
               >
-                <div>
-                  <q-img src="../../../assets/usdc.svg" width="28px" />
-                </div>
-                <div class="price1">
-                  {{ nft.listingDetails.listingPrice }}
-                </div>
+                <q-icon :name="`app:${GetCurrencyLabel(nft.listingDetails.currency)}-icon`" size="28px"/>
+                <span class="price1 q-pl-sm"> {{ nft.listingDetails.listingPrice }} </span>
               </div>
               <div
                 v-else-if="nft.listingDetails.listingPrice == null"
@@ -98,12 +104,12 @@
             >
               <div class="bid-text">Highest bid from</div>
               <div class="row items-center q-pt-sm">
-                <div>
-                  <q-img src="../../../assets/usdc.svg" width="20px" />
-                </div>
-                <div class="bid-price">
-                  {{ nft.offerDetails.highestBid || '--.--' }}
-                </div>
+                <q-icon
+                  v-if="!!nft.offerDetails.highestBid"
+                  :name="`app:${GetCurrencyLabel(nft.offerDetails.highestBidCurrency)}-icon`"
+                  size="20px"
+                />
+                <span class="bid-price q-pl-sm"> {{ nft.offerDetails.highestBid || '--.--' }} </span>
               </div>
             </div>
           </div>
@@ -150,7 +156,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="AcceptOffer(nft.listingDetails.orderHash, nft.brand, nft.image)"
+          @click="openPurchaseListingDialog = true"
         >
           Buy now
         </q-btn>
@@ -188,7 +194,7 @@
       :is-edit="false"
       @listing-edit-close="openCreateListingDialog = false"
       @listing-error-dialog="HandleError"
-      @listable-nft-listed="SetTimeoutOnCompletedDialog('listing')"
+      @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
       @listing-exists="listed => UpdateListingStatus(listed)"
     />
 
@@ -196,7 +202,8 @@
       v-model="openCreateOfferDialog"
       :brand="nft.brand"
       :highest-offer="nft.offerDetails.highestBid"
-      :highest-offer-currency="nft.offerDetails?.highestBidCurrency"
+      :highest-offer-currency="nft.offerDetails.highestBidCurrency"
+      :highest-offer-exp-time="nft.offerDetails.highestBidExpTime"
       :image="nft.image"
       :network="nft.network"
       :smart-contract-address="nft.smartContractAddress"
@@ -226,6 +233,19 @@
       :error-message="errorMessage"
     />
 
+    <PurchaseListingDialog
+      v-model="openPurchaseListingDialog"
+      :brand="nft.brand"
+      :image="nft.image"
+      :listing-currency="nft.listingDetails.currency"
+      :listing-price="nft.listingDetails.listingPrice"
+      :order-hash="nft.listingDetails.orderHash"
+      :wallet-address="walletAddress"
+      :listing-exp-date="nft.listingDetails.expTime"
+      @listing-purchase-error="HandleError"
+      @listing-purchased="PurchaseListingSuccess"
+    />
+
     <AcceptedOrderDialog
       v-model="openOrderAccepted"
       :order-accepted="'listing'"
@@ -243,11 +263,13 @@ import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import { FulfillBasicOrder } from '../services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import OutgoingEdit from 'src/pages/SharedPopups/OutgoingEdit.vue';
 import ListingUnlist from 'src/pages/SharedPopups/ListingUnlist.vue';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
+import OrderExpTimer from 'src/pages/SharedPopups/OrderExpTimer.vue';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -258,7 +280,9 @@ export default defineComponent({
 
     OrderProcessed: OrderProcessed,
     ErrorDialog: ProfileErrors,
-    AcceptedOrderDialog: OrderAccepted
+    AcceptedOrderDialog: OrderAccepted,
+    PurchaseListingDialog: PurchaseListing,
+    ListingExpTimer: OrderExpTimer
   },
   props: {
     nft: {
@@ -274,6 +298,7 @@ export default defineComponent({
       openCreateOfferDialog: false,
       openOrderCompletedDialog: false,
       openErrorDialog: false,
+      openPurchaseListingDialog: false,
       openOrderAccepted: false,
 
       errorType: '',
@@ -283,6 +308,9 @@ export default defineComponent({
       orderType: '',
 
       ongoingListingTransaction: false,
+
+      GetCurrencyLabel,
+			userStore: useUserStore()
     };
   },
   computed: {
@@ -332,22 +360,12 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
-    async AcceptOffer(orderHash: string, brand: string, image: string) {
-      const address = this.walletAddress;
-      try {
-        await FulfillBasicOrder(orderHash, brand, false, address, image);
-        this.openOrderAccepted = true;
-        setTimeout(() => {
-          this.openOrderAccepted = false;
-        }, 2500);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        this.HandleError({
-          errorType: 'accept',
-          errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
-        });
-      }
+    async PurchaseListingSuccess() {
+      this.openPurchaseListingDialog = false;
+      this.openOrderAccepted = true;
+      setTimeout(() => {
+        this.openOrderAccepted = false;
+      }, 2500);
     },
     UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
       this.$emit('listing-exists', listed);

@@ -19,13 +19,14 @@ interface Fee {
   recipient: string;
   basisPoints: number;
 }
-export interface OrderListingModel extends OrderWithCounter, TokenIdentifier {
+export interface OrderModel extends OrderWithCounter, TokenIdentifier {
   orderHash: string;
   network: string;
   from: string;
   brand: string;
   image: string;
-  highestBid?: string;
+  offerPrice?: string;
+  offerCurrency?: string;
   nonce?: number;
 }
 
@@ -51,7 +52,7 @@ export interface SeaportInstance {
   network: string;
 }
 
-export interface UpdateListingRequest extends TokenIdentifier {
+export interface FulfillOrderRequest extends TokenIdentifier {
 	readonly notificationID: number;
 	readonly brand: string;
 	readonly image: string;

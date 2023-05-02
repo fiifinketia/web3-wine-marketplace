@@ -30,7 +30,11 @@
         v-if="$q.screen.width > 600"
         class="row items-center outgoing-column-own-offer"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="offer.offer"
+          :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
@@ -53,7 +57,11 @@
         v-if="$q.screen.width > 600"
         class="row items-center outgoing-column-highest-offer"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="offer.highestOffer"
+          :name="`app:${GetCurrencyLabel(offer.highestOfferCurrency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number">
           {{ !!offer.highestOffer ? parseFloat(offer.highestOffer).toFixed(1) : '0.00' }}
         </span>
@@ -69,7 +77,11 @@
         class="outgoing-column-own-offer column"
       >
         <div class="row q-pb-xs">
-          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <q-icon
+            v-if="offer.offer"
+            :name="`app:${GetCurrencyLabel(offer.currency)}-icon`"
+            size="20px"
+          />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
@@ -101,6 +113,8 @@
 import { defineComponent, PropType } from 'vue';
 import { OutgoingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
+
 export default defineComponent({
   components: {
     NFTDialog: NFTDetails,
@@ -120,6 +134,8 @@ export default defineComponent({
       offerEndTime: '',
       highestOffer: '',
       tab: 'outgoing',
+
+      GetCurrencyLabel
     };
   },
   methods: {

@@ -54,7 +54,9 @@ interface IncomingOffersResponse
 interface OutgoingOffersResponse
   extends OfferModel,
     HighestOfferModel,
-    TokenIdentifier {}
+    TokenIdentifier {
+      highestOfferExpTime: number | null;
+    }
 
 interface OrdersResponse {
   incoming: IncomingOffersResponse[];

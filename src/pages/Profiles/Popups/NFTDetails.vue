@@ -18,7 +18,7 @@
           <div class="row items-center q-gutter-x-xs">
             <img
               class="nft-dialog-currency"
-              src="../../../assets/icons/currencies/USDC-Icon.svg"
+              src="../../../assets/icons/currencies/USDC-logo.svg"
             />
             <span class="nft-dialog-text-highlight"> {{ highestOffer }} </span>
           </div>
@@ -34,7 +34,7 @@
           <div class="row items-center q-gutter-x-xs">
             <img
               class="nft-dialog-currency"
-              src="../../../assets/icons/currencies/USDC-Icon.svg"
+              src="../../../assets/icons/currencies/USDC-logo.svg"
             />
             <span class="nft-dialog-text-default"> {{ floorPrice }} </span>
           </div>
@@ -62,7 +62,7 @@
           <div class="row items-center q-gutter-x-xs">
             <img
               class="nft-dialog-currency"
-              src="../../../assets/icons/currencies/USDC-Icon.svg"
+              src="../../../assets/icons/currencies/USDC-logo.svg"
             />
             <span class="nft-dialog-text-default"> {{ highestOffer }} </span>
           </div>

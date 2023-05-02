@@ -31,7 +31,11 @@
         v-if="$q.screen.width > 600"
         class="row items-center listings-column-price"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="listing.listingPrice"
+          :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
@@ -44,7 +48,11 @@
             <div class="row items-center justify-between">
               <span class="listing-tooltip-label"> Highest Offer </span>
               <div class="row items-center">
-                <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+                <q-icon
+                  v-if="listing.highestOffer"
+                  :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
+                  size="16px"
+                />
                 <span class="listing-tooltip-price-highest q-pl-xs">
                   {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
                 </span>
@@ -57,7 +65,11 @@
         v-if="$q.screen.width > 1265"
         class="row items-center listings-column-highestOffer"
       >
-        <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+        <q-icon
+          v-if="listing.highestOffer"
+          :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
+          size="20px"
+        />
         <span class="profile-nft-number-highlight">
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
@@ -69,7 +81,11 @@
       </div>
       <div v-if="$q.screen.width <= 600" class="listings-column-yours column">
         <div class="row q-pb-xs">
-          <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
+          <q-icon
+            v-if="listing.listingPrice"
+            :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
+            size="20px"
+          />
           <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         </div>
         <span class="profile-nft-number-highlight">
@@ -104,6 +120,7 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   components: {
@@ -123,6 +140,8 @@ export default defineComponent({
       brand: '',
       highestOffer: '',
       tab: 'listings',
+
+      GetCurrencyLabel
     };
   },
   methods: {
