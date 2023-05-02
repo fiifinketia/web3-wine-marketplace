@@ -492,18 +492,6 @@ export default defineComponent({
           const { result: nfts } = await RetrieveFilteredNFTs(
             `${this.wineFiltersStore.getFiltersQueryParams}&walletAddress=${this.userStore.walletAddress}`
           );
-					// TODO: Implement in backend API Place NFTs with prices first
-					nfts.sort((a, b) => {
-						if (a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
-							return 0;
-						} else if (a.orderDetails?.listingPrice && !b.orderDetails?.listingPrice) {
-							return -1;
-						} else if (!a.orderDetails?.listingPrice && b.orderDetails?.listingPrice) {
-							return 1;
-						} else {
-							return 0;
-						}
-					});
           this.$emit('totalTokens', nfts.length);
           this.IncorporateOwnedNFTs(nfts);
           this.erroredOut = false;
