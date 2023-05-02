@@ -271,12 +271,16 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+		this.$shepherd.next();
+		this.$shepherd.removeStep('metadata-details');
+}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
+		this.$shepherd.removeStep('metadata-details');
                 this.$shepherd.cancel();
               },
             },
@@ -292,13 +296,17 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+		this.$shepherd.next();
+		this.$shepherd.removeStep('metadata-listing-price');
+		}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
+		this.$shepherd.cancel();
+		this.$shepherd.removeStep('metadata-listing-price');
               },
             },
           ],
@@ -313,13 +321,17 @@ export default defineComponent({
           buttons: [
 						{
 							text: 'Continue',
-							action: this.$shepherd.next
+							action: () => {
+	this.$shepherd.next();
+	this.$shepherd.removeStep('metadata-bidding-price');
+}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.$shepherd.cancel();
+	this.$shepherd.removeStep('metadata-bidding-price')
               },
             },
           ],
@@ -342,6 +354,7 @@ export default defineComponent({
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.$shepherd.complete();
+		this.$shepherd.removeStep('metadata-checkout-buttons')
               },
             },
           ],

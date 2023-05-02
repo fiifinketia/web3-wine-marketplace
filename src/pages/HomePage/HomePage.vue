@@ -64,12 +64,16 @@ export default defineComponent({
           buttons: [
             {
               text: 'Continue',
-              action: this.$shepherd.next,
+              action: () => {
+		this.$shepherd.next();
+		this.$shepherd.removeStep('welcome-step');
+	      }
             },
             {
               text: 'Skip',
               action: () => {
                 this.$shepherd.cancel();
+		this.$shepherd.removeStep('welcome-step');
                 this.tourStore.setHomeCompleted();
               },
             },
@@ -92,6 +96,7 @@ export default defineComponent({
               text: 'Finish',
               action: () => {
                 this.$shepherd.complete();
+		this.$shepherd.removeStep('go-to-marketplace');
                 this.tourStore.setHomeCompleted();
               },
             }
@@ -101,7 +106,7 @@ export default defineComponent({
 
       this.$shepherd.addSteps(steps);
       this.$shepherd.start();
-			this.tourStore.setHomeCompleted();
+      this.tourStore.setHomeCompleted();
     },
     waitForLoad() {
       return new Promise<void>(resolve => {

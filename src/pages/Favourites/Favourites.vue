@@ -442,9 +442,6 @@ export default defineComponent({
 
 			if(this.emptyRequest || this.emptySearch || this.erroredOut) return;
 
-      // Clear all previous steps
-      this.$shepherd.complete();
-
       // Start the tour
 
       this.$shepherd.addSteps([
@@ -459,13 +456,17 @@ export default defineComponent({
           buttons: [
             {
               text: 'Next',
-              action: this.$shepherd.next,
+              action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-search-input');
+		},
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
                 this.$shepherd.cancel();
+		this.$shepherd.removeStep('favorites-search-input');
                 this.tourStore.setFavoritesCompleted();
               },
             },
@@ -482,7 +483,10 @@ export default defineComponent({
           buttons: [
             {
               text: 'Next',
-              action: this.$shepherd.next,
+              action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-search-button');
+		},
             },
             {
               text: 'Skip',
@@ -490,6 +494,7 @@ export default defineComponent({
                 // Cancel and set favoritesCompleted to true
                 this.$shepherd.cancel();
                 this.tourStore.setFavoritesCompleted();
+		this.$shepherd.removeStep('favorites-search-button');
               },
             },
           ],
@@ -513,7 +518,10 @@ export default defineComponent({
             buttons: [
               {
                 text: 'Next',
-                action: this.$shepherd.next,
+                action: () => {
+			this.$shepherd.next();
+			this.$shepherd.removeStep('favorites-item');
+		},
               },
               {
                 text: 'Skip',
@@ -521,6 +529,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.$shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
+		this.$shepherd.removeStep('favorites-item');
                 },
               },
             ],
@@ -542,6 +551,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.$shepherd.complete();
                   this.tourStore.setFavoritesCompleted();
+		  this.$shepherd.removeStep('favorites-item-remove');
                 },
               },
             ],
