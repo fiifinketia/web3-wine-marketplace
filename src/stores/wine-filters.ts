@@ -7,13 +7,13 @@ export const useWineFilters = defineStore('wineFilters', {
     listedOnly: '',
     listedOnlyOptions: [
       {
-        label: 'Listed',
-        value: 'Listed',
-      },
-      {
-        label: 'Unlisted',
+        label: 'Non-listed',
         value: 'Unlisted',
       },
+      {
+        label: 'Listed',
+        value: 'Listed',
+      }
     ],
     type: [''],
     typeOptions: [] as { label: string; value: string }[],
@@ -95,7 +95,7 @@ export const useWineFilters = defineStore('wineFilters', {
     getPrice: state => state.price,
     getSearchQuery: state => state.searchQuery,
     getFiltersQueryParams: state => {
-      const filters = [];
+      const filters : string[] = [];
       const keys = Object.keys(state);
       keys.forEach(key => {
         switch (key) {
@@ -251,8 +251,10 @@ export const useWineFilters = defineStore('wineFilters', {
             }
             break;
           case 'currency':
-            if (state.currency.length > 0) {
+            if (state.currency.length > 0 && state.listedOnly != 'Unlisted') {
               filters.push('currency[]=' + state.currency.join('&currency[]='))
+              filters.push('listed[]=1')
+              state.listedOnly = state.listedOnlyOptions[1].value;
             }
         }
       });
@@ -260,15 +262,18 @@ export const useWineFilters = defineStore('wineFilters', {
       return filters.join('&');
     },
     getAllFiltersArray: state => {
-      const currency = state.currency.map(f => {
-        if (f == process.env.WIVA_CURRENCY) {
-          return 'WIVA'
-        } else if (f == process.env.USDC_CURRENCY) {
-          return 'USDC'
-        } else if (f == process.env.USDT_CURRENCY) {
-          return 'USDT'
-        }
-      });
+      let currency : ('USDC' | 'USDT' | 'WIVA' | undefined)[] = [];
+      if (state.listedOnly == 'Listed') {
+        currency = state.currency.map(f => {
+          if (f == process.env.WIVA_CURRENCY) {
+            return 'WIVA'
+          } else if (f == process.env.USDC_CURRENCY) {
+            return 'USDC'
+          } else if (f == process.env.USDT_CURRENCY) {
+            return 'USDT'
+          }
+        });
+      }
       const filters = [
         ...state.type,
         ...state.brand,
