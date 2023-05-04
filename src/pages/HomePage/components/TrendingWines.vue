@@ -4,11 +4,11 @@
       <div class="trending-wines-title q-pb-lg">Trending wines</div>
       <div v class="trending-table">
         <div class="row trending-header-row">
-          <div class="trending-wine-name">Wine Name</div>
-          <div class="trending-twentyFour">24 hrs</div>
-          <div class="trending-three">3 mos</div>
-          <div>6 mos</div>
-          <div class="trending-wines-price">Price</div>
+          <span class="trending-wine-name">Wine Name</span>
+          <span class="trending-twentyFour">24 hrs</span>
+          <span class="trending-three">3 mos</span>
+          <span>6 mos</span>
+          <span class="trending-wines-price">Price</span>
         </div>
         <div class="trending-separator"></div>
         <div class="column trending-wine-rows">
@@ -17,9 +17,9 @@
             :key="item.id"
             class="row each-trending-row"
           >
-            <div class="trending-wine-name trending-wine-name-label">
+            <span class="trending-wine-name trending-wine-name-label">
               {{ item.name }}
-            </div>
+            </span>
             <div
               class="trending-twentyFour"
               :class="positive === true ? 'positive' : 'negative'"
