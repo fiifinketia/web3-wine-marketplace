@@ -28,7 +28,7 @@
         <q-tab-panel name="history">
           <WineHistory
             :nft-txn-history="txnHistory"
-            :nft-chart-data="chartData"
+            :nft-chart-data-sets="chartDataSets"
             :is-loading="loadingPrices"
             :errored-out="errorLoadingHistory"
             style="padding-bottom: 3rem"
@@ -87,7 +87,10 @@ export default defineComponent({
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
-      chartData: [] as number[][],
+      chartDataSets: {
+        wivaChart: [] as number[][],
+        stableChart: [] as number[][],
+      },
       userStore,
 			tourStore,
       tab: ref('about'),
@@ -176,9 +179,10 @@ export default defineComponent({
           contractAddress,
           network
         })
-        const { txns, chartData } = txnHistory;
+        const { txns, stableChart, wivaChart } = txnHistory;
         this.txnHistory = txns;
-        this.chartData = chartData;
+        this.chartDataSets.stableChart = stableChart;
+        this.chartDataSets.wivaChart = wivaChart;
       } catch {
         this.errorLoadingHistory = true;
       } finally {

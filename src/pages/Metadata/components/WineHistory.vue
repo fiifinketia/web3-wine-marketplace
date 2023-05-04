@@ -2,11 +2,7 @@
   <div class="column items-center justify-center">
     <div class="flex items-start history-container column q-mb-xl">
       <div class="price-history q-pb-lg">Price history</div>
-      <div
-        v-if="isError"
-        class="column items-center chart-container"
-        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
-      >
+      <div v-if="isError" class="column items-center chart-container" :class="$q.screen.width > 600 ? 'q-pa-lg' : ''">
         <span class="error-header"> Ooops </span>
         <span class="error-subheader q-py-lg"> The price history is not available at the moment. </span>
         <span class="error-subheader q-pb-md"> Let's try to load again. </span>
@@ -23,7 +19,7 @@
         </q-btn>
       </div>
       <div
-        v-else-if="!isChartEmpty"
+        v-else
         class="column chart-container"
         :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
       >
@@ -31,52 +27,112 @@
           <div v-if="$q.screen.width > 600" class="row items-center q-mb-sm q-gutter-x-sm">
             <q-radio
               v-model="currentTimeline"
-              :disable="isLoading ? true : false"
+              :disable="isLoading || isChartEmpty ? true : false"
               keep-color
-              :color="isLoading ? 'blue-1' : ''"
+              :color="isLoading || isChartEmpty ? 'blue-2' : ''"
               val="three_months"
-              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+              :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               3 mos.
             </q-radio>
             <q-radio
               v-model="currentTimeline"
-              :disable="isLoading ? true : false"
+              :disable="isLoading || isChartEmpty ? true : false"
               keep-color
-              :color="isLoading ? 'blue-1' : ''"
+              :color="isLoading || isChartEmpty ? 'blue-2' : ''"
               val="six_months"
-              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+              :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               6 mos.
             </q-radio>
             <q-radio
               v-model="currentTimeline"
-              :disable="isLoading ? true : false"
+              :disable="isLoading || isChartEmpty ? true : false"
               keep-color
-              :color="isLoading ? 'blue-1' : ''"
+              :color="isLoading || isChartEmpty ? 'blue-2' : ''"
               val="one_year"
-              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+              :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               1 yr.
             </q-radio>
             <q-radio
               v-model="currentTimeline"
-              :disable="isLoading ? true : false"
+              :disable="isLoading || isChartEmpty ? true : false"
               keep-color
-              :color="isLoading ? 'blue-1' : ''"
+              :color="isLoading || isChartEmpty ? 'blue-2' : ''"
               val="five_years"
-              :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+              :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
             >
               5 yrs.
             </q-radio>
           </div>
-          <div :class="$q.screen.width > 600 ? 'column' : 'row reverse full-width justify-between q-mb-sm'">
+          <div
+            :class="$q.screen.width > 600
+              ? 'column'
+              : !isChartEmpty ? 'row items-center full-width justify-between q-mb-sm' : 'row items-center full-width justify-end q-mb-sm'
+            ">
+            <span v-if="!isChartEmpty" class="average-price">Average price</span>
             <div class="row items-center justify-end q-gutter-x-xs">
-              <img src="../../../../public/images/USDT-black.svg"/>
-              <span v-if="!isLoading" class="price1">{{ averagePrice }}</span>
-              <div v-else class="loading-price-box" />
+              <span v-if="!isLoading && !isChartEmpty" class="chart-avg-price">{{ averagePrice }}</span>
+              <div v-else-if="!!isLoading" class="loading-price-box" />
+              <q-select
+                v-model="chartCurrency"
+                :options="filteredCurrencyOptions"
+                dense
+                borderless
+                popup-content-class="currency-dropdown"
+                behavior="menu"
+                class="q-pl-sm"
+              >
+                <template #selected>
+                  <div
+                    v-if="chartCurrency"
+                    dense
+                    square
+                    color="white"
+                    text-color="primary"
+                    class="q-ma-none"
+                  >
+                    <div v-if="chartCurrency.value == 'WIVA'" class="row items-center">
+                      <q-icon :name="chartCurrency.icon" size="20px"/>
+                      <span class="currency-label q-ml-xs"> {{ chartCurrency.label }} </span>
+                    </div>
+                    <div v-else class="column">
+                      <div class="row items-center">
+                        <q-icon :name="chartCurrency.icon[0]" size="20px"/>
+                        <span class="currency-label q-ml-xs"> {{ chartCurrency.label[0] }} </span>
+                      </div>
+                      <div class="row items-center">
+                        <q-icon :name="chartCurrency.icon[1]" size="20px"/>
+                        <span class="currency-label q-ml-xs"> {{ chartCurrency.label[1] }} </span>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template #option="scope">
+                  <q-item
+                    v-bind="scope.itemProps"
+                    dense
+                    class="chart-currency-option q-px-sm row items-center"
+                  >
+                    <div v-if="chartCurrency.value != 'WIVA'" class="row items-center">
+                      <q-icon :name="scope.opt.icon" size="20px"/>
+                      <span class="currency-label q-ml-xs"> {{ scope.opt.label }} </span>
+                    </div>
+                    <div v-else class="column q-py-sm">
+                      <div class="row items-center">
+                        <q-icon :name="scope.opt.icon[0]" size="20px"/>
+                        <span class="currency-label q-ml-xs"> {{ scope.opt.label[0] }} </span>
+                      </div>
+                      <div class="row items-center">
+                        <q-icon :name="scope.opt.icon[1]" size="20px"/>
+                        <span class="currency-label q-ml-xs"> {{ scope.opt.label[1] }} </span>
+                      </div>
+                    </div>
+                  </q-item>
+                </template>
+              </q-select>
             </div>
-            <span class="average-price">Average price</span>
           </div>
         </div>
         <div class="real-chart">
@@ -107,6 +163,10 @@
               </div>
             </div>
           </div>
+          <div v-else-if="isChartEmpty" class="column items-center">
+            <img src="../../../assets/analytics.svg" class="q-pb-lg"/>
+            <span class="metadata-missing-text"> This wine has no price history yet. </span>
+          </div>
           <apexchart
             v-else
             id="chart"
@@ -120,53 +180,45 @@
         <div v-if="$q.screen.width <= 600" class="row items-center q-mb-sm q-gutter-x-sm">
           <q-radio
             v-model="currentTimeline"
-            :disable="isLoading ? true : false"
+            :disable="isLoading || isChartEmpty ? true : false"
             keep-color
-            :color="isLoading ? 'blue-1' : ''"
+            :color="isLoading || isChartEmpty ? 'blue-2' : ''"
             val="three_months"
-            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             3 mos.
           </q-radio>
           <q-radio
             v-model="currentTimeline"
-            :disable="isLoading ? true : false"
+            :disable="isLoading || isChartEmpty ? true : false"
             keep-color
-            :color="isLoading ? 'blue-1' : ''"
+            :color="isLoading || isChartEmpty ? 'blue-2' : ''"
             val="six_months"
-            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             6 mos.
           </q-radio>
           <q-radio
             v-model="currentTimeline"
-            :disable="isLoading ? true : false"
+            :disable="isLoading || isChartEmpty ? true : false"
             keep-color
-            :color="isLoading ? 'blue-1' : ''"
+            :color="isLoading || isChartEmpty ? 'blue-2' : ''"
             val="one_year"
-            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             1 yr.
           </q-radio>
           <q-radio
             v-model="currentTimeline"
-            :disable="isLoading ? true : false"
+            :disable="isLoading || isChartEmpty ? true : false"
             keep-color
-            :color="isLoading ? 'blue-1' : ''"
+            :color="isLoading || isChartEmpty ? 'blue-2' : ''"
             val="five_years"
-            :class="isLoading ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
+            :class="isLoading || isChartEmpty ? 'chart-timeline-options-disabled' : 'chart-timeline-options'"
           >
             5 yrs.
           </q-radio>
         </div>
-      </div>
-      <div
-        v-else
-        class="column items-center chart-container"
-        :class="$q.screen.width > 600 ? 'q-pa-lg' : ''"
-      >
-        <img src="../../../assets/analytics.svg" class="q-py-lg"/>
-        <span class="metadata-missing-text"> This wine has no price history yet. </span>
       </div>
     </div>
     <div class="flex items-start history-container column">
@@ -272,12 +324,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, createApp, PropType } from 'vue';
+import { defineComponent, createApp, PropType, ref } from 'vue';
 import ApexCharts, { ApexOptions } from 'apexcharts';
 import '../../../css/Metadata/WineHistory.css';
 import App from '../../../App.vue';
 import VueApexCharts from 'vue3-apexcharts';
-import { SeaportTransactionsModel } from '../models/Metadata';
+import { NFTHistoryDetails, SeaportTransactionsModel } from '../models/Metadata';
 const app = createApp(App);
 app.config.globalProperties.$apexcharts = ApexCharts;
 declare module '@vue/runtime-core' {
@@ -293,10 +345,9 @@ export default defineComponent({
       type: [Object] as PropType<SeaportTransactionsModel[]>,
       required: true,
     },
-    nftChartData: {
-      type: [] as PropType<number[][]>,
-      required: true,
-      default: []
+    nftChartDataSets: {
+      type: Object as PropType<NFTHistoryDetails>,
+      required: true
     },
     isLoading: {
       type: Boolean,
@@ -305,7 +356,7 @@ export default defineComponent({
     erroredOut: {
       type: Boolean,
       default: false
-    }
+    },
   },
   emits: ['refetch-history'],
 
@@ -386,6 +437,7 @@ export default defineComponent({
           lineCap: 'butt',
           width: 3,
           dashArray: 0,
+          colors: ['rgba(130, 0, 64, 1)']
         },
         dataLabels: {
           enabled: false,
@@ -437,7 +489,11 @@ export default defineComponent({
         tooltip: {
           x: {
             format: 'dd/MM/yyyy',
+            show: false
           },
+          marker: {
+            show: false
+          }
         },
         selection: {
           enabled: false
@@ -468,25 +524,48 @@ export default defineComponent({
           },
         }]
       } as ApexOptions,
+      chartCurrency: ref(
+        {
+          label: 'WIVA',
+          value: 'WIVA',
+          icon: 'app:WIVA-icon'
+        }
+      ),
+      currencyOptions: [
+        {
+          label: 'WIVA',
+          value: 'WIVA',
+          icon: 'app:WIVA-icon'
+        },
+        {
+          label: ['USDC', 'USDT'],
+          value: 'STABLE',
+          icon: ['app:USDC-icon', 'app:USDT-icon']
+        }
+      ],
     };
   },
   computed: {
     series() {
+      const currency = this.chartCurrency.value;
       return [
         {
-          data: this.nftChartData,
-          name: 'Sold at'
+          data: currency == 'WIVA' ? this.nftChartDataSets.wivaChart : this.nftChartDataSets.stableChart,
+          name: 'Sold for'
         }
       ]
     },
     averagePrice() {
-      const temp = this.nftChartData;
+      const currency = this.chartCurrency.value;
+      const temp = currency == 'WIVA' ? this.nftChartDataSets.wivaChart : this.nftChartDataSets.stableChart;
       if (temp.length > 0) {
         return (temp.reduce((acc, val) => acc + val[1], 0)/temp.length).toFixed(2)
       } else return '00.00'
     },
     isChartEmpty() {
-      if (this.isLoading || this.nftChartData.length > 0) {
+      const currency = this.chartCurrency.value;
+      const chartData = currency == 'WIVA' ? this.nftChartDataSets.wivaChart : this.nftChartDataSets.stableChart;
+      if (this.isLoading || chartData.length > 0) {
         return false;
       }
       return true
@@ -499,12 +578,29 @@ export default defineComponent({
     },
     isError() {
       return this.erroredOut
-    }
+    },
+    filteredCurrencyOptions() {
+      return this.currencyOptions.filter((option) => option.value !== this.chartCurrency.value);
+    },
   },
   watch: {
     currentTimeline: {
       handler(timeline: string) {
-        this.UpdateData(timeline)
+        if (!!timeline) {
+          this.UpdateData(timeline)
+        }
+      }
+    },
+    chartCurrency: {
+      handler() {
+        this.UpdateColors()
+      }
+    },
+    isChartEmpty: {
+      handler(isEmpty: boolean) {
+        if (isEmpty) {
+          this.currentTimeline = '';
+        }
       }
     }
   },
@@ -514,7 +610,9 @@ export default defineComponent({
       return date.toDateString();
     },
     UpdateData(timeline: string) {
-      const lastDate = this.nftChartData[this.nftChartData.length - 1][0];
+      const currency = this.chartCurrency.value;
+      const chartData = currency == 'WIVA' ? this.nftChartDataSets.wivaChart : this.nftChartDataSets.stableChart;
+      const lastDate = chartData[chartData.length - 1][0];
       let convertedLastDate = new Date(lastDate);
       let dateAsked = 0;
       switch (timeline) {
@@ -549,9 +647,25 @@ export default defineComponent({
     },
     TryAgain() {
       this.$emit('refetch-history')
+    },
+    UpdateColors() {
+      const chart = this.$refs.chart as ApexCharts;
+      if (!!chart) {
+        const currency = this.chartCurrency.value;
+        chart.updateOptions({
+          stroke: {
+            colors: currency != 'WIVA' ? ['rgba(53, 134, 255, 1)']  : ['rgba(130, 0, 64, 1)']
+          }
+        })
+      }
     }
   },
 });
 </script>
 
-<style></style>
+<style scoped>
+  .apexcharts-tooltip {
+    background: #f3f3f3;
+    color: orange;
+  }
+</style>

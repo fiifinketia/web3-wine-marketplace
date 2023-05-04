@@ -1,7 +1,6 @@
 .owned-by,
 .wine-description,
 .starting-from,
-.price2,
 .bid-text {
 	font-family: 'ProximaNova-Regular';
 }
@@ -88,11 +87,6 @@
 	line-height: 39px;
 	align-items: center;
 	color: #3586FF;
-}
-
-.price2 {
-	font-size: 16px;
-	color: #9d9d9d;
 }
 
 .bid-text {
@@ -243,6 +237,9 @@
 	.offer-btn {
 		width: 100%;
 		max-width: 500px;
+	}
+	.price1 {
+		font-size: 24px;
 	}
 	.wine-name {
 		font-size: 20px;

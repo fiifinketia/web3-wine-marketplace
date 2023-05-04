@@ -71,4 +71,10 @@ interface FavoritesAndOrderDetails {
   };
 }
 
+export interface NFTHistoryDetails {
+  txns: SeaportTransactionsModel[],
+  wivaChart: number[][],
+  stableChart: number[][]
+}
+
 export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails {}
