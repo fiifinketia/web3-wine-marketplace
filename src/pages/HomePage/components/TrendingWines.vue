@@ -4,11 +4,11 @@
       <div class="trending-wines-title q-pb-lg">Trending wines</div>
       <div v class="trending-table">
         <div class="row trending-header-row">
-          <span class="trending-wine-name">Wine Name</span>
-          <span class="trending-twentyFour">24 hrs</span>
-          <span class="trending-three">3 mos</span>
-          <span>6 mos</span>
-          <span class="trending-wines-price">Price</span>
+          <div class="trending-wine-name">Wine Name</div>
+          <div class="trending-twentyFour">24 hrs</div>
+          <div class="trending-three">3 mos</div>
+          <div>6 mos</div>
+          <div class="trending-wines-price">Price</div>
         </div>
         <div class="trending-separator"></div>
         <div class="column trending-wine-rows">
