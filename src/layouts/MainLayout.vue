@@ -44,7 +44,10 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div v-if="userStore.user && showMyWallet" class="my-wallet-background row justify-end hidden">
+  <div
+    v-if="userStore.user && showMyWallet"
+    class="my-wallet-background row justify-end hidden"
+  >
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
@@ -57,7 +60,10 @@
 
   <!---------------------------- /MY WALLET ---------------------------->
   <!---------------------------- SETTINGS ---------------------------->
- <div v-if="userStore.user && showSettings" class="settings-background row justify-end hidden">
+  <div
+    v-if="userStore.user && showSettings"
+    class="settings-background row justify-end hidden"
+  >
     <SettingsDialog
       v-model="showSettings"
       @close-settings="showSettings = false"
@@ -65,47 +71,76 @@
   </div>
 
   <!---------------------------- /SETTINGS ---------------------------->
-	<!-- Terms and Conditions -->
-	<q-dialog v-model="showTermsAndConditions" position="left" full-height class="terms-and-conditions-background">
-		<q-card class="terms-and-conditions-container column justify-between">
-			<q-card-section class="full-width">
-				<div class="terms-and-conditions-title text-h6 bold text-black text-start">
-					Terms and Conditions
-				</div>
-			</q-card-section>
+  <!-- Terms and Conditions -->
+  <q-dialog
+    v-model="showTermsAndConditions"
+    position="left"
+    full-height
+    class="terms-and-conditions-background"
+  >
+    <q-card class="terms-and-conditions-container column justify-between">
+      <q-card-section class="full-width">
+        <div
+          class="terms-and-conditions-title text-h6 bold text-black text-start"
+        >
+          Terms and Conditions
+        </div>
+      </q-card-section>
 
-			<q-card-section>
-				<div class="terms-and-conditions-content overflow-scroll">
-					<p>
-						By using this website, you agree to the following terms and conditions. If you do not agree to these terms and conditions, you may not use this website.
-					</p>
-					<p>
-						We reserve the right to change these terms and conditions at any time. You should check these terms and conditions regularly to ensure you are aware of any changes made by us. Your continued use of this website will be deemed acceptance of the updated or amended terms and conditions.
-					</p>
-					<p>
-						We may suspend or terminate your access to this website if you breach these terms and conditions or if we are unable to verify or authenticate any information you provide to us.
-					</p>
-				</div>
-			</q-card-section>
-			<q-card-actions class="row terms-and-conditions-btns justify-end">
-				<q-btn class="terms-and-conditions-btn-decline q-ma-xs" color="primary" size="lg" unelevated no-caps outline @click="showTermsAndConditions = false">
-					Decline
-				</q-btn>
-				<q-btn class="terms-and-conditions-btn-accept q-ma-xs" color="primary" size="lg" unelevated no-caps @click="acceptTermsAndConditions">
-					Accept
-				</q-btn>
+      <q-card-section>
+        <div class="terms-and-conditions-content overflow-scroll">
+          <p>
+            By using this website, you agree to the following terms and
+            conditions. If you do not agree to these terms and conditions, you
+            may not use this website.
+          </p>
+          <p>
+            We reserve the right to change these terms and conditions at any
+            time. You should check these terms and conditions regularly to
+            ensure you are aware of any changes made by us. Your continued use
+            of this website will be deemed acceptance of the updated or amended
+            terms and conditions.
+          </p>
+          <p>
+            We may suspend or terminate your access to this website if you
+            breach these terms and conditions or if we are unable to verify or
+            authenticate any information you provide to us.
+          </p>
+        </div>
+      </q-card-section>
+      <q-card-actions class="row terms-and-conditions-btns justify-end">
+        <q-btn
+          class="terms-and-conditions-btn-decline q-ma-xs"
+          color="primary"
+          size="lg"
+          unelevated
+          no-caps
+          outline
+          @click="showTermsAndConditions = false"
+        >
+          Decline
+        </q-btn>
+        <q-btn
+          class="terms-and-conditions-btn-accept q-ma-xs"
+          color="primary"
+          size="lg"
+          unelevated
+          no-caps
+          @click="acceptTermsAndConditions"
+        >
+          Accept
+        </q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 
-			</q-card-actions>
-		</q-card>
-	</q-dialog>
-
-	<!-- /Terms and Conditions -->
+  <!-- /Terms and Conditions -->
 
   <BurgerMenu
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
     @openConnectWallet="showConnectWallet = true"
-    openMyWallet="showMyWallet = true"
+    @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
   />
   <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
@@ -248,7 +283,11 @@
                     <q-avatar size="24px">
                       <img :src="userStore.user?.avatar" />
                     </q-avatar>
-                    {{ userStore.user.username || walletAddress.slice(0, 10) }}
+                    {{
+                      userStore.user !== null
+                        ? userStore.user.username
+                        : walletAddress.slice(0, 10)
+                    }}
                   </q-chip>
                 </q-toolbar>
                 <q-list>
@@ -435,7 +474,7 @@ import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
 import WalletDialog from './components/WalletDialog.vue';
-import SettingsDialog from './components/SettingsDialog.vue'
+import SettingsDialog from './components/SettingsDialog.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -461,7 +500,7 @@ export default defineComponent({
       showMyWallet: false,
       showSettings: false,
       showConnectWallet: false,
-			showTermsAndConditions: false,
+      showTermsAndConditions: false,
       userStore,
       nftStore,
       orderStore,
@@ -542,12 +581,16 @@ export default defineComponent({
     },
     async connectWallet() {
       this.showConnectWallet = false;
-			if(!this.tourStore.termsAndConditionsAgreed) {
-				this.showTermsAndConditions = true;
-				return;
-			}
+      if (!this.tourStore.termsAndConditionsAgreed) {
+        this.showTermsAndConditions = true;
+        return;
+      }
       //TODO: Catch errors
-      await this.userStore.connectWallet();
+      try {
+        await this.userStore.connectWallet();
+      } catch (error) {
+        throw error;
+      }
       if (!this.$route.query?.next) {
         this.$router.go(0);
       } else {
@@ -556,11 +599,11 @@ export default defineComponent({
       }
     },
 
-		acceptTermsAndConditions() {
-			this.tourStore.setTermsAndConditionsAgreed();
-			this.showTermsAndConditions = false;
-			this.connectWallet();
-		},
+    acceptTermsAndConditions() {
+      this.tourStore.setTermsAndConditionsAgreed();
+      this.showTermsAndConditions = false;
+      this.connectWallet();
+    },
 
     setupWallet() {
       this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;

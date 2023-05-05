@@ -31,7 +31,7 @@
           <q-card flat class="column items-center justify-around">
             <q-card-section class="column q-my-md items-center">
               <q-avatar size="8em">
-                <img class="col-auto" :src="userStore.user.avatar" />
+                <img class="col-auto" :src="getUserAvatar" />
               </q-avatar>
               <q-badge
                 floating
@@ -41,10 +41,18 @@
                 class="q-pa-sm"
               >
                 <q-icon name="app:edit" size="xs" dense round color="white">
-                  <q-menu>
+                  <q-menu v-model="imageUploadMenu">
                     <q-list style="min-width: 100px">
-                      <q-item clickable v-close-popup>
-                        <q-item-section>Update Avatar</q-item-section>
+                      <q-item clickable>
+                        <q-item-section
+                          >
+                            <q-file
+                              v-model="imageFile"
+                              label="Update Avatar"
+                              borderless
+                              max-files="1"
+                              accept="image/*" />
+                        </q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup>
                         <q-item-section>Delete Avatar</q-item-section>
@@ -114,6 +122,8 @@ export default defineComponent({
     return {
       userStore,
       tab: ref('profile'),
+      imageFile: ref(null),
+      imageUploadMenu: false,
       username: ref(''),
       usernameRules: [
         (val: string) =>
@@ -124,6 +134,17 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+	getUserAvatar() {
+  		const timestamp = new Date().getTime();
+      		return `${this.userStore.user?.avatar || 'https://source.boringavatars.com/beam/40/'}?${timestamp}`;
+	}
+  },
+  watch: {
+    imageFile() {
+    	this.uploadProfileAvatar()
+    },
+  },
   methods: {
     saveProfileSettings() {
       if (
@@ -133,6 +154,16 @@ export default defineComponent({
         return;
       try {
         this.userStore.updateUsername(this.username);
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+    async uploadProfileAvatar() {
+      const formData = new FormData();
+      if (this.imageFile !== null) formData.append('image', this.imageFile);
+      try {
+        await this.userStore.uploadAvatar(formData);
+	this.imageUploadMenu = false
       } catch (error: any) {
         throw new Error(error);
       }
