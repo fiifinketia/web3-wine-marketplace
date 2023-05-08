@@ -70,7 +70,7 @@
     </div>
     <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
     <div class="burger-bolder-text">digital wine cellar</div>
-    <div @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
+    <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
     <div>contact us</div>
     <div>faqs</div>
     <div v-if="isConnected" @click="Logout()">log out</div>

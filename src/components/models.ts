@@ -27,3 +27,14 @@ export interface UserModel {
   verificationStatus: VerificationStatus;
   settings: object;
 }
+
+export interface NotificationsSettings {
+	email?: string;
+	offerReceived: boolean;
+	offerAccepted: boolean;
+	offerOutbidded: boolean;
+	offerMade: boolean;
+	orderFulfilled: boolean;
+	wineChanged: boolean;
+}
+

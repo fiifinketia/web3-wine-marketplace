@@ -388,7 +388,7 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-close-popup clickable @click="showSettings = true">
+                  <q-item v-if="!!walletAddress" v-close-popup clickable @click="showSettings = true">
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
