@@ -1,9 +1,3 @@
-/* .footer-container {
-	background: #212131;
-	min-height: 300px;
-	width: 100%;
-} */
-
 .footer-bold {
 	font-family: 'ProximaNova-Bold';
 	font-style: normal;
@@ -37,10 +31,7 @@
 	text-decoration: none !important;
 }
 .footer-container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: flex-start;
+	width: 100%;
 	background: #212131;
 }
 
@@ -72,14 +63,6 @@
 }
 
 .wiv-image-wrapper {
-	padding-left: 15px;
-}
-.footer-wrapper {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	/* align-items: center; */
-	width: 99%;
 	padding-left: 15px;
 }
 

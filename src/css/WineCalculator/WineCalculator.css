@@ -62,16 +62,13 @@
 }
 
 .help-section {
-	padding-top: 120px;
-	padding-right: 30px;
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 18px;
 	line-height: 20px;
 	text-decoration-line: underline;
 	color: #3586ff;
 }
+
 .current-step {
 	font-family: 'ProximaNova-Regular';
 	font-style: normal;
@@ -109,8 +106,6 @@
 
 .next-step-second-version {
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 16px;
 	line-height: 24px;
 	color: #9d9d9d;
@@ -121,17 +116,13 @@
 
 .next-step-number {
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 16px;
 	line-height: 24px;
 	color: #9d9d9d;
 }
 
 .portfolio-calculation-title {
-	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 700;
+	font-family: 'ProximaNova-Bold';
 	font-size: 16px;
 	line-height: 24px;
 	color: #212131;
@@ -244,14 +235,16 @@
 
 .risk-level-title {
 	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 450;
 	font-size: 18px;
 	line-height: 28px;
 	text-align: left;
 	letter-spacing: 0.02em;
 	color: #262626;
-	padding-bottom: 10px;
+}
+
+.calc-help-btn {
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
 }
 
 .calculating {
@@ -290,9 +283,7 @@
 }
 
 .continue-text {
-	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 700;
+	font-family: 'ProximaNova-Bold';
 	font-size: 20px;
 	line-height: 29px;
 	letter-spacing: 0.02em;
@@ -300,7 +291,7 @@
 }
 
 .continue-button-wrapper {
-	padding-top: 90px;
+	padding-top: 80px;
 }
 
 .back-button {
@@ -484,7 +475,7 @@
 		width: 70%;
 	}
 	.step-mobile {
-		font-family: 'Proxima Nova';
+		font-family: 'ProximaNova-Bold';
 		font-style: normal;
 		font-weight: 700;
 		font-size: 16px;
@@ -549,12 +540,9 @@
 		padding-bottom: 20px;
 	}
 	.step-mobile {
-		font-family: 'Proxima Nova';
-		font-style: normal;
-		font-weight: 700;
+		font-family: 'ProximaNova-Bold';
 		font-size: 16px;
 		line-height: 24px;
-		display: flex;
 		align-items: center;
 		text-align: center;
 		color: #212131;
