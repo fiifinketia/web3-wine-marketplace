@@ -27,9 +27,10 @@ const RandomIdGenerator = () => {
   return Date.now();
 };
 
-function SetExpDate(expDate: string) : string{
+function SetExpDate(expDate: string, expTime: string) : string{
+	const inputDateTime = `${expDate}T${expTime}:00`
 	return (
-		Math.round(new Date(expDate).getTime() / 1000) + 24 * 60 * 60
+		Math.round(new Date(inputDateTime).getTime() / 1000)
 	).toString()
 }
 
@@ -71,7 +72,8 @@ export async function CreateERC721Listing(
   address: string,
   listingPrice: string,
 	listingCurrency: string,
-  expirationDate: string
+  expirationDate: string,
+	expirationTime: string
 ) {
 	const signer = WindowWeb3Provider?.getSigner();
   if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
@@ -113,7 +115,7 @@ export async function CreateERC721Listing(
 					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			endTime: SetExpDate(expirationDate),
+			endTime: SetExpDate(expirationDate, expirationTime),
 		},
 		address
 	);
@@ -165,6 +167,7 @@ export async function CreateERC721Offer(
   offerPrice: string,
 	offerCurrency: string,
   expirationDate: string,
+	expirationTime: string,
   user: UserModel
 ) {
   if (
@@ -217,7 +220,7 @@ export async function CreateERC721Offer(
 					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			endTime: SetExpDate(expirationDate),
+			endTime: SetExpDate(expirationDate, expirationTime),
 		},
 		address
 	);

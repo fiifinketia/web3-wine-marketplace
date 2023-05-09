@@ -284,14 +284,31 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Keep active until </span>
-            <q-input
-              v-model="offerExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start q-gutter-x-md">
+              <q-input
+                v-model="offerExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="width: 125px;"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="offerExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 100px"
+                :disable="!offerExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
@@ -349,7 +366,7 @@
                 !acceptTerms ||
                 offerExpirationDate === '' ||
                 parseFloat(offerPrice) <= 0 ||
-                loadingOffer
+                loadingOffer || !isValidTime
               "
               @click="CreateNewOrder()"
             >
@@ -375,6 +392,7 @@ import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import TxnOngoing from './TxnOngoing.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
 
 export default defineComponent({
@@ -436,6 +454,8 @@ export default defineComponent({
       userStore,
       offerPrice: '',
       offerExpirationDate: '',
+      offerExpirationTime: '',
+      isValidTime: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -466,13 +486,23 @@ export default defineComponent({
       ongoingTxn: false,
 
       GetCurrencyLabel,
-      Currencies
+      Currencies,
+
+      GetCurrentDate,
+      GetValidTime
     };
   },
   computed: {
     filteredCurrencyOptions() {
       return this.currencyOptions.filter((option) => option.value !== this.currency.value);
     },
+  },
+  watch: {
+    offerExpirationDate: {
+      handler() {
+        this.offerExpirationTime = '';
+      }
+    }
   },
   methods: {
     async PreventExitDuringTxn(event: BeforeUnloadEvent) {
@@ -506,6 +536,7 @@ export default defineComponent({
             this.offerPrice,
             <string> this.currency.value,
             this.offerExpirationDate,
+            this.offerExpirationTime,
             this.userStore.user
           );
           this.$emit('offer-created');
@@ -529,6 +560,11 @@ export default defineComponent({
       const errorDetails: ErrorModel = ErrorMessageBuilder(err);
       this.$emit('outgoing-error-dialog', errorDetails);
     },
+    CheckExpirationTime() {
+      const isValid = GetValidTime(this.offerExpirationDate, this.offerExpirationTime);
+      this.isValidTime = isValid;
+      return isValid;
+    }
   },
 });
 </script>
