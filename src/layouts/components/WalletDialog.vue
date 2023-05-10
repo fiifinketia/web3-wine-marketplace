@@ -1,8 +1,10 @@
 <template>
   <q-dialog
     position="right"
+    transition-show="slide-left"
+    transition-hide="slide-right"
     full-height
-    class="my-wallet-background row justify-end"
+    class="my-wallet-background"
   >
     <q-card class="my-wallet-container column justify-between items-center">
       <q-card-section class="my-wallet-header row items-center no-wrap">
@@ -235,16 +237,44 @@
         class="my-wallet-ballance-container column justify-center items-center"
       >
         <img src="../../../public/images/wallet.svg" alt="wallet-icon" />
-        <div class="ballance-wrapper column">
-          <div class="my-wallet-title q-pb-sm">Your balance is</div>
-          <div class="my-wallet-balance">$ {{ balance.toFixed(4) }}</div>
+        <div class="row items-center">
+          <div class="balance-container column justify-between">
+            <span class="balance-label"> USDC Balance </span>
+            <div class="row items-center q-gutter-x-sm">
+              <q-icon name="app:USDC-icon" size="24px"/>
+              <span
+                class="balance-number"
+                :style="usdcBalance ? '' : 'color: #9D9D9D'"
+              >
+                {{ usdcBalance ? usdcBalance : '0' }}
+              </span>
+            </div>
+          </div>
+          <div class="balance-container column justify-between q-mx-md">
+            <span class="balance-label"> USDT Balance </span>
+            <div class="row items-center q-gutter-x-sm">
+              <q-icon name="app:USDT-icon" size="24px"/>
+              <span
+                class="balance-number"
+                :style="usdtBalance ? '' : 'color: #9D9D9D'"
+              >
+                {{ usdtBalance ? usdtBalance : '0' }}
+              </span>
+            </div>
+          </div>
+          <div class="balance-container column justify-between">
+            <span class="balance-label"> WIVA Balance </span>
+            <div class="row items-center q-gutter-x-sm">
+              <q-icon name="app:WIVA-icon" size="24px"/>
+              <span
+                class="balance-number"
+                :style="wivaBalance ? '' : 'color: #9D9D9D'"
+              >
+                {{ wivaBalance ? wivaBalance : '0' }}
+              </span>
+            </div>
+          </div>
         </div>
-        <q-btn
-          class="my-wallet-btn no-box-shadow"
-          unelevated
-          @click="$emit('fund-wallet')"
-          >Fund wallet</q-btn
-        >
       </q-card-section>
 
       <q-card-section class="my-wallet-logout" @click="$emit('logout')">
@@ -264,16 +294,19 @@ export default defineComponent({
       type: Object as () => UserModel,
       required: true,
     },
-    balance: {
-      type: Number,
-      required: true,
+    usdtBalance: {
+      type: String,
+      required: true
+    },
+    usdcBalance: {
+      type: String,
+      required: true
+    },
+    wivaBalance: {
+      type: String,
+      required: true
     },
   },
-  emits: ['close-my-wallet', 'fund-wallet', 'logout'],
-  data() {
-    return {
-      expanded: ref(false),
-    };
-  },
+  emits: ['close-my-wallet', 'fund-wallet', 'logout']
 });
 </script>

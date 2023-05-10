@@ -1,4 +1,4 @@
-import { BigNumber, Contract, utils } from 'ethers';
+import { BigNumber, Contract, ethers, utils } from 'ethers';
 import { RetrieveListingResponse } from 'src/pages/Metadata/models/Orders';
 import { ERC20_ContractWithSigner, ERC721_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
 
@@ -86,4 +86,18 @@ export async function HandleFulfillmentApprovals(owner: boolean, address: string
 			tokenID
 		)
 	}
+}
+
+export async function GetBalanceByCurrency(
+		currency: string,
+		signer: ethers.providers.JsonRpcSigner,
+		walletAddress: string
+	) {
+	const ERC20Contract = ERC20_ContractWithSigner(currency, signer);
+	const decimalOfToken = <number> await ERC20Contract.decimals();
+	const { _hex } = <{ _hex: string; _isBigNumber: true }> (
+		await ERC20Contract.balanceOf(walletAddress)
+	);
+	const balance = +utils.formatUnits(_hex, decimalOfToken);
+	return balance;
 }

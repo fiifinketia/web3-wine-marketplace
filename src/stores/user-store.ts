@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import axios from 'axios';
-import { ethers, utils } from 'ethers';
+import { utils } from 'ethers';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 import { APIKeyString } from 'src/boot/axios';
+import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 
 export const useUserStore = defineStore(
   'userStore',
@@ -73,16 +75,20 @@ export const useUserStore = defineStore(
 
     const getWalletBalance = async () => {
       if (!window.ethereum) return 0;
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const balance = await provider.getBalance(walletAddress.value);
-      const balanceInETH = ethers.utils.formatEther(balance);
-
-      // Convert Matic to USDC
-      const maticToUsdc = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd'
-      );
-      const maticToUsdcRate = maticToUsdc.data['matic-network'].usd;
-      return Number(balanceInETH) * maticToUsdcRate;
+      const signer = WindowWeb3Provider?.getSigner();
+      if (!!signer) {
+        const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
+          GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, walletAddress.value),
+          GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, walletAddress.value),
+          GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, walletAddress.value)
+        ]);
+        return {
+          _wivaBalance: wivaBalance,
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance
+        }
+      }
+      return undefined;
     };
 
     const getWalletAddress = () => {
