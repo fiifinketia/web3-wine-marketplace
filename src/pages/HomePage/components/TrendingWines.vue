@@ -17,9 +17,9 @@
             :key="item.id"
             class="row each-trending-row"
           >
-            <div class="trending-wine-name trending-wine-name-label">
+            <span class="trending-wine-name trending-wine-name-label">
               {{ item.name }}
-            </div>
+            </span>
             <div
               class="trending-twentyFour"
               :class="positive === true ? 'positive' : 'negative'"

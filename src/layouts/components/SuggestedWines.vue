@@ -1,18 +1,19 @@
 <template>
   <q-dialog
-    class="suggested-wines-background"
+    transition-show="scale"
+    transition-hide="scale"
+    :maximized="$q.screen.width > 600 ? false : true"
     @hide="tourStore.setSuggestedWinesDialog()"
   >
-    <q-card class="suggested-wines column items-center full-width no-wrap">
+    <q-card class="suggested-wines column items-center q-px-md no-wrap">
       <q-card-section class="join-wiv-world">
         <div>We're happy to see you join WiV wine world!</div>
       </q-card-section>
       <q-card-section
-        class="suggest-trending-today row justify-center items-center"
+        class="suggest-trending-today row justify-center items-center q-gutter-x-sm"
       >
         <q-img src="../../../public/images/trending.svg" width="22px" />
-
-        <div>&nbsp;&nbsp;Trending today</div>
+        <span>TRENDING TODAY</span>
       </q-card-section>
 
       <q-card-section class="suggested-paragraph">
@@ -94,21 +95,21 @@
       </q-card-section>
 			<q-card-section v-else class="suggested-wines-section row justify-between">
 				<div
-          v-for="loading in loadingNFTs"
+          v-for="loading in ReturnNumberLoading($q.screen.width)"
           :key="loading"
-          class="no-shadow q-pa-sm exclusive-card-container col-xs-3"
+          :style="$q.screen.width > 1025
+            ? 'width: 32%' : $q.screen.width > 600
+            ? 'width: 35%;' : 'width: 48%'
+          "
         >
           <div>
             <q-card class="q-ma-md" flat>
               <img
                 src="../../assets/loading-card.svg"
-                class="releases-card-image"
               />
               <img
                 src="../../assets/loading-brand.svg"
-                :style="
-                  $q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'
-                "
+                :style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
                 class="q-my-md"
               />
               <img src="../../assets/loading-pricebox.svg" />
@@ -117,22 +118,26 @@
         </div>
 			</q-card-section>
 
-      <q-card-section class="suggested-buttons-container row no-wrap">
+      <q-card-section
+        class="suggested-buttons-container no-wrap q-gutter-x-sm"
+        :class="$q.screen.width > 600 ? 'row items-center' : 'full-width column items-center q-gutter-y-sm'"
+      >
         <q-btn
           v-close-popup
-          class="suggested-buttons q-ma-xs"
+          no-caps
+          class="suggested-skip-button suggested-skip-text"
           unelevated
-          color="primary"
-          >Skip</q-btn
         >
+          Skip
+        </q-btn>
         <q-btn
           v-close-popup
-          class="suggested-buttons q-ma-xs"
-          outline
-          color="primary"
+          no-caps
+          class="suggested-more-button suggested-more-text"
           @click="() => $router.push('/marketplace?tab=recommended')"
-          >Show more</q-btn
         >
+          Show more
+        </q-btn>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -160,7 +165,7 @@ export default defineComponent({
       totalView: 4,
       errorLoad: false,
       isLoading: ref(true),
-			loadingNFTs: [0, 1, 2, 3],
+			loadingNFTs: [0, 1, 2, 3]
     };
   },
   mounted() {
@@ -189,6 +194,15 @@ export default defineComponent({
 						this.fetchSuggestedWines(calls + 1)
 					}, 5000)
 				}
+      }
+    },
+    ReturnNumberLoading(width: number) {
+      if (width > 1025) {
+        return [0, 1, 2, 3]
+      } else if (width > 600) {
+        return [0, 1, 2]
+      } else {
+        return [0, 1]
       }
     },
 
@@ -257,4 +271,13 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+@media screen and (min-width: 600px) {
+  .q-dialog__inner--minimized > div {
+    max-width: none;
+  }
+  .q-dialog__inner > div {
+    border-radius: 20px;
+  }
+}
+</style>

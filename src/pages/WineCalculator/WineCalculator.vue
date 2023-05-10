@@ -183,8 +183,15 @@
               </div>
             </div>
           </div>
-          <div class="full-width flex justify-end q-pr-sm q-pt-lg help-section">
-            <q-btn flat dense> Help </q-btn>
+          <div class="help-section row justify-end">
+            <q-btn
+              class="calc-help-btn"
+              no-caps
+              flat
+              dense
+            >
+              Help
+            </q-btn>
           </div>
         </div>
         <div
@@ -194,7 +201,7 @@
           <div class="calculating">Calculating...</div>
           <div>
             <q-img
-              src="../../assets/giffycanvas.png"
+              src="../../assets/giffycanvas.svg"
               width="130px"
               height="190px"
             />
@@ -208,7 +215,7 @@
           <div class="calculating">Calculating the final worth...</div>
           <div>
             <q-img
-              src="../../assets/giffycanvas.png"
+              src="../../assets/giffycanvas.svg"
               width="130px"
               height="190px"
             />
@@ -221,7 +228,7 @@
         >
           <div class="q-pb-lg">
             <q-img
-              src="../../assets/moneyPlant.png"
+              src="../../assets/moneyPlant.svg"
               width="55px"
               height="117px"
             />
@@ -267,7 +274,7 @@
               </div>
             </div>
             <div class="flex column risk-level-container">
-              <div class="risk-level-title">Risk level</div>
+              <div class="risk-level-title q-pt-sm q-pb-md">Risk level</div>
               <div
                 class="flex row risk-container items-center cursor-pointer"
                 @click="riskType = 'low'"
