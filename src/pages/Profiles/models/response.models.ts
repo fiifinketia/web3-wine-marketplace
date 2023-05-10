@@ -29,8 +29,7 @@ interface TransactionResponse extends TokenIdentifier {
 
   source: string;
 
-  date: string;
-  time: string;
+  timestamp: string;
 
   txnHash: string;
 }

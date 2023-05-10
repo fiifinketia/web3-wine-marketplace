@@ -53,8 +53,14 @@
       >
         <div class="row items-center justify-between">
           <span class="nft-dialog-label"> Expiration On </span>
-          <div class="row items-center q-gutter-x-xs">
-            <span class="nft-dialog-text-highlight"> {{ offerEndTime }} </span>
+          <div class="column items-end q-gutter-x-xs">
+            <span
+              class="nft-dialog-text-highlight"
+              :style="offerEndDate == 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+            >
+              {{ offerEndDate }}
+            </span>
+            <span class="nft-dialog-time"> {{ offerEndTime }} </span>
           </div>
         </div>
         <div class="row items-center justify-between">
@@ -117,6 +123,7 @@ export default defineComponent({
     highestOffer: { type: String, default: '' },
     floorPrice: { type: String, default: '' },
     from: { type: String, default: '' },
+    offerEndDate: { type: String, default: '' },
     offerEndTime: { type: String, default: '' },
     txnHash: { type: String, default: '' },
     date: { type: String, default: '' },
