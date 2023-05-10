@@ -82,11 +82,6 @@ export const useUserStore = defineStore(
         );
         const updatedUser = await axios.get(
           process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
-          {
-            headers: {
-              'x-api-key': APIKeyString,
-            },
-          }
         );
         user.value = updatedUser.data;
       } catch (error: any) {
