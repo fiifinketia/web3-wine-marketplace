@@ -90,7 +90,38 @@
             : 'column items-center q-gutter-y-sm'
         "
       >
+ 	<q-btn
+          v-if="!userStore.user"
+          class="dialog-confirm"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+          unelevated
+          no-caps
+          flat
+          disable
+          size="md"
+        >
+          Please Connect Wallet
+        </q-btn>
+	<router-link
+          v-else-if="
+            userStore.user.verificationStatus !== 'VERIFIED'
+          "
+          :to="
+            '/profile/' +
+            userStore.user.walletAddress +
+            '/kyc' +
+            '?redirect=' +
+            $route.path +
+            $route.query +
+            $route.hash
+          "
+          class="q-ma-sm q-pa-xs text-warning"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+        >
+          Complete KYC to offer
+        </router-link>
         <q-btn
+	  v-else
           class="dialog-confirm-small"
           :style="$q.screen.width <= 450 ? 'width: 95% !important;' : ''"
           no-caps
@@ -177,8 +208,40 @@
             </span>
           </q-checkbox>
           <div class="row justify-end q-mb-sm">
+	<q-btn
+          v-if="!userStore.user"
+          class="dialog-confirm"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+          unelevated
+          no-caps
+          flat
+          disable
+          size="md"
+        >
+          Please Connect Wallet
+        </q-btn>
+	<router-link
+          v-else-if="
+            userStore.user.verificationStatus !== 'VERIFIED'
+          "
+          :to="
+            '/profile/' +
+            userStore.user.walletAddress +
+            '/kyc' +
+            '?redirect=' +
+            $route.path +
+            $route.query +
+            $route.hash
+          "
+          class="q-ma-sm q-pa-xs text-warning"
+          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+        >
+          Complete KYC to offer
+        </router-link>
+
             <q-btn
-              class="dialog-confirm"
+		v-else
+      class="dialog-confirm"
               style="width: 70%;"
               no-caps
               flat

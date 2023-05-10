@@ -2,8 +2,7 @@
   <div class="burger-menu-background column justify-around items-center">
     <div v-if="isConnected" class="burger-bolder-text" @click="openMyWallet()">
       <q-avatar size="40px"> <img :src="userStore.user?.avatar" /> </q-avatar>
-      &nbsp;my wallet&nbsp;
-      {{ userStore.walletAddress.slice(0, 10) }}
+      {{ userStore.user.username || userStore.walletAddress.slice(0, 10) }}
     </div>
 		<div
       class="burger-bolder-text"
@@ -71,7 +70,7 @@
     </div>
     <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
     <div class="burger-bolder-text">digital wine cellar</div>
-    <div>settings</div>
+    <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
     <div>contact us</div>
     <div>faqs</div>
     <div v-if="isConnected" @click="Logout()">log out</div>
@@ -89,7 +88,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet'],
+  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();

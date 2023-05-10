@@ -35,7 +35,7 @@
         class="row items-center no-wrap"
       >
         <q-btn
-          class="shadow-1 overflow-hidden text-warning"
+          class="shadow-1 overflow-hidden text-primary"
           style="border-radius: 10px"
           icon="warning_amber"
           no-caps
@@ -132,7 +132,7 @@
       </q-card-section>
 
       <q-card-section
-        v-if="true"
+        v-if="user.verificationStatus === 'VERIFIED'"
         class="row items-center no-wrap"
       >
         <q-btn

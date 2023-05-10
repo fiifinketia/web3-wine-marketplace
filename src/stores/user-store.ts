@@ -11,26 +11,13 @@ export const useUserStore = defineStore(
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
-    const user: Ref<UserModel | null> = ref<UserModel | null>(null);
+    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
 
     const connectWallet = async () => {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
       walletAddress.value = utils.getAddress(accounts[0]);
-      try {
-        const body = {
-          walletAddress: walletAddress.value,
-          apiKey: APIKeyString
-        }
-        const getUser = await axios.post(
-          process.env.MARKETPLACE_API_URL + '/market/users/retrieve',
-          body
-        );
-        if (!!getUser.data) return (user.value = getUser.data);
-      } catch (error: unknown) {
-        throw 'User does not exist'
-      }
 
       try {
         const getColors = [
@@ -39,17 +26,37 @@ export const useUserStore = defineStore(
           generateRandomColor(),
         ].join(',');
         const newUser = await axios.post(
-          process.env.MARKETPLACE_API_URL + '/market/create',
+          process.env.MARKETPLACE_USERS_API + '/create',
           {
             walletAddress: walletAddress.value,
             avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
+          },
+          {
+            headers: {
+              'x-api-key': APIKeyString,
+            },
           }
         );
         user.value = newUser.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch {
-        return 0;
+        throw new Error('Unable to connect wallet');
       }
+    };
+
+    const updateUsername = async (username: string) => {
+      const updatedUser = await axios.put(
+        process.env.MARKETPLACE_USERS_API + '/' + walletAddress.value,
+        {
+          username,
+        },
+        {
+          headers: {
+            'x-api-key': APIKeyString,
+          },
+        }
+      );
+      user.value = updatedUser.data;
     };
 
     const checkConnection = async () => {
@@ -58,6 +65,27 @@ export const useUserStore = defineStore(
       });
       if (connectedAccounts.length == 0) {
         walletAddress.value = '';
+      }
+    };
+
+    const uploadAvatar = async (formData: any) => {
+      try {
+        await axios.post(
+          process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'x-api-key': APIKeyString,
+            },
+          }
+        );
+        const updatedUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
+        );
+        user.value = updatedUser.data;
+      } catch (error: any) {
+        throw new Error(error);
       }
     };
 
@@ -86,17 +114,19 @@ export const useUserStore = defineStore(
     };
 
     const getWalletAddress = () => {
-      return walletAddress.value
+      return walletAddress.value;
     };
 
     const $reset = () => {
-      (walletAddress.value = ''), (user.value = null);
+      (walletAddress.value = ''), (user.value = undefined);
     };
 
     return {
       // provider,
       walletAddress,
       connectWallet,
+      updateUsername,
+      uploadAvatar,
       getWalletBalance,
       getWalletAddress,
       checkConnection,

@@ -20,9 +20,21 @@ export interface UserModel {
   email?: string;
   firstName?: string;
   lastName?: string;
+  username: string;
   phone?: string;
   dob?: string;
   isLegal: boolean;
   verificationStatus: VerificationStatus;
   settings: object;
 }
+
+export interface NotificationsSettings {
+	email?: string;
+	offerReceived: boolean;
+	offerAccepted: boolean;
+	offerOutbidded: boolean;
+	offerMade: boolean;
+	orderFulfilled: boolean;
+	wineChanged: boolean;
+}
+
