@@ -625,11 +625,8 @@ export default defineComponent({
         });
     },
     formatNumber(num: number) {
-      if (Number.isInteger(num)) {
-        return num.toString();
-      } else {
-        return num.toFixed(1);
-      }
+      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      return formatted.replace(/\.0$/, '');
     }
   },
 });
