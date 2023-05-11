@@ -77,4 +77,6 @@ export interface NFTHistoryDetails {
   stableChart: number[][]
 }
 
-export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails {}
+export interface NFTWithListingAndFavorites extends NewPolygonNFT, FavoritesAndOrderDetails {
+  favoriteLoading?: null | boolean;
+}

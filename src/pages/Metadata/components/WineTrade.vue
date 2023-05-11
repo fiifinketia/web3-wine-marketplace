@@ -9,7 +9,49 @@
           : 'column items-center metadata-container'
       "
     >
-      <img :src="nft.image" class="metadata-nft-image" />
+      <div
+        :class="$q.screen.width > 600 ? 'metadata-nft-image-wrapper row justify-end' : ''"
+        :style="$q.screen.width > 600 ? '' : 'position: relative'"
+      >
+        <img :src="nft.image" class="metadata-nft-image" />
+        <div v-if="!!userStore.walletAddress" class="metadata-favorite-container column items-center justify-center">
+          <q-img
+            v-if="nft.favoriteLoading"
+            src="../../../assets/loading-heart.gif"
+            style="width: 27px; height: 27px;"
+          />
+          <q-img
+            v-else-if="nft.favorited"
+            src="../../../../public/images/heart.svg"
+            class="clickable-image"
+            width="20px"
+            height="20px"
+            @click.stop="
+              addRemoveFavorites(
+                nft.tokenID,
+                nft.smartContractAddress,
+                nft.network,
+                'remove'
+              )
+            "
+          />
+          <q-img
+            v-else
+            src="../../../../public/images/empty-heart.svg"
+            class="clickable-image"
+            width="20px"
+            height="20px"
+            @click.stop="
+              addRemoveFavorites(
+                nft.tokenID,
+                nft.smartContractAddress,
+                nft.network,
+                'add'
+              )
+            "
+          />
+        </div>
+      </div>
 
       <div class="column nft-takeaways-container q-pa-sm">
         <div class="row">
@@ -270,6 +312,7 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
 import OrderExpTimer from 'src/pages/SharedPopups/OrderExpTimer.vue';
+import { AddFavorites, RemoveFavorites } from 'src/pages/Favourites/services/FavoritesFunctions';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -290,7 +333,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet', 'refresh-metadata', 'connect-wallet', 'listing-exists', 'nft-listed'],
+  emits: ['openWallet', 'refresh-metadata', 'connect-wallet', 'listing-exists', 'nft-listed', 'favorite-action'],
   data() {
     return {
       openCreateListingDialog: false,
@@ -372,7 +415,44 @@ export default defineComponent({
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');
-    }
+    },
+    async addRemoveFavorites(
+      tokenID: string,
+      cAddress: string,
+      network: string,
+      objective: string
+    ) {
+      switch (objective) {
+        case 'add':
+          try {
+            this.$emit('favorite-action', 'processing')
+            await AddFavorites({
+              walletAddress: this.userStore.walletAddress,
+              tokenID: tokenID,
+              contractAddress: cAddress,
+              network: network,
+            });
+            this.$emit('favorite-action', 'favorited')
+          } catch {
+            return 0;
+          }
+          break;
+        case 'remove':
+          try {
+            this.$emit('favorite-action', 'processing')
+            await RemoveFavorites({
+              walletAddress: this.userStore.walletAddress,
+              tokenID: tokenID,
+              contractAddress: cAddress,
+              network: network,
+            });
+            this.$emit('favorite-action', 'unfavorited')
+          } catch {
+            return 0;
+          }
+          break;
+      }
+    },
   },
 });
 </script>

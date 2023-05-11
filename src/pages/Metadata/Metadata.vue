@@ -7,6 +7,7 @@
         @connect-wallet="ConnectWallet()"
         @listing-exists="listed => UpdateListingStatus(listed)"
         @nft-listed="nft.listingDetails.transactionStatus = false"
+        @favorite-action="FavoriteAction"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -369,6 +370,17 @@ export default defineComponent({
 			this.$shepherd.start()
 			this.tourStore.setMetadataCompleted();
 		},
+    FavoriteAction(state: 'favorited' | 'unfavorited' | 'processing') {
+      if (state == 'favorited') {
+        this.nft.favorited = true;
+        this.nft.favoriteLoading = false;
+      } else if (state == 'unfavorited') {
+        this.nft.favorited = false;
+        this.nft.favoriteLoading = false;
+      } else if (state == 'processing') {
+        this.nft.favoriteLoading = true;
+      }
+    },
   },
 });
 </script>

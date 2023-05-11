@@ -17,10 +17,27 @@
 	width: 50%;
 }
 
+.metadata-favorite-container {
+	background: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(20px);
+	border-radius: 8px;
+	width: 38px;
+	height: 38px;
+	position: absolute;
+	bottom: 25px;
+	right: 25px;
+}
+
 .metadata-nft-image {
+	width: 100%;
+	height: 100%;
+	max-width: 487px;
+}
+
+.metadata-nft-image-wrapper {
 	width: 50%;
 	height: 50%;
-	max-width: 487px;
+	position: relative;
 }
 
 .metadata-container {
@@ -187,9 +204,8 @@
 }
 
 @media screen and (max-width: 1100px) {
-	.metadata-nft-image {
+	.metadata-nft-image-wrapper {
 		width: 40%;
-		height: 40%;
 	}
 	.nft-takeaways-container {
 		width: 60%;
@@ -222,8 +238,14 @@
 		padding-left: 0px;
 		width: 100%;
 	}
-	.metadata-nft-image {
+	.metadata-favorite-container {
+		bottom: 32px;
+		right: 35px;
+	}
+	.metadata-nft-image-wrapper {
 		width: 100%;
+	}
+	.metadata-nft-image {
 		padding-left: 10px;
 		padding-right: 10px;
 	}
