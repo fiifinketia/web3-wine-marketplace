@@ -310,12 +310,12 @@
                 {{ 'Select the notifications you would like to recieve.' }}
               </div>
               <div class="column q-my-sm justify-center items-start q-mx-xl text-caption">
-              	<q-checkbox v-model="notificationsStore.settings.offerReceived" label="You received an offer on your wine" />
-              	<q-checkbox v-model="notificationsStore.settings.offerMade" label="You have successfully placed a bid" />
-              	<q-checkbox v-model="notificationsStore.settings.offerAccepted" label="Your bid has been accepted" />
-              	<q-checkbox v-model="notificationsStore.settings.offerOutbidded" label="Your offer has been outbid" />
-              	<q-checkbox v-model="notificationsStore.settings.orderFulfilled" label="You sold your Wine" />
-              	<q-checkbox v-model="notificationsStore.settings.wineChanged" label="Your wine has some changes from the producer" />
+              	<q-checkbox v-model="notificationsStore.settings.offerReceived" :disabled="!notificationsStore.settings.offerReceived" label="You received an offer on your wine" />
+              	<q-checkbox v-model="notificationsStore.settings.offerMade" :disabled="!notificationsStore.settings.offerMade" label="You have successfully placed a bid" />
+              	<q-checkbox v-model="notificationsStore.settings.offerAccepted" :disabled="!notificationsStore.settings.offerAccepted" label="Your bid has been accepted" />
+              	<q-checkbox v-model="notificationsStore.settings.offerOutbidded" :disabled="!notificationsStore.settings.offerOutbidded" label="Your offer has been outbid" />
+              	<q-checkbox v-model="notificationsStore.settings.orderFulfilled" :disabled="!notificationsStore.settings.orderFulfilled" label="You sold your Wine" />
+              	<q-checkbox v-model="notificationsStore.settings.wineChanged" :disabled="!notificationsStore.settings.wineChanged" label="Your wine has some changes from the producer" />
               </div>
 
 	      <div class="row q-my-md text-bold text-primary justify-center">
@@ -329,6 +329,7 @@
                 class="q-mb-md"
                 outlined
                 dense
+		:disabled="!notificationsStore.settings.email"
                 lazy-rules
               />
 	</div>

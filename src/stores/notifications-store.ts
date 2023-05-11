@@ -17,6 +17,18 @@ export const useNotificationsStore = defineStore(
         );
        settings.value = updatedSettings.data;
       } catch (error: any) {
+	if(!settings.value)
+	{
+		settings.value = {
+			offerMade: false,
+			email: undefined,
+			offerReceived: false,
+			offerAccepted: false,
+			orderFulfilled: false,
+			offerOutbidded: false,
+			wineChanged: false
+		}
+	}
         throw new Error(error);
       }
     }
@@ -31,7 +43,7 @@ export const useNotificationsStore = defineStore(
 		offerReceived: settings.value?.offerReceived,
 		offerAccepted: settings.value?.offerAccepted,
 		offerOutbidded: settings.value?.offerOutbidded,
-		orderFulfullid: settings.value?.orderFulfilled,
+		orderFulfilled: settings.value?.orderFulfilled,
 		wineChanged: settings.value?.wineChanged
 	  },
           {

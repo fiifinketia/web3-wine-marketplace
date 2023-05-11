@@ -14,10 +14,6 @@ export const useUserStore = defineStore(
     const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
 
     const connectWallet = async () => {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-      walletAddress.value = utils.getAddress(accounts[0]);
 
       try {
         const getColors = [
@@ -25,21 +21,21 @@ export const useUserStore = defineStore(
           generateRandomColor(),
           generateRandomColor(),
         ].join(',');
-        const newUser = await axios.post(
-          process.env.MARKETPLACE_USERS_API + '/create',
-          {
-            walletAddress: walletAddress.value,
-            avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
-          },
-          {
-            headers: {
-              'x-api-key': APIKeyString,
-            },
-          }
-        );
-        user.value = newUser.data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch {
+	const accounts = await window.ethereum.request({
+        	method: 'eth_requestAccounts',
+      	});
+
+	const address = utils.getAddress(accounts[0]);
+
+        const newUser = await axios.get(process.env.MARKETPLACE_USERS_API + '/profile/' + address);
+
+	if(!newUser.data.avatar) newUser.data.avatar = `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`
+      	walletAddress.value = address;
+	user.value = newUser.data;
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch(error: any) {
+	console.log(error)
         throw new Error('Unable to connect wallet');
       }
     };
