@@ -101,7 +101,6 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
   />
-  <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
   <q-layout view="lHh Lpr lFf">
@@ -425,7 +424,6 @@ import 'src/css/reusable.css';
 
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
-import SuggestedWines from './components/SuggestedWines.vue';
 import WalletDialog from './components/WalletDialog.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
@@ -436,7 +434,6 @@ export default defineComponent({
   name: 'MainLayout',
   components: {
     BurgerMenu,
-    SuggestedWines,
     WalletDialog,
   },
   data() {
