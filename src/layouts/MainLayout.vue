@@ -48,9 +48,9 @@
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
-      :usdc-balance="usdcBalance ? usdcBalance.toString() : ''"
-      :usdt-balance="usdtBalance ? usdtBalance.toString() : ''"
-      :wiva-balance="wivaBalance ? wivaBalance.toString() : ''"
+      :usdc-balance="usdcBalance ? formatNumber(usdcBalance) : ''"
+      :usdt-balance="usdtBalance ? formatNumber(usdtBalance) : ''"
+      :wiva-balance="wivaBalance ? formatNumber(wivaBalance) : ''"
       @close-my-wallet="showMyWallet = false"
       @fund-wallet="fundWallet()"
       @logout="logout"
@@ -624,6 +624,13 @@ export default defineComponent({
           // console.log('I am triggered on both OK and Cancel')
         });
     },
+    formatNumber(num: number) {
+      if (Number.isInteger(num)) {
+        return num.toString();
+      } else {
+        return num.toFixed(1);
+      }
+    }
   },
 });
 </script>
