@@ -16,8 +16,7 @@ import {
 } from '@opensea/seaport-js/lib/types';
 import { APIKeyString } from 'src/boot/axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { balanceAndApprovals, HandleFulfillmentApprovals } from 'src/shared/balanceAndApprovals';
-import { ERC20_ContractWithSigner, ERC721_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
+import { ERC20_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
 import { UserModel } from 'src/components/models';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -56,7 +55,7 @@ export async function GetWeb3(): Promise<SeaportInstance> {
     case ChainID.MUMBAI:
       network = 'Mumbai';
   }
-  const seaport = new Seaport(web3, { balanceAndApprovalChecksOnOrderCreation: false, seaportVersion: '1.4' });
+  const seaport = new Seaport(web3, { seaportVersion: '1.4' });
   const seaportInstance: SeaportInstance = {
     seaport: seaport,
     network: network,
@@ -77,16 +76,16 @@ export async function CreateERC721Listing(
 ) {
 	const signer = WindowWeb3Provider?.getSigner();
   if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
-	const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
+	// const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
 	const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
 	const decimalOfToken = <number> await ERC20Contract.decimals();
 
-	await balanceAndApprovals(
-		address,
-		'ERC721',
-		ERC721Contract,
-		tokenID
-	)
+	// await balanceAndApprovals(
+	// 	address,
+	// 	'ERC721',
+	// 	ERC721Contract,
+	// 	tokenID
+	// )
 	listingPrice = utils.parseUnits(<string> listingPrice, decimalOfToken).toString();
 
 	const { seaport, network } = await GetWeb3();
@@ -183,14 +182,14 @@ export async function CreateERC721Offer(
 	const contract = ERC20_ContractWithSigner(offerCurrency, signer);
 	const decimalOfToken = <number> await contract.decimals();
 
-	await balanceAndApprovals(
-		address,
-		'ERC20',
-		contract,
-		'',
-		offerPrice,
-		decimalOfToken
-	)
+	// await balanceAndApprovals(
+	// 	address,
+	// 	'ERC20',
+	// 	contract,
+	// 	'',
+	// 	offerPrice,
+	// 	decimalOfToken
+	// )
 
 	offerPrice = utils.parseUnits(<string> offerPrice, decimalOfToken).toString();
 
@@ -289,7 +288,7 @@ export async function FulfillBasicOrder(
 		});
 	const blockNumber = await GetBlockNumber();
 
-	await HandleFulfillmentApprovals(owner, user.walletAddress, order);
+	// await HandleFulfillmentApprovals(owner, user.walletAddress, order);
 
 	const { executeAllActions: executeAllFulfillActions } =
 		await seaport.fulfillOrder({
