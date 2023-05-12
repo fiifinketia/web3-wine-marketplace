@@ -72,7 +72,7 @@
     <div class="burger-bolder-text">digital wine cellar</div>
     <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
     <div>contact us</div>
-    <div>faqs</div>
+    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenter')">faqs</div>
     <div v-if="isConnected" @click="Logout()">log out</div>
     <div>&nbsp;</div>
     <div>&nbsp;</div>
@@ -88,7 +88,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings'],
+  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenter'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();

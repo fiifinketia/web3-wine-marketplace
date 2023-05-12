@@ -12,79 +12,64 @@ export const useUserStore = defineStore(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
     const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
-    const createNewUser = async () => {
-	try {
-		const accounts = await window.ethereum.request({
-        		method: 'eth_requestAccounts',
-      		});
-
-		const address = utils.getAddress(accounts[0]);
-
-
-	    	const getColors = [
-         		generateRandomColor(),
-          		generateRandomColor(),
-          		generateRandomColor(),
-        	].join(',');
-
-    		const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
-
-		const newUser = await axios.post(
-			process.env.MARKETPLACE_USERS_API + '/create',
-			{
-       				walletAddress: address,
-				avatar,
-			},
-			{
-				headers: {
-					'x-api-key': APIKeyString
-				}
-			})
-		walletAddress.value = address;
-		user.value = newUser.data;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} catch (error: any) {
-		console.error(error)
-	}
-    }
-
     const connectWallet = async () => {
-      try {
-       	const accounts = await window.ethereum.request({
-        	method: 'eth_requestAccounts',
+	const accounts = await window.ethereum.request({
+        		method: 'eth_requestAccounts',
       	});
 
 	const address = utils.getAddress(accounts[0]);
 
-        const newUser = await axios.get(process.env.MARKETPLACE_USERS_API + '/retrieve/' + address);
-
-      	walletAddress.value = utils.getAddress(accounts[0]);
-	user.value = newUser.data;
+	try {
+		const getUser = await axios.get(
+	      		process.env.MARKETPLACE_USERS_API + '/profile/' + address
+		);
+		if (!!getUser.data) {
+			user.value = getUser.data;
+			walletAddress.value = address;
+			return;
+		}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any){
-	if(error.response)
-	{
-		if(error.response.status === 404)
-		{
-			return await createNewUser();
+	} catch (error: any) {
+		if(error.response && error.response.status === 404) {
+			try {
+				const getColors = [
+					generateRandomColor(),
+					generateRandomColor(),
+					generateRandomColor(),
+				].join(',');
+
+				const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
+
+				const newUser = await axios.post(
+					process.env.MARKETPLACE_USERS_API + '/create',
+					{
+						walletAddress: address,
+						avatar,
+						apiKey: APIKeyString
+					}
+					)
+
+
+				walletAddress.value = address;
+				user.value = newUser.data;
+				return
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (error: any){
+				throw new Error('Unable to connect wallet');
+			}
 		}
+		console.error(error);
 	}
-        throw new Error('Unable to connect wallet');
-      }
-    };
+     };
 
     const updateUsername = async (username: string) => {
       const updatedUser = await axios.put(
         process.env.MARKETPLACE_USERS_API + '/' + walletAddress.value,
         {
           username,
+	  apiKey: APIKeyString,
         },
-        {
-          headers: {
-            'x-api-key': APIKeyString,
-          },
-        }
       );
       user.value = updatedUser.data;
     };
@@ -100,13 +85,13 @@ export const useUserStore = defineStore(
 
     const uploadAvatar = async (formData: any) => {
       try {
+	formData.append("apiKey", APIKeyString)
         await axios.post(
           process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
           formData,
           {
             headers: {
               'Content-Type': 'multipart/form-data',
-              'x-api-key': APIKeyString,
             },
           }
         );

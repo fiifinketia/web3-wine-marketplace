@@ -142,6 +142,12 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
+    @openHelpCenter="showHelpCenter = true"
+  />
+
+  <HelpCenterDialog
+	v-model="showHelpCenter"
+	@close-help-center="showHelpCenter = false"
   />
   <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
@@ -410,7 +416,7 @@
                             </q-item-section>
                           </q-item>
 
-                          <q-item v-close-popup clickable>
+                          <q-item v-close-popup clickable @click="showHelpCenter = true">
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -475,6 +481,7 @@ import BurgerMenu from './components/BurgerMenu.vue';
 import SuggestedWines from './components/SuggestedWines.vue';
 import WalletDialog from './components/WalletDialog.vue';
 import SettingsDialog from './components/SettingsDialog.vue';
+import HelpCenterDialog from './components/HelpCenterDialog.vue';
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -487,6 +494,7 @@ export default defineComponent({
     SuggestedWines,
     WalletDialog,
     SettingsDialog,
+    HelpCenterDialog,
   },
   data() {
     const userStore = useUserStore();
@@ -499,6 +507,7 @@ export default defineComponent({
       showBurgerMenu: false,
       showMyWallet: false,
       showSettings: false,
+      showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
       userStore,
