@@ -18,10 +18,10 @@ export const useUserStore = defineStore(
       	});
 
 	const address = utils.getAddress(accounts[0]);
-
+	const date = new Date().getTime()
 	try {
 		const getUser = await axios.get(
-	      		process.env.MARKETPLACE_USERS_API + '/profile/' + address
+	      		process.env.MARKETPLACE_USERS_API + '/profile/' + address + '?t=' + date
 		);
 		if (!!getUser.data) {
 			user.value = getUser.data;
@@ -85,7 +85,6 @@ export const useUserStore = defineStore(
 
     const uploadAvatar = async (formData: any) => {
       try {
-	formData.append("apiKey", APIKeyString)
         await axios.post(
           process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
           formData,
