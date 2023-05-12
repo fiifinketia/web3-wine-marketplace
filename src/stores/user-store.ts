@@ -12,30 +12,64 @@ export const useUserStore = defineStore(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
     const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
+    const createNewUser = async () => {
+	try {
+		const accounts = await window.ethereum.request({
+        		method: 'eth_requestAccounts',
+      		});
+
+		const address = utils.getAddress(accounts[0]);
+
+
+	    	const getColors = [
+         		generateRandomColor(),
+          		generateRandomColor(),
+          		generateRandomColor(),
+        	].join(',');
+
+    		const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
+
+		const newUser = await axios.post(
+			process.env.MARKETPLACE_USERS_API + '/create',
+			{
+       				walletAddress: address,
+				avatar,
+			},
+			{
+				headers: {
+					'x-api-key': APIKeyString
+				}
+			})
+		walletAddress.value = address;
+		user.value = newUser.data;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	} catch (error: any) {
+		console.error(error)
+	}
+    }
 
     const connectWallet = async () => {
-
       try {
-        const getColors = [
-          generateRandomColor(),
-          generateRandomColor(),
-          generateRandomColor(),
-        ].join(',');
-	const accounts = await window.ethereum.request({
+       	const accounts = await window.ethereum.request({
         	method: 'eth_requestAccounts',
       	});
 
 	const address = utils.getAddress(accounts[0]);
 
-        const newUser = await axios.get(process.env.MARKETPLACE_USERS_API + '/profile/' + address);
+        const newUser = await axios.get(process.env.MARKETPLACE_USERS_API + '/retrieve/' + address);
 
-	if(!newUser.data.avatar) newUser.data.avatar = `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`
-      	walletAddress.value = address;
+      	walletAddress.value = utils.getAddress(accounts[0]);
 	user.value = newUser.data;
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch(error: any) {
-	console.log(error)
+      } catch (error: any){
+	if(error.response)
+	{
+		if(error.response.status === 404)
+		{
+			return await createNewUser();
+		}
+	}
         throw new Error('Unable to connect wallet');
       }
     };
