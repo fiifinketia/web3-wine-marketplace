@@ -96,7 +96,7 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
-              v-if="nft.listingDetails.expTime"
+              v-if="nft.listingDetails.expTime && nft.listingDetails.transactionStatus == true"
               :class="$q.screen.width > 600 ? '' : 'column items-center'"
               style="margin-bottom: 14px;"
             >
@@ -171,7 +171,7 @@
         </q-btn>
         <q-btn
           v-else
-          :disable="nft.listingDetails.transactionStatus == false"
+          :disable="nft.listingDetails.transactionStatus == false || unlisted || nft.listingDetails.listingCancellationStatus == true"
           class="unlist-btn items-center justify-center metadata-btn-text_outline"
           no-caps
           outline
@@ -213,7 +213,7 @@
       </div>
     </div>
     <q-btn
-      class="q-pt-lg"
+      class="q-mt-md btn--no-hover"
       flat
       unelevated
       dense
@@ -261,6 +261,7 @@
       :order-hash="nft.listingDetails.orderHash"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
+      @remove-listing="unlisted = true"
     />
 
     <OrderProcessed
@@ -347,6 +348,7 @@ export default defineComponent({
       errorType: '',
       errorTitle: '',
       errorMessage: '',
+      unlisted: false,
 
       orderType: '',
 
