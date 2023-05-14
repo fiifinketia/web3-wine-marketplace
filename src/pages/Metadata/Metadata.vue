@@ -130,7 +130,7 @@ export default defineComponent({
         );
         if (!!tokenExistCheck) {
           await this.SetNFTView(id, contractAddress, network);
-          if (target) {
+          if (target && !sessionStorage.getItem('scrolledToTarget')) {
             this.$nextTick(() => {
               this.tab = 'history';
               this.$nextTick(() => {
@@ -140,6 +140,7 @@ export default defineComponent({
                   return;
                 }
               })
+              sessionStorage.setItem('scrolledToTarget', 'scrolled');
             })
           }
           this.tokenExists = true;
