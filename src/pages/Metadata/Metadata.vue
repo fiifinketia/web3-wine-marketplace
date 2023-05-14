@@ -15,7 +15,7 @@
       />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="about" label="About" />
-        <q-tab name="history" label="NFT history" />
+        <q-tab id="history" name="history" label="NFT history" />
       </q-tabs>
       <q-tab-panels
         v-model="tab"
@@ -23,7 +23,7 @@
         transition-prev="jump-right"
         transition-next="jump-left"
       >
-			<q-tab-panel name="about">
+			  <q-tab-panel name="about">
           <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
         </q-tab-panel>
         <q-tab-panel name="history">
@@ -117,7 +117,7 @@ export default defineComponent({
     async ValidateAndFetchNFT() {
       this.loadingMetadata = true;
       this.tokenExists = false;
-      const { id, contractAddress, network } = this.$route.query;
+      const { id, contractAddress, network, highlight : target } = this.$route.query;
       if (
         typeof id === 'string' &&
         typeof contractAddress === 'string' &&
@@ -130,6 +130,18 @@ export default defineComponent({
         );
         if (!!tokenExistCheck) {
           await this.SetNFTView(id, contractAddress, network);
+          if (target) {
+            this.$nextTick(() => {
+              this.tab = 'history';
+              this.$nextTick(() => {
+                const anchor = document.getElementById(<string> target);
+                if (anchor) {
+                  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  return;
+                }
+              })
+            })
+          }
           this.tokenExists = true;
         }
         this.loadingMetadata = false;
