@@ -125,7 +125,8 @@ export default defineComponent({
   },
   computed: {
     ...mapState(ordersStore, {
-      brandSearched: store => store.getTransactionBrandFilterStatus
+      brandSearched: store => store.getTransactionBrandFilterStatus,
+      tabKey: store => store.getTransactionTabKey
     }),
   },
   watch: {
@@ -144,6 +145,11 @@ export default defineComponent({
         this.store.setTransactionBrandFilter(brandFilter);
       },
     },
+    tabKey: {
+      async handler() {
+        await this.FetchTransactions('', '');
+      }
+    }
   },
   async mounted() {
     const transactionRequestStatus = this.store.getTransactionRequestStatus;
@@ -169,10 +175,7 @@ export default defineComponent({
           this.store.transactionBrandFilterStatus == true
         ) {
           this.HandleMissingBrand();
-        } else if (this.store.transactionBrandFilterStatus == true) {
-          this.brandSearched = true;
         } else {
-          this.brandSearched = false;
           this.transactions = this.store.getTransactions;
           this.$emit('transactionsAmount', this.transactions.length);
           this.CheckForEmptyRequest();

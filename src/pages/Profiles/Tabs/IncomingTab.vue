@@ -185,7 +185,8 @@ export default defineComponent({
   computed: {
     ...mapState(ordersStore, {
       incomingOffers: store => store.getIncomingOffers,
-      brandSearched: store => store.getIncomingBrandFilterStatus
+      brandSearched: store => store.getIncomingBrandFilterStatus,
+      tabKey: store => store.getIncomingTabKey
     }),
   },
 
@@ -206,6 +207,11 @@ export default defineComponent({
         this.store.setIncomingBrandFilterStatus(false);
       },
     },
+    tabKey: {
+      async handler() {
+        await this.FetchIncomingOffers('', '');
+      }
+    }
   },
 
   async mounted() {
@@ -281,10 +287,7 @@ export default defineComponent({
           this.store.incomingBrandFilterStatus == true
         ) {
           this.HandleMissingBrand();
-        } else if (this.store.incomingBrandFilterStatus == true) {
-          this.brandSearched = true;
         } else {
-          this.brandSearched = false;
           this.incomingOffers = this.EnsureIncomingOffersAreOwned();
           this.$emit('incomingAmount', this.incomingOffers.length);
           this.CheckForEmptyRequest();
