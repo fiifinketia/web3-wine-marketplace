@@ -137,11 +137,18 @@
           no-caps
           class="profile-accept-btn"
           @click="
-            OpenConfirmDialog(offer.orderHash, offer.brand, offer.image, {
-              identifierOrCriteria: offer.identifierOrCriteria,
-              contractAddress: offer.contractAddress,
-              network: offer.network,
-            })
+            OpenConfirmDialog(
+              offer.orderHash,
+              offer.brand,
+              offer.image,
+              {
+                identifierOrCriteria: offer.identifierOrCriteria,
+                contractAddress: offer.contractAddress,
+                network: offer.network,
+              },
+              offer.offer,
+              offer.currency
+            )
           "
         >
           Accept
@@ -153,11 +160,18 @@
           dense
           no-caps
           @click="
-            OpenConfirmDialog(offer.orderHash, offer.brand, offer.image, {
-              identifierOrCriteria: offer.identifierOrCriteria,
-              contractAddress: offer.contractAddress,
-              network: offer.network,
-            })
+            OpenConfirmDialog(
+              offer.orderHash,
+              offer.brand,
+              offer.image,
+              {
+                identifierOrCriteria: offer.identifierOrCriteria,
+                contractAddress: offer.contractAddress,
+                network: offer.network,
+              },
+              offer.offer,
+              offer.currency
+            )
           "
         >
           <img src="../../../assets/accept.svg" />
@@ -216,13 +230,17 @@ export default defineComponent({
       orderHash: string,
       brand: string,
       image: string,
-      token: TokenIdentifier
+      token: TokenIdentifier,
+      offer: string,
+      currency: string
     ) {
       this.$emit('accept-offer', {
         orderHash: orderHash,
         brand: brand,
         image: image,
         token: token,
+        offer: offer,
+        currency: currency
       });
     },
     OpenNFTDialog(offer: IncomingOffersResponse) {
