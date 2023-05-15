@@ -265,9 +265,9 @@
                 </q-icon>
               </q-badge>
               <div class="row q-mt-sm justify-around full-width">
-                <div class="col text-body2">Wallet</div>
+                <div class="col text-body2 q-mx-xs">Wallet</div>
                 <div
-                  class="col text-bold no-wrap"
+                  class="col text-bold no-wrap q-mx-xs"
                   style="min-width: fit-content"
                 >
                   {{

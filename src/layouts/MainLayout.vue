@@ -376,7 +376,7 @@
                     @click="showConnectWallet = true"
                   >
                     <q-item-section>
-                      <q-item-label>sign up</q-item-label>
+                      <q-item-label>connect wallet</q-item-label>
                     </q-item-section>
                   </q-item>
 
