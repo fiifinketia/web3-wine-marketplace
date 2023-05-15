@@ -88,7 +88,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenter'],
+  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenter', 'logout'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
@@ -124,6 +124,7 @@ export default defineComponent({
     async Logout() {
       this.userStore.walletAddress = '';
       this.ClearStore();
+      this.$emit('logout');
       this.$emit('closeBurgerMenu');
     },
     ClearStore() {
