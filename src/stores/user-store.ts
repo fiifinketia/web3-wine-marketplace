@@ -13,45 +13,65 @@ export const useUserStore = defineStore(
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
-    const user: Ref<UserModel | null> = ref<UserModel | null>(null);
-
+    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
     const connectWallet = async () => {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-      walletAddress.value = utils.getAddress(accounts[0]);
-      try {
-        const body = {
-          walletAddress: walletAddress.value,
-          apiKey: APIKeyString
-        }
-        const getUser = await axios.post(
-          process.env.MARKETPLACE_API_URL + '/market/users/retrieve',
-          body
-        );
-        if (!!getUser.data) return (user.value = getUser.data);
-      } catch (error: unknown) {
-        throw 'User does not exist'
-      }
+	const accounts = await window.ethereum.request({
+        		method: 'eth_requestAccounts',
+      	});
 
-      try {
-        const getColors = [
-          generateRandomColor(),
-          generateRandomColor(),
-          generateRandomColor(),
-        ].join(',');
-        const newUser = await axios.post(
-          process.env.MARKETPLACE_API_URL + '/market/create',
-          {
-            walletAddress: walletAddress.value,
-            avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
-          }
-        );
-        user.value = newUser.data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch {
-        return 0;
-      }
+	const address = utils.getAddress(accounts[0]);
+	const date = new Date().getTime()
+	try {
+		const getUser = await axios.get(
+	      		process.env.MARKETPLACE_USERS_API + '/profile/' + address + '?t=' + date
+		);
+		if (!!getUser.data) {
+			user.value = getUser.data;
+			walletAddress.value = address;
+			return;
+		}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	} catch (error: any) {
+		if(error.response && error.response.status === 404) {
+			try {
+				const getColors = [
+					generateRandomColor(),
+					generateRandomColor(),
+					generateRandomColor(),
+				].join(',');
+
+				const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
+
+				const newUser = await axios.post(
+					process.env.MARKETPLACE_USERS_API + '/create',
+					{
+						walletAddress: address,
+						avatar,
+						apiKey: APIKeyString
+					}
+        )
+
+				walletAddress.value = address;
+				user.value = newUser.data;
+				return
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (error: any){
+				throw new Error('Unable to connect wallet');
+			}
+		}
+	}
+     };
+
+    const updateUsername = async (username: string) => {
+      const updatedUser = await axios.put(
+        process.env.MARKETPLACE_USERS_API + '/' + walletAddress.value,
+        {
+          username,
+	  apiKey: APIKeyString,
+        },
+      );
+      user.value = updatedUser.data;
     };
 
     const checkConnection = async () => {
@@ -60,6 +80,27 @@ export const useUserStore = defineStore(
       });
       if (connectedAccounts.length == 0) {
         walletAddress.value = '';
+      }
+    };
+    // eslint-disable-next-line
+    const uploadAvatar = async (formData: any) => {
+      try {
+        await axios.post(
+          process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        const updatedUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
+        );
+        user.value = updatedUser.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        throw new Error(error);
       }
     };
 
@@ -92,17 +133,19 @@ export const useUserStore = defineStore(
     };
 
     const getWalletAddress = () => {
-      return walletAddress.value
+      return walletAddress.value;
     };
 
     const $reset = () => {
-      (walletAddress.value = ''), (user.value = null);
+      (walletAddress.value = ''), (user.value = undefined);
     };
 
     return {
       // provider,
       walletAddress,
       connectWallet,
+      updateUsername,
+      uploadAvatar,
       getWalletBalance,
       getWalletAddress,
       checkConnection,

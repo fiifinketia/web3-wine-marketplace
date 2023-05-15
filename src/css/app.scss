@@ -10,6 +10,71 @@ img {
 .bg-gradient_blue-green {
   background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
 }
+
+.font-proxima-normal {
+	font-family: 'Proxima-Nova-Font' !important;
+	font-style: normal !important;
+}
+
+.font-proxima-bold {
+	font-family: 'ProximaNova-Bold' !important;
+	font-style: normal !important;
+}
+
+.font-proxima-light {
+	font-family: 'ProximaNova-Light' !important;
+	font-style: normal !important;
+}
+
+.font-obviously-normal {
+	font-family: 'Obviously' !important;
+	font-style: normal !important;
+}
+
+.font-weight-700 {
+	font-weight: 700 !important;
+}
+
+.font-weight-400 {
+	font-weight: 400 !important;
+}
+
+.font-size-16 {
+	font-size: 16px !important;
+}
+
+.font-size-18 {
+	font-size: 18px !important;
+}
+
+.font-size-20 {
+	font-size: 20px !important;
+}
+
+.line-height-18 {
+	line-height: 18px !important;
+}
+
+.line-height-22 {
+	line-height: 22px !important;
+}
+
+.line-height-24 {
+	line-height: 24px !important;
+}
+
+.line-height-26 {
+	line-height: 26px !important;
+}
+
+.spacing-02 {
+	letter-spacing: 0.02em !important;
+}
+
+.dark-blue-color {
+	color: #212131;
+}
+
 @media only screen and (max-width: 1023px) {
   .hidden-a-1023 {
     display: none;
