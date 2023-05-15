@@ -1,0 +1,129 @@
+[
+	{
+		"title": "How to Start?",
+		"subtitles": ["Web3 Wallet", "Identity Verification"],
+		"icon": "app-rocket",
+		"questions": [
+				{
+					"question": "What can I buy?",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Web3 Wallet"
+				},
+				{
+					"question": "Can I use metamask?",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Web3 Wallet"
+				},
+				{
+					"question": "My Identity",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Identity Verification"
+				}
+		]
+	},
+	{
+		"title": "How to get NFT?",
+		"subtitles": ["Buying Now", "Making offers (bidding)"],
+		"icon": "app-shopping-bag",
+		"questions": [
+				{
+					"question": "How do I buy?",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Buy Now"
+				},
+				{
+					"question": "Difference between buy now amd make offer?",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Buy Now"
+				},
+				{
+					"question": "I can't make an offer",
+					"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"tag": "Making Offers (bidding)"
+				}
+		]
+	},
+	{
+		"title": "Storing my NFTs",
+		"subtitles": ["Digital Wine Cellar", "Portfolio"],
+		"icon": "app-barrel-top",
+		"questions": [
+			{
+				"question": "Where are my NFTs stored?",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			},
+			{
+				"question": "Another answer NFTs stored",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			},
+			{
+				"question": "Another answer NFTs stored",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			}
+		]
+	},
+	{
+		"title": "Sell my NFT",
+		"subtitles": ["Listing", "Incoming Offers"],
+		"icon": "app-seller-tag",
+		"questions": [
+			{
+				"question": "Where are my NFTs stored?",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			},
+			{
+				"question": "Another answer NFTs stored",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			},
+			{
+				"question": "Another answer NFTs stored",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Digital Wine Cellar"
+			}
+		]
+	},
+	{
+		"title": "My Profile",
+		"subtitles": ["Offers & Listings", "Trading history"],
+		"icon": "app-person-avatar",
+		"questions": [
+			{
+				"question": "Question about my profile?",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Offers & Listings"
+			},
+			{
+				"question": "Another question about My Profile",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Trading History"
+			}
+		]
+	},
+	{
+		"title": "Policy",
+		"subtitles": ["Privacy Policy", "Terms of Service"],
+		"icon": "app-lock",
+		"questions": [
+			{
+				"question": "Question about Policy",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Privacy Policy"
+			},
+			{
+				"question": "Another question about Privacy Policy",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Privacy Policy"
+			},
+			{
+				"question": "Question about Terms of Service",
+				"answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"tag": "Terms of Service"
+			}
+		]
+	}
+]
