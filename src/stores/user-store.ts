@@ -85,7 +85,7 @@ export const useUserStore = defineStore(
     // eslint-disable-next-line
     const uploadAvatar = async (formData: any) => {
       try {
-	formData.append("apiKey", APIKeyString)
+	formData.append('apiKey', APIKeyString)
         await axios.post(
           process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
           formData,
