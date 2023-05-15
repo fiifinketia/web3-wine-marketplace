@@ -13,7 +13,7 @@
     >
       Home
     </div>
-    <div v-if="!isConnected" @click="ConnectWallet()" class="text-primary">connect wallet</div>
+    <div v-if="!isConnected" class="text-primary" @click="ConnectWallet()">connect wallet</div>
     <div
       class="burger-bolder-text"
       @click="
