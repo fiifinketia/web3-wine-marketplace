@@ -23,7 +23,13 @@ const customIcons: { [key: string]: string } = {
 	'app:verify-user': 'img:/icons/verify-account-icon.svg',
 	'app:verify-complete': 'img:/icons/verification-completed.svg',
 	'app:verify-pending': 'img:/icons/verification-pending.svg',
-	'app:verify-failed': 'img:/icons/verification-failed.svg'
+	'app:verify-failed': 'img:/icons/verification-failed.svg',
+	'app-rocket': 'img:/icons/rocket.svg',
+	'app-shopping-bag': 'img:/icons/shopping-bag.svg',
+	'app-lock': 'img:/icons/lock.svg',
+	'app-person-avatar': 'img:/icons/person-avatar.svg',
+	'app-seller-tag': 'img:/icons/seller-tag.svg',
+	'app-barrel-top': 'img:/icons/barrel-top.svg'
 };
 export default defineComponent({
   name: 'App',
