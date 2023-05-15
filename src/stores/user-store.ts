@@ -65,7 +65,7 @@ export const useUserStore = defineStore(
 
     const updateUsername = async (username: string) => {
       const updatedUser = await axios.put(
-        process.env.MARKETPLACE_USERS_API + '/' + walletAddress.value,
+        process.env.MARKETPLACE_USERS_API + '/update/' + walletAddress.value,
         {
           username,
 	  apiKey: APIKeyString,
@@ -85,6 +85,7 @@ export const useUserStore = defineStore(
 
     const uploadAvatar = async (formData: any) => {
       try {
+	formData.append("apiKey", APIKeyString)
         await axios.post(
           process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
           formData,

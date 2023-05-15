@@ -17,6 +17,10 @@ export const useNotificationsStore = defineStore(
         );
        settings.value = updatedSettings.data;
       } catch (error: any) {
+	if(error.response && error.response.status === 404)
+	{
+		
+	}
 	if(!settings.value)
 	{
 		settings.value = {
