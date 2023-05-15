@@ -70,10 +70,10 @@
     />
   </div>
 
-  <!---------------------------- /SETTINGS ---------------------------->
   <!-- Terms and Conditions -->
   <q-dialog
     v-model="showTermsAndConditions"
+    position="left"
     full-height
     class="terms-and-conditions-background"
   >
@@ -146,8 +146,8 @@
   />
 
   <HelpCenterDialog
-	v-model="showHelpCenter"
-	@close-help-center="showHelpCenter = false"
+    v-model="showHelpCenter"
+    @close-help-center="showHelpCenter = false"
   />
   <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
@@ -251,6 +251,7 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
+              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -394,7 +395,12 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-if="!!walletAddress" v-close-popup clickable @click="showSettings = true">
+                  <q-item
+                    v-if="!!walletAddress"
+                    v-close-popup
+                    clickable
+                    @click="showSettings = true"
+                  >
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
@@ -416,7 +422,11 @@
                             </q-item-section>
                           </q-item>
 
-                          <q-item v-close-popup clickable @click="showHelpCenter = true">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="showHelpCenter = true"
+                          >
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -486,6 +496,7 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
+import { STAGING_TrackClickEvent } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -551,6 +562,11 @@ export default defineComponent({
     }
   },
   methods: {
+    // amplitude tracking
+    favoritesPageClick() {
+      STAGING_TrackClickEvent('Favorites Page Clicked');
+    },
+
     async fundWallet() {
       let transak = new transakSDK({
         apiKey: process.env.TRANSAK_API_KEY, // Your API Key

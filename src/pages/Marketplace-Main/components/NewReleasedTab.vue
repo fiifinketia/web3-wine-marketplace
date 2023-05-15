@@ -114,8 +114,8 @@ export default defineComponent({
     };
   },
   mounted() {
-    SetSessionID('Releases Tab Clicked');
-  }
+    SetSessionID();
+  },
 });
 </script>
 

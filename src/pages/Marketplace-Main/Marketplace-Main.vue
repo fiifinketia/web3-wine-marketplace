@@ -98,14 +98,15 @@ import 'src/css/Profile/shared.css';
 import AllNFTsTab from './components/AllNFTsTab.vue';
 import NewReleasedTab from './components/NewReleasedTab.vue';
 import RecommendedTab from './components/Recommended/RecommendedTab.vue';
+import { STAGING_TrackClickEvent } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
     AllNFTsTab: AllNFTsTab,
     NewlyReleasedTab: NewReleasedTab,
-		RecommendedTab: RecommendedTab,
+    RecommendedTab: RecommendedTab,
   },
-	emits: ['openConnectWallet'],
+  emits: ['openConnectWallet'],
 
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
@@ -124,11 +125,9 @@ export default defineComponent({
           const tabTo = to.query.tab;
           if (
             tabTo !== from.query.tab &&
-            (
-              tabTo === 'nfts' ||
+            (tabTo === 'nfts' ||
               tabTo === 'releases' ||
-              tabTo === 'recommended'
-            )
+              tabTo === 'recommended')
           ) {
             this.tab = tabTo;
             this.TabLabelSetter(tabTo);
@@ -137,20 +136,30 @@ export default defineComponent({
       },
       immediate: true,
     },
+
     tab: {
       handler(val) {
         switch (val) {
           case 'nfts':
             this.$router.push({ path: 'marketplace', query: { tab: 'nfts' } });
             this.tabLabel = 'Marketplace';
+            STAGING_TrackClickEvent('Marketplace Tab Clicked');
             break;
           case 'releases':
-            this.$router.push({ path: 'marketplace', query: { tab: 'releases' } });
+            this.$router.push({
+              path: 'marketplace',
+              query: { tab: 'releases' },
+            });
             this.tabLabel = 'Releases';
+            STAGING_TrackClickEvent('Releases Tab Clicked');
             break;
           case 'recommended':
-            this.$router.push({ path: 'marketplace', query: { tab: 'recommended' } });
+            this.$router.push({
+              path: 'marketplace',
+              query: { tab: 'recommended' },
+            });
             this.tabLabel = 'Recommended';
+            STAGING_TrackClickEvent('Recommended NFTs Tab Clicked');
             break;
         }
       },
