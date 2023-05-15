@@ -264,14 +264,31 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Expiration date </span>
-            <q-input
-              v-model="listingExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start q-gutter-x-md">
+              <q-input
+                v-model="listingExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="width: 125px;"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="listingExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 100px;"
+                :disable="!listingExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <div class="column">
             <span class="dialog-price-label"> Fee </span>
@@ -318,7 +335,7 @@
                 !acceptTerms ||
                 listingExpirationDate === '' ||
                 parseFloat(listingPrice) <= 0 ||
-                loadingListing
+                loadingListing || !isValidTime
               "
               @click="CreateNewOrder()"
             >
@@ -344,6 +361,7 @@ import { useUserStore } from 'src/stores/user-store';
 import { useListingStore } from 'src/stores/listing-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { ListableToken } from 'src/shared/models/entities/NFT.model';
+import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
 export default defineComponent({
@@ -395,6 +413,8 @@ export default defineComponent({
       listingsStore,
       listingPrice: '',
       listingExpirationDate: '',
+      listingExpirationTime: '',
+      isValidTime: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -421,7 +441,10 @@ export default defineComponent({
       ],
       fee: '',
       acceptTerms: false,
-      ongoingTxn: false
+      ongoingTxn: false,
+
+      GetCurrentDate,
+      GetValidTime
     };
   },
   computed: {
@@ -436,6 +459,13 @@ export default defineComponent({
     filteredCurrencyOptions() {
       return this.currencyOptions.filter((option) => option.value !== this.currency.value);
     },
+  },
+  watch: {
+    listingExpirationDate: {
+      handler() {
+        this.listingExpirationTime = '';
+      }
+    }
   },
   mounted() {
     share('ongoingListings', useListingStore(), { initialize: true });
@@ -489,7 +519,8 @@ export default defineComponent({
             this.userStore.walletAddress,
             this.listingPrice,
             <string> this.currency.value,
-            this.listingExpirationDate
+            this.listingExpirationDate,
+            this.listingExpirationTime
           );
           if (!this.isEdit) {
             const token: ListableToken = {
@@ -535,6 +566,11 @@ export default defineComponent({
       const errorDetails: ErrorModel = ErrorMessageBuilder(err);
       this.$emit('listing-error-dialog', errorDetails);
     },
+    CheckExpirationTime() {
+      const isValid = GetValidTime(this.listingExpirationDate, this.listingExpirationTime);
+      this.isValidTime = isValid;
+      return isValid;
+    }
   },
 });
 </script>

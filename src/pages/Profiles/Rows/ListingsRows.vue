@@ -75,9 +75,17 @@
         </span>
       </div>
       <div v-if="$q.screen.width > 600" class="listings-column-expire">
-        <span class="profile-nft-number-highlight">
-          {{ listing.endTime }}
-        </span>
+        <div class="column items-center" style="width: fit-content">
+          <span
+            class="profile-nft-number-highlight"
+            :style="ConvertUnixToDate(listing.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+          >
+            {{ ConvertUnixToDate(listing.endTime) }}
+          </span>
+          <span class="transaction-time-text">
+            {{ ConvertUnixToTime(listing.endTime) }}
+          </span>
+        </div>
       </div>
       <div v-if="$q.screen.width <= 600" class="listings-column-yours column">
         <div class="row q-pb-xs">
@@ -88,8 +96,11 @@
           />
           <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
         </div>
-        <span class="profile-nft-number-highlight">
-          {{ listing.endTime }}
+        <span
+          class="profile-nft-number-highlight"
+          :style="ConvertUnixToDate(listing.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+        >
+          {{ ConvertUnixToDate(listing.endTime) }}
         </span>
       </div>
       <div
@@ -121,6 +132,7 @@ import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { ConvertUnixToDate, ConvertUnixToTime } from 'src/shared/date.helper';
 
 export default defineComponent({
   components: {
@@ -141,7 +153,9 @@ export default defineComponent({
       highestOffer: '',
       tab: 'listings',
 
-      GetCurrencyLabel
+      GetCurrencyLabel,
+      ConvertUnixToDate,
+      ConvertUnixToTime
     };
   },
   methods: {

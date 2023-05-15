@@ -216,7 +216,8 @@ export default defineComponent({
   computed: {
     ...mapState(ordersStore, {
       listings: store => store.getListings,
-      brandSearched: store => store.getListingBrandFilterStatus
+      brandSearched: store => store.getListingBrandFilterStatus,
+      tabKey: store => store.getListingTabKey
     }),
     ...mapState(useListableFilters, {
       listableNFTs: store => store.getParentListableTokens
@@ -238,6 +239,11 @@ export default defineComponent({
         this.store.setListingBrandFilter(brandFilter);
       },
     },
+    tabKey: {
+      async handler() {
+        await this.FetchListings('', '');
+      }
+    }
   },
 
   async mounted() {
@@ -249,6 +255,8 @@ export default defineComponent({
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
       this.listableNFTs = this.listableFiltersStore.getFilteredListableTokens;
+      this.loadingNewListingDialog = false;
+      this.errorNewListingDialog = false;
       this.loadingRequest = false;
     }
   },
@@ -270,10 +278,7 @@ export default defineComponent({
           this.store.listingBrandFilterStatus == true
         ) {
           this.HandleMissingBrand();
-        } else if (this.store.listingBrandFilterStatus == true) {
-          this.brandSearched = true;
         } else {
-          this.brandSearched = false;
           this.$emit('listingsAmount', this.listings.length);
           this.CheckForEmptyRequest();
         }

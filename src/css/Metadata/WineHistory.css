@@ -118,6 +118,12 @@
 	padding-left: 8px;
 }
 
+.chart-avg-price {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	color: #212131;
+}
+
 .border {
 	width: 16px;
 	height: 16px;
@@ -182,10 +188,8 @@ td {
 		display: flex;
 		flex-direction: column-reverse;
 	}
-	.average-price,
-	.price1,
-	.price2 {
-		line-height: 30px;
+	.average-price {
+		line-height: 40px;
 	}
 	.radio-buttons {
 		width: 100%;

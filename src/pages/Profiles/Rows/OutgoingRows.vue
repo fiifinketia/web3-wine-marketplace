@@ -41,14 +41,22 @@
           anchor="top start"
           self="center start"
           class="outgoing-tooltip-container"
-          :offset="[70, 30]"
+          :offset="[70, 40]"
         >
           <div class="column">
             <div class="row items-center justify-between">
               <span class="outgoing-tooltip-label"> Expiration On </span>
-              <span class="outgoing-tooltip-expire q-pl-xs">
-                {{ offer.endTime }}
-              </span>
+              <div class="column items-center q-pl-xs" style="width: fit-content">
+                <span
+                  class="outgoing-tooltip-expire"
+                  :style="ConvertUnixToDate(offer.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+                >
+                  {{ ConvertUnixToDate(offer.endTime) }}
+                </span>
+                <span class="transaction-time-text" style="font-size: 16px">
+                  {{ ConvertUnixToTime(offer.endTime) }}
+                </span>
+              </div>
             </div>
           </div>
         </q-tooltip>
@@ -70,7 +78,17 @@
         v-if="$q.screen.width > 1265"
         class="row items-center outgoing-column-expire"
       >
-        <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
+        <div class="column items-center" style="width: fit-content">
+          <span
+            class="profile-nft-number-highlight"
+            :style="ConvertUnixToDate(offer.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+          >
+            {{ ConvertUnixToDate(offer.endTime) }}
+          </span>
+          <span class="transaction-time-text">
+            {{ ConvertUnixToTime(offer.endTime) }}
+          </span>
+        </div>
       </div>
       <div
         v-if="$q.screen.width <= 600"
@@ -84,7 +102,12 @@
           />
           <span class="profile-nft-number"> {{ parseFloat(offer.offer).toFixed(1) }} </span>
         </div>
-        <span class="profile-nft-number-highlight"> {{ offer.endTime }} </span>
+        <span
+          class="profile-nft-number-highlight"
+          :style="ConvertUnixToDate(offer.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+        >
+          {{ ConvertUnixToDate(offer.endTime) }}
+        </span>
       </div>
       <div
         style="margin-left: -5px"
@@ -103,6 +126,7 @@
       :brand="brand"
       :image="image"
       :offer-end-time="offerEndTime"
+      :offer-end-date="offerEndDate"
       :highest-offer="highestOffer"
       :tab="tab"
     />
@@ -114,6 +138,7 @@ import { defineComponent, PropType } from 'vue';
 import { OutgoingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { ConvertUnixToDate, ConvertUnixToTime } from 'src/shared/date.helper';
 
 export default defineComponent({
   components: {
@@ -131,11 +156,14 @@ export default defineComponent({
       showNFTPopup: false,
       image: '',
       brand: '',
+      offerEndDate: '',
       offerEndTime: '',
       highestOffer: '',
       tab: 'outgoing',
 
-      GetCurrencyLabel
+      GetCurrencyLabel,
+      ConvertUnixToDate,
+      ConvertUnixToTime
     };
   },
   methods: {
@@ -149,7 +177,8 @@ export default defineComponent({
       this.image = offer.image;
       this.brand = offer.brand;
       this.highestOffer = !!offer.highestOffer ? parseFloat(offer.highestOffer).toFixed(1) : '0.00';
-      this.offerEndTime = offer.endTime;
+      this.offerEndDate = ConvertUnixToDate(offer.endTime);
+      this.offerEndTime = ConvertUnixToTime(offer.endTime);
       this.showNFTPopup = true;
     },
     OpenMetadataPage(offer: OutgoingOffersResponse) {

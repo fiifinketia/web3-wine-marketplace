@@ -257,7 +257,7 @@
                               accept="image/*" />
                         </q-item-section>
                       </q-item>
-                      <q-item clickable v-close-popup>
+                      <q-item v-close-popup clickable>
                         <q-item-section>Delete Avatar</q-item-section>
                       </q-item>
                     </q-list>
@@ -295,10 +295,10 @@
               />
               <q-btn
                 class="wiv-primary-button q-my-sm"
-                @click="saveProfileSettings"
                 full-width
                 label="Save Changes"
                 unelevated
+                @click="saveProfileSettings"
               />`
             </q-card-section>
           </q-card>
@@ -329,15 +329,15 @@
                 class="q-mb-md"
                 outlined
                 dense
-		:disabled="!notificationsStore.settings.email"
+								:disabled="!notificationsStore.settings.email"
                 lazy-rules
               />
-	</div>
+			</div>
               <q-btn
                 class="wiv-primary-button q-my-sm"
-                @click="notificationsStore.saveNotificationsSettings(userStore.walletAddress)"
                 label="Save Changes"
                 unelevated
+                @click="notificationsStore.saveNotificationsSettings(userStore.walletAddress)"
               />
 		</div>
             </q-card-section>
@@ -350,7 +350,6 @@
   </q-dialog>
 </template>
 <script lang="ts">
-import { UserModel } from 'src/components/models';
 import { defineComponent, ref } from 'vue';
 import '../../css/MainLayout/SettingsDialog.css';
 import { useUserStore } from 'src/stores/user-store';
@@ -401,6 +400,7 @@ export default defineComponent({
         return;
       try {
         this.userStore.updateUsername(this.username);
+			// eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }
@@ -411,6 +411,7 @@ export default defineComponent({
       try {
         await this.userStore.uploadAvatar(formData);
 	this.imageUploadMenu = false
+			// eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }

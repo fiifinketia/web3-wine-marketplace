@@ -42,6 +42,22 @@
             type="radio"
             class="sidebar-options"
           />
+          <div style="padding-left: 30px">
+            <q-option-group
+              v-model="wineFiltersStore.currency"
+              :options="wineFiltersStore.currencyOptions"
+              type="checkbox"
+              class="sidebar-options"
+              :disable="disableCurrencies"
+            >
+              <template #label="opt">
+                <div class="row items-center q-gutter-x-xs">
+                  <q-icon :name="opt.icon" size="1.5em" />
+                  <span>{{ opt.label }}</span>
+                </div>
+              </template>
+            </q-option-group>
+          </div>
         </q-list>
       </q-expansion-item>
 
@@ -57,28 +73,6 @@
             type="radio"
             class="sidebar-options"
           />
-        </q-list>
-      </q-expansion-item>
-
-      <!-- Currency filter -->
-      <q-expansion-item
-        label="Listing currencies"
-        header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
-      >
-        <q-list class="sidebar-active-border rounded-borders q-my-sm">
-          <q-option-group
-            v-model="wineFiltersStore.currency"
-            :options="wineFiltersStore.currencyOptions"
-            type="checkbox"
-            class="sidebar-options"
-          >
-            <template #label="opt">
-              <div class="row items-center q-gutter-x-xs">
-                <q-icon :name="opt.icon" size="1.5em"></q-icon>
-                <span>{{ opt.label }}</span>
-              </div>
-            </template>
-          </q-option-group>
         </q-list>
       </q-expansion-item>
 
@@ -442,6 +436,11 @@ export default defineComponent({
       minPrice: 0,
       maxPrice: 0,
     };
+  },
+  computed: {
+    disableCurrencies() {
+      return !!(this.wineFiltersStore.listedOnly == 'Unlisted')
+    }
   },
   watch: {
     brandQuery: {
