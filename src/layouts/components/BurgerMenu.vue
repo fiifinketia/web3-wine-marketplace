@@ -4,7 +4,7 @@
       <q-avatar size="40px"> <img :src="userStore.user?.avatar" /> </q-avatar>
       {{ userStore.user.username || userStore.walletAddress.slice(0, 10) }}
     </div>
-		<div
+    <div
       class="burger-bolder-text"
       @click="
         $router.push('/');
@@ -13,6 +13,7 @@
     >
       Home
     </div>
+    <div v-if="!isConnected" @click="ConnectWallet()" class="text-primary">connect wallet</div>
     <div
       class="burger-bolder-text"
       @click="
@@ -68,7 +69,6 @@
         "
       />
     </div>
-    <div v-if="!isConnected" @click="ConnectWallet()">connect wallet</div>
     <div class="burger-bolder-text">digital wine cellar</div>
     <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
     <div>contact us</div>
