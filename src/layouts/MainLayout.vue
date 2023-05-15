@@ -74,7 +74,6 @@
   <!-- Terms and Conditions -->
   <q-dialog
     v-model="showTermsAndConditions"
-    position="left"
     full-height
     class="terms-and-conditions-background"
   >
@@ -139,6 +138,7 @@
   <BurgerMenu
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
+    @logout="logout"
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
