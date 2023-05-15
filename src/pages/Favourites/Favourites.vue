@@ -206,7 +206,7 @@
       :network="network"
       :smart-contract-address="smartContractAddress"
       :token-id="tokenID"
-      @unfavorite="(action) => DialogAction(action)"
+      @unfavorite="action => DialogAction(action)"
     />
   </q-page>
 </template>
@@ -274,11 +274,10 @@ export default defineComponent({
       ongoingTxn: false,
 
       GetCurrencyLabel,
-      
       index: 0,
       smartContractAddress: '',
       tokenID: '',
-      network: ''
+      network: '',
     };
   },
   async mounted() {
@@ -302,17 +301,13 @@ export default defineComponent({
       }
     },
     DialogAction(action: {
-      index: number,
-      token: { tokenID: string, cAddress: string, network: string },
-      cancel: boolean
+      index: number;
+      token: { tokenID: string; cAddress: string; network: string };
+      cancel: boolean;
     }) {
       this.removeDialog = false;
       const { index, token, cancel } = action;
-      this.UnfavoriteNFT(
-        index,
-        token,
-        cancel
-      )
+      this.UnfavoriteNFT(index, token, cancel);
     },
     async getAllFavorites(walletAddress: string, brand: string) {
       this.isLoading = true;
@@ -350,13 +345,13 @@ export default defineComponent({
         if (nftIndex > -1) {
           this.favNFTs[nftIndex].favoriteLoading = true;
           this.removeDialog = true;
-          await new Promise(resolve => setTimeout(resolve, 1500))
+          await new Promise(resolve => setTimeout(resolve, 1500));
           if (!!this.removeDialog) {
             await this.UnfavoriteNFT(
               nftIndex,
               { tokenID, cAddress, network },
               false
-            )
+            );
           }
         }
       } catch {
