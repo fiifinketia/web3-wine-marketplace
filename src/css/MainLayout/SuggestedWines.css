@@ -53,55 +53,65 @@
 	height: 8px; /* Optional: add a height to increase the clickable area */
 }
 
-.suggest-wine-name {
-	font-family: 'Obviously-Bold';
-	font-style: normal;
-	line-height: 1.5;
-	letter-spacing: 0.02em;
-	color: #212131;
-	order: 1;
-	align-self: stretch;
-	display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-	text-overflow: ellipsis;
-	max-height: 3;
-}
-
 .suggest-card-individual {
-	min-width: 150px !important;
-	min-height: 150px !important;
+	transition: 0.2s;
 }
 
-.suggest-card-img {
-	background-color: #e0e4eb;
-	width: 100%;
-	height: 230px;
+.suggest-card-individual:hover {
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+}
+
+.suggest-nft-card {
+	font-family: 'Obviously-Bolder';
+  font-size: 18px;
+  font-weight: 460;
+}
+
+.suggest-card-image {
+  border-radius: 6px !important;
+}
+
+.suggest-card-brand {
+  height: 57px;
+  line-height: 1.2;
+}
+
+.clickable-image {
+  cursor: pointer;
+}
+
+.suggest-price-container {
+  background: linear-gradient(
+    109.05deg,
+    rgba(255, 255, 255, 0.13) 15.61%,
+    rgba(255, 255, 255, 0.04) 98.78%
+  );
+  border: 1px solid rgba(94, 151, 236, 0.27) !important;
+  backdrop-filter: blur(20px);
+  border-radius: 6px !important;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.suggest-price-header {
+  line-height: 1;
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  color: #9d9d9d;
+}
+
+.suggest-price-text-b-active,
+.suggest-price-text-b-inactive {
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color: rgba(33, 33, 49, 1);
+  line-height: 0.8;
 }
 
 .suggest-price-container {
 	border: 1px solid rgba(94, 151, 236, 0.27) !important;
 	border-radius: 6px !important;
-}
-
-.suggest-price {
-	font-family: 'ProximaNova-Bold';
-	font-size: 20px;
-	line-height: 24px;
-	display: flex;
-	align-items: center;
-	color: #212131;
-}
-
-.suggest-starting-from {
-	font-family: 'ProximaNova-All';
-	font-size: 16px;
-	line-height: 19px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.5px;
-	color: #9d9d9d;
 }
 
 .suggested-skip-button, .suggested-more-button {
@@ -145,6 +155,24 @@
 	color: #FFFFFF;
 }
 
+@media screen and (min-width: 1025px) {
+  .suggest-card-individual {
+    width: 23%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .suggest-card-individual {
+    width: 32%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .suggest-card-individual {
+    width: 48%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .suggested-skip-button, .suggested-more-button {
 		width: 100%;
@@ -152,4 +180,19 @@
 	.suggested-skip-text, .suggested-more-text {
 		font-size: 18px;
 	}
+}
+
+@media screen and (max-width: 350px) {
+  .suggest-price-text-b-inactive {
+    font-size: 14px;
+  }
+  .suggest-price-text-b-active {
+    font-size: 16px;
+  }
+  .suggest-price-header {
+    font-size: 14px;
+  }
+  .suggest-nft-card {
+    font-size: 16px;
+  }
 }

@@ -368,7 +368,6 @@
   </q-dialog>
 </template>
 <script lang="ts">
-import { UserModel } from 'src/components/models';
 import { defineComponent, ref } from 'vue';
 import '../../css/MainLayout/SettingsDialog.css';
 import { useUserStore } from 'src/stores/user-store';
@@ -422,6 +421,7 @@ export default defineComponent({
         return;
       try {
         this.userStore.updateUsername(this.username);
+        // eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }
@@ -432,6 +432,7 @@ export default defineComponent({
       try {
         await this.userStore.uploadAvatar(formData);
         this.imageUploadMenu = false;
+        // eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }

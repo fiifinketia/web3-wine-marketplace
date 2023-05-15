@@ -1,8 +1,19 @@
 <template>
   <q-dialog transition-show="scale" transition-hide="scale" persistent>
     <q-card class="q-pa-sm dialog-confirm-box-long column items-center">
-      <q-card-section class="column items-center q-pb-none q-gutter-y-lg">
-        <span class="dialog-delete-action"> Please confirm the action. </span>
+      <q-card-section class="column items-center q-pb-none">
+        <div class="column items-center q-gutter-y-md">
+          <span class="dialog-delete-action" style="font-family: ProximaNova-Regular">
+            The offer is in {{ GetCurrencyLabel(currency) }}
+          </span>
+          <span class="dialog-delete-action row items-center">
+            You will receive
+            <q-icon :name="`app:${GetCurrencyLabel(currency)}-icon`" class="currency-logo q-px-xs" /> {{ amount }}
+          </span>
+          <span class="dialog-delete-action row items-center">
+            in your wallet.
+          </span>
+        </div>
       </q-card-section>
       <div
         class="q-mb-sm"
@@ -75,6 +86,7 @@ import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/dialog.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useUserStore } from 'src/stores/user-store';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
 
 export default defineComponent({
   props: {
@@ -85,11 +97,20 @@ export default defineComponent({
       type: Object as PropType<TokenIdentifier>,
       required: true,
     },
+    currency: {
+      type: String,
+      required: true
+    },
+    amount: {
+      type: String,
+      required: true
+    }
   },
   emits: ['accept-offer'],
   data() {
     return {
       userStore: useUserStore(),
+      GetCurrencyLabel
     };
   },
   methods: {

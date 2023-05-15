@@ -19,11 +19,31 @@
         <q-tabs
           v-else
           v-model="tab"
-          class="row justify-between items-center text-grey q-py-sm q-px-md bg-gradient_blue-green"
+          class="text-grey q-py-sm q-px-md bg-gradient_blue-green"
+          content-class="row justify-between items-center"
           indicator-color="primary"
           no-caps
         >
-          <span v-if="$q.screen.width > 350" class="col profile-tab-title">
+          <div v-if="IsSearchedForTab()" class="q-mr-xs">
+            <q-btn
+              dense
+              unelevated
+              flat
+              no-caps
+              class="btn--no-hover"
+              style="width: fit-content;"
+              @click="ResetSearchForTab()"
+            >
+              <img
+                src="../../assets/back-left-white.svg"
+                style="height: 20px; width: 11.5px"
+              />
+              <span class="profile-back-text q-pl-md" style="color: white">
+                {{ BackButtonLabel() }}
+              </span>
+            </q-btn>
+          </div>
+          <span v-else-if="$q.screen.width > 350" class="col profile-tab-title">
             {{ CountLabel() }}
             <span class="profile-tab-count"> {{ countForTab }} </span>
           </span>
@@ -159,6 +179,8 @@ import ListingsTab from './Tabs/ListingsTab.vue';
 import TransactionsTab from './Tabs/TransactionsTab.vue';
 import UnconnectedWallet from './UnconnectedWallet.vue';
 import { useUserStore } from 'src/stores/user-store';
+import { ordersStore } from 'src/stores/orders-store';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   components: {
@@ -173,15 +195,24 @@ export default defineComponent({
   data() {
     const queryT = this.$router.currentRoute.value.query.tab as string;
     const userStore = useUserStore();
+    const store = ordersStore();
     return {
       tab: ref(queryT || 'listings'),
       tabLabel: '',
       countForTab: 0,
       isConnected: false,
       userStore,
+      store
     };
   },
-
+  computed: {
+    ...mapState(ordersStore, {
+      txnSearched: store => store.getTransactionBrandFilterStatus,
+      outgoingSearched: store => store.getOutgoingBrandFilterStatus,
+      listingSearched: store => store.getListingBrandFilterStatus,
+      incomingSearched: store => store.getIncomingBrandFilterStatus
+    }),
+  },
   watch: {
     $route: {
       handler: function (to, from) {
@@ -260,6 +291,30 @@ export default defineComponent({
           return 'TXN';
       }
     },
+    IsSearchedForTab() {
+      switch (this.tabLabel) {
+        case 'Listings':
+          return this.listingSearched;
+        case 'Incoming Offers':
+          return this.incomingSearched;
+        case 'Outgoing Offers':
+          return this.outgoingSearched;
+        case 'Trading History':
+          return this.txnSearched;
+      }
+    },
+    BackButtonLabel() {
+      switch (this.tabLabel) {
+        case 'Listings':
+          return 'All List...'
+        case 'Incoming Offers':
+          return 'All Inc...'
+        case 'Outgoing Offers':
+          return 'All Off...'
+        case 'Trading History':
+          return 'All TXN...'
+      }
+    },
     TabLabelSetter(tab: string) {
       switch (tab) {
         case 'listings':
@@ -279,6 +334,22 @@ export default defineComponent({
           break;
       }
     },
+    ResetSearchForTab() {
+      switch (this.tabLabel) {
+        case 'Listings':
+          this.store.setListingTabKey();
+          break;
+        case 'Incoming Offers':
+          this.store.setIncomingTabKey();
+          break;
+        case 'Outgoing Offers':
+          this.store.setOutgoingTabKey();
+          break;
+        case 'Trading History':
+          this.store.setTransactionTabKey()
+          break;
+      }
+    }
   },
 });
 </script>

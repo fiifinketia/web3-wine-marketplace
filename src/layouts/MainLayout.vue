@@ -44,14 +44,13 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div
-    v-if="userStore.user && showMyWallet"
-    class="my-wallet-background row justify-end hidden"
-  >
+  <div v-if="userStore.user" class="my-wallet-background row justify-end hidden">
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
-      :balance="balance"
+      :usdc-balance="usdcBalance ? formatNumber(usdcBalance) : ''"
+      :usdt-balance="usdtBalance ? formatNumber(usdtBalance) : ''"
+      :wiva-balance="wivaBalance ? formatNumber(wivaBalance) : ''"
       @close-my-wallet="showMyWallet = false"
       @fund-wallet="fundWallet()"
       @logout="logout"
@@ -149,7 +148,6 @@
     v-model="showHelpCenter"
     @close-help-center="showHelpCenter = false"
   />
-  <SuggestedWines v-model="tourStore.suggestedWinesDialog" />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
   <q-layout view="lHh Lpr lFf">
@@ -478,7 +476,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
-// import transakSDK from '@transak/transak-sdk';
 import transakSDK from '@transak/transak-sdk';
 
 import '../css/MainLayout/MainLayout.scss';
@@ -488,7 +485,6 @@ import 'src/css/reusable.css';
 
 import { useUserStore } from 'src/stores/user-store';
 import BurgerMenu from './components/BurgerMenu.vue';
-import SuggestedWines from './components/SuggestedWines.vue';
 import WalletDialog from './components/WalletDialog.vue';
 import SettingsDialog from './components/SettingsDialog.vue';
 import HelpCenterDialog from './components/HelpCenterDialog.vue';
@@ -502,7 +498,6 @@ export default defineComponent({
   name: 'MainLayout',
   components: {
     BurgerMenu,
-    SuggestedWines,
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
@@ -526,7 +521,9 @@ export default defineComponent({
       orderStore,
       walletAddress: userStore.walletAddress,
       isMetaMaskInstalled,
-      balance: 0,
+      usdtBalance: 0,
+      usdcBalance: 0,
+      wivaBalance: 0,
       tourStore,
     };
   },
@@ -558,7 +555,11 @@ export default defineComponent({
       this.ClearStore();
     } else {
       this.ReInitAmplitude(this.walletAddress);
-      this.balance = await this.userStore.getWalletBalance();
+      const walletBalances = await this.userStore.getWalletBalance();
+      if (walletBalances) {
+        const { _usdtBalance: usdtBalance, _usdcBalance: usdcBalance, _wivaBalance: wivaBalance } = walletBalances;
+        Object.assign(this, { usdtBalance, usdcBalance, wivaBalance });
+      }
     }
   },
   methods: {
@@ -697,6 +698,10 @@ export default defineComponent({
           // console.log('I am triggered on both OK and Cancel')
         });
     },
+    formatNumber(num: number) {
+      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      return formatted.replace(/\.0$/, '');
+    }
   },
 });
 </script>

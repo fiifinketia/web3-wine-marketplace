@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APIKeyString } from 'src/boot/axios';
-import { NFTWithListingAndFavorites, SeaportTransactionsModel } from '../models/Metadata';
+import { NFTHistoryDetails, NFTWithListingAndFavorites, SeaportTransactionsModel } from '../models/Metadata';
 
 const timeStamp = new Date().getTime();
 
@@ -36,14 +36,12 @@ async function GetTokenTXNHistory(req: {
   identifierOrCriteria: string,
   contractAddress: string,
   network: string
-}) : Promise<{
-  txns: SeaportTransactionsModel[],
-  chartData: number[][]
-}> {
+}) : Promise<NFTHistoryDetails> {
   try {
     let txnHistory = {} as {
       txns: SeaportTransactionsModel[],
-      chartData: number[][]
+      wivaChart: number[][],
+      stableChart: number[][]
     };
     const { identifierOrCriteria, contractAddress, network } = req;
     const body = {

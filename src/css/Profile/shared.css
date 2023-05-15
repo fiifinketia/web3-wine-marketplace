@@ -142,6 +142,9 @@
   font-size: 20px;
   font-family: 'ProximaNova-Bold';
   line-height: 1;
+}
+
+.profile-nft-number {
   margin-top: 4px;
   margin-left: 4px;
 }
@@ -158,6 +161,10 @@
 
 .profile-checkbox > .q-radio__label {
   margin-top: 2px;
+}
+
+.profile-dropdown-container .q-btn-dropdown__arrow-container {
+  display: none;
 }
 
 .profile-back-text {
@@ -286,6 +293,10 @@
   .profile-nft-number, .profile-nft-number-highlight {
     font-size: 16px;
   }
+  .profile-back-text {
+    font-size: 18px;
+    padding-left: 10px;
+  }
   .profile-nft-brand {
     font-size: 16px;
   }
@@ -304,7 +315,7 @@
 
 @media screen and (max-width: 350px) {
   .profile-dropdown-container {
-    width: 100% !important;
+    flex: 1 !important;
   }
   .profile-dropdown-container .justify-center{
     justify-content: space-between;

@@ -26,97 +26,143 @@
           moment!
         </div>
       </q-card-section>
-      <q-card-section v-if="!isLoading" class="suggested-wines-section row justify-between">
-        <q-card
-          v-for="item in recommendations"
-          :key="item.tokenID"
-          class="no-shadow q-pa-sm suggest-card-individual"
-        >
-          <q-img :src="item.image" alt="wine" aspect-ratio="1" width="100%" />
-          <div class="suggest-wine-name q-py-md">
-            {{ item.brand }}
-          </div>
-          <div class="suggest-price-container column q-pa-sm">
-            <div class="row justify-between q-pb-sm">
-              <div class="suggest-starting-from">Price</div>
-              <q-img
-              v-if="!!userStore.walletAddress && !!item.favoriteLoading"
-              src="../../assets/loading-heart.gif"
-              :style="
-                $q.screen.width > 350
-                  ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
-                  : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
-              "
-            />
-            <q-img
-              v-else-if="!!userStore.walletAddress && item.favorited === true"
-              src="../../../public/images/heart.svg"
-              class="clickable-image"
-              :width="$q.screen.width > 350 ? '20px' : '16px'"
-              :height="$q.screen.width > 350 ? '20px' : '16px'"
-              @click.stop="
-                addRemoveFavorites(
-                  item.tokenID,
-                  item.smartContractAddress,
-                  item.network,
-                  'remove'
-                )
-              "
-            />
-            <q-img
-              v-else-if="!!userStore.walletAddress"
-              src="../../../public/images/empty-heart.svg"
-              class="clickable-image"
-              :width="$q.screen.width > 350 ? '20px' : '16px'"
-              :height="$q.screen.width > 350 ? '20px' : '16px'"
-              @click.stop="
-                addRemoveFavorites(
-                  item.tokenID,
-                  item.smartContractAddress,
-                  item.network,
-                  'add'
-                )
-              "
-            />
-            </div>
-            <div class="row justify-between">
-              <div class="suggest-price">
-                <q-img src="../../../public/images/USDT.svg" width="20px" />
-                &nbsp; {{ item.orderDetails?.listingPrice || '00.00' }}
-              </div>
-              <q-img
-                src="../../../public/images/mini-button.svg"
-                width="24px"
-                height="24px"
-              />
-            </div>
-          </div>
-        </q-card>
-      </q-card-section>
-			<q-card-section v-else class="suggested-wines-section row justify-between">
-				<div
-          v-for="loading in ReturnNumberLoading($q.screen.width)"
-          :key="loading"
-          :style="$q.screen.width > 1025
-            ? 'width: 32%' : $q.screen.width > 600
-            ? 'width: 35%;' : 'width: 48%'
+      <q-card-section class="suggested-wines-section row justify-between">
+        <div
+          v-for="token in recommendations.slice(0, $q.screen.width > 1024 ? 4 : $q.screen.width > 600 ? 3 : 2)"
+          :key="
+            token.tokenID + ',' + token.network + ',' + token.smartContractAddress
           "
+          class="suggest-card-individual q-mb-sm"
+          @click="openNFT(token)"
         >
-          <div>
-            <q-card class="q-ma-md" flat>
-              <img
-                src="../../assets/loading-card.svg"
-              />
-              <img
-                src="../../assets/loading-brand.svg"
-                :style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
-                class="q-my-md"
-              />
-              <img src="../../assets/loading-pricebox.svg" />
-            </q-card>
-          </div>
+          <q-card class="q-ma-xs suggest-nft-card" flat>
+            <img
+              :src="token.image"
+              class="suggest-card-image clickable-image"
+            />
+            <div
+              class="q-pb-sm suggest-card-brand column justify-center"
+              style="text-align: left"
+            >
+              <span>
+                {{ truncateText(token.brand) }}
+              </span>
+            </div>
+            <q-card-section
+              class="row justify-between suggest-price-container q-py-sm"
+            >
+              <div class="column items-start justify-evenly">
+                <span class="suggest-price-header q-pb-xs"> Price </span>
+                <div
+                  v-if="
+                    !!token.orderDetails?.listingPrice &&
+                    !!token.orderDetails?.transactionStatus
+                  "
+                  class="row items-center justify-between full-width"
+                  @click.stop
+                >
+                  <div class="row items-center q-gutter-x-xs q-pt-xs">
+                    <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
+                    <span class="suggest-price-text-b-active">
+                      {{ ToInt(token.orderDetails.listingPrice) }}
+                    </span>
+                  </div>
+                </div>
+                <div v-else class="q-pt-sm" style="display: flex">
+                  <span class="suggest-price-text-b-inactive">
+                    Not Listed
+                  </span>
+                </div>
+              </div>
+              <div class="column items-center justify-between q-gutter-y-xs">
+                <q-img
+                  v-if="!!userStore.walletAddress && !!token.favoriteLoading"
+                  src="../../assets/loading-heart.gif"
+                  :style="
+                    $q.screen.width > 350
+                      ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
+                      : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
+                  "
+                />
+                <q-img
+                  v-else-if="!!userStore.walletAddress && token.favorited === true"
+                  src="../../../public/images/heart.svg"
+                  class="clickable-image"
+                  :width="$q.screen.width > 350 ? '20px' : '16px'"
+                  :height="$q.screen.width > 350 ? '20px' : '16px'"
+                  @click.stop="
+                    addRemoveFavorites(
+                      token.tokenID,
+                      token.smartContractAddress,
+                      token.network,
+                      'remove'
+                    )
+                  "
+                />
+                <q-img
+                  v-else-if="!!userStore.walletAddress"
+                  src="../../../public/images/empty-heart.svg"
+                  class="clickable-image"
+                  :width="$q.screen.width > 350 ? '20px' : '16px'"
+                  :height="$q.screen.width > 350 ? '20px' : '16px'"
+                  @click.stop="
+                    addRemoveFavorites(
+                      token.tokenID,
+                      token.smartContractAddress,
+                      token.network,
+                      'add'
+                    )
+                  "
+                />
+                <q-btn
+                  v-if="
+                    userStore.user &&
+                    userStore.user.verificationStatus === 'VERIFIED' &&
+                    !token.isOwned &&
+                    !!token.orderDetails?.listingPrice &&
+                    !!token.orderDetails?.transactionStatus
+                  "
+                  dense
+                  unelevated
+                  flat
+                  no-caps
+                  :ripple="false"
+                  class="q-pa-none"
+                  @click.stop="
+                    AcceptOffer(
+                      token.orderDetails.orderHash,
+                      token.brand,
+                      token.image,
+                      token
+                    )
+                  "
+                >
+                  <img
+                    src="../../../src/assets/small-bag-btn.svg"
+                    style="border-radius: 0 !important"
+                  />
+                </q-btn>
+                <img
+                  v-if="!!token.isOwned"
+                  src="../../../src/assets/owned-tick.svg"
+                  style="border-radius: 0 !important; padding-top: 6px"
+                />
+              </div>
+            </q-card-section>
+          </q-card>
         </div>
-			</q-card-section>
+        <AcceptedOrderDialog
+          v-model="openOrderAccepted"
+          :order-accepted="'listing'"
+        />
+        <ErrorDialog
+          v-model="openErrorDialog"
+          :error-type="errorType"
+          :error-title="errorTitle"
+          :error-message="errorMessage"
+        />
+        <OngoingTransactionDialog v-model="ongoingTxn"/>
+      </q-card-section>
 
       <q-card-section
         class="suggested-buttons-container no-wrap q-gutter-x-sm"
@@ -144,82 +190,52 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import '../../css/MainLayout/SuggestedWines.css';
-import { RetrieveFilteredNFTs } from 'src/pages/Marketplace-Main/services/RetrieveTokens';
 import { ListingWithPricingAndImage } from 'src/pages/Marketplace-Main/models/Response.models';
 import { useTourStore } from 'src/stores/tour-state';
 import { useUserStore } from 'src/stores/user-store';
 import { AddFavorites, RemoveFavorites } from 'src/pages/Favourites/services/FavoritesFunctions';
+import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { useNFTStore } from 'src/stores/nft-store';
+import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
+import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 
 export default defineComponent({
   name: 'SuggestedWines',
+  components: {
+    AcceptedOrderDialog: OrderAccepted,
+    ErrorDialog: ProfileErrors,
+    OngoingTransactionDialog: TxnOngoing
+  },
+  props: {
+    recommendations: {
+      type: [] as PropType<ListingWithPricingAndImage[]>,
+      default: [],
+    }
+  },
+  emits: ['favorite-action'],
   data() {
     const tourStore = useTourStore();
 		const userStore = useUserStore();
+		const nftStore = useNFTStore();
     return {
-      recommendations: [] as ListingWithPricingAndImage[],
       tourStore,
 			userStore,
-      isEmpty: false,
-      totalView: 4,
-      errorLoad: false,
-      isLoading: ref(true),
-			loadingNFTs: [0, 1, 2, 3]
+      nftStore,
+      GetCurrencyLabel,
+
+      ongoingTxn: false,
+      openOrderAccepted: false,
+      openErrorDialog: false,
+      errorType: '',
+      errorTitle: '',
+      errorMessage: '',
     };
   },
-  mounted() {
-    this.fetchSuggestedWines(0);
-  },
   methods: {
-    async fetchSuggestedWines(calls: number) {
-			if(!this.tourStore.suggestedWinesDialog) return;
-      try {
-        const { result: nfts } = await RetrieveFilteredNFTs();
-        this.recommendations = this.filterAndSortListedNFTs(nfts).slice(
-          0,
-          this.totalView
-        );
-				this.isLoading = false;
-      } catch (error) {
-        this.errorLoad = true;
-				this.isLoading = true;
-				if(calls > 3) {
-					// Try again in 30 secs
-					setTimeout(()=> {
-						this.fetchSuggestedWines(0)
-					}, 30000)
-				} else {
-					setTimeout(()=> {
-						this.fetchSuggestedWines(calls + 1)
-					}, 5000)
-				}
-      }
-    },
-    ReturnNumberLoading(width: number) {
-      if (width > 1025) {
-        return [0, 1, 2, 3]
-      } else if (width > 600) {
-        return [0, 1, 2]
-      } else {
-        return [0, 1]
-      }
-    },
-
-    filterAndSortListedNFTs(nfts: ListingWithPricingAndImage[]) {
-      const filteredNFTs = nfts.filter(
-        nft =>
-          nft.orderDetails?.listingPrice !== null ||
-          nft.orderDetails?.listingPrice !== undefined ||
-          nft.orderDetails?.listingPrice !== ''
-      );
-      const sortedNFTs = filteredNFTs.sort((a, b) => {
-        const aPrice = a.orderDetails?.listingPrice as string;
-        const bPrice = b.orderDetails?.listingPrice as string;
-        return parseFloat(aPrice) - parseFloat(bPrice);
-      });
-      return sortedNFTs;
-    },
 		async addRemoveFavorites(
       tokenID: string,
       cAddress: string,
@@ -235,37 +251,124 @@ export default defineComponent({
       switch (objective) {
         case 'add':
           try {
-            this.recommendations[nftIndex].favoriteLoading = true;
+            this.$emit('favorite-action', { source: 'suggestions', nftIndex: nftIndex, state: 'processing' })
             await AddFavorites({
               walletAddress: this.userStore.walletAddress,
               tokenID: tokenID,
               contractAddress: cAddress,
               network: network,
             });
-            this.recommendations[nftIndex].favorited = true;
+            this.$emit('favorite-action', { source: 'suggestions', nftIndex: nftIndex, state: 'favorited' })
           } catch {
             return 0;
-          } finally {
-            this.recommendations[nftIndex].favoriteLoading = false;
           }
           break;
         case 'remove':
           try {
-            this.recommendations[nftIndex].favoriteLoading = true;
+            this.$emit('favorite-action', { source: 'suggestions', nftIndex: nftIndex, state: 'processing' })
             await RemoveFavorites({
               walletAddress: this.userStore.walletAddress,
               tokenID: tokenID,
               contractAddress: cAddress,
               network: network,
             });
-            this.recommendations[nftIndex].favorited = false;
+            this.$emit('favorite-action', { source: 'suggestions', nftIndex: nftIndex, state: 'unfavorited' })
           } catch {
             return 0;
-          } finally {
-            this.recommendations[nftIndex].favoriteLoading = false;
           }
           break;
       }
+    },
+    truncateText(text: string) {
+      if (this.$q.screen.width > 1350) {
+        if (text.length > 50) {
+          return (
+            text.trim().substring(0, 50).split(' ').slice(0, -1).join(' ') + '…'
+          );
+        } else return text;
+      } else if (this.$q.screen.width <= 600) {
+        if (text.length > 35) {
+          return (
+            text.trim().substring(0, 35).split(' ').slice(0, -1).join(' ') + '…'
+          );
+        } else return text;
+      } else {
+        if (text.length > 40) {
+          return (
+            text.trim().substring(0, 40).split(' ').slice(0, -1).join(' ') + '…'
+          );
+        } else return text;
+      }
+    },
+    async PreventExitDuringTxn(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+    SetPreventingExitListener(action: boolean) {
+      if (action) {
+        this.ongoingTxn = true;
+        window.addEventListener('beforeunload', this.PreventExitDuringTxn);
+      } else {
+        this.ongoingTxn = false;
+        window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
+      }
+    },
+    async AcceptOffer(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
+      if (!this.userStore.user) throw new Error('User not logged in');
+      this.SetPreventingExitListener(true);
+      try {
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          false,
+          this.userStore.user,
+          image
+        );
+        this.openOrderAccepted = true;
+        setTimeout(() => {
+          this.openOrderAccepted = false;
+        }, 2000);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        this.HandleError({
+          errorType: 'accept',
+          errorTitle: 'Sorry, the purchase failed',
+          errorMessage:
+            'It may be due to insufficient balance, disconnected wallet, etc.',
+        });
+        this.SetPreventingExitListener(false);
+      }
+    },
+    HandleError(err: {
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
+    }) {
+      this.errorType = err.errorType;
+      this.errorTitle = err.errorTitle;
+      this.errorMessage = err.errorMessage;
+      this.openErrorDialog = true;
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2500);
+    },
+    ToInt(price: string) {
+      return parseInt(price);
+    },
+    openNFT(token: ListingWithPricingAndImage) {
+      const routeData = this.$router.resolve({
+        path: '/nft',
+        query: {
+          id: token.tokenID,
+          network: token.network,
+          contractAddress: token.smartContractAddress,
+        },
+      });
+      window.open(routeData.href, '_blank');
     },
   },
 });
