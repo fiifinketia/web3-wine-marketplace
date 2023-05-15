@@ -7,6 +7,7 @@
         @connect-wallet="ConnectWallet()"
         @listing-exists="listed => UpdateListingStatus(listed)"
         @nft-listed="nft.listingDetails.transactionStatus = false"
+        @favorite-action="FavoriteAction"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -14,7 +15,7 @@
       />
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="about" label="About" />
-        <q-tab name="history" label="NFT history" />
+        <q-tab id="history" name="history" label="NFT history" />
       </q-tabs>
       <q-tab-panels
         v-model="tab"
@@ -22,13 +23,13 @@
         transition-prev="jump-right"
         transition-next="jump-left"
       >
-			<q-tab-panel name="about">
+			  <q-tab-panel name="about">
           <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
         </q-tab-panel>
         <q-tab-panel name="history">
           <WineHistory
             :nft-txn-history="txnHistory"
-            :nft-chart-data="chartData"
+            :nft-chart-data-sets="chartDataSets"
             :is-loading="loadingPrices"
             :errored-out="errorLoadingHistory"
             style="padding-bottom: 3rem"
@@ -87,7 +88,10 @@ export default defineComponent({
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
-      chartData: [] as number[][],
+      chartDataSets: {
+        wivaChart: [] as number[][],
+        stableChart: [] as number[][],
+      },
       userStore,
 			tourStore,
       tab: ref('about'),
@@ -113,7 +117,7 @@ export default defineComponent({
     async ValidateAndFetchNFT() {
       this.loadingMetadata = true;
       this.tokenExists = false;
-      const { id, contractAddress, network } = this.$route.query;
+      const { id, contractAddress, network, highlight : target } = this.$route.query;
       if (
         typeof id === 'string' &&
         typeof contractAddress === 'string' &&
@@ -126,6 +130,19 @@ export default defineComponent({
         );
         if (!!tokenExistCheck) {
           await this.SetNFTView(id, contractAddress, network);
+          if (target && !sessionStorage.getItem('scrolledToTarget')) {
+            this.$nextTick(() => {
+              this.tab = 'history';
+              this.$nextTick(() => {
+                const anchor = document.getElementById(<string> target);
+                if (anchor) {
+                  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  return;
+                }
+              })
+              sessionStorage.setItem('scrolledToTarget', 'scrolled');
+            })
+          }
           this.tokenExists = true;
         }
         this.loadingMetadata = false;
@@ -176,9 +193,10 @@ export default defineComponent({
           contractAddress,
           network
         })
-        const { txns, chartData } = txnHistory;
+        const { txns, stableChart, wivaChart } = txnHistory;
         this.txnHistory = txns;
-        this.chartData = chartData;
+        this.chartDataSets.stableChart = stableChart;
+        this.chartDataSets.wivaChart = wivaChart;
       } catch {
         this.errorLoadingHistory = true;
       } finally {
@@ -365,6 +383,17 @@ export default defineComponent({
 			this.$shepherd.start()
 			this.tourStore.setMetadataCompleted();
 		},
+    FavoriteAction(state: 'favorited' | 'unfavorited' | 'processing') {
+      if (state == 'favorited') {
+        this.nft.favorited = true;
+        this.nft.favoriteLoading = false;
+      } else if (state == 'unfavorited') {
+        this.nft.favorited = false;
+        this.nft.favoriteLoading = false;
+      } else if (state == 'processing') {
+        this.nft.favoriteLoading = true;
+      }
+    },
   },
 });
 </script>

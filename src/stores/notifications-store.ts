@@ -16,19 +16,19 @@ export const useNotificationsStore = defineStore(
           process.env.MARKETPLACE_API_URL + '/market/notifications/settings/' + walletAddress,
         );
        settings.value = updatedSettings.data;
+      //  eslint-disable-next-line
       } catch (error: any) {
-	if(!settings.value)
-	{
-		settings.value = {
-			offerMade: false,
-			email: undefined,
-			offerReceived: false,
-			offerAccepted: false,
-			orderFulfilled: false,
-			offerOutbidded: false,
-			wineChanged: false
-		}
-	}
+	      if(!settings.value) {
+          settings.value = {
+            offerMade: false,
+            email: undefined,
+            offerReceived: false,
+            offerAccepted: false,
+            orderFulfilled: false,
+            offerOutbidded: false,
+            wineChanged: false
+          }
+        }
         throw new Error(error);
       }
     }
@@ -37,15 +37,15 @@ export const useNotificationsStore = defineStore(
       try {
         const updatedSettings = await axios.put(
           process.env.MARKETPLACE_NOTIFICATIONS_API + '/settings/' + walletAddress,
-	  {
-	  	offerMade: settings.value?.offerMade,
-		email: settings.value?.email || undefined,
-		offerReceived: settings.value?.offerReceived,
-		offerAccepted: settings.value?.offerAccepted,
-		offerOutbidded: settings.value?.offerOutbidded,
-		orderFulfilled: settings.value?.orderFulfilled,
-		wineChanged: settings.value?.wineChanged
-	  },
+          {
+            offerMade: settings.value?.offerMade,
+            email: settings.value?.email || undefined,
+            offerReceived: settings.value?.offerReceived,
+            offerAccepted: settings.value?.offerAccepted,
+            offerOutbidded: settings.value?.offerOutbidded,
+            orderFulfilled: settings.value?.orderFulfilled,
+            wineChanged: settings.value?.wineChanged
+          },
           {
             headers: {
               'x-api-key': APIKeyString,
@@ -53,6 +53,7 @@ export const useNotificationsStore = defineStore(
           }
         );
        	settings.value = updatedSettings.data;
+      // eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }

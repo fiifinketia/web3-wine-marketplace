@@ -42,6 +42,11 @@ export const ordersStore = defineStore('ordersStore', {
     incomingBrandFilter: '',
     transactionBrandFilter: '',
 
+    listingTabKey: 0,
+    outgoingTabKey: 0,
+    incomingTabKey: 0,
+    transactionsTabKey: 0,
+
     previousListingBrandFilter: '',
     previousOutgoingBrandFilter: '',
     previousIncomingBrandFilter: '',
@@ -67,6 +72,11 @@ export const ordersStore = defineStore('ordersStore', {
     getOutgoingSortKey: state => state.selectedOutgoingSortKey,
     getIncomingSortKey: state => state.selectedIncomingSortKey,
     getTransactionSortKey: state => state.selectedTransactionSortKey,
+
+    getListingTabKey: state => state.listingTabKey,
+    getOutgoingTabKey: state => state.outgoingTabKey,
+    getIncomingTabKey: state => state.incomingTabKey,
+    getTransactionTabKey: state => state.transactionsTabKey,
 
     getListingBrandFilter: state => state.listingBrandFilter,
     getOutgoingBrandFilter: state => state.outgoingBrandFilter,
@@ -178,6 +188,9 @@ export const ordersStore = defineStore('ordersStore', {
       if (this.transactions.length > 0) {
         this.previousTransactions = transactions;
         this.previousTransactionBrandFilter = brandFilter;
+        if (brandFilter) {
+          this.transactionBrandFilterStatus = true;
+        }
       }
       this.fetchedTransactions = true;
     },
@@ -197,6 +210,23 @@ export const ordersStore = defineStore('ordersStore', {
     },
     setTransactionSortKey(sortKey: string) {
       this.selectedTransactionSortKey = sortKey;
+    },
+
+    setListingTabKey() {
+      this.listingBrandFilterStatus = false;
+      this.listingTabKey++;
+    },
+    setOutgoingTabKey() {
+      this.outgoingBrandFilterStatus = false;
+      this.outgoingTabKey++;
+    },
+    setIncomingTabKey() {
+      this.incomingBrandFilterStatus = false;
+      this.incomingTabKey++;
+    },
+    setTransactionTabKey() {
+      this.transactionBrandFilterStatus = false;
+      this.transactionsTabKey++;
     },
 
     setListingBrandFilter(brandFilter: string) {

@@ -200,7 +200,14 @@
         </q-card>
       </div>
     </div>
-    <FavsRemoved v-model="removeDialog" />
+    <FavsRemoved
+      v-model="removeDialog"
+      :index="index"
+      :network="network"
+      :smart-contract-address="smartContractAddress"
+      :token-id="tokenID"
+      @unfavorite="(action) => DialogAction(action)"
+    />
   </q-page>
 </template>
 
@@ -267,6 +274,11 @@ export default defineComponent({
       ongoingTxn: false,
 
       GetCurrencyLabel,
+      
+      index: 0,
+      smartContractAddress: '',
+      tokenID: '',
+      network: ''
     };
   },
   async mounted() {
@@ -288,6 +300,19 @@ export default defineComponent({
         this.ongoingTxn = false;
         window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
       }
+    },
+    DialogAction(action: {
+      index: number,
+      token: { tokenID: string, cAddress: string, network: string },
+      cancel: boolean
+    }) {
+      this.removeDialog = false;
+      const { index, token, cancel } = action;
+      this.UnfavoriteNFT(
+        index,
+        token,
+        cancel
+      )
     },
     async getAllFavorites(walletAddress: string, brand: string) {
       this.isLoading = true;
@@ -317,41 +342,50 @@ export default defineComponent({
           nft.tokenID == tokenID &&
           nft.network == network
       );
+      this.tokenID = tokenID;
+      this.index = nftIndex;
+      this.smartContractAddress = cAddress;
+      this.network = network;
       try {
         if (nftIndex > -1) {
           this.favNFTs[nftIndex].favoriteLoading = true;
           this.removeDialog = true;
-          setTimeout(() => {
-            this.removeFavoritesCountdown(nftIndex, {
-              tokenID,
-              cAddress,
-              network,
-            });
-          }, 2000);
+          await new Promise(resolve => setTimeout(resolve, 1500))
+          if (!!this.removeDialog) {
+            await this.UnfavoriteNFT(
+              nftIndex,
+              { tokenID, cAddress, network },
+              false
+            )
+          }
         }
       } catch {
         return 0;
-      } finally {
-        this.favNFTs[nftIndex].favoriteLoading = false;
       }
     },
-    async removeFavoritesCountdown(
+    async UnfavoriteNFT(
       index: number,
-      favorite: { tokenID: string; cAddress: string; network: string }
+      favorite: { tokenID: string; cAddress: string; network: string },
+      isCancelled: boolean
     ) {
-      if (!!this.removeDialog) {
-        await RemoveFavorites({
-          walletAddress: this.userStore.walletAddress,
-          tokenID: favorite.tokenID,
-          contractAddress: favorite.cAddress,
-          network: favorite.network,
-        });
-        this.favNFTs.splice(index, 1);
+      if (!isCancelled) {
+        try {
+          await RemoveFavorites({
+            walletAddress: this.userStore.walletAddress,
+            tokenID: favorite.tokenID,
+            contractAddress: favorite.cAddress,
+            network: favorite.network,
+          });
+          this.favNFTs.splice(index, 1);
+          this.CheckForEmptiness(this.favNFTs, '');
+        } catch {
+          this.favNFTs[index].favoriteLoading = false;
+        } finally {
+          this.removeDialog = false;
+        }
       } else {
         this.favNFTs[index].favoriteLoading = false;
       }
-      this.removeDialog = false;
-      this.CheckForEmptiness(this.favNFTs, '');
     },
     getAllFavoritesWithBrand(brand: string) {
       this.getAllFavorites(this.userStore.walletAddress, brand);

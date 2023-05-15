@@ -5,6 +5,7 @@
     transition-show="scale"
     transition-hide="scale"
     persistent
+    @show="FetchBalances()"
   >
     <q-card class="q-pa-none column">
       <q-card-section class="row items-center q-pb-none">
@@ -108,6 +109,10 @@
               </q-select>
             </div>
           </div>
+          <div class="row items-center q-ma-none">
+            <span class="dialog-label q-pr-xs">Max Available</span>
+            <span class="dialog-label" style="color: #262626"> {{ DisplayBalanceForToken(currency.label) }} </span>
+          </div>
           <div class="column">
             <span class="dialog-price-label"> Fee </span>
             <span class="dialog-fee"> 2.5% </span>
@@ -182,7 +187,12 @@
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
   </q-dialog>
-  <q-dialog v-else transition-show="scale" transition-hide="scale">
+  <q-dialog
+    v-else
+    transition-show="scale"
+    transition-hide="scale"
+    @show="FetchBalances()"
+  >
     <q-card
       class="q-pa-none"
       style="
@@ -278,20 +288,41 @@
               </q-select>
             </div>
           </div>
+          <div class="row items-center q-ma-none">
+            <span class="dialog-label q-pr-xs">Max Available</span>
+            <span class="dialog-label" style="color: #262626"> {{ DisplayBalanceForToken(currency.label) }} </span>
+          </div>
           <div class="column">
             <span class="dialog-price-label"> Fee </span>
             <span class="dialog-fee"> 2.5% </span>
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Keep active until </span>
-            <q-input
-              v-model="offerExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start q-gutter-x-md">
+              <q-input
+                v-model="offerExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="width: 125px;"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="offerExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 100px"
+                :disable="!offerExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
@@ -349,7 +380,7 @@
                 !acceptTerms ||
                 offerExpirationDate === '' ||
                 parseFloat(offerPrice) <= 0 ||
-                loadingOffer
+                loadingOffer || !isValidTime
               "
               @click="CreateNewOrder()"
             >
@@ -375,7 +406,10 @@ import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import TxnOngoing from './TxnOngoing.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
+import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
+import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
+import { WindowWeb3Provider } from 'src/shared/web3.helper';
 
 export default defineComponent({
   components: {
@@ -436,6 +470,8 @@ export default defineComponent({
       userStore,
       offerPrice: '',
       offerExpirationDate: '',
+      offerExpirationTime: '',
+      isValidTime: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -466,13 +502,27 @@ export default defineComponent({
       ongoingTxn: false,
 
       GetCurrencyLabel,
-      Currencies
+      Currencies,
+
+      GetCurrentDate,
+      GetValidTime,
+
+      usdtBalance: '',
+      usdcBalance: '',
+      wivaBalance: ''
     };
   },
   computed: {
     filteredCurrencyOptions() {
       return this.currencyOptions.filter((option) => option.value !== this.currency.value);
     },
+  },
+  watch: {
+    offerExpirationDate: {
+      handler() {
+        this.offerExpirationTime = '';
+      }
+    }
   },
   methods: {
     async PreventExitDuringTxn(event: BeforeUnloadEvent) {
@@ -506,6 +556,7 @@ export default defineComponent({
             this.offerPrice,
             <string> this.currency.value,
             this.offerExpirationDate,
+            this.offerExpirationTime,
             this.userStore.user
           );
           this.$emit('offer-created');
@@ -529,6 +580,48 @@ export default defineComponent({
       const errorDetails: ErrorModel = ErrorMessageBuilder(err);
       this.$emit('outgoing-error-dialog', errorDetails);
     },
+    CheckExpirationTime() {
+      const isValid = GetValidTime(this.offerExpirationDate, this.offerExpirationTime);
+      this.isValidTime = isValid;
+      return isValid;
+    },
+    DisplayBalanceForToken(tokenLabel: string) {
+      switch (tokenLabel) {
+        case 'USDC':
+          if (this.usdcBalance) {
+            return `${this.usdcBalance} USDC`;
+          }
+          return '00.00 USDC';
+        case 'USDT':
+          if (this.usdtBalance) {
+            return `${this.usdtBalance} USDT`;
+          }
+          return '00.00 USDT';
+        default:
+          if (this.wivaBalance) {
+            return `${this.wivaBalance} WIVA`
+          }
+          return '00.00 WIVA'
+      }
+    },
+    async FetchBalances() {
+      if (!window.ethereum) return 0;
+      const signer = WindowWeb3Provider?.getSigner();
+      if (!!signer) {
+        const formatNumber = (num: number) => {
+          let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return formatted.replace(/\.0$/, '');
+        }
+        const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
+          GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, this.userStore.walletAddress),
+          GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, this.userStore.walletAddress),
+          GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, this.userStore.walletAddress)
+        ]);
+        this.wivaBalance = wivaBalance ? formatNumber(wivaBalance) : '';
+        this.usdtBalance = usdtBalance ? formatNumber(usdtBalance) : '';
+        this.usdcBalance = usdcBalance ? formatNumber(usdcBalance) : '';
+      };
+    }
   },
 });
 </script>

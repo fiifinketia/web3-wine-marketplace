@@ -59,7 +59,9 @@
                   req.orderHash,
                   req.brand,
                   req.image,
-                  req.token
+                  req.token,
+                  req.offer,
+                  req.currency
                 )
             "
           />
@@ -74,7 +76,9 @@
                   req.orderHash,
                   req.brand,
                   req.image,
-                  req.token
+                  req.token,
+                  req.offer,
+                  req.currency
                 )
             "
           />
@@ -91,6 +95,8 @@
           :brand="brand"
           :image="image"
           :token="token"
+          :amount="offer"
+          :currency="currency"
           @accept-offer="
             req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
           "
@@ -177,6 +183,8 @@ export default defineComponent({
       brand: '',
       image: '',
       token: {} as TokenIdentifier,
+      currency: '',
+      offer: '',
 
       ongoingTxn: false
     };
@@ -185,7 +193,8 @@ export default defineComponent({
   computed: {
     ...mapState(ordersStore, {
       incomingOffers: store => store.getIncomingOffers,
-      brandSearched: store => store.getIncomingBrandFilterStatus
+      brandSearched: store => store.getIncomingBrandFilterStatus,
+      tabKey: store => store.getIncomingTabKey
     }),
   },
 
@@ -206,6 +215,11 @@ export default defineComponent({
         this.store.setIncomingBrandFilterStatus(false);
       },
     },
+    tabKey: {
+      async handler() {
+        await this.FetchIncomingOffers('', '');
+      }
+    }
   },
 
   async mounted() {
@@ -234,12 +248,16 @@ export default defineComponent({
       orderHash: string,
       brand: string,
       image: string,
-      token: TokenIdentifier
+      token: TokenIdentifier,
+      offer: string,
+      currency: string
     ) {
       this.orderHash = orderHash;
       this.brand = brand;
       this.image = image;
       this.token = token;
+      this.offer = offer;
+      this.currency = currency;
       this.openConfirmDialog = true;
     },
     async AcceptOffer(
@@ -281,10 +299,7 @@ export default defineComponent({
           this.store.incomingBrandFilterStatus == true
         ) {
           this.HandleMissingBrand();
-        } else if (this.store.incomingBrandFilterStatus == true) {
-          this.brandSearched = true;
         } else {
-          this.brandSearched = false;
           this.incomingOffers = this.EnsureIncomingOffersAreOwned();
           this.$emit('incomingAmount', this.incomingOffers.length);
           this.CheckForEmptyRequest();

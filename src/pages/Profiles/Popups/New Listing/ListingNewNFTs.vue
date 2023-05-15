@@ -100,6 +100,7 @@
             dense
             :ripple="false"
             class="open-link btn--no-hover"
+            @click="RedirectToMetadataPage(token)"
           >
             <img src="../../../../assets/button-right.svg" />
           </q-btn>
@@ -163,9 +164,20 @@ export default defineComponent({
       }
     },
     OpenListingDialog(token: ListableToken) {
-      // console.log(token);
       this.$emit('open-listing-dialog', token);
     },
+    RedirectToMetadataPage(token: ListableToken) {
+      const routeData = this.$router.resolve({
+        path: '/nft',
+        query: {
+          id: token.identifierOrCriteria,
+          network: token.network,
+          contractAddress: token.contractAddress,
+          highlight: 'history'
+        },
+      });
+      window.open(routeData.href, '_blank');
+    }
   },
 });
 </script>

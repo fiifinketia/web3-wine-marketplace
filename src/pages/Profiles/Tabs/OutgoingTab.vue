@@ -170,7 +170,8 @@ export default defineComponent({
   computed: {
     ...mapState(ordersStore, {
       outgoingOffers: store => store.getOutgoingOffers,
-      brandSearched: store => store.getOutgoingBrandFilterStatus
+      brandSearched: store => store.getOutgoingBrandFilterStatus,
+      tabKey: store => store.getOutgoingTabKey
     }),
   },
   watch: {
@@ -189,6 +190,11 @@ export default defineComponent({
         this.store.setOutgoingBrandFilter(brandFilter);
       },
     },
+    tabKey: {
+      async handler() {
+        await this.FetchOutgoingOffers('', '');
+      }
+    }
   },
   async mounted() {
     const outgoingOffersRequestStatus =
@@ -219,10 +225,7 @@ export default defineComponent({
           this.store.outgoingBrandFilterStatus == true
         ) {
           this.HandleMissingBrand();
-        } else if (this.store.outgoingBrandFilterStatus == true) {
-          this.brandSearched = true;
         } else {
-          this.brandSearched = false;
           this.$emit('outgoingAmount', this.outgoingOffers.length);
           this.CheckForEmptyRequest();
         }

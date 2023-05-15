@@ -6,6 +6,11 @@
   <PartnershipWines class="partnership" />
   <FAQ class="faq" />
   <LandingPageFooter />
+  <SuggestedWines
+    v-model="DisplayRecommendations"
+    :recommendations="recommendations"
+    @favorite-action="action => FavoriteAction(action.source, action.nftIndex, action.state)"
+  />
 </template>
 
 <script lang="ts">
@@ -20,9 +25,14 @@ import '../../css/Homepage/HomePage.css';
 import HeadlineComponent from './components/HeadlineComponent.vue';
 
 import FAQ from './components/FAQ.vue';
+import SuggestedWines from 'src/layouts/components/SuggestedWines.vue';
 
 import { useTourStore } from 'src/stores/tour-state';
 import { StepOptions } from 'vue-shepherd';
+import { useNFTStore } from 'src/stores/nft-store';
+import { ListingWithPricingAndImage } from '../Marketplace-Main/models/Response.models';
+import { AssociateOwned } from 'src/shared/association.helper';
+import { RetrieveFilteredNFTs } from '../Marketplace-Main/services/RetrieveTokens';
 
 export default defineComponent({
   name: 'VueHomepage',
@@ -34,17 +44,34 @@ export default defineComponent({
     LandingPageFooter,
     PartnershipWines,
     FAQ,
+    SuggestedWines
   },
   data() {
     const tourStore = useTourStore();
+    const nftStore = useNFTStore();
 
     return {
       tourStore,
+      nftStore,
+      recommendations: [] as ListingWithPricingAndImage[],
+      recommendationsFetched: false
     };
   },
+  computed: {
+    DisplayRecommendations() {
+      return (this.recommendationsFetched && this.tourStore.suggestedWinesDialog)
+    },
+  },
 
-  mounted() {
-    this.startPageTour();
+  async mounted() {
+    try {
+      await this.SetUpRecommendations();
+      if (this.recommendations.length > 0) {
+        this.startPageTour();
+      }
+    } catch {
+      return
+    }
   },
 
   methods: {
@@ -119,6 +146,38 @@ export default defineComponent({
         };
         checkValue();
       });
+    },
+    IncorporateOwnedNFTs(retrievedNFTs: ListingWithPricingAndImage[]) {
+      const nftsFetched = this.nftStore.fetchNFTsStatus;
+      if (!!nftsFetched) {
+        this.recommendations = AssociateOwned(retrievedNFTs, this.nftStore.ownedNFTs);
+      } else {
+        this.recommendations = retrievedNFTs;
+      }
+    },
+    async SetUpRecommendations() {
+      if (this.tourStore.suggestedWinesDialog) {
+        const { result: nfts } = await RetrieveFilteredNFTs();
+        if (nfts.length > 0) {
+          this.recommendations = nfts.slice(0,4);
+          this.recommendationsFetched = true;
+        }
+      }
+    },
+    FavoriteAction(source: string, nftIndex: number, state: 'favorited' | 'unfavorited' | 'processing') {
+      switch(source) {
+        case 'suggestions':
+          if (state == 'favorited') {
+            this.recommendations[nftIndex].favorited = true;
+            this.recommendations[nftIndex].favoriteLoading = false;
+          } else if (state == 'unfavorited') {
+            this.recommendations[nftIndex].favorited = false;
+            this.recommendations[nftIndex].favoriteLoading = false;
+          } else if (state == 'processing') {
+            this.recommendations[nftIndex].favoriteLoading = true;
+          }
+        break;
+      }
     },
   },
 });

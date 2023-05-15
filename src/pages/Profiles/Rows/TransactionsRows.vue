@@ -67,13 +67,13 @@
             <div class="row items-center justify-between">
               <span class="transaction-tooltip-label"> Date </span>
               <span class="transaction-tooltip-text">
-                {{ txn.date }}
+                {{ ConvertUnixToDate(txn.timestamp) }}
               </span>
             </div>
             <div class="row items-center justify-between">
               <span class="transaction-tooltip-label"> Time </span>
               <span class="transaction-tooltip-text">
-                {{ txn.time }}
+                {{ ConvertUnixToTime(txn.timestamp) }}
               </span>
             </div>
           </div>
@@ -83,14 +83,14 @@
         v-if="$q.screen.width > 1020"
         class="transaction-column-date row items-center"
       >
-        <span class="transaction-date-text"> {{ txn.date }} </span>
+        <span class="transaction-date-text"> {{ ConvertUnixToDate(txn.timestamp) }} </span>
         <q-separator
           style="background-color: #5e97ec45 !important"
           inset
           class="q-mx-sm"
           vertical
         />
-        <span class="transaction-time-text"> {{ txn.time }} </span>
+        <span class="transaction-time-text"> {{ ConvertUnixToTime(txn.timestamp) }} </span>
       </div>
     </div>
     <NFTDialog
@@ -112,6 +112,7 @@ import { defineComponent } from 'vue';
 import { TransactionResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { ConvertUnixToDate, ConvertUnixToTime } from 'src/shared/date.helper';
 
 export default defineComponent({
   components: {
@@ -132,7 +133,9 @@ export default defineComponent({
       tab: 'transactions',
       txnLinkPrepend: <string>process.env.POLYGON_SCAN_TXN_LINK,
 
-      GetCurrencyLabel
+      GetCurrencyLabel,
+      ConvertUnixToDate,
+      ConvertUnixToTime
     };
   },
   methods: {
@@ -149,8 +152,8 @@ export default defineComponent({
       this.image = txn.image;
       this.brand = txn.brand;
       this.txnHash = txn.txnHash;
-      this.date = txn.date;
-      this.time = txn.time;
+      this.date = ConvertUnixToDate(txn.timestamp);
+      this.time = ConvertUnixToTime(txn.timestamp);
       this.showNFTPopup = true;
     },
     OpenMetadataPage(txn: TransactionResponse) {
