@@ -13,7 +13,7 @@ export const useNotificationsStore = defineStore(
     const getNotificationsSettings = async (walletAddress: string) => {
      try {
         const updatedSettings = await axios.get(
-          process.env.MARKETPLACE_NOTIFICATIONS_API + '/settings/' + walletAddress,
+          process.env.MARKETPLACE_API_URL + '/market/notifications/settings/' + walletAddress,
         );
        settings.value = updatedSettings.data;
       } catch (error: any) {
