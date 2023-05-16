@@ -70,7 +70,7 @@
           :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number-highlight">
+        <span class="profile-nft-number-highlight" :class="!!listing.highestOffer ? 'q-ml-xs' : ''">
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
       </div>

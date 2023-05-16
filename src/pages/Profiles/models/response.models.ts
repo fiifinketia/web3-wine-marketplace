@@ -66,6 +66,7 @@ interface ListingsResponse
   extends ListingModel,
     HighestOfferModel,
     TokenIdentifier {}
+
 interface BaseOrderModel {
   brand: string;
   image: string;
