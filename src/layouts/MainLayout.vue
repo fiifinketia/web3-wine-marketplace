@@ -44,7 +44,10 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div v-if="userStore.user" class="my-wallet-background row justify-end hidden">
+  <div
+    v-if="userStore.user"
+    class="my-wallet-background row justify-end hidden"
+  >
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
@@ -69,10 +72,10 @@
     />
   </div>
 
-  <!---------------------------- /SETTINGS ---------------------------->
   <!-- Terms and Conditions -->
   <q-dialog
     v-model="showTermsAndConditions"
+    position="left"
     full-height
     class="terms-and-conditions-background"
   >
@@ -251,6 +254,7 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
+              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -395,7 +399,12 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-if="!!walletAddress" v-close-popup clickable @click="showSettings = true">
+                  <q-item
+                    v-if="!!walletAddress"
+                    v-close-popup
+                    clickable
+                    @click="showSettings = true"
+                  >
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
@@ -416,7 +425,6 @@
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-
                           <q-item v-close-popup clickable @click="openHelpCenter('topics')">
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
@@ -487,6 +495,7 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
+import { TrackClickEvent } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -552,7 +561,11 @@ export default defineComponent({
       this.ReInitAmplitude(this.walletAddress);
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
-        const { _usdtBalance: usdtBalance, _usdcBalance: usdcBalance, _wivaBalance: wivaBalance } = walletBalances;
+        const {
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance,
+          _wivaBalance: wivaBalance,
+        } = walletBalances;
         Object.assign(this, { usdtBalance, usdcBalance, wivaBalance });
       }
     }
@@ -693,9 +706,12 @@ export default defineComponent({
         });
     },
     formatNumber(num: number) {
-      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      let formatted = num.toLocaleString(undefined, {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      });
       return formatted.replace(/\.0$/, '');
-    }
+    },
   },
 });
 </script>

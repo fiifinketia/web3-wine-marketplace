@@ -180,7 +180,6 @@ export default defineComponent({
 	}
   }
 });
-
 </script>
 <style>
 .topic-card {
@@ -193,7 +192,7 @@ export default defineComponent({
 }
 
 .topic-card:hover {
-	border: 1px solid #3586FF;
+  border: 1px solid #3586ff;
 }
 
 @media screen and (min-width: 800px) {
