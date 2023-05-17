@@ -259,9 +259,13 @@
     <DeleteListingDialog
       v-model="openDeleteListingDialog"
       :order-hash="nft.listingDetails.orderHash"
+      :network="nft.network"
+      :smart-contract-address="nft.smartContractAddress"
+      :token-id="nft.tokenID"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
       @remove-listing="unlisted = true"
+      @unlist-failed="(failedUnlist) => InvalidUnlist(failedUnlist)"
     />
 
     <OrderProcessed
@@ -334,7 +338,15 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet', 'refresh-metadata', 'connect-wallet', 'listing-exists', 'nft-listed', 'favorite-action'],
+  emits: [
+    'openWallet',
+    'refresh-metadata',
+    'connect-wallet',
+    'listing-exists',
+    'nft-listed',
+    'favorite-action',
+    'unlist-failed'
+  ],
   data() {
     return {
       openCreateListingDialog: false,
@@ -414,6 +426,10 @@ export default defineComponent({
     },
     UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
       this.$emit('listing-exists', listed);
+    },
+    InvalidUnlist(failedUnlist: TokenIdentifier & { status: 'ongoingUnlist' | 'unlisted' | 'purchased' }) {
+      this.openDeleteListingDialog = false;
+      this.$emit('unlist-failed', failedUnlist);
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');

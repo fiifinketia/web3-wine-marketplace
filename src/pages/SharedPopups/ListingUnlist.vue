@@ -27,7 +27,7 @@
 <script lang="ts">
 import 'src/css/Profile/Component/dialog.css';
 import { defineComponent } from 'vue';
-import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
+import { CancelSingleOrder, ValidateUnlist } from 'src/pages/Metadata/services/Orders';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { useUserStore } from 'src/stores/user-store';
 import TxnOngoing from './TxnOngoing.vue';
@@ -40,8 +40,20 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    tokenId: {
+      type: String,
+      required: true
+    },
+    smartContractAddress: {
+      type: String,
+      required: true
+    },
+    network: {
+      type: String,
+      required: true
+    }
   },
-  emits: ['remove-listing', 'listing-delete-close', 'listing-error-dialog'],
+  emits: ['remove-listing', 'listing-delete-close', 'listing-error-dialog', 'unlist-failed'],
   data() {
     const userStore = useUserStore();
     return {
@@ -66,6 +78,24 @@ export default defineComponent({
     async CancelOrder() {
       try {
         this.SetPreventingExitListener(true);
+          const nonExistentListing = await ValidateUnlist(
+            {
+              contractAddress: this.smartContractAddress,
+              network: this.network,
+              identifierOrCriteria: this.tokenId,
+            },
+            this.userStore.walletAddress
+          )
+          if (nonExistentListing != false) {
+            this.$emit('unlist-failed', {
+              status: nonExistentListing,
+              contractAddress: this.smartContractAddress,
+              identifierOrCriteria: this.tokenId,
+              network: this.network
+            });
+            this.SetPreventingExitListener(false);
+            return
+          }
         await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
         this.$emit('remove-listing', this.orderHash);
       } catch (err) {

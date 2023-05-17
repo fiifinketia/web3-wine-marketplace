@@ -11,6 +11,12 @@
   border-radius: 4px !important;
 }
 
+.profile-nft-btn-wrapper .q-btn__content{
+  display: flex;
+  flex-wrap: nowrap;
+  padding-right: 20px;
+}
+
 .profile-error-btn {
   justify-content: center;
   align-items: center;

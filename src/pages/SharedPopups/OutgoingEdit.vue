@@ -138,6 +138,14 @@
               </span>
             </div>
           </div>
+          <div class="row items-center" style="flex-wrap: nowrap">
+            <img src="../../assets/info-icon.svg" />
+            <span class="dialog-info q-ml-sm">
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
+            </span>
+          </div>
         </div>
       </q-card-section>
 
@@ -333,6 +341,14 @@
                 {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
               </span>
             </div>
+          </div>
+          <div class="row items-center" style="flex-wrap: nowrap">
+            <img src="../../assets/info-icon.svg" />
+            <span class="dialog-info q-ml-sm">
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
+            </span>
           </div>
           <q-checkbox v-model="acceptTerms">
             <span class="dialog-terms-conditions">

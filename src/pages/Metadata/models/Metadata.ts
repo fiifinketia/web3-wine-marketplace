@@ -56,19 +56,36 @@ interface FavoritesAndOrderDetails {
   favorited?: null | boolean;
 
   offerDetails: {
-    highestBidCurrency?: string;
-    highestBid?: string;
-    highestBidHash?: string;
-    highestBidExpTime?: number;
+    highestBidCurrency: string | null;
+    highestBid: string | null;
+    highestBidHash: string | null;
+    highestBidExpTime: number | null;
   };
 
   listingDetails: {
-    listingPrice?: string;
-    currency?: string;
-    orderHash?: string;
-    transactionStatus?: boolean;
-    expTime?: string;
+    listingPrice: string | null;
+    currency: string | null;
+    orderHash: string | null;
+    transactionStatus: boolean | null;
+    listingCancellationStatus: boolean | null;
+    expTime: string | null;
   };
+}
+
+export interface ListingDetails {
+  listingPrice: string | null;
+  currency: string | null;
+  orderHash: string | null;
+  transactionStatus: boolean | null;
+  listingCancellationStatus: boolean | null;
+  expTime: string | null;
+}
+
+export interface OfferDetails {
+  highestBidCurrency: string | null;
+  highestBid: string | null;
+  highestBidHash: string | null;
+  highestBidExpTime: number | null;
 }
 
 export interface NFTHistoryDetails {

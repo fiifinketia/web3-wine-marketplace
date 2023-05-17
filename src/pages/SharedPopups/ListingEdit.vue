@@ -123,8 +123,9 @@
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
-              After the expiration, the NFT will be removed from the listing and
-              will be available for listing in DWC.
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
             </span>
           </div>
         </div>
@@ -307,8 +308,9 @@
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
-              After the expiration, the NFT will be removed from the listing and
-              will be available for listing in DWC.
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
             </span>
           </div>
           <q-checkbox v-model="acceptTerms">

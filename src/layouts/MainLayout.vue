@@ -234,11 +234,11 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge rounded color="red" align="top" label="Soon" />
+            Stats <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge rounded color="red" align="top" label="Soon" />
+            <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
           </div>
         </div>
         <div class="row">

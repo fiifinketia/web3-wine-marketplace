@@ -13,7 +13,7 @@
         no-caps
         align="left"
         padding="0px"
-        class="incoming-column-nft btn--no-hover"
+        class="incoming-column-nft profile-nft-btn-wrapper btn--no-hover"
         @click="
           $q.screen.width > 600
             ? ClickBrandAction(offer, 'new tab')

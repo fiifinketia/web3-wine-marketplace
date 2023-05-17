@@ -13,7 +13,7 @@
         no-caps
         align="left"
         padding="0px"
-        class="listings-column-nft btn--no-hover"
+        class="listings-column-nft profile-nft-btn-wrapper btn--no-hover"
         @click="
           $q.screen.width > 600
             ? ClickBrandAction(listing, 'new tab')
@@ -70,7 +70,7 @@
           :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number-highlight">
+        <span class="profile-nft-number-highlight" :class="!!listing.highestOffer ? 'q-ml-xs' : ''">
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
       </div>
