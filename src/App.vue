@@ -18,6 +18,7 @@ const customIcons: { [key: string]: string } = {
   'app:USDC-icon': 'img:/currencies/USDC-icon.svg',
   'app:USDT-icon': 'img:/currencies/USDT-icon.svg',
   'app:WIVA-icon': 'img:/currencies/WIVA-icon.svg',
+  'app:spinning-icon': 'img:/icons/spinning-icon.gif',
 	'app:caution': 'img:/icons/caution-icon.svg',
 	'app:edit': 'img:/icons/edit-icon.svg',
 	'app:verify-user': 'img:/icons/verify-account-icon.svg',

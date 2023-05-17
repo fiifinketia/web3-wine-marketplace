@@ -240,6 +240,7 @@ import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
+import { FilterOptionsResponse } from '../models/Response.models/FilterOptions.response';
 
 export default defineComponent({
   components: {
@@ -336,22 +337,8 @@ export default defineComponent({
     },
   },
   async mounted() {
-    if (!this.nftStore.fetchNFTsStatus && this.userStore.walletAddress) {
-      await this.nftStore.fetchNFTs(this.userStore.walletAddress);
-    }
-    await this.RetrieveTokens(null);
-
-    const filterOptions = await RetrieveFilterDetails();
-    this.wineFiltersStore.setAllFilters(filterOptions);
-
-    this.subscription = this.wineFiltersStore.$subscribe(async () => {
-      if (!this.filterListenersEnabled) {
-        return;
-      }
-      if (this.wineFiltersStore.filterMode == 'automatic') {
-        await this.RetrieveTokens(null);
-      }
-    });
+    this.SetUpTokens();
+    this.SetUpFilters();
   },
   unmounted() {
     // cancels subscription once changing to another tab (e.g. releases, recommended)
@@ -359,6 +346,31 @@ export default defineComponent({
   },
 
   methods: {
+    async SetUpTokens() {
+      if (!this.nftStore.fetchNFTsStatus && this.userStore.walletAddress) {
+        await this.nftStore.fetchNFTs(this.userStore.walletAddress);
+      }
+      await this.RetrieveTokens(null);
+    },
+    async SetUpFilters() {
+      try {
+        const filterOptions : FilterOptionsResponse = await RetrieveFilterDetails();
+        this.wineFiltersStore.setAllFilters(filterOptions);
+      } catch {
+        return
+      } finally {
+        this.wineFiltersStore.filtersFetched = true;
+      }
+
+      this.subscription = this.wineFiltersStore.$subscribe(async () => {
+        if (!this.filterListenersEnabled) {
+          return;
+        }
+        if (this.wineFiltersStore.filterMode == 'automatic') {
+          await this.RetrieveTokens(null);
+        }
+      });
+    },
     async PreventExitDuringTxn(event: BeforeUnloadEvent) {
       event.preventDefault();
       event.returnValue = '';

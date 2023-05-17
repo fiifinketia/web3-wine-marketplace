@@ -81,6 +81,7 @@ export const useWineFilters = defineStore('wineFilters', {
 
     filterMode: 'automatic',
     filterKey: 0,
+    filtersFetched: false
   }),
   getters: {
     getType: state => state.type,
