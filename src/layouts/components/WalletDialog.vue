@@ -80,7 +80,7 @@
         </q-card-section>
 
         <q-card-section
-          v-if="user.verificationStatus === 'FAILED'"
+          v-else-if="user.verificationStatus === 'FAILED'"
           class="row items-center justify-center no-wrap"
         >
           <q-btn
@@ -127,7 +127,7 @@
         </q-card-section>
 
         <q-card-section
-          v-if="user.verificationStatus === 'PENDING'"
+          v-else-if="user.verificationStatus === 'PENDING'"
           class="row items-center justify-center no-wrap"
         >
           <q-btn
@@ -161,7 +161,7 @@
         </q-card-section>
 
         <q-card-section
-          v-else
+          v-else-if="user.verificationStatus === 'VERIFIED'"
           class="row items-center justify-center no-wrap"
         >
           <q-btn

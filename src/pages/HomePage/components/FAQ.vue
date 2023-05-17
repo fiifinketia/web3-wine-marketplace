@@ -110,7 +110,7 @@
             Cellar. It’s our web app to monitor manage the NFTs you own.
           </q-card-section>
           <q-card-section class="q-pt-none faq-text row">
-            <a class="contact-us">Visit Cellar</a>
+            <a class="contact-us" href="https://dwc.wiv-tech.org/#" target="_blank">Visit Cellar</a>
           </q-card-section>
         </q-card>
       </div>
@@ -118,8 +118,8 @@
     <div class="flex row items-center justify-center q-mt-lg">
       <div class="still-have-question">Still have questions?</div>
       <div class="still-have-question q-pl-sm">
-        <a class="contact-us">Contact us</a> or find answer in
-        <a class="contact-us">FAQs</a>
+        <a class="contact-us" @click="$emit('openHelpCenterSupport')">Contact us</a> or find answer in
+        <a class="contact-us" @click="$emit('openHelpCenterFaqs')">FAQs</a>
       </div>
     </div>
   </div>
@@ -130,6 +130,7 @@ import { defineComponent } from 'vue';
 import '../../../css/Homepage/Faq.css';
 export default defineComponent({
   name: 'FAQ',
+  emits: ['openHelpCenterSupport', 'openHelpCenterFaqs'],
   data() {
     return {
       items: [
