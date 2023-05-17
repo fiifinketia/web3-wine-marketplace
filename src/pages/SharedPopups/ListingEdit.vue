@@ -6,7 +6,7 @@
     transition-hide="scale"
     persistent
   >
-    <q-card class="q-pa-none column">
+    <q-card class="q-pa-none column no-wrap">
       <q-card-section class="row items-center q-pb-lg">
         <div class="dialog-title">
           {{ !isEdit ? 'List' : 'Edit Listing' }}
@@ -97,14 +97,32 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Expiration date </span>
-            <q-input
-              v-model="listingExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start" :class="$q.screen.width > 600 ? 'q-gutter-x-xs' : 'q-gutter-x-sm'">
+              <q-input
+                v-model="listingExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="height: 40px;"
+                :style="$q.screen.width > 600 ? 'width: 130px;' : 'width: 140px'"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="listingExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 120px; height: 40px;"
+                :disable="!listingExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <div class="column">
             <span class="dialog-price-label"> Fee </span>
@@ -142,6 +160,7 @@
       </q-checkbox>
 
       <div
+        class="q-pb-sm"
         :class="
           $q.screen.width > 450
             ? 'row justify-center q-gutter-x-sm'
@@ -273,7 +292,7 @@
                 type="date"
                 debounce="500"
                 class="input-text"
-                style="width: 125px;"
+                style="width: 150px;"
                 :min="GetCurrentDate()"
               />
               <q-input
@@ -283,7 +302,7 @@
                 type="time"
                 debounce="500"
                 class="input-text"
-                style="width: 100px;"
+                style="width: 120px;"
                 :disable="!listingExpirationDate"
                 :rules=[CheckExpirationTime]
                 :no-error-icon="true"
@@ -357,7 +376,8 @@ import { defineComponent, ref } from 'vue';
 import {
   CreateERC721Listing,
   CancelSingleOrder,
-  InspectListingStatus
+  InspectListingStatus,
+  isInputDateTimeAboveCurrentTime
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { useListingStore } from 'src/stores/listing-store';
@@ -487,6 +507,13 @@ export default defineComponent({
       }
     },
     async CreateNewOrder() {
+      const isValidExpTime = isInputDateTimeAboveCurrentTime(this.listingExpirationDate, this.listingExpirationTime);
+      if (!isValidExpTime) {
+        this.isValidTime = false;
+        this.listingExpirationTime = '';
+        this.listingExpirationDate = '';
+        return;
+      }
       const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       this.SetPreventingExitListener(true);
       try {

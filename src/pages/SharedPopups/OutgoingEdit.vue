@@ -7,7 +7,7 @@
     persistent
     @show="FetchBalances()"
   >
-    <q-card class="q-pa-none column">
+    <q-card class="q-pa-none column no-wrap">
       <q-card-section class="row items-center q-pb-none">
         <div class="dialog-title">
           {{ isEdit ? 'Edit Offer' : 'Bid For' }}
@@ -119,14 +119,32 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Keep active until </span>
-            <q-input
-              v-model="offerExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start" :class="$q.screen.width > 600 ? 'q-gutter-x-xs' : 'q-gutter-x-sm'">
+              <q-input
+                v-model="offerExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="height: 40px;"
+                :style="$q.screen.width > 600 ? 'width: 130px;' : 'width: 140px'"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="offerExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 120px; height: 40px;"
+                :disable="!offerExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
@@ -160,6 +178,7 @@
       </q-checkbox>
 
       <div
+        class="q-pb-sm"
         :class="
           $q.screen.width > 450
             ? 'row justify-center q-gutter-x-sm'
@@ -314,7 +333,7 @@
                 type="date"
                 debounce="500"
                 class="input-text"
-                style="width: 125px;"
+                style="width: 150px;"
                 :min="GetCurrentDate()"
               />
               <q-input
@@ -324,7 +343,7 @@
                 type="time"
                 debounce="500"
                 class="input-text"
-                style="width: 100px"
+                style="width: 120px;"
                 :disable="!offerExpirationDate"
                 :rules=[CheckExpirationTime]
                 :no-error-icon="true"
@@ -416,6 +435,7 @@ import { defineComponent, ref } from 'vue';
 import {
   CreateERC721Offer,
   CancelSingleOrder,
+  isInputDateTimeAboveCurrentTime,
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
@@ -556,6 +576,13 @@ export default defineComponent({
     },
     async CreateNewOrder() {
       if (!this.userStore.user) throw 'Connect Wallet and Login';
+      const isValidExpTime = isInputDateTimeAboveCurrentTime(this.offerExpirationDate, this.offerExpirationTime);
+      if (!isValidExpTime) {
+        this.isValidTime = false;
+        this.offerExpirationDate = '';
+        this.offerExpirationTime = '';
+        return;
+      }
       try {
         this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
