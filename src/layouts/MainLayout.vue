@@ -141,11 +141,13 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
-    @openHelpCenter="showHelpCenter = true"
+    @openHelpCenterFaqs="openHelpCenter('topics')"
+    @openHelpCenterSupport="openHelpCenter('support')"
   />
 
   <HelpCenterDialog
 	v-model="showHelpCenter"
+	:openTab="this.openHelpCenterTab"
 	@close-help-center="showHelpCenter = false"
   />
 
@@ -383,7 +385,8 @@
                   <q-item
                     v-close-popup
                     clickable
-                    href="https://dwc.wiv-tech.com/#/"
+                    href="https://dwc.wiv-tech.org/#/"
+		    target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -408,13 +411,13 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable>
+                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
 
-                          <q-item v-close-popup clickable @click="showHelpCenter = true">
+                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -458,13 +461,15 @@
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
         @open-connect-wallet="showConnectWallet = true"
+	@open-help-center-support="openHelpCenter('support')"
+	@open-help-center-faqs="openHelpCenter('topics')"
       />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import transakSDK from '@transak/transak-sdk';
 
@@ -505,6 +510,7 @@ export default defineComponent({
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
       orderStore,
@@ -552,6 +558,10 @@ export default defineComponent({
     }
   },
   methods: {
+    openHelpCenter(tab: string){
+	this.openHelpCenterTab = tab;
+	this.showHelpCenter = true;
+    },
     async fundWallet() {
       let transak = new transakSDK({
         apiKey: process.env.TRANSAK_API_KEY, // Your API Key

@@ -6,18 +6,18 @@
     >
       Help
     </router-link>
-    <router-link
-      to=""
+    <div
+      @click="$emit('openHelpCenterSupport')"
       class="item-text footer-normal q-pt-sm"
     >
       Contact Us
-    </router-link>
-    <router-link
-      to=""
+    </div>
+    <div
+      @click="$emit('openHelpCenterFaqs')"
       class="item-text footer-normal q-pt-sm"
     >
       FAQs
-    </router-link>
+    </div>
     <router-link
       to=""
       class="item-text footer-normal q-pt-sm"

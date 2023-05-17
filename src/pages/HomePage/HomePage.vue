@@ -4,8 +4,8 @@
   <Calculator/>
   <TrendingWines class="trending" />
   <PartnershipWines class="partnership" />
-  <FAQ class="faq" />
-  <LandingPageFooter />
+  <FAQ class="faq" @open-help-center-faqs="$emit('openHelpCenterFaqs')" @open-help-center-support="$emit('openHelpCenterSupport')"/>
+  <LandingPageFooter @open-help-center-faqs="$emit('openHelpCenterFaqs')" @open-help-center-support="$emit('openHelpCenterSupport')"/>
   <SuggestedWines
     v-model="DisplayRecommendations"
     :recommendations="recommendations"

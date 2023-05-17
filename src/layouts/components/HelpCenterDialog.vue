@@ -2,18 +2,34 @@
 	<q-dialog v-model="dialog" position="left"  full-height persistent class="my-wallet-background help-center-dialog row justify-end">
 		<q-card class="q-pa-md" style="width: 100%">
 			<q-card-section class="row justify-between no-wrap">
-				<div class="col-8">
-					<div class="font-proxima-bold font-weight-700 font-size-18 line-height-26 spacing-02 dark-blue-color">HELP CENTER</div>
+				<div class="row col no-wrap">
+					<div
+					  	:class="
+							tab === 'topics' ?
+							'cursor-pointer font-proxima-bold font-weight-700 font-size-18 line-height-26 spacing-02 dark-blue-color q-py-xs' :
+							'cursor-pointer font-proxima-regular font-weight-400 font-size-18 line-height-26 spacing-02 dark-blue-color q-py-xs'
+						"
+						@click="openTopics"
+					>HELP CENTER</div>
 					<q-separator spaced="md" size="2px" vertical color="accent" />
+					<div
+						v-if="tab === 'subject'"
+						class="no-pointer-events font-proxima-bold font-weight-700 font-size-18 line-height-26 spacing-02 dark-blue-color q-py-xs"
+					>{{ faqs[subject].title.toUpperCase() }}</div>
+					<div
+						v-if="tab === 'support'"
+						class="no-pointer-events font-proxima-bold font-weight-700 font-size-18 line-height-26 spacing-02 dark-blue-color q-py-xs"
+					>CONTACT SUPPORT</div>
+
 				</div>
 				<img class="x-icon col-auto q-pa-sm" src="../../../public/images/x-icon.svg" alt="" @click="$emit('close-help-center')" />
 			</q-card-section>
-			<q-card-section class="row justify-center no-wrap q-mt-lg">
+			<q-card-section v-if="tab !== 'support'" class="row justify-center no-wrap q-mt-lg">
 				<div class="font-proxima-bold font-weight-700 font-size-20 line-height-24 spacing-02 text-primary">
 					How can we help you?
 				</div>
 			</q-card-section>
-			<q-card-section class="column justify-center no-wrap q-mt-lg q-mx-auto">
+			<q-card-section v-if="tab !== 'support'" class="column justify-center no-wrap q-mt-lg q-mx-auto">
 				<div class="font-proxima-regular font-weight-400 font-size-18 line-height-22 spacing-02 text-center">
 					Search for a question or topic,or find relevant ones below.
 				</div>
@@ -26,31 +42,105 @@
 					<q-btn color="primary" label="GO" class="col-auto q-py-xs" unelevated />
 				</div>
 			</q-card-section>
-			<q-card-section class="row q-my-md justify-evenly q-gutter-sm">
-				<q-card v-for="topic in faqs" :key="topic.icon+topic.title" class="col-md-3 col-xs-5 topic-card" flat bordered>
-					<q-card-section class="q-ma-md">
-						<div class="font-obviously-normal font-weight-400 font-size-18 line-height-26 spacing-02">
-							{{ topic.title }}
-						</div>
+			<q-tab-panels
+			  v-model="tab"
+			  animated
+			  transition-prev="jump-up"
+			  transition-next="jump-down"
+			>
+				<q-tab-panel name="topics">
+					<q-card-section class="row q-my-md justify-evenly q-gutter-sm">
+						<q-card
+							v-for="(topic, i) in faqs"
+							:key="topic.icon+topic.title"
+							class="col-md-3 col-xs-5 topic-card"
+							@click="setSubject(i)"
+							flat
+							bordered
+						>
+							<q-card-section class="q-ma-md">
+								<div class="font-obviously-normal font-weight-400 font-size-18 line-height-26 spacing-02">
+									{{ topic.title }}
+								</div>
+							</q-card-section>
+							<q-card-section class="q-ma-md">
+								<div
+									v-for="subtitle in topic.subtitles"
+									:key="topic.title+subtitle"
+									class="font-proxima-regular text-caption">
+									{{ subtitle }}
+								</div>
+							</q-card-section>
+							<q-card-section class="row q-mx-md q-mb-xs justify-end">
+								<q-icon :name="topic.icon" color="primary" size="32px" />
+							</q-card-section>
+						</q-card>
 					</q-card-section>
-					<q-card-section class="q-ma-md">
+				</q-tab-panel>
+				<q-tab-panel name="subject">
+					<q-list>
 						<div
-							v-for="subtitle in topic.subtitles"
-							:key="topic.title+subtitle"
-							class="font-proxima-regular text-caption">
-							{{ subtitle }}
+							v-for="(question, i) in faqs[subject].questions"
+							:key="question.question"
+						>
+							<q-expansion-item
+								group="questions"
+								hide-expand-icon
+							>
+								<template v-slot:header>
+								  <q-item-section avatar>
+								    <q-icon color="primary" name="add" />
+								  </q-item-section>
+
+								  <q-item-section>
+								    {{ question.question }}
+								  </q-item-section>
+								</template>
+								<q-card class="q-my-md q-mx-xl">
+									<q-card-section>{{ question.answer }}</q-card-section>
+								</q-card>
+							</q-expansion-item>
+							<q-separator v-if="i !== faqs[subject].questions.length - 1"/>
 						</div>
-					</q-card-section>
-					<q-card-section class="row q-mx-md justify-end">
-						<q-icon :name="topic.icon" color="primary" size="32px" />
-					</q-card-section>
-				</q-card>
-			</q-card-section>
-			<q-card-section class="column justify-center">
+					</q-list>
+				</q-tab-panel>
+				<q-tab-panel name="support">
+					<q-card class="column justify-evenly q-ma-md q-gutter-md" flat>
+						<q-card-section class="row justify-center">
+							<div class="font-proxima-regular font-weight-400 font-size-18 line-height-22 spacing-02 text-center">
+								We will much appreciate if you add some more info so that we could have more productive communication at first message.
+							</div>
+						</q-card-section>
+						<q-card-section class="row justify-center">
+							<q-icon name="app:request-call" size="7rem" />
+							<q-icon name="app:chat-us" size="7rem" />
+							<q-icon name="app:email-us" size="7rem" />
+						</q-card-section>
+						<q-form class="column q-gutter-lg">
+							<div class="text-start text-caption text-grey">
+								{{ 'Name' }}
+								<q-input outlined v-model="form_name" placeholder="Please enter your name" dense />
+							</div>
+							<div class="text-start text-caption text-grey">
+								{{ 'Email' }}
+								<q-input outlined v-model="form_email" type="email" placeholder="Please enter email" required dense />
+							</div>
+							<div class="text-start text-caption text-grey">
+								{{ 'How can we help?' }}
+								<q-input outlined v-model="form_message" type="textarea" placeholder="How can we help?" required dense />
+							</div>
+							<div class="row justify-end">
+								<q-btn label="Send the message" color="primary" unelevated no-caps/>
+							</div>
+						</q-form>
+					</q-card>
+				</q-tab-panel>
+			</q-tab-panels>
+			<q-card-section v-if="tab !== 'support'" class="column justify-center">
 				<div class="text-body text-center"> Can't find your answer? </div>
 				<div class="text-bold text-center"> Ask our team! </div>
 				<div class="row col-4 justify-center">
-					<q-btn color="primary" label="Contact Support" no-caps unelevated />
+					<q-btn @click="openSupport" color="primary" label="Contact Support" no-caps unelevated />
 				</div>
 			</q-card-section>
 	      	</q-card>
@@ -61,14 +151,34 @@ import { defineComponent, ref } from 'vue';
 import faqs from 'src/shared/faqs.json';
 
 export default defineComponent({
-  name: 'WalletDialog',
+  name: 'HelpCenterDialog',
   emits: ['close-help-center', 'open-contact-us'],
+  props: {
+  	openTab: String
+  },
   data() {
     return {
 	search: ref(''),
 	faqs,
+	tab: ref(this.openTab),
+	subject: ref(0),
     };
   },
+  updated () {
+	this.tab = this.openTab;
+  },
+  methods: {
+	setSubject(i: number) {
+		this.subject = i;
+		this.tab = 'subject';
+	},
+	openTopics() {
+		this.tab = 'topics';
+	},
+	openSupport() {
+		this.tab = 'support';
+	}
+  }
 });
 
 </script>
@@ -79,7 +189,7 @@ export default defineComponent({
 	border: none;
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1) !important;
 	border-radius: 14px;
-	height: 168px !important;
+	height: auto;
 }
 
 .topic-card:hover {
