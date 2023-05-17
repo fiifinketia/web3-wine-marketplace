@@ -161,7 +161,7 @@ export default defineComponent({
     async InvalidUnlist(status: 'ongoingUnlist' | 'unlisted' | 'purchased') {
       if (status == 'ongoingUnlist') {
         this.nft.listingDetails.listingCancellationStatus = true;
-      } else if (status == 'unlisted' || status == 'purchased') {
+      } else {
         Object.keys(this.nft.listingDetails).forEach((prop) => {
           this.nft.listingDetails[prop as keyof ListingDetails] = null;
         });
