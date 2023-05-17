@@ -98,7 +98,7 @@ import 'src/css/Profile/shared.css';
 import AllNFTsTab from './components/AllNFTsTab.vue';
 import NewReleasedTab from './components/NewReleasedTab.vue';
 import RecommendedTab from './components/Recommended/RecommendedTab.vue';
-import { STAGING_TrackClickEvent } from 'src/shared/amplitude-service';
+import { TrackClickEvent } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   components: {
@@ -143,7 +143,7 @@ export default defineComponent({
           case 'nfts':
             this.$router.push({ path: 'marketplace', query: { tab: 'nfts' } });
             this.tabLabel = 'Marketplace';
-            STAGING_TrackClickEvent('Marketplace Tab Clicked');
+            TrackClickEvent('Marketplace Tab Clicked');
             break;
           case 'releases':
             this.$router.push({
@@ -151,7 +151,7 @@ export default defineComponent({
               query: { tab: 'releases' },
             });
             this.tabLabel = 'Releases';
-            STAGING_TrackClickEvent('Releases Tab Clicked');
+            TrackClickEvent('Releases Tab Clicked');
             break;
           case 'recommended':
             this.$router.push({
@@ -159,7 +159,7 @@ export default defineComponent({
               query: { tab: 'recommended' },
             });
             this.tabLabel = 'Recommended';
-            STAGING_TrackClickEvent('Recommended NFTs Tab Clicked');
+            TrackClickEvent('Recommended NFTs Tab Clicked');
             break;
         }
       },

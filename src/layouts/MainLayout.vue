@@ -44,7 +44,10 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div v-if="userStore.user" class="my-wallet-background row justify-end hidden">
+  <div
+    v-if="userStore.user"
+    class="my-wallet-background row justify-end hidden"
+  >
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
@@ -492,7 +495,7 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
-import { STAGING_TrackClickEvent } from 'src/shared/amplitude-service';
+import { TrackClickEvent } from 'src/shared/amplitude-service';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -557,7 +560,11 @@ export default defineComponent({
       this.ReInitAmplitude(this.walletAddress);
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
-        const { _usdtBalance: usdtBalance, _usdcBalance: usdcBalance, _wivaBalance: wivaBalance } = walletBalances;
+        const {
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance,
+          _wivaBalance: wivaBalance,
+        } = walletBalances;
         Object.assign(this, { usdtBalance, usdcBalance, wivaBalance });
       }
     }
@@ -565,7 +572,7 @@ export default defineComponent({
   methods: {
     // amplitude tracking
     favoritesPageClick() {
-      STAGING_TrackClickEvent('Favorites Page Clicked');
+      TrackClickEvent('Favorites Page Clicked');
     },
 
     async fundWallet() {
@@ -699,9 +706,12 @@ export default defineComponent({
         });
     },
     formatNumber(num: number) {
-      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      let formatted = num.toLocaleString(undefined, {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      });
       return formatted.replace(/\.0$/, '');
-    }
+    },
   },
 });
 </script>

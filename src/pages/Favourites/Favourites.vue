@@ -282,7 +282,6 @@ export default defineComponent({
   },
   async mounted() {
     SetSessionID();
-    // SetSessionID('pageVisitationTracker');
     await this.getAllFavoritesWithoutBrand();
     await this.startPageTour();
   },

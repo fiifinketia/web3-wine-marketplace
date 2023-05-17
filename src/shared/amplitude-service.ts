@@ -5,13 +5,9 @@ function SetSessionID() {
   // amplitude.track(track);
 }
 
-// tracking STAGING ENVIRONMENT events
-function STAGING_TrackClickEvent(track: string) {
-  amplitude.track(track, { environment: 'Staging' });
+function TrackClickEvent(track: string) {
+  amplitude.track(track, {
+    environment: process.env.QENV == 'Development' ? 'Staging' : 'Production',
+  });
 }
-
-// tracking PRODUCTION ENVIRONMENT events
-function PRODUCTION_TrackClickEvent(track: string) {
-  amplitude.track(track, { environment: 'Production' });
-}
-export { SetSessionID, STAGING_TrackClickEvent, PRODUCTION_TrackClickEvent };
+export { SetSessionID, TrackClickEvent };
