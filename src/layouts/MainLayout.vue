@@ -559,7 +559,7 @@ export default defineComponent({
         widgetHeight: '625px',
         widgetWidth: '500px',
         // Examples of some of the customization parameters you can pass
-        defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+        defaultCryptoCurrency: 'USDT', // Example 'ETH'
         walletAddress: this.userStore.walletAddress, // Your customer's wallet address
         themeColor: '#3586ff', // App theme color
         fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'

@@ -197,14 +197,11 @@
 
       <q-card-section class="my-wallet-ballance-container column justify-center items-center">
         <img src="../../../public/images/wallet.svg" alt="wallet-icon" />
-        <div class="row items-center" :class="$q.screen.width > 600 ? '' : 'justify-between full-width'">
+        <div v-if="$q.screen.width > 600" class="row items-center">
           <div class="balance-container column justify-between">
             <span class="balance-label"> USDC Balance </span>
             <div class="row items-center q-gutter-x-xs">
-              <q-icon
-                name="app:USDC-icon"
-                :size="$q.screen.width > 600 ? '24px' : '20px'"
-              />
+              <q-icon name="app:USDC-icon" size="24px" />
               <span
                 class="balance-number"
                 :style="usdcBalance ? '' : 'color: #9D9D9D'"
@@ -213,13 +210,10 @@
               </span>
             </div>
           </div>
-          <div class="balance-container column justify-between" :class="$q.screen.width > 600 ? 'q-mx-md' : ''">
+          <div class="balance-container column justify-between q-mx-md">
             <span class="balance-label"> USDT Balance </span>
             <div class="row items-center q-gutter-x-xs">
-              <q-icon
-                name="app:USDT-icon"
-                :size="$q.screen.width > 600 ? '24px' : '20px'"
-              />
+              <q-icon name="app:USDT-icon" size="24px" />
               <span
                 class="balance-number"
                 :style="usdtBalance ? '' : 'color: #9D9D9D'"
@@ -231,16 +225,55 @@
           <div class="balance-container column justify-between">
             <span class="balance-label"> WIVA Balance </span>
             <div class="row items-center q-gutter-x-xs">
-              <q-icon
-                name="app:WIVA-icon"
-                :size="$q.screen.width > 600 ? '24px' : '20px'"
-              />
+              <q-icon name="app:WIVA-icon" size="24px"/>
               <span
                 class="balance-number"
                 :style="wivaBalance ? '' : 'color: #9D9D9D'"
               >
                 {{ wivaBalance ? wivaBalance : '0' }}
               </span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="column items-center no-wrap full-width q-gutter-y-md">
+          <div :class="$q.screen.width > 350 ? 'row justify-center q-gutter-x-md full-width' : 'column items-center q-gutter-y-md'">
+            <div class="balance-container column justify-between q-ml-none q-mt-none">
+              <span class="balance-label"> USDC Balance </span>
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon name="app:USDC-icon" size="24px" />
+                <span
+                  class="balance-number"
+                  :style="usdcBalance ? '' : 'color: #9D9D9D'"
+                >
+                  {{ usdcBalance ? usdcBalance : '0' }}
+                </span>
+              </div>
+            </div>
+            <div class="balance-container column justify-between">
+              <span class="balance-label"> USDT Balance </span>
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon name="app:USDT-icon" size="24px" />
+                <span
+                  class="balance-number"
+                  :style="usdtBalance ? '' : 'color: #9D9D9D'"
+                >
+                  {{ usdtBalance ? usdtBalance : '0' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-center">
+            <div class="balance-container column justify-between">
+              <span class="balance-label"> WIVA Balance </span>
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon name="app:WIVA-icon" size="24px"/>
+                <span
+                  class="balance-number"
+                  :style="wivaBalance ? '' : 'color: #9D9D9D'"
+                >
+                  {{ wivaBalance ? wivaBalance : '0' }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
