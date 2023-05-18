@@ -134,7 +134,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+                {{ !!listingPrice ? listingPrice : '0.00' }}
               </span>
             </div>
           </div>
@@ -321,7 +321,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+                {{ !!listingPrice ? listingPrice : '0.00' }}
               </span>
             </div>
           </div>

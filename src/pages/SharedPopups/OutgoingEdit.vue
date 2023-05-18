@@ -152,7 +152,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
+                {{ !!offerPrice ? offerPrice : '0.00' }}
               </span>
             </div>
           </div>
@@ -358,7 +358,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
+                {{ !!offerPrice ? offerPrice : '0.00' }}
               </span>
             </div>
           </div>
@@ -442,7 +442,7 @@ import {
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import TxnOngoing from './TxnOngoing.vue';
-import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { FormatNumber, GetCurrencyLabel } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
 import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
@@ -550,7 +550,8 @@ export default defineComponent({
 
       usdtBalance: '',
       usdcBalance: '',
-      wivaBalance: ''
+      wivaBalance: '',
+      FormatNumber
     };
   },
   computed: {
@@ -658,18 +659,14 @@ export default defineComponent({
       if (!window.ethereum) return 0;
       const signer = WindowWeb3Provider?.getSigner();
       if (!!signer) {
-        const formatNumber = (num: number) => {
-          let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-          return formatted.replace(/\.0$/, '');
-        }
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
           GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, this.userStore.walletAddress),
           GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, this.userStore.walletAddress),
           GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, this.userStore.walletAddress)
         ]);
-        this.wivaBalance = wivaBalance ? formatNumber(wivaBalance) : '';
-        this.usdtBalance = usdtBalance ? formatNumber(usdtBalance) : '';
-        this.usdcBalance = usdcBalance ? formatNumber(usdcBalance) : '';
+        this.wivaBalance = wivaBalance ? FormatNumber(wivaBalance) : '';
+        this.usdtBalance = usdtBalance ? FormatNumber(usdtBalance) : '';
+        this.usdcBalance = usdcBalance ? FormatNumber(usdcBalance) : '';
       };
     }
   },

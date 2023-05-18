@@ -51,7 +51,7 @@
               <div class="row items-center q-gutter-x-xs q-pt-xs">
                 <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
                 <span class="main-marketplace-price-text-b-active">
-                  {{ ToInt(token.orderDetails.listingPrice) }}
+                  {{ token.orderDetails.listingPrice }}
                 </span>
               </div>
             </div>
@@ -524,9 +524,6 @@ export default defineComponent({
         }
       }
       this.isLoading = false;
-    },
-    ToInt(price: string) {
-      return parseInt(price);
     },
     truncateText(text: string) {
       if (this.$q.screen.width > 1350) {

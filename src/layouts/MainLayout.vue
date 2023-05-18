@@ -48,9 +48,9 @@
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
-      :usdc-balance="usdcBalance ? formatNumber(usdcBalance) : ''"
-      :usdt-balance="usdtBalance ? formatNumber(usdtBalance) : ''"
-      :wiva-balance="wivaBalance ? formatNumber(wivaBalance) : ''"
+      :usdc-balance="usdcBalance ? FormatNumber(usdcBalance) : ''"
+      :usdt-balance="usdtBalance ? FormatNumber(usdtBalance) : ''"
+      :wiva-balance="wivaBalance ? FormatNumber(wivaBalance) : ''"
       @close-my-wallet="showMyWallet = false"
       @fund-wallet="fundWallet()"
       @logout="logout"
@@ -482,6 +482,7 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
+import { FormatNumber } from 'src/shared/currency.helper';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -514,6 +515,8 @@ export default defineComponent({
       usdcBalance: 0,
       wivaBalance: 0,
       tourStore,
+
+      FormatNumber
     };
   },
   watch: {
@@ -682,10 +685,6 @@ export default defineComponent({
           // console.log('I am triggered on both OK and Cancel')
         });
     },
-    formatNumber(num: number) {
-      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      return formatted.replace(/\.0$/, '');
-    }
   },
 });
 </script>
