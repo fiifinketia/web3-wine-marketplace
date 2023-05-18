@@ -51,19 +51,6 @@
 	gap: 1rem;
 }
 
-.headline-buttons {
-	width: 254px;
-	border-radius: 6px;
-	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 20px;
-	line-height: 24px;
-	text-align: center;
-	cursor: pointer;
-	letter-spacing: 0.02em;
-}
-
 .left-btn {
 	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
 	color: white;

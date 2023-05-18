@@ -79,13 +79,16 @@
       </div>
 
       <q-btn
-        class="see-market-button"
-        color="primary"
+        class="app-btn-text-md app-secondary-btn-bg q-mt-lg"
         no-caps
         outline
         unelevated
-        >See market statistics</q-btn
+        style="width: 260px; height: 56px;"
       >
+        <span class="app-secondary-btn-text">
+          See market statistics
+        </span>
+      </q-btn>
     </div>
   </div>
 </template>

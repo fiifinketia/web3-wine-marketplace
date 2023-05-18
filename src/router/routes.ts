@@ -64,25 +64,25 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  {
-    path: '/protected',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        component: () => import('pages/NewWine/NewWine.vue'),
-      },
-    ],
-    beforeEnter: async () => {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-      const account = accounts[0];
-      if (account != '0xade82f372e70f8032f675b80e3c6a7d31e3a5269') {
-        return false;
-      }
-    },
-  },
+  // {
+  //   path: '/protected',
+  //   component: () => import('layouts/MainLayout.vue'),
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: () => import('pages/NewWine/NewWine.vue'),
+  //     },
+  //   ],
+  //   beforeEnter: async () => {
+  //     const accounts = await window.ethereum.request({
+  //       method: 'eth_requestAccounts',
+  //     });
+  //     const account = accounts[0];
+  //     if (account != '0xade82f372e70f8032f675b80e3c6a7d31e3a5269') {
+  //       return false;
+  //     }
+  //   },
+  // },
 
   // Always leave this as last one,
   // but you can also remove it

@@ -98,7 +98,8 @@
     <div class="go-to-marketplace-wrapper row justify-center">
       <q-btn
         id="go-to-marketplace"
-        class="go-to-marketplace q-mt-lg"
+        class="app-primary-btn-bg app-btn-text-lg q-mt-lg"
+        style="width: 270px"
         unelevated
         no-caps
         @click="$router.push('marketplace?tab=nfts')"
