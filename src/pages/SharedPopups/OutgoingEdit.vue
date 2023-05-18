@@ -204,7 +204,7 @@
             !acceptTerms ||
             offerExpirationDate === '' ||
             parseFloat(offerPrice) <= 0 ||
-            loadingOffer
+            loadingOffer || !isValidTime
           "
           @click="CreateNewOrder()"
         >
@@ -213,6 +213,7 @@
       </div>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
   <q-dialog
     v-else
@@ -426,6 +427,7 @@
       </q-card-section>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 </template>
 
@@ -446,11 +448,13 @@ import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import ExpirationInvalid from './ExpirationInvalid.vue';
 
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing,
-    OfferExpTimer: OrderExpTimer
+    OfferExpTimer: OrderExpTimer,
+    ExpirationInvalid: ExpirationInvalid
   },
   props: {
     orderHash: {
@@ -508,6 +512,7 @@ export default defineComponent({
       offerExpirationDate: '',
       offerExpirationTime: '',
       isValidTime: false,
+      openInvalidTimeDialog: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -579,8 +584,10 @@ export default defineComponent({
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.offerExpirationDate, this.offerExpirationTime);
       if (!isValidExpTime) {
         this.isValidTime = false;
-        this.offerExpirationDate = '';
-        this.offerExpirationTime = '';
+        this.openInvalidTimeDialog = true;
+        setTimeout(() => {
+          this.openInvalidTimeDialog = false;
+        }, 2000);
         return;
       }
       try {

@@ -187,7 +187,7 @@
             !acceptTerms ||
             listingExpirationDate === '' ||
             parseFloat(listingPrice) <= 0 ||
-            loadingListing
+            loadingListing || !isValidTime
           "
           @click="CreateNewOrder()"
         >
@@ -196,6 +196,7 @@
       </div>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 
   <q-dialog v-else transition-show="scale" transition-hide="scale">
@@ -367,6 +368,7 @@
       </q-card-section>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 </template>
 
@@ -386,9 +388,11 @@ import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
+import ExpirationInvalid from './ExpirationInvalid.vue';
 export default defineComponent({
   components: {
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    ExpirationInvalid: ExpirationInvalid
   },
   props: {
     orderHash: {
@@ -437,6 +441,7 @@ export default defineComponent({
       listingExpirationDate: '',
       listingExpirationTime: '',
       isValidTime: false,
+      openInvalidTimeDialog: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -510,8 +515,10 @@ export default defineComponent({
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.listingExpirationDate, this.listingExpirationTime);
       if (!isValidExpTime) {
         this.isValidTime = false;
-        this.listingExpirationTime = '';
-        this.listingExpirationDate = '';
+        this.openInvalidTimeDialog = true;
+        setTimeout(() => {
+          this.openInvalidTimeDialog = false;
+        }, 2000);
         return;
       }
       const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
