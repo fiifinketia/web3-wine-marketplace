@@ -146,7 +146,7 @@ async function FetchERC721TokensStandard(
       ERC721Map.set(`${f.toString()},${contractAddress},Mumbai`, {
         identifierOrCriteria: f.toString(),
         contractAddress: contractAddress,
-        network: 'Polygon',
+        network: 'Mumbai',
       });
     });
   });
