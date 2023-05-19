@@ -1,81 +1,70 @@
 <template>
-<div class="row">
-  <div
-    v-for="token in newNFTs"
-    :key="
-      token.tokenID + ',' + token.network + ',' + token.smartContractAddress
-    "
-    class="col-xl-3 col-md-3 col-sm-4 col-xs-6 main-marketplace-card-container"
-  >
-    <q-btn
-      flat
-      dense
-      :ripple="false"
-      no-caps
-      class="btn--no-hover"
-      @click="selectCard(token.tokenID)"
-    >
-      <q-card class="q-pa-xs main-marketplace-nft-card" flat>
-        <img class="main-marketplace-card-image" :src="token.image" />
-        <div
-          class="q-px-sm q-pb-sm main-marketplace-card-brand column justify-center"
-          style="text-align: left"
-        >
-          <span>
-            {{ token.brand }}
-          </span>
-        </div>
-        <q-card-section
-          class="column items-start main-marketplace-price-container q-py-sm q-mx-sm"
-        >
-          <span class="main-marketplace-price-header q-pb-xs">
-            Starting from
-          </span>
-          <div v-if="!!token.listingPrice">
-            <div class="row items-end q-gutter-x-xs">
-              <q-img
-                src="../../../../assets/icons/currencies/USDC-Icon.svg"
-                style="height: 20px; width: 20px"
-              />
-              <span class="main-marketplace-price-text-b"> 0.00 </span>
-              <span class="main-marketplace-price-text-l"> /$ 00.00 </span>
-            </div>
-          </div>
-          <div v-else>
-            <span class="main-marketplace-price-text-b"> Not available </span>
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-btn>
-  </div>
-</div> 
+  <NFTSelections
+    :nft-selections="newNFTs"
+    :is-loading="isLoading"
+    :errored-out="erroredOut"
+    :section-error="erroredText"
+    @refetch-release="GetNewlyMinted()"
+  />
 </template>
 
 <script lang="ts">
-import axios, { AxiosResponse } from 'axios';
+import { GetLatestMinted } from '../../services/RetrieveReleased';
 import { defineComponent } from 'vue';
 import { ListingWithPricingAndImage } from '../../models/Response.models';
-import '../../../../css/Marketplace/NFT-Selections.css'
+import 'src/css/Releases/ReleasesSelections.css';
+import { useUserStore } from 'src/stores/user-store';
+import NFTSelectionsVue from './NFT-Selections.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import { AssociateOwned } from 'src/shared/association.helper';
 
 export default defineComponent({
-	data() {
-		return {
-      newNFTs: new Array<ListingWithPricingAndImage>()
-		};
-	},
+  components: {
+    NFTSelections: NFTSelectionsVue
+  },
+  emits: ['empty-section'],
+  data() {
+    const userStore = useUserStore();
+    const nftStore = useNFTStore();
+    return {
+      userStore,
+      nftStore,
+      newNFTs: new Array<ListingWithPricingAndImage & { isOwned?: boolean }>(),
+      isLoading: true,
+      erroredOut: false,
+      erroredText: 'Newly minted wines'
+    };
+  },
+  async mounted() {
+    await this.GetNewlyMinted();
+  },
 
-	mounted() {
-    this.GetNewlyMinted()
-	},
-
-	methods: {
+  methods: {
     async GetNewlyMinted() {
-      const url = <string> process.env.RETRIEVE_NEWLY_MINTED_NFTS_URL;
-      await axios.get(url).then((res: AxiosResponse<ListingWithPricingAndImage[]>) => this.newNFTs = res.data)
+      try {
+        this.isLoading = true;
+        const newNFTs = await GetLatestMinted(this.userStore.walletAddress);
+        if (newNFTs.length == 0) {
+          this.$emit('empty-section');
+        }
+        this.IncorporateOwnedNFTs(newNFTs);
+        this.erroredOut = false;
+      } catch {
+        this.erroredOut = true;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    IncorporateOwnedNFTs(newNFTs: ListingWithPricingAndImage[]) {
+      const nftsFetched = this.nftStore.fetchNFTsStatus;
+      if (!!nftsFetched) {
+        this.newNFTs = AssociateOwned(newNFTs, this.nftStore.ownedNFTs);
+      } else {
+        this.newNFTs = newNFTs;
+      }
     }
-	},
+  },
 });
 </script>
 
-<style>
-</style>
+<style></style>

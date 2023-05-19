@@ -1,0 +1,17 @@
+.light-bulb-icon {
+  width: 70px;
+}
+
+.order-completed-blue-text {
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #3586FF;
+}
+
+.order-completed-black-text {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  text-align: center;
+  color: #212131;
+}

@@ -1,8 +1,38 @@
+@media screen and (min-width: 1512px) {
+  .profile-page-container, .profile-main-container {
+    width: 1200px !important;
+  }
+}
+
 .profile-dropdown-container {
   font-family: 'ProximaNova-Bold';
   font-size: 18px;
   line-height: 0;
   border-radius: 4px !important;
+}
+
+.profile-nft-btn-wrapper .q-btn__content{
+  display: flex;
+  flex-wrap: nowrap;
+  padding-right: 20px;
+}
+
+.profile-error-btn {
+  justify-content: center;
+  align-items: center;
+  width: 147px;
+  height: 48px;
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
+  border-radius: 6px;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.profile-error-btn:hover {
+  background: #212131;
+  opacity: 0.8;
 }
 
 .profile-dropdown-container .q-icon > img {
@@ -118,6 +148,9 @@
   font-size: 20px;
   font-family: 'ProximaNova-Bold';
   line-height: 1;
+}
+
+.profile-nft-number {
   margin-top: 4px;
   margin-left: 4px;
 }
@@ -136,6 +169,20 @@
   margin-top: 2px;
 }
 
+.profile-dropdown-container .q-btn-dropdown__arrow-container {
+  display: none;
+}
+
+.profile-back-text {
+	font-family: 'ProximaNova-Bold';
+	color: rgba(53, 134, 255, 1);
+	font-size: 20px;
+}
+
+.profile-back-text {
+	line-height: 0;
+}
+
 .profile-searchbox .q-field__control {
   border-radius: 6px !important;
 }
@@ -144,13 +191,32 @@
   font-family: 'ProximaNova-Regular' !important; 
 }
 
+.profile-searchbox .q-icon {
+	width: 20px;
+}
+
+.profile-searchbox .q-field__native {
+	font-family: 'ProximaNova-Regular';
+	font-size: 16px;
+	color: #9d9d9d;
+}
+
 .profile-primary-btn {
   font-family: 'ProximaNova-Regular' !important;
   font-size: 14px;
   background: #3586FF;
   color: white;
   width: 45px;
-  height: 38px;
+  height: 39px;
+  border-radius: 6px;
+}
+
+.profile-primary-btn:hover {
+	background: #8cbaff;
+}
+
+.profile-primary-btn.disabled {
+	background: #C0C0C0 !important;
 }
 
 .profile-accept-btn {
@@ -198,6 +264,25 @@
   padding: 16px 32px;
 }
 
+.profile-error-header {
+  font-family: 'Obviously-Bold';
+  color: #3586ff;
+  font-size: 32px;
+  text-align: center;
+}
+
+.profile-error-subheader {
+	font-family: 'ProximaNova-Bold';
+	color: #212131;
+	font-size: 20px;
+  text-align: center;
+}
+
+.profile-error-icon {
+	width: 40vw;
+	max-width: 350px;
+}
+
 @media screen and (max-width: 800px) {
   .profile-loading-gif {
     width: 20vw;
@@ -214,14 +299,29 @@
   .profile-nft-number, .profile-nft-number-highlight {
     font-size: 16px;
   }
+  .profile-back-text {
+    font-size: 18px;
+    padding-left: 10px;
+  }
   .profile-nft-brand {
     font-size: 16px;
+  }
+  .profile-column-name {
+    border-top: 1px solid rgba(94, 151, 236, 0.27);
+    border-bottom: 1px solid rgba(94, 151, 236, 0.27);
+    height: 60px;
+  }
+  .profile-error-icon {
+		width: 250px;
+	}
+  .profile-error-btn {
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 350px) {
   .profile-dropdown-container {
-    width: 100% !important;
+    flex: 1 !important;
   }
   .profile-dropdown-container .justify-center{
     justify-content: space-between;

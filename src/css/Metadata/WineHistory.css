@@ -1,0 +1,209 @@
+.history-container {
+	width: 95%;
+}
+
+.price-history {
+	font-family: 'Obviously-Bold';
+	font-size: 20px;
+	align-items: center;
+	color: #212131;
+}
+
+.metadata-missing-text {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	text-align: center;
+	color: #3586FF;
+}
+
+.chart-timeline-options {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+	color: #9d9d9d;
+}
+
+.chart-timeline-options-disabled {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+	color: #8CBAFF;
+}
+
+.loading-price-box {
+	width: 54px;
+	height: 24px;
+	background: rgba(217, 232, 255, 0.3);
+	border: 1px solid #8CBAFF;
+	border-radius: 4px;
+}
+
+.loading-label-box {
+	width: 64px;
+	height: 24px;
+	background: rgba(217, 232, 255, 0.3);
+	border: 1px solid #8CBAFF;
+	border-radius: 4px;
+}
+
+.loading-label-box-inv {
+	width: 64px;
+	height: 24px;
+}
+
+.loading-x-axis {
+	flex: 1;
+	margin-left: 15px;
+	border-bottom: 1px solid #8CBAFF;
+	position: relative;
+}
+
+.loading-event-box-clear,
+.loading-event-box-colored {
+	width: 20%;
+	min-width: 150px;
+	height: 38px;
+	border: 1px solid #8CBAFF;
+	border-radius: 6px;
+}
+
+.loading-date-box-clear,
+.loading-date-box-colored {
+	width: 60px;
+	height: 18px;
+	border: 1px solid #8CBAFF;
+	border-radius: 2px;
+}
+
+.loading-event-box-clear,
+.loading-date-box-clear {
+	background: #FFFFFF;
+}
+
+.loading-event-box-colored,
+.loading-date-box-colored {
+	background: rgba(217, 232, 255, 0.3);
+}
+
+.tick {
+	position: absolute;
+  bottom: -10px;
+  width: 1px;
+  height: 10px; /* Adjust as needed */
+  background-color: #8CBAFF;
+}
+
+.slash-loading {
+	font-size: 16px;
+	color: #9d9d9d;
+}
+
+[aria-checked="true"] {
+  font-family: 'ProximaNova-Bold';
+	color: #212131;
+}
+
+.chart-container {
+	width: 100%;
+	background: #ffffff;
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+}
+
+.radio-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	cursor: pointer;
+	align-items: center;
+	padding-top: 20px;
+	padding-left: 8px;
+}
+
+.chart-avg-price {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	color: #212131;
+}
+
+.border {
+	width: 16px;
+	height: 16px;
+	border: 1px solid #c0c0c0;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
+.average-price {
+	font-family: 'ProximaNova-Regular';
+	font-size: 16px;
+	line-height: 19px;
+	align-self:flex-end;
+	color: #9d9d9d;
+}
+
+.price-history-rows {
+	gap: 8px;
+}
+
+td {
+	border-bottom-width: 0 !important;
+}
+
+.price-table {
+	width: 100%;
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+}
+
+.each-price-row {
+	padding: 10px 12px;
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
+	line-height: 22px;
+	color: #212131;
+}
+
+.each-price-row:nth-child(odd) {
+	background: rgba(217, 232, 255, 0.3);
+	border-radius: 8px;
+}
+
+.user-ids-bold {
+	font-family: 'ProximaNova-Bold';
+}
+
+.date-of-transaction {
+	font-family: 'ProximaNova-Regular';
+	font-size: 14px;
+	color: #9d9d9d;
+}
+
+@media screen and (min-width: 601px) {
+	.loading-price-box {
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.chart1 {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+	.average-price {
+		line-height: 40px;
+	}
+	.radio-buttons {
+		width: 100%;
+	}
+	.q-table__card {
+		box-shadow: none;
+	}
+	.chart-container {
+		box-shadow: none;
+	}
+	#three_months {
+		display: none;
+	}
+	.loading-price-box {
+		margin-bottom: 0;
+	}
+}

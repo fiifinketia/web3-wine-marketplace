@@ -15,10 +15,53 @@
 	border-radius: 0 !important;
 }
 
+.identity-label {
+	font-family: 'ProximaNova-Bold';
+	font-size: 16px;
+	color: rgba(53, 134, 255, 1);
+	padding: 16px 12px;
+	width: 100%;
+	max-width: 490px;
+	height: 56px;
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(20px);
+	border-radius: 6px;
+}
+
+.identity-popup {
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(20px);
+	border-radius: 16px;
+	padding: 32px;
+	width: 490px;
+}
+
+.identify-popup-title {
+	font-family: 'ProximaNova-Bold';
+	color: rgba(53, 134, 255, 1);
+	font-size: 18px;
+	text-align: center;
+}
+
+.identify-popup-subtitle {
+	font-family: 'ProximaNova-Regular';
+	color: rgba(53, 134, 255, 1);
+	font-size: 18px;
+	text-align: center;
+}
+
+.identity-popup-route {
+	font-family: 'ProximaNova-Bold';
+	font-size: 20px;
+	line-height: 24px;
+	text-align: center;
+	color: #9D9D9D;
+}
+
 .my-wallet-container {
-	height: 100vh;
-	width: fit-content;
-	padding: 1.5rem 2rem;
+	padding: 24px 32px;
 	background: rgb(245, 245, 245);
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(20px);
@@ -39,8 +82,9 @@
 }
 
 .x-icon {
-	padding-left: 5rem;
 	cursor: pointer;
+	left: -1rem;
+	padding-left: 1rem;
 }
 
 .my-wallet-ballance-container {
@@ -49,6 +93,28 @@
 
 .my-wallet-ballance-container {
 	gap: 2.5rem;
+}
+
+.balance-container {
+	padding: 12px;
+	width: 150px;
+	height: 83px;
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px solid #3586FF;
+	border-radius: 6px;
+}
+
+.balance-label {
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
+	color: #9d9d9d;
+	line-height: 1;
+}
+
+.balance-number {
+	font-family: 'ProximaNova-Bold';
+	font-size: 24px;
+	color: #212131;
 }
 
 .ballance-wrapper {
@@ -127,7 +193,15 @@
 .id-mobile {
 	display: none;
 }
-@media screen and (max-width: 570px) {
+
+@media screen and (min-width: 1512px) {
+	.my-wallet-container {
+		margin: 0 auto;
+		max-width: 785px;
+	}
+}
+
+@media screen and (max-width: 600px) {
 	.wallet-id {
 		display: none;
 	}
@@ -140,6 +214,9 @@
 		letter-spacing: 0.02em;
 		display: block;
 		margin: 0 auto;
+	}
+	.my-wallet-container {
+		width: 100vw;
 	}
 }
 @media screen and (max-width: 470px) {
@@ -156,9 +233,3 @@
 		width: 100%;
 	}
 }
-
-/* @media screen and (max-width: 450px) {
-  .my-wallet-header {
-    gap: 1rem;
-  }
-} */

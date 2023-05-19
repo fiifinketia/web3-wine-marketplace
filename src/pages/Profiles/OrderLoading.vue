@@ -4,7 +4,7 @@
     <span class="profile-loading-text">
       {{ loadingText }}
     </span>
-  </div>  
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,12 +15,10 @@ export default defineComponent({
   props: {
     loadingText: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

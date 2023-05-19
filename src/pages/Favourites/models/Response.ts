@@ -1,18 +1,19 @@
 interface FavoritesModel {
-	contractAddress: string;
-	network: string;
-	tokenID: string;
-	walletAddress: string;
-	nftDetails: {
-		image: string;
-		orderDetails?: {
-			listingPrice?: string;
-			currency?: string;
-			orderHash?: string;
-			transactionStatus?: boolean;
-			expTime?: number;
-		};
-	};
+  smartContractAddress: string;
+  network: string;
+  tokenID: string;
+  walletAddress: string;
+  image: string;
+  brand: string;
+  orderDetails?: {
+    listingPrice?: string;
+    currency?: string;
+    orderHash?: string;
+    transactionStatus?: boolean;
+    expTime?: number;
+  };
+
+  favoriteLoading: null | boolean;
 }
 
 export { FavoritesModel };

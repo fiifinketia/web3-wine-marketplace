@@ -1,212 +1,136 @@
 <template>
-<q-page class="column items-center" :class="!loadingRequest || emptyRequest ? 'justify-center' : ''" style="flex-wrap: nowrap">
-  <div v-if="!loadingRequest" class="column items-center">
-    <LoadingView
-      :loadingText="'Loading your listings'"
+  <q-page
+    class="column items-center"
+    :class="loadingRequest || emptyRequest ? 'justify-center' : ''"
+    style="flex-wrap: nowrap"
+  >
+    <div v-if="loadingRequest" class="column items-center">
+      <LoadingView :loading-text="'Loading your listings'" />
+    </div>
+    <ErrorView
+      v-else-if="!!errorOverall"
+      :tab-error="'listings'"
+      @reload-tab="FetchListings(listingSortKey, listingBrandFilter)"
     />
-  </div>
-  <div v-else class="column items-center">
-    <div v-if="!emptyRequest" class="column items-center">
-      <ListingHeaderLg
-        v-if="$q.screen.width > 1020"
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
-      />
-      <ListingHeaderSm
-        v-else
-        :listingsAmount="listings.length"
-        :selectedListingSortKey="listingSortKey"
-        :updatedListingBrandFilter="listingBrandFilter"
-        @listingBrandFilterUpdated="(val) => listingBrandFilter = val"
-        @listingSortKeySelected="(val) => listingSortKey = val"
-        @fetchListingsWithBrandFilter="(val) => FetchListings(val.sortKey, val.brandFilter)"
-      />
-      <div class="profile-main-container column">
-        <div class="row q-pa-lg profile-column-name">
-          <span class="listings-column-nft">
-            NFT
-          </span>
-          <span 
-            v-if="$q.screen.width > 1265"
-            class="listings-column-threshold"
-          >
-            Threshold
-          </span>
-          <span 
-            v-if="$q.screen.width > 600"
-            class="listings-column-price"
-          >
-            Price
-          </span>
-          <span 
-            v-if="$q.screen.width <= 600"
-            class="listings-column-yours"
-          >
-            Yours
-          </span>
-          <span 
-            v-if="$q.screen.width > 1020"
-            class="listings-column-highestOffer"
-          >
-            Highest Offer
-          </span>
-          <span
-            v-if="$q.screen.width > 600"
-            class="listings-column-expire"
-          >
-            Exp On
-          </span>
-          <span class="listings-column-action">
-            Action
-          </span>
-        </div>
-        <q-separator style="background-color: #5e97ec45 !important" inset class="q-mx-xl" />
-        <div class="profile-nft-container">
-        <div 
-          v-for="listing in listings"
-          :key="listing.orderHash"
-          class="q-px-lg q-py-md row items-center"
-        >
-          <q-btn 
-            flat
-            unelevated
-            dense
-            no-caps
-            align="left"
-            padding="0px"
-            class="listings-column-nft btn--no-hover"
-            :to="{ path: '/nft', query: { id: listing.identifierOrCriteria, network: listing.network, contractAddress: listing.contractAddress} }"
-          >
-            <img v-if="$q.screen.width > 1265" :src="listing.image" class="profile-nft-image q-mr-md"/>
-            <span class="profile-nft-brand"> {{ listing.brand }}</span>
-          </q-btn>
-          <div
-            v-if="$q.screen.width > 1265"
-            class="row items-center listings-column-threshold"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number"> 0.00 </span>
-          </div>
-          <div 
-            v-if="$q.screen.width > 600"
-            class="row items-center listings-column-price"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
-            <q-tooltip 
-              v-if="
-                $q.screen.width <= 1265 
-                && $q.screen.width > 600
-              "
-              anchor="top start" 
-              self="center start"
-              class="listing-tooltip-container" 
-              :offset="$q.screen.width > 1020 ? [70, 30] : [70, 40]"
-            >
-              <div class="column">
-                <div 
-                  v-if="$q.screen.width <= 1020"
-                  class="row items-center justify-between"
-                >
-                  <span class="listing-tooltip-label">
-                    Highest Offer
-                  </span>
-                  <div class="row items-center">
-                    <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-                    <span class="listing-tooltip-price-highest q-pl-xs"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
-                  </div>
-                </div>
-                <div class="row items-center justify-between">
-                  <span class="listing-tooltip-label">
-                    Threshold
-                  </span>
-                  <div class="row items-center">
-                    <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-                    <span class="listing-tooltip-price-threshold q-pl-xs"> {{ '0.00' }} </span>
-                  </div>
-                </div>
-              </div>
-            </q-tooltip>
-          </div>
-          <div 
-            v-if="$q.screen.width > 1020"
-            class="row items-center listings-column-highestOffer"
-          >
-            <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-            <span class="profile-nft-number-highlight"> {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }} </span>
-          </div>
-          <div 
-            v-if="$q.screen.width > 600"
-            class="listings-column-expire"
-          >
-            <span class="profile-nft-number-highlight"> {{ listing.endTime }} </span>
-          </div>
-          <div 
-            v-if="$q.screen.width <= 600"
-            class="listings-column-yours column"
-          >
-            <div class="row q-pb-xs">
-              <img src="../../../assets/icons/currencies/USDC-Icon.svg" />
-              <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
-            </div>
-            <span class="profile-nft-number-highlight"> {{ listing.endTime }} </span>
-          </div>
-          <div style="margin-left: -5px;" class="row items-center listings-column-action">
-            <q-btn
-              flat
-              unelevated
-              dense
-              @click="OpenDeleteDialog(listing)"
-            >
-              <img src="../../../assets/trash.svg" />
-            </q-btn>
-            <q-btn
-              flat
-              unelevated
-              dense
-              @click="OpenEditDialog(listing)"
-            >
-              <img src="../../../assets/edit.svg" />
-            </q-btn>
-          </div>
-          <ListingDialogEdit
-            v-model="openEditDialog"
-            :brand="singleListing.brand"
-            :image="singleListing.image"
-            :orderHash="singleListing.orderHash"
-            :network="singleListing.network"
-            :smartContractAddress="singleListing.contractAddress"
-            :tokenID="singleListing.identifierOrCriteria"
-            @listing-edit-close="openEditDialog = false"
-            @remove-listing="(val) => RemoveRow(val)"
-            @listing-error-dialog="HandleError"
+    <div v-else class="column items-center full-width q-mx-none profile-page-container">
+      <div
+        v-if="!emptyRequest"
+        class="column items-center"
+        :class="$q.screen.width > 600 ? '' : 'full-width'"
+      >
+        <ListingHeaderLg
+          v-if="$q.screen.width > 1020"
+          :listings-amount="listings.length"
+          :selected-listing-sort-key="listingSortKey"
+          :updated-listing-brand-filter="listingBrandFilter"
+          :listable-n-f-ts="listableNFTs"
+          :brand-searched="brandSearched"
+          @listing-brand-filter-updated="val => (listingBrandFilter = val)"
+          @listing-sort-key-selected="val => (listingSortKey = val)"
+          @create-new-listing="openNewListingDialog = true"
+          @fetch-listings-with-brand-filter="
+            val => FetchListings(val.sortKey, val.brandFilter)
+          "
+          @reset-listings-search="val => FetchListings(val, '')"
+        />
+        <ListingHeaderSm
+          v-else
+          :listings-amount="listings.length"
+          :selected-listing-sort-key="listingSortKey"
+          :updated-listing-brand-filter="listingBrandFilter"
+          :listable-n-f-ts="listableNFTs"
+          :brand-searched="brandSearched"
+          @listing-brand-filter-updated="val => (listingBrandFilter = val)"
+          @listing-sort-key-selected="val => (listingSortKey = val)"
+          @create-new-listing="openNewListingDialog = true"
+          @fetch-listings-with-brand-filter="
+            val => FetchListings(val.sortKey, val.brandFilter)
+          "
+          @reset-listings-search="val => FetchListings(val, '')"
+        />
+        <div v-if="$q.screen.width > 600" class="profile-main-container column">
+          <ListingsColumns />
+          <q-separator
+            style="background-color: #5e97ec45 !important"
+            inset
+            class="q-mx-xl"
           />
-          <ListingDialogUnlist
-            v-model="openDeleteDialog"
-            :orderHash="singleListing.orderHash"
-            @listing-delete-close="openDeleteDialog = false"
-            @remove-listing="(val) => RemoveRow(val)"
-            @listing-error-dialog="HandleError"
+          <ListingsRows
+            :listings="listings"
+            @delete-listing="listing => OpenDeleteDialog(listing)"
+            @edit-listing="listing => OpenEditDialog(listing)"
           />
         </div>
+        <div v-else class="full-width" style="width: 100vw">
+          <ListingsColumns />
+          <ListingsRows
+            :listings="listings"
+            @delete-listing="listing => OpenDeleteDialog(listing)"
+            @edit-listing="listing => OpenEditDialog(listing)"
+          />
         </div>
       </div>
+      <div v-else class="column items-center">
+        <EmptyView
+          :empty-text="'You have not made any listings yet.'"
+          @open-listable-container="openNewListingDialog = true"
+        />
+      </div>
+      <ListingDialogEdit
+        v-model="openEditDialog"
+        :brand="singleListing.brand"
+        :image="singleListing.image"
+        :order-hash="singleListing.orderHash"
+        :network="singleListing.network"
+        :smart-contract-address="singleListing.contractAddress"
+        :token-i-d="singleListing.identifierOrCriteria"
+        :is-edit="true"
+        @listing-edit-close="openEditDialog = false"
+        @remove-listing="val => RemoveRow(val)"
+        @listing-error-dialog="HandleError"
+        @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
+      />
+      <ListingDialogUnlist
+        v-model="openDeleteDialog"
+        :order-hash="singleListing.orderHash"
+        :network="singleListing.network"
+        :smart-contract-address="singleListing.contractAddress"
+        :token-id="singleListing.identifierOrCriteria"
+        @listing-delete-close="openDeleteDialog = false"
+        @remove-listing="val => RemoveRow(val)"
+        @listing-error-dialog="HandleError"
+        @unlist-failed="(unlisted) => InvalidUnlist(unlisted)"
+      />
       <ErrorDialog
         v-model="openErrorDialog"
-        :errorType="errorType"
-        :errorTitle="errorTitle"
-        :errorMessage="errorMessage"
+        :error-type="errorType"
+        :error-title="errorTitle"
+        :error-message="errorMessage"
+      />
+      <CreateListing
+        v-model="openNewListingDialog"
+        :listable-n-f-ts="listableNFTs"
+        :is-loading="loadingNewListingDialog"
+        :errored-out="errorNewListingDialog"
+        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed, false)"
+        @listing-warning-processing="processingListing => UpdateListableNFTWithPrice(processingListing, true)"
+        @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
+        @refetch-nfts="SetListableNFTs()"
+      />
+      <ListingProcessedDialog
+        v-model="openOrderCompletedDialog"
+        :order-type="'listing'"
+      />
+      <ListingStatusDialog
+        v-model="openListingStatusDialog"
+        :transaction-status="true"
+      />
+      <UnlistingStatusDialog
+        v-model="openListingUnavailableDialog"
+        :invalid-status="listingUnavailableStatus"
       />
     </div>
-    <div v-else class="column items-center">
-      <EmptyView :emptyText="'You have not made any listings yet.'" />
-    </div>
-  </div>
-</q-page>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -215,15 +139,30 @@ import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { setCssVar } from 'quasar';
 import { ordersStore } from 'src/stores/orders-store';
+import { useListableFilters } from 'src/stores/listable-filters';
 import ListingHeaderLg from '../Headers/ListingHeaderLg.vue';
 import ListingHeaderSm from '../Headers/ListingHeaderSm.vue';
 import OrderLoading from '../OrderLoading.vue';
 import EmptyOrders from '../EmptyOrders.vue';
 import { useUserStore } from 'src/stores/user-store';
-import ListingEdit from '../Popups/ListingEdit.vue';
-import ListingUnlist from '../Popups/ListingUnlist.vue';
+import ListingEdit from '../../SharedPopups/ListingEdit.vue';
+import ListingUnlist from '../../SharedPopups/ListingUnlist.vue';
 import { ListingsResponse } from '../models/response.models';
-import ProfileErrors from '../Popups/ProfileErrors.vue';
+import ProfileErrors from '../../SharedPopups/ProfileErrors.vue';
+import LoadingError from '../LoadingError.vue';
+import ListingsColumns from '../Columns/ListingsColumns.vue';
+import ListingsRows from '../Rows/ListingsRows.vue';
+import ListingNew from '../Popups/New Listing/ListingNew.vue';
+import { useNFTStore } from 'src/stores/nft-store';
+import {
+  TokenIdentifier,
+  ListableToken,
+} from 'src/shared/models/entities/NFT.model';
+import { ReturnMissingNFTDetails } from '../orders.requests';
+import { mapState } from 'pinia';
+import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
+import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -233,53 +172,89 @@ export default defineComponent({
     ListingHeaderSm: ListingHeaderSm,
     LoadingView: OrderLoading,
     EmptyView: EmptyOrders,
+    ErrorView: LoadingError,
     ListingDialogEdit: ListingEdit,
     ListingDialogUnlist: ListingUnlist,
-    ErrorDialog: ProfileErrors
+    ListingProcessedDialog: OrderProcessed,
+    ErrorDialog: ProfileErrors,
+    ListingsColumns: ListingsColumns,
+    ListingsRows: ListingsRows,
+    CreateListing: ListingNew,
+    ListingStatusDialog: ListingExists,
+    UnlistingStatusDialog: ListingUnavailable
   },
+  emits: ['listingsAmount'],
 
   data() {
+    const nftStore = useNFTStore();
     const store = ordersStore();
     const userStore = useUserStore();
+    const listableFiltersStore = useListableFilters();
     return {
       store,
       userStore,
-      listings: store.listings,
+      nftStore,
+      listableFiltersStore,
+
       listingSortKey: store.getListingSortKey,
 
       listingBrandFilter: store.getListingBrandFilter,
 
-      loadingRequest: false,
+      loadingRequest: true,
       emptyRequest: false,
 
       openEditDialog: false,
       openDeleteDialog: false,
 
+      openNewListingDialog: false,
+      enableListingDialog: false,
+
+      loadingNewListingDialog: true,
+      errorNewListingDialog: true,
+
       singleListing: {} as ListingsResponse,
 
+      errorOverall: false,
       errorType: '',
       errorTitle: '',
       errorMessage: '',
-      openErrorDialog: false
-    }
-  },
+      openErrorDialog: false,
+      openOrderCompletedDialog: false,
+      openListingStatusDialog: false,
 
+      listingUnavailableStatus: '',
+      openListingUnavailableDialog: false
+    };
+  },
+  computed: {
+    ...mapState(ordersStore, {
+      listings: store => store.getListings,
+      brandSearched: store => store.getListingBrandFilterStatus,
+      tabKey: store => store.getListingTabKey
+    }),
+    ...mapState(useListableFilters, {
+      listableNFTs: store => store.getParentListableTokens
+    })
+  },
   watch: {
     listingSortKey: {
       handler: async function (sortKey) {
         this.store.setListingSortKey(sortKey);
         if (!this.store.listingBrandFilterStatus) {
-          await this.FetchListings(sortKey, '');  
+          await this.FetchListings(sortKey, '');
         } else {
           await this.FetchListings(sortKey, this.listingBrandFilter);
         }
-        this.loadingRequest = true
-      }
+      },
     },
     listingBrandFilter: {
       handler: async function (brandFilter) {
         this.store.setListingBrandFilter(brandFilter);
-        this.store.setListingBrandFilterStatus(false);
+      },
+    },
+    tabKey: {
+      async handler() {
+        await this.FetchListings('', '');
       }
     }
   },
@@ -288,25 +263,43 @@ export default defineComponent({
     const listingsRequestStatus = this.store.getListingRequestStatus;
     if (listingsRequestStatus == false) {
       await this.FetchListings('', '');
+      this.SetListableNFTs();
     } else {
       this.$emit('listingsAmount', this.listings.length);
       this.CheckForEmptyRequest();
+      this.listableNFTs = this.listableFiltersStore.getFilteredListableTokens;
+      this.loadingNewListingDialog = false;
+      this.errorNewListingDialog = false;
+      this.loadingRequest = false;
     }
-    this.loadingRequest = true
   },
 
   methods: {
+    SetTimeoutOnListingProcessedDialog() {
+      this.openOrderCompletedDialog = true;
+      setTimeout(() => {
+        this.openOrderCompletedDialog = false
+      }, 3000);
+    },
     async FetchListings(sortKey: string, brandFilter: string) {
-      this.loadingRequest = false;
+      this.loadingRequest = true;
       const address = this.userStore.walletAddress;
-      await this.store.setListings(address, sortKey, brandFilter);
-      if (this.store.getListings.length == 0 && this.store.listingBrandFilterStatus == true) {
-        this.HandleMissingBrand();
-      } else {        
-        this.listings = this.store.getListings;
-        this.$emit('listingsAmount', this.listings.length);
-        this.CheckForEmptyRequest();
-        this.loadingRequest = true
+      try {
+        await this.store.setListings(address, sortKey, brandFilter);
+        if (
+          this.store.getListings.length == 0 &&
+          this.store.listingBrandFilterStatus == true
+        ) {
+          this.HandleMissingBrand();
+        } else {
+          this.$emit('listingsAmount', this.listings.length);
+          this.CheckForEmptyRequest();
+        }
+        this.errorOverall = false;
+      } catch {
+        this.errorOverall = true;
+      } finally {
+        this.loadingRequest = false;
       }
     },
     OpenDeleteDialog(listing: ListingsResponse) {
@@ -318,44 +311,145 @@ export default defineComponent({
       this.openEditDialog = true;
     },
     RemoveRow(orderHash: string) {
-      this.listings = this.listings.filter(f => f.orderHash !== orderHash);
       this.store.filterListings(orderHash);
       this.CheckForEmptyRequest();
     },
     CheckForEmptyRequest() {
       if (this.listings.length == 0) {
-        this.emptyRequest = true 
+        this.emptyRequest = true;
       }
     },
     HandleError(err: {
-      errorType: string,
-      errorTitle: string,
-      errorMessage: string
+      errorType: string;
+      errorTitle: string;
+      errorMessage: string;
     }) {
       this.errorType = err.errorType;
       this.errorTitle = err.errorTitle;
       this.errorMessage = err.errorMessage;
       this.openErrorDialog = true;
-      setTimeout(() => { this.openErrorDialog = false }, 2000);
+      setTimeout(() => {
+        this.openErrorDialog = false;
+      }, 2000);
     },
     HandleMissingBrand() {
       this.store.resetListings();
       this.listingBrandFilter = this.store.listingBrandFilter;
-      this.store.setListingBrandFilterStatus(false);
-      this.loadingRequest = true;
       this.HandleError({
         errorType: 'filter',
         errorTitle: 'Unable to fetch your orders',
-        errorMessage: 'There are no orders under your current filter'
-      })
-    }
-  }
+        errorMessage: 'There are no orders under your current filter',
+      });
+    },
+    async RefetchNFTs() {
+      this.nftStore.ownedNFTs = [] as TokenIdentifier[];
+      await this.nftStore.fetchNFTs(this.userStore.walletAddress);
+    },
+    async SetListableNFTs() {
+      try {
+        this.loadingNewListingDialog = true;
+        await this.RefetchNFTs()
+        const currentListings = this.listings;
+        const ownedNFTs = this.nftStore.ownedNFTs;
+        if (ownedNFTs.length > currentListings.length) {
+          const ownedNFTsMap: Map<string, TokenIdentifier> = new Map();
+          ownedNFTs.forEach(f => {
+            const {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network,
+            } = f;
+            const key = `${id},${address},${network}`;
+            ownedNFTsMap.set(key, {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network: network,
+            });
+          });
+          currentListings.forEach(f => {
+            const {
+              identifierOrCriteria: id,
+              contractAddress: address,
+              network,
+            } = f;
+            const key = `${id},${address},${network}`;
+            if (ownedNFTsMap.has(key)) {
+              ownedNFTsMap.delete(key);
+            }
+          });
+          if (ownedNFTsMap.size > 0) {
+            const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
+            const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
+            this.listableFiltersStore.setParentListableTokens(listableTokens);
+            this.listableFiltersStore.setAllFilters(this.listableNFTs);
+            this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
+          }
+          this.errorNewListingDialog = false;
+        }
+      } catch {
+        this.errorNewListingDialog = true;
+      } finally {
+        this.loadingNewListingDialog = false;
+      }
+    },
+    UpdateListableNFTWithPrice(
+      listed: ListableToken,
+      warning: boolean
+    ) {
+      if (!warning) {
+        this.SetTimeoutOnListingProcessedDialog();
+      }
+      const listedIndex = this.listableNFTs.findIndex(
+        nft =>
+          nft.contractAddress == listed.contractAddress &&
+          nft.identifierOrCriteria == listed.identifierOrCriteria &&
+          nft.network == listed.network
+      );
+      this.listableNFTs[listedIndex].listingPrice = listed.listingPrice;
+      this.listableNFTs[listedIndex].listingCurrency = listed.listingCurrency;
+      this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
+    },
+    RemoveListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+      this.openNewListingDialog = false;
+      this.openNewListingDialog = false;
+      this.openListingStatusDialog = true;
+      setTimeout(() => {
+        this.openListingStatusDialog = false;
+      }, 2000);
+      const listedIndex = this.listableNFTs.findIndex(
+        nft =>
+          nft.contractAddress == listed.contractAddress &&
+          nft.identifierOrCriteria == listed.identifierOrCriteria &&
+          nft.network == listed.network
+      );
+      this.listableNFTs.splice(listedIndex, 1);
+      this.listableFiltersStore.RemoveListableNFTInDuplicate(listed);
+    },
+    async InvalidUnlist(failed: {
+      status: 'ongoingUnlist' | 'unlisted' | 'purchased',
+      contractAddress: string,
+      identifierOrCriteria: string,
+      network: string
+    }) {
+      const listedIndex = this.store.listings.findIndex(
+        nft =>
+          nft.contractAddress == failed.contractAddress &&
+          nft.identifierOrCriteria == failed.identifierOrCriteria &&
+          nft.network == failed.network
+      );
+      this.RemoveRow(this.store.listings[listedIndex].orderHash);
+      this.listingUnavailableStatus = failed.status;
+      this.openListingUnavailableDialog = true;
+      setTimeout(() => {
+        this.openListingUnavailableDialog = false;
+      }, 2000);
+    },
+  },
 });
-
 </script>
 
 <style scoped>
 :deep(.q-btn.btn--no-hover .q-focus-helper) {
-	display: none;
+  display: none;
 }
 </style>

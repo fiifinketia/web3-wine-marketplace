@@ -7,15 +7,20 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
+    "lint:fix": "./node_modules/.bin/eslint --ext .js,.ts,.vue src/** --fix",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "cross-env QENV=development quasar dev"
+    "dev": "cross-env QENV=development quasar dev",
+    "prod": "cross-env QENV=production quasar dev"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.9.3",
     "@metamask/onboarding": "^1.0.1",
-    "@opensea/seaport-js": "^1.0.8",
+    "@opensea/seaport-js": "^1.1.0",
+    "@popperjs/core": "^2.11.7",
     "@quasar/extras": "^1.0.0",
     "@transak/transak-sdk": "^1.2.3",
+    "ajv": "^8.12.0",
     "apexcharts": "^3.36.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
@@ -26,10 +31,12 @@
     "opensea-js": "^4.0.12",
     "pinia": "^2.0.11",
     "pinia-plugin-persistedstate": "^2.3.0",
+    "pinia-shared-state": "^0.3.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.0.0",
+    "vue-shepherd": "^3.0.0",
     "vue3-apexcharts": "^1.4.1",
     "web3": "^1.8.0",
     "web3-utils": "^1.8.1"

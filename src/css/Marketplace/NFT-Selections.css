@@ -1,7 +1,13 @@
 .main-marketplace-nft-card {
-  font-family: 'Obviously-Bold';
+  font-family: 'Obviously-Bolder';
   font-size: 18px;
   font-weight: 460;
+}
+
+.main-marketplace-overall-container {
+  overflow-y: scroll;
+  max-height: calc(95% - 150px);
+  margin-top: 8px;
 }
 
 .main-marketplace-card-container {
@@ -22,25 +28,37 @@
 }
 
 .main-marketplace-card-brand {
+  height: 57px;
+  line-height: 1.2;
+}
+
+.main-marketplace-loading-card-brand {
   height: 54px;
-  line-height: 1;
+  width: 95%;
 }
 
 .main-marketplace-price-container {
-  background: linear-gradient(109.05deg, rgba(255, 255, 255, 0.13) 15.61%, rgba(255, 255, 255, 0.04) 98.78%);
+  background: linear-gradient(
+    109.05deg,
+    rgba(255, 255, 255, 0.13) 15.61%,
+    rgba(255, 255, 255, 0.04) 98.78%
+  );
   border: 1px solid rgba(94, 151, 236, 0.27) !important;
   backdrop-filter: blur(20px);
   border-radius: 6px !important;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .main-marketplace-price-header {
   line-height: 1;
   font-family: 'ProximaNova-Regular';
   font-size: 16px;
-  color: #9D9D9D;
+  color: #9d9d9d;
 }
 
-.main-marketplace-price-text-b {
+.main-marketplace-price-text-b-active,
+.main-marketplace-price-text-b-inactive {
   font-family: 'ProximaNova-Bold';
   font-size: 20px;
   color: rgba(33, 33, 49, 1);
@@ -50,6 +68,85 @@
 .main-marketplace-price-text-l {
   font-family: 'ProximaNova-Regular';
   font-size: 16px;
-  color: #9D9D9D;
+  color: #9d9d9d;
   line-height: 1;
+}
+
+@media screen and (min-width: 1512px) {
+  .fit {
+    /* width: 100% !important;
+    height: 100% !important; */
+    max-width: 1200px;
+  }
+  .q-page {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .main-marketplace-card-container:nth-child(-n + 4) {
+    margin-top: 2px;
+  }
+  .main-marketplace-loading-card-container:nth-child(-n + 4) {
+    margin-top: 2px;
+  }
+  .main-marketplace-overall-container {
+    padding-left: 32px;
+    padding-right: 16px;
+  }
+  .main-marketplace-card-container,
+  .main-marketplace-loading-card-container {
+    width: 23%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .main-marketplace-card-container,
+  .main-marketplace-loading-card-container {
+    width: 32%;
+  }
+  .main-marketplace-overall-container {
+    margin-top: 20px;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+  .main-marketplace-card-container:nth-child(-n + 3) {
+    margin-top: -8px;
+  }
+  .main-marketplace-loading-card-container:nth-child(-n + 3) {
+    margin-top: 0px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .main-marketplace-card-container,
+  .main-marketplace-loading-card-container {
+    width: 48%;
+  }
+}
+
+@media screen and (min-width: 0px) and (max-width: 599px) {
+  .main-marketplace-card-container:nth-child(-n + 2) {
+    margin-top: -6px;
+  }
+  .main-marketplace-loading-card-container:nth-child(-n + 2) {
+    margin-top: 0px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .main-marketplace-price-text-b-inactive {
+    font-size: 14px;
+  }
+  .main-marketplace-price-text-b-active {
+    font-size: 16px;
+  }
+  .main-marketplace-price-header {
+    font-size: 14px;
+  }
+  .main-marketplace-nft-card {
+    font-size: 16px;
+  }
 }

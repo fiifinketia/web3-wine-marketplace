@@ -1,0 +1,157 @@
+.boost-worth-text {
+	font-family: 'Obviously-Bolder';
+	font-size: 32px;
+	letter-spacing: 0.03em;
+	color: #212131;
+	width: 90%;
+}
+
+.we-offer-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 36px;
+	color: #212131;
+	opacity: 0.6;
+	width: 90%;
+}
+
+.calculate-worth-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 16px 32px;
+	width: 290px;
+	height: 61px;
+	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+}
+
+.calculate-worth-text {
+	font-family: 'ProximaNova-Regular';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 29px;
+	text-align: center;
+	letter-spacing: 0.02em;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.wine-calculator-description-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 16px;
+	width: 50%;
+}
+
+.wine-calculator-container {
+	width: 100%;
+padding-top: 20px;
+
+}
+
+.wine-calculator-image-wrapper {
+	padding-left: 40px;
+	width: 50%;
+}
+.wine-calculator-image {
+	width: '450';
+	height: '450px';
+}
+
+@media screen and (min-width: 1250px) {
+	.wine-calculator-image-wrapper {
+		padding-left: 200px;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.wine-calculator-image-wrapper {
+		padding-left: 10px;
+	}
+	.wine-calculator-image {
+		width: 370px;
+		height: 370px;
+	}
+	.boost-worth-text {
+		font-size: 28px;
+		line-height: 42px;
+	}
+	.we-offer-text {
+		font-size: 18px;
+		line-height: 27px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.wine-calculator-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.boost-worth-text {
+		font-size: 24px;
+		line-height: 36px;
+		text-align: center;
+		width: 100%;
+	}
+	.we-offer-text {
+		width: 100%;
+		text-align: center;
+	}
+
+	.wine-calculator-description-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+	}
+
+	.wine-calculator-image-wrapper {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.calculate-worth-button {
+		width: 260px;
+		height: 56px;
+	}
+	.calculate-worth-text {
+		font-size: 20px;
+		line-height: 24px;
+		letter-spacing: 0.02em;
+	}
+	.wine-calculator-image {
+		width: 305px;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.wine-calculator-image {
+		width: 210px;
+		height: 210px;
+	}
+	.wine-calculator-image-wrapper {
+		padding-left: 0px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.wine-calculator-description-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+	}
+}

@@ -1,16 +1,58 @@
 <template>
   <div class="burger-menu-background column justify-around items-center">
-    <div class="burger-bolder-text" @click="$router.push('/marketplace?tab=nfts'); $emit('closeBurgerMenu')">Marketplace</div>
-    <div @click="$router.push('/marketplace?tab=releases'); $emit('closeBurgerMenu')">New Releases</div>
-    <div @click="$router.push('/marketplace?tab=releases'); $emit('closeBurgerMenu')">Recommended</div>
+    <div v-if="isConnected" class="burger-bolder-text" @click="openMyWallet()">
+      <q-avatar size="40px"> <img :src="userStore.user?.avatar" /> </q-avatar>
+      {{ userStore.user.username || userStore.walletAddress.slice(0, 10) }}
+    </div>
+    <div
+      class="burger-bolder-text"
+      @click="
+        $router.push('/');
+        $emit('closeBurgerMenu');
+      "
+    >
+      Home
+    </div>
+    <div v-if="!isConnected" class="text-primary" @click="ConnectWallet()">connect wallet</div>
+    <div
+      class="burger-bolder-text"
+      @click="
+        $router.push('/marketplace?tab=nfts');
+        $emit('closeBurgerMenu');
+      "
+    >
+      Marketplace
+    </div>
+    <div
+      @click="
+        $router.push('/marketplace?tab=releases');
+        $emit('closeBurgerMenu');
+      "
+    >
+      New Releases
+    </div>
+    <div
+      @click="
+        $router.push('/marketplace?tab=recommended');
+        $emit('closeBurgerMenu');
+      "
+    >
+      Recommended
+    </div>
     <div class="burger-bolder-text">stats</div>
     <div class="burger-bolder-text">storefront</div>
-    <div class="burger-icons row justify-between">
+    <div
+      v-if="userStore.walletAddress"
+      class="burger-icons row justify-between"
+    >
       <img
         class="icons"
         src="../../../public/images/favs-icon.svg"
         alt="favorite-icon"
-				@click="$router.push('/favorites'); $emit('closeBurgerMenu')"
+        @click="
+          $router.push('/favorites');
+          $emit('closeBurgerMenu');
+        "
       />
       <img
         class="icons"
@@ -21,15 +63,19 @@
         class="icons"
         src="../../../public/images/profile-icon.svg"
         alt="profile-icon"
-        @click="$router.push('/orders'); $emit('closeBurgerMenu')"
+        @click="
+          $router.push('/orders');
+          $emit('closeBurgerMenu');
+        "
       />
     </div>
-    <div v-if="!isConnected" @click="ConnectWallet()">sign up</div>
-    <div class="burger-bolder-text">digital wine cellar</div>
-    <div>settings</div>
-    <div>contact us</div>
-    <div>faqs</div>
+    <div class="burger-bolder-text" @click="openDWC">digital wine cellar</div>
+    <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
+    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterSupport')">contact us</div>
+    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterFaqs')">faqs</div>
     <div v-if="isConnected" @click="Logout()">log out</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
   </div>
 </template>
 
@@ -38,11 +84,11 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { useUserStore } from 'src/stores/user-store';
 import { defineComponent } from 'vue';
 import '../../css/MainLayout/BurgerMenu.css';
-import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { ordersStore } from 'src/stores/orders-store';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-	emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet'],
+  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenterSupport', 'openHelpCenterFaqs', 'logout'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
@@ -51,18 +97,18 @@ export default defineComponent({
       userStore,
       nftStore,
       orderStore,
-      isConnected: false
-    }
+      isConnected: false,
+    };
   },
   async mounted() {
     await this.userStore.checkConnection();
-		const wallet = this.userStore.walletAddress;
-		if (!!wallet) {
-			this.isConnected = true;
-		} else {
-			this.ClearStore();
+    const wallet = this.userStore.walletAddress;
+    if (!!wallet) {
+      this.isConnected = true;
+    } else {
+      this.ClearStore();
     }
-	},
+  },
   methods: {
     onClickBackground() {
       this.$emit('clicked', true);
@@ -71,15 +117,23 @@ export default defineComponent({
       this.$emit('closeBurgerMenu');
       this.$emit('openConnectWallet');
     },
-    async Logout() {
-			this.userStore.walletAddress = '';
-      this.ClearStore();
+    async openMyWallet() {
       this.$emit('closeBurgerMenu');
-		},
+      this.$emit('openMyWallet');
+    },
+    async Logout() {
+      this.userStore.walletAddress = '';
+      this.ClearStore();
+      this.$emit('logout');
+      this.$emit('closeBurgerMenu');
+    },
     ClearStore() {
       this.nftStore.ownedNFTs = [] as TokenIdentifier[];
       this.nftStore.fetchNFTsStatus = false;
       this.orderStore.$reset();
+    },
+    openDWC() {
+    	window.open('https://dwc.wiv-tech.org/#/', '_blank')
     }
   },
 });

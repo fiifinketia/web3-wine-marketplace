@@ -1,40 +1,105 @@
 import { Seaport } from '@opensea/seaport-js';
-import { ethers, utils } from 'ethers';
+import { Contract, ethers, utils } from 'ethers';
 import {
-	ChainID,
-	ItemType,
-	OrderListingModel,
-	RetrieveListingResponse,
-	SeaportInstance,
-	UpdateListingRequest,
+  ChainID,
+  ItemType,
+  OrderModel,
+  RetrieveListingResponse,
+  SeaportInstance,
+  FulfillOrderRequest,
 } from '../models/Orders';
-
+import {
+  NewPolygonCollectionContract_MumbaiInstance,
+  NewPolygonCollectionContract_PolygonInstance,
+} from 'src/shared/web3.helper';
 import axios from 'axios';
 import {
-	OrderComponents,
-	OrderParameters,
+  OrderComponents,
+  OrderParameters,
 } from '@opensea/seaport-js/lib/types';
+import { APIKeyString } from 'src/boot/axios';
+import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import { ERC20_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
+import { UserModel } from 'src/components/models';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-declare let window: any; // eslint-disable-line
-const GETParams = {
-	params: {
-		t: new Date().getTime(),
-	},
+declare let window: Window;
+
+const RandomIdGenerator = () => {
+  return Date.now();
 };
 
+export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
+  const inputDateTime = `${expDate}T${expTime}:00`;
+  const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
+  const currentTimestamp = Math.round(new Date().getTime() / 1000);
+  return inputTimestamp > currentTimestamp;
+}
+
+function SetExpDate(expDate: string, expTime: string) : string{
+	const inputDateTime = `${expDate}T${expTime}:00`
+	return (
+		Math.round(new Date(inputDateTime).getTime() / 1000)
+	).toString()
+}
+
+export async function GetBlockNumber(): Promise<number> {
+  const web3 = new ethers.providers.Web3Provider(window.ethereum);
+  return await web3.getBlockNumber();
+}
+
+export async function GetWeb3(): Promise<SeaportInstance> {
+  const web3 = new ethers.providers.Web3Provider(window.ethereum);
+  const chainId = (await web3.getNetwork()).chainId;
+  let network = '';
+  switch (chainId) {
+    case ChainID.ETHEREUM:
+      network = 'Ethereum';
+      break;
+    case ChainID.POLYGON:
+      network = 'Polygon';
+      break;
+    case ChainID.RINKEBY:
+      network = 'Rinkeby';
+      break;
+    case ChainID.MUMBAI:
+      network = 'Mumbai';
+  }
+  const seaport = new Seaport(web3, { seaportVersion: '1.4' });
+  const seaportInstance: SeaportInstance = {
+    seaport: seaport,
+    network: network,
+  };
+  return seaportInstance;
+}
+
 export async function CreateERC721Listing(
-	tokenID: string,
-	smartContractAddress: string,
-	brand: string,
-	image: string,
-	address: string,
-	listingPrice: string,
-	expirationDate: string
+  tokenID: string,
+  smartContractAddress: string,
+  brand: string,
+  image: string,
+  address: string,
+  listingPrice: string,
+	listingCurrency: string,
+  expirationDate: string,
+	expirationTime: string
 ) {
-	listingPrice = utils.parseEther(listingPrice).toString();
+	const signer = WindowWeb3Provider?.getSigner();
+  if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
+	// const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
+	const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
+	const decimalOfToken = <number> await ERC20Contract.decimals();
+
+	// await balanceAndApprovals(
+	// 	address,
+	// 	'ERC721',
+	// 	ERC721Contract,
+	// 	tokenID
+	// )
+	listingPrice = utils.parseUnits(<string> listingPrice, decimalOfToken).toString();
 
 	const { seaport, network } = await GetWeb3();
+	const blockNumber = await GetBlockNumber();
 	const { executeAllActions } = await seaport.createOrder(
 		{
 			offer: [
@@ -50,27 +115,24 @@ export async function CreateERC721Listing(
 				{
 					amount: listingPrice,
 					recipient: address,
-					// TODO: CHANGE IN PRODUCTION
-					token: process.env.MARKETPLACE_CURRENCY,
+					token: listingCurrency,
 				},
 			],
 			fees: [
 				{
 					basisPoints: Number(process.env.WIV_FEE),
-					recipient:
-						process.env.WIV_FEE_RECEIVER ||
-						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
+					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
+			endTime: SetExpDate(expirationDate, expirationTime),
 		},
 		address
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	await transact();
+	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
-	const db_Order: OrderListingModel = {
+	const db_Order: OrderModel = {
 		parameters: order.parameters,
 		signature: order.signature,
 		orderHash: orderHash,
@@ -80,100 +142,112 @@ export async function CreateERC721Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
+		nonce: txn.nonce
 	};
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
+		blockNumber: blockNumber,
+		apiKey: APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
 }
 
-export async function CreateERC1155Listing(
-	tokenID: string,
-	smartContractAddress: string,
-	brand: string,
-	image: string,
-	address: string,
-	listingPrice: string,
-	expirationDate: string,
-	amount: string
-) {
-	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
-	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	listingPrice = utils.parseEther(listingPrice).toString();
-	// const testDate = new Date('2022-08-24T14:31:18.067Z');
-	// const testDate2 = Math.round(testDate.getTime()/1000).toString();
+export async function InspectListingStatus(
+  nft: TokenIdentifier
+): Promise<
+  false | { listingPrice: string; currency: string; transactionStatus: boolean }
+> {
+  const url = <string>process.env.RETRIEVE_LISTING_STATUS;
+  let status = false;
+  await axios.post(url, { ...nft, apiKey: APIKeyString }).then(res => {
+    status = res.data;
+  });
+  return status;
+}
 
-	const { seaport, network } = await GetWeb3();
-	const { executeAllActions } = await seaport.createOrder(
-		{
-			offer: [
-				// owner's offer
-				{
-					itemType: ItemType.ERC1155,
-					token: smartContractAddress,
-					identifier: tokenID,
-					amount: amount,
-				},
-			],
-			consideration: [
-				// owner's ask
-				{
-					amount: listingPrice,
-					recipient: address,
-					token: process.env.MARKETPLACE_CURRENCY,
-				},
-			],
-			fees: [
-				{
-					basisPoints: Number(process.env.WIV_FEE),
-					recipient:
-						process.env.WIV_FEE_RECEIVER ||
-						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
-				},
-			],
-			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
-		},
-		address
-	);
-	const order = await executeAllActions();
-	const { transact } = seaport.validate([order]);
-	await transact();
-	const orderHash = seaport.getOrderHash({ ...order.parameters });
-	const db_Order: OrderListingModel = {
-		parameters: order.parameters,
-		signature: order.signature,
-		orderHash: orderHash,
-		network: network,
-		from: 'Owner', // process env here
-		contractAddress: smartContractAddress,
-		identifierOrCriteria: tokenID,
-		brand: brand,
-		image: image,
-	};
-	const OrderRequest = {
-		order: db_Order,
-		notificationID: RandomIdGenerator(),
-	};
-	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
-	axios.post(createOrderURL, OrderRequest);
+export async function ValidateUnlist(
+  nft: TokenIdentifier,
+	ownerAddress: string
+): Promise<
+  false | 'ongoingUnlist' | 'unlisted' | 'purchased'
+> {
+  const url = <string>process.env.RETRIEVE_LISTING_CANCELLATION_STATUS;
+	let status: false | 'ongoingUnlist' | 'nonexistent' = 'nonexistent';
+  await axios.post(url, { ...nft, apiKey: APIKeyString }).then(res => {
+    status = res.data;
+  });
+	if (status == 'nonexistent') {
+		let isUnlisted = false;
+		try {
+			let actualOwner = '';
+			let contract: Contract;
+			switch (nft.contractAddress) {
+				case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+					contract = NewPolygonCollectionContract_MumbaiInstance;
+					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
+					// if still the same owner, then listing is nonexistent because it was unlisted
+					// else it was bought
+					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
+					break;
+				case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
+					contract = NewPolygonCollectionContract_PolygonInstance;
+					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
+					// if still the same owner, then listing is nonexistent because it was unlisted
+					// else it was bought
+					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
+					break;
+			}
+			if (!!isUnlisted) {
+				return 'unlisted'
+			}
+			return 'purchased'
+		} catch (err) {
+			throw err;
+		}
+	}
+	// is either false or ongoingUnlist
+  return status;
 }
 
 export async function CreateERC721Offer(
-	tokenID: string,
-	smartContractAddress: string,
-	brand: string,
-	image: string,
-	address: string,
-	offerPrice: string,
-	expirationDate: string
+  tokenID: string,
+  smartContractAddress: string,
+  brand: string,
+  image: string,
+  address: string,
+  offerPrice: string,
+	offerCurrency: string,
+  expirationDate: string,
+	expirationTime: string,
+  user: UserModel
 ) {
-	// const wivaContract = '0xC1d6EF502Ac5410B3F3706beb6a0808131337Fb6';
-	// const wivaContract = '0xA00055e6EE4D1f4169096EcB682F70cAa8c29987';
-	// const feeReceiver = '0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A';
-	offerPrice = utils.parseEther(offerPrice).toString();
+  if (
+    user.verificationStatus === 'NOT_STARTED' ||
+    user.verificationStatus === 'FAILED' ||
+    user.verificationStatus === 'PENDING'
+  ) {
+    throw new Error('User is not verified');
+  }
 
+	const signer = WindowWeb3Provider?.getSigner();
+	if(!signer) throw new Error('Please reconnect/install Metamask wallet to continue');
+	const contract = ERC20_ContractWithSigner(offerCurrency, signer);
+	const decimalOfToken = <number> await contract.decimals();
+
+	// await balanceAndApprovals(
+	// 	address,
+	// 	'ERC20',
+	// 	contract,
+	// 	'',
+	// 	offerPrice,
+	// 	decimalOfToken
+	// )
+
+	offerPrice = utils.parseUnits(<string> offerPrice, decimalOfToken).toString();
+
+	const blockNumber = await GetBlockNumber();
 	const { seaport, network } = await GetWeb3();
 	const { executeAllActions } = await seaport.createOrder(
 		{
@@ -181,7 +255,7 @@ export async function CreateERC721Offer(
 				// buyer's offer
 				{
 					amount: offerPrice,
-					token: process.env.MARKETPLACE_CURRENCY,
+					token: offerCurrency,
 				},
 			],
 			consideration: [
@@ -196,21 +270,18 @@ export async function CreateERC721Offer(
 			fees: [
 				{
 					basisPoints: Number(process.env.WIV_FEE),
-					recipient:
-						process.env.WIV_FEE_RECEIVER ||
-						'0xF0377dF3235e4F5B3e38DB494e601Edf3567eF9A',
+					recipient: <string> process.env.WIV_FEE_RECEIVER
 				},
 			],
-			domain: 'Seaport',
-			endTime: Math.round(new Date(expirationDate).getTime() / 1000).toString(),
+			endTime: SetExpDate(expirationDate, expirationTime),
 		},
 		address
 	);
 	const order = await executeAllActions();
 	const { transact } = seaport.validate([order]);
-	await transact();
+	const txn = await transact();
 	const orderHash = seaport.getOrderHash({ ...order.parameters });
-	const db_Order: OrderListingModel = {
+	const db_Order: OrderModel = {
 		parameters: order.parameters,
 		signature: order.signature,
 		orderHash: orderHash,
@@ -220,28 +291,46 @@ export async function CreateERC721Offer(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		highestBid: offerPrice,
+		offerPrice: offerPrice,
+		offerCurrency: offerCurrency,
+		nonce: txn.nonce
 	};
 	const OrderRequest = {
 		order: db_Order,
 		notificationID: RandomIdGenerator(),
+		blockNumber: blockNumber,
+		apiKey: APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	await axios.post(createOrderURL, OrderRequest);
 }
 
 export async function FulfillBasicOrder(
-	orderHash: string,
-	brand: string,
-	owner: boolean,
-	address: string,
-	image: string
+  orderHash: string,
+  brand: string,
+  owner: boolean,
+  user: UserModel,
+  image: string
 ) {
+  if (!user.walletAddress) {
+    throw 'Check Metamask connection.';
+  }
+  if (
+    user.verificationStatus === 'NOT_STARTED' ||
+    user.verificationStatus === 'FAILED' ||
+    user.verificationStatus === 'PENDING'
+  ) {
+    throw 'User is not verified';
+  }
 	const { seaport } = await GetWeb3();
 	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
+	const body = {
+		apiKey: APIKeyString,
+		orderHash: orderHash
+	}
 	const order: RetrieveListingResponse = await axios
-		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
-		.then((result) => {
+		.post(retrieveOrderUrl, body)
+		.then(result => {
 			const data = result.data;
 			return {
 				parameters: data.parameters,
@@ -251,17 +340,22 @@ export async function FulfillBasicOrder(
 				contractAddress: data.contractAddress,
 			};
 		});
+	const blockNumber = await GetBlockNumber();
+
+	// await HandleFulfillmentApprovals(owner, user.walletAddress, order);
+
 	const { executeAllActions: executeAllFulfillActions } =
 		await seaport.fulfillOrder({
 			order: {
 				parameters: order.parameters,
 				signature: order.signature,
 			},
+			exactApproval: false
 		});
 
-	await executeAllFulfillActions();
+	const txn = await executeAllFulfillActions();
 
-	const updateOrder: UpdateListingRequest = {
+	const updateOrder: FulfillOrderRequest & { apiKey: string } = {
 		notificationID: RandomIdGenerator(),
 		identifierOrCriteria: order.identifierOrCriteria,
 		contractAddress: order.contractAddress,
@@ -269,71 +363,50 @@ export async function FulfillBasicOrder(
 		network: order.network,
 		brand: brand,
 		isOwner: owner,
-		walletAddress: address,
+		walletAddress: user.walletAddress,
+		offerer: order.parameters.offerer,
 		image: image,
+		nonce: txn.nonce,
+		blockNumber: blockNumber,
+		apiKey: <string> APIKeyString
 	};
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
 }
 
-export async function GetWeb3(): Promise<SeaportInstance> {
-	const web3 = new ethers.providers.Web3Provider(window.ethereum);
-	const chainId = (await web3.getNetwork()).chainId;
-	let network = '';
-	switch (chainId) {
-		case ChainID.ETHEREUM:
-			network = 'Ethereum';
-			break;
-		case ChainID.POLYGON:
-			network = 'Polygon';
-			break;
-		case ChainID.RINKEBY:
-			network = 'Rinkeby';
-			break;
-		case ChainID.MUMBAI:
-			network = 'Mumbai';
-	}
-	const seaport = new Seaport(web3);
-	const seaportInstance: SeaportInstance = {
-		seaport: seaport,
-		network: network,
-	};
-	return seaportInstance;
+export async function CancelSingleOrder(
+  orderHash: string,
+  walletAddress: string
+) {
+  if (!!walletAddress) {
+    const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
+    const body = {
+      apiKey: APIKeyString,
+      orderHash: orderHash,
+    };
+    const order: OrderComponents = await axios
+      .post(retrieveOrderUrl, body)
+      .then(result => {
+        const data = result.data;
+        return {
+          ...(<OrderParameters & { counter: number }>data.parameters),
+          signature: <string>data.signature,
+        };
+      });
+    const { seaport } = await GetWeb3();
+    const blockNumber = await GetBlockNumber();
+    const { transact } = seaport.cancelOrders([order]);
+    const txn = await transact();
+    const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
+    const requestToCancel = {
+      orderHash: orderHash,
+      walletAddress: walletAddress,
+      nonce: txn.nonce,
+      blockNumber: blockNumber,
+      apiKey: APIKeyString,
+    };
+    axios.post(cancelOrderURL, requestToCancel);
+  } else {
+    throw new Error('Please reconnect/install Metamask wallet to continue')
+  }
 }
-
-export async function CancelSingleOrder(orderHash: string) {
-	const retrieveOrderUrl = <string>process.env.RETRIEVE_ORDER_URL;
-	const order: OrderComponents = await axios
-		.get(`${retrieveOrderUrl}?orderHash=${orderHash}`, GETParams)
-		.then((result) => {
-			const data = result.data;
-			return {
-				...(<OrderParameters & { counter: number }>data.parameters),
-				signature: <string>data.signature,
-			};
-		});
-	const { seaport } = await GetWeb3();
-	const { transact } = seaport.cancelOrders([order]);
-	await transact();
-	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-	axios.post(cancelOrderURL, [orderHash]);
-}
-
-// HAVE TO DELETE!
-export async function CancelSelectOrders(orderHashes: string[]) {
-	let orders: OrderComponents[] = [];
-	const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-	const cancelOrderConfirmedURL = <string>(
-		process.env.CANCEL_ORDER_CONFIRMED_URL
-	);
-	const { data } = await axios.post(cancelOrderURL, orderHashes);
-	orders = data;
-	const { seaport } = await GetWeb3();
-	const { transact } = seaport.cancelOrders(orders);
-	await transact();
-	axios.post(cancelOrderConfirmedURL, orderHashes);
-}
-
-const RandomIdGenerator = () => {
-	return Date.now();
-};

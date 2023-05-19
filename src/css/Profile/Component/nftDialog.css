@@ -1,0 +1,61 @@
+.nft-dialog-brand {
+  font-family: 'Obviously-Bold';
+  word-wrap: break-word;
+  text-align: left;
+  font-size: 16px;
+}
+
+.nft-dialog-currency {
+  width: 16px;
+  height: 16px;
+}
+
+.nft-dialog-custom-padding {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nft-dialog-label {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+  line-height: 17px;
+  color: #212131;
+}
+
+.nft-dialog-time, .nft-dialog-date {
+  font-family: 'ProximaNova-Regular';
+  font-size: 14px;
+}
+
+.nft-dialog-hash {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+}
+
+.nft-dialog-time {
+  color: #9D9D9D;
+}
+
+.nft-dialog-date {
+  color: #212131;
+}
+
+.nft-dialog-info {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  color: #3586FF;
+}
+
+.nft-dialog-text-default, .nft-dialog-text-highlight {
+  font-family: 'ProximaNova-Bold';
+  font-size: 16px;
+  line-height: 17px;
+}
+
+.nft-dialog-text-highlight {
+  color: #3586FF;
+}
+
+.nft-dialog-text-default {
+  color: #212131;
+}

@@ -1,97 +1,146 @@
 import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import axios from 'axios';
-import { ethers, utils } from 'ethers';
-import { useNFTStore } from './nft-store';
+import { utils } from 'ethers';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
+import { APIKeyString } from 'src/boot/axios';
+import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 
 export const useUserStore = defineStore(
-	'userStore',
-	() => {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const walletAddress = ref('');
-		// const nftStorage = useNFTStore();
-		const user: Ref<UserModel | null> = ref<UserModel | null>(null);
+  'userStore',
+  () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const walletAddress: Ref<string> = ref('');
+    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
+    const connectWallet = async () => {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      const address = utils.getAddress(accounts[0]);
+      const date = new Date().getTime();
+      try {
+        const getUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API + '/profile/' + address + '?t=' + date
+        );
+        if (!!getUser.data) {
+          user.value = getUser.data;
+          walletAddress.value = address;
+          return;
+        }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if(error.response && error.response.status === 404) {
+          try {
+            const getColors = [
+              generateRandomColor(),
+              generateRandomColor(),
+              generateRandomColor(),
+            ].join(',');
 
-		const connectWallet = async () => {
-			// this.showConnectWallet = true;
-			// // this.showMyWallet = true;
-			// document.body.classList.add('no-scroll');
-			const accounts = await window.ethereum.request({
-				method: 'eth_requestAccounts',
-			});
-			walletAddress.value = utils.getAddress(accounts[0]);
-			// await nftStorage.fetchNFTs(accounts[0]);
+            const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
 
-			const getUser = await axios.get(
-				process.env.MARKETPLACE_API_URL + 'market/users/' + walletAddress.value
-			);
-			if (!!getUser.data) return (user.value = getUser.data);
+            const newUser = await axios.post(
+              process.env.MARKETPLACE_USERS_API + '/create',
+              {
+                walletAddress: address,
+                avatar,
+                apiKey: APIKeyString
+              }
+            )
+            walletAddress.value = address;
+            user.value = newUser.data;
+            return;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any){
+            throw new Error('Unable to connect wallet');
+          }
+        }
+        throw error;
+      }
+    };
 
-			try {
-				const getColors = [
-					generateRandomColor(),
-					generateRandomColor(),
-					generateRandomColor(),
-				].join(',');
-				const newUser = await axios.post(
-					process.env.MARKETPLACE_API_URL + 'market/users',
-					{
-						walletAddress: walletAddress.value,
-						avatar: `https://source.boringavatars.com/beam/40/${walletAddress.value}?colors=${getColors}`,
-					}
-				);
-				user.value = newUser.data;
-			} catch (error: any) {
-				console.log('Failed to upload user!');
-			}
-		};
+    const updateUsername = async (username: string) => {
+      const updatedUser = await axios.put(
+        process.env.MARKETPLACE_USERS_API + '/update/' + walletAddress.value,
+        {
+          username,
+          apiKey: APIKeyString,
+        },
+      );
+      user.value = updatedUser.data;
+    };
 
-		const checkConnection = async () => {
-			const connectedAccounts: string[] = await window.ethereum.request({
-				method: 'eth_accounts',
-			});
-			if (connectedAccounts.length == 0) {
-				walletAddress.value = '';
-			}
-		};
+    const checkConnection = async () => {
+      const connectedAccounts: string[] = await window.ethereum.request({
+        method: 'eth_accounts',
+      });
+      if (connectedAccounts.length == 0) {
+        walletAddress.value = '';
+      }
+    };
 
-		const checkNetwork = async () => {
-			const connectedAccounts: string[] = await window.ethereum.request({
-				method: 'eth_accounts',
-			});
-			if (connectedAccounts.length == 0) {
-				walletAddress.value = '';
-			}
-		};
+    // eslint-disable-next-line
+    const uploadAvatar = async (formData: any) => {
+      try {
+	      formData.append('apiKey', APIKeyString)
+        await axios.post(
+          process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        const updatedUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
+        );
+        user.value = updatedUser.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    };
 
-		const getWalletBalance = async () => {
-			if (!window.ethereum) return 0;
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const balance = await provider.getBalance(walletAddress.value);
-			const balanceInETH = ethers.utils.formatEther(balance);
+    const getWalletBalance = async () => {
+      if (!window.ethereum) return 0;
+      const signer = WindowWeb3Provider?.getSigner();
+      if (!!signer) {
+        const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
+          GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, walletAddress.value),
+          GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, walletAddress.value),
+          GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, walletAddress.value)
+        ]);
+        return {
+          _wivaBalance: wivaBalance,
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance
+        }
+      }
+      return undefined;
+    };
 
-			// Convert Matic to USDC
-			const maticToUsdc = await axios.get(
-				'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd'
-			);
-			const maticToUsdcRate = maticToUsdc.data['matic-network'].usd;
-			return Number(balanceInETH) * maticToUsdcRate;
-		};
+    const getWalletAddress = () => {
+      return walletAddress.value;
+    };
 
-		return {
-			// provider,
-			walletAddress,
-			connectWallet,
-			getWalletBalance,
-			checkConnection,
-			user,
-			// isConnected,
-			// walletBalance,
-			// connect,
-			// logout,
-		};
-	},
-	{ persist: true }
+    const $reset = () => {
+      (walletAddress.value = ''), (user.value = undefined);
+    };
+
+    return {
+      walletAddress,
+      connectWallet,
+      updateUsername,
+      uploadAvatar,
+      getWalletBalance,
+      getWalletAddress,
+      checkConnection,
+      user,
+      $reset,
+    };
+  },
+  { persist: true }
 );
