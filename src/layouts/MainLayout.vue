@@ -76,35 +76,10 @@
     full-height
     class="terms-and-conditions-background"
   >
-    <q-card class="terms-and-conditions-container column justify-between">
-      <q-card-section class="full-width">
-        <div
-          class="terms-and-conditions-title text-h6 bold text-black text-start"
-        >
-          Terms and Conditions
-        </div>
-      </q-card-section>
-
+    <q-card class="terms-and-conditions-container column justify-between no-wrap">
       <q-card-section>
-        <div class="terms-and-conditions-content overflow-scroll">
-          <p>
-            By using this website, you agree to the following terms and
-            conditions. If you do not agree to these terms and conditions, you
-            may not use this website.
-          </p>
-          <p>
-            We reserve the right to change these terms and conditions at any
-            time. You should check these terms and conditions regularly to
-            ensure you are aware of any changes made by us. Your continued use
-            of this website will be deemed acceptance of the updated or amended
-            terms and conditions.
-          </p>
-          <p>
-            We may suspend or terminate your access to this website if you
-            breach these terms and conditions or if we are unable to verify or
-            authenticate any information you provide to us.
-          </p>
-        </div>
+        <div v-html="TermsAndConditions" class="overflow-scroll">
+	</div>
       </q-card-section>
       <q-card-actions class="row terms-and-conditions-btns justify-end">
         <q-btn
@@ -487,6 +462,8 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
+import TermsAndConditionsJson from '../TermsAndConditions.json';
+
 
 export default defineComponent({
   name: 'MainLayout',
@@ -502,9 +479,9 @@ export default defineComponent({
     const orderStore = ordersStore();
     const tourStore = useTourStore();
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
-
     return {
       showBurgerMenu: false,
+      TermsAndConditions: TermsAndConditionsJson.data,
       showMyWallet: false,
       showSettings: false,
       showHelpCenter: false,
