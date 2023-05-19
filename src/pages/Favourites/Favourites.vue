@@ -213,6 +213,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useShepherd, Tour } from 'vue-shepherd';
 import '../../css/Favorites/Favorites.css';
 import { FavoritesModel } from './models/Response';
 import {
@@ -251,6 +252,9 @@ export default defineComponent({
     const userStore = useUserStore();
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
+    const shepherd = useShepherd({
+	useModalOverlay: true,
+    }) as Tour;
     return {
       favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
       loadingFavNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
@@ -263,7 +267,7 @@ export default defineComponent({
       removeDialog: false,
       erroredOut: false,
       tourStore,
-
+      shepherd,
       openOrderAccepted: false,
       openErrorDialog: false,
 
@@ -309,12 +313,14 @@ export default defineComponent({
       this.UnfavoriteNFT(index, token, cancel);
     },
     async getAllFavorites(walletAddress: string, brand: string) {
+      this.shepherd.removeStep('favorites-search-button')
       this.isLoading = true;
       try {
         const { result: nfts } = await GetAllFavorites(walletAddress, brand);
-        this.IncorporateOwnedNFTs(nfts);
+        if (nfts.length === 0) this.shepherd.complete();
+	this.IncorporateOwnedNFTs(nfts);
         this.CheckForEmptiness(this.favNFTs, brand);
-        this.erroredOut = false;
+	this.erroredOut = false;
       } catch {
         this.erroredOut = true;
       } finally {
@@ -330,6 +336,7 @@ export default defineComponent({
       }
     },
     async removeNFT(tokenID: string, cAddress: string, network: string) {
+      this.shepherd.removeStep('favorites-item-remove');
       const nftIndex = this.favNFTs.findIndex(
         nft =>
           nft.smartContractAddress == cAddress &&
@@ -421,6 +428,7 @@ export default defineComponent({
       }
     },
     openNFT(token: FavoritesModel, where?: string) {
+      this.shepherd.removeStep('favorites-item');
       const routeData = this.$router.resolve({
         path: '/nft',
         query: {
@@ -485,7 +493,7 @@ export default defineComponent({
 
       // Start the tour
 
-      this.$shepherd.addSteps([
+      this.shepherd.addSteps([
         {
           id: 'favorites-search-input',
           attachTo: {
@@ -498,16 +506,16 @@ export default defineComponent({
             {
               text: 'Next',
               action: () => {
-                this.$shepherd.next();
-                this.$shepherd.removeStep('favorites-search-input');
-              },
+              this.shepherd.next();
+              this.shepherd.removeStep('favorites-search-input');
+		          },
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
-                this.$shepherd.cancel();
-                this.$shepherd.removeStep('favorites-search-input');
+                this.shepherd.cancel();
+		            this.shepherd.removeStep('favorites-search-input');
                 this.tourStore.setFavoritesCompleted();
               },
             },
@@ -525,17 +533,17 @@ export default defineComponent({
             {
               text: 'Next',
               action: () => {
-                this.$shepherd.next();
-                this.$shepherd.removeStep('favorites-search-button');
+                this.shepherd.next();
+                this.shepherd.removeStep('favorites-search-button');
               },
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
-                this.$shepherd.cancel();
+                this.shepherd.cancel();
                 this.tourStore.setFavoritesCompleted();
-                this.$shepherd.removeStep('favorites-search-button');
+                this.shepherd.removeStep('favorites-search-button');
               },
             },
           ],
@@ -544,7 +552,7 @@ export default defineComponent({
 
       // Check if there are any favorites
       if (this.favNFTs.length > 0) {
-        this.$shepherd.addSteps([
+        this.shepherd.addSteps([
           {
             id: 'favorites-item',
             attachTo: {
@@ -560,17 +568,17 @@ export default defineComponent({
               {
                 text: 'Next',
                 action: () => {
-                  this.$shepherd.next();
-                  this.$shepherd.removeStep('favorites-item');
+                  this.shepherd.next();
+                  this.shepherd.removeStep('favorites-item');
                 },
               },
               {
                 text: 'Skip',
                 action: () => {
                   // Cancel and set favoritesCompleted to true
-                  this.$shepherd.cancel();
+                  this.shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
-                  this.$shepherd.removeStep('favorites-item');
+		              this.shepherd.removeStep('favorites-item');
                 },
               },
             ],
@@ -590,9 +598,9 @@ export default defineComponent({
                 text: 'Finish',
                 action: () => {
                   // Cancel and set favoritesCompleted to true
-                  this.$shepherd.complete();
+                  this.shepherd.complete();
                   this.tourStore.setFavoritesCompleted();
-                  this.$shepherd.removeStep('favorites-item-remove');
+		              this.shepherd.removeStep('favorites-item-remove');
                 },
               },
             ],
@@ -602,23 +610,23 @@ export default defineComponent({
 
       // Start the tour
       setTimeout(() => {
-        this.$shepherd.start();
+        this.shepherd.start();
       }, 3000);
       this.tourStore.setFavoritesCompleted();
     },
 
-    async waitForLoad() {
-      return new Promise<void>(resolve => {
-        const checkValue = () => {
-          if (this.isLoading === false && this.tourStore.suggestedWinesDialog) {
-            resolve();
-          } else {
-            setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
-          }
-        };
-        checkValue();
-      });
-    },
+		async waitForLoad () {
+        return new Promise<void>(resolve => {
+          const checkValue = () => {
+            if (this.isLoading === false ) {
+              resolve();
+            } else {
+              setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
+            }
+          };
+          checkValue();
+        });
+      },
 
     async AcceptOffer(orderHash: string, brand: string, image: string) {
       if (!this.userStore.user) throw new Error('User not logged in');

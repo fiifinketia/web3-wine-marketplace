@@ -198,7 +198,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="openPurchaseListingDialog = true"
+          @click="openPurchaseListingDialog = true; shepherdRemoveStep()"
         >
           Buy now
         </q-btn>
@@ -206,7 +206,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenOfferDialog()"
+          @click="OpenOfferDialog(); shepherdRemoveStep()"
         >
           Make an offer
         </q-btn>
@@ -345,7 +345,8 @@ export default defineComponent({
     'listing-exists',
     'nft-listed',
     'favorite-action',
-    'unlist-failed'
+    'unlist-failed',
+    'shepherd-remove-step'
   ],
   data() {
     return {
@@ -392,6 +393,9 @@ export default defineComponent({
       } else {
         this.openCreateOfferDialog = true;
       }
+    },
+    shepherdRemoveStep() {
+    	this.$emit('shepherd-remove-step', 'metadata-checkout-buttons')
     },
     SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
