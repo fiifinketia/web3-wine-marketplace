@@ -102,7 +102,7 @@
         style="width: 270px"
         unelevated
         no-caps
-        @click="$router.push('marketplace?tab=nfts')"
+        @click="$router.push('marketplace?tab=nfts');$emit('shepherdRemoveStep', 'go-to-marketplace')"
       >
         Go to Marketplace
       </q-btn>
@@ -123,6 +123,7 @@ import { useTourStore } from 'src/stores/tour-state';
 import { useUserStore } from 'src/stores/user-store';
 export default defineComponent({
   name: 'ExclusiveOffers',
+  emits: [ 'shepherdRemoveStep' ],
   data() {
     return {
       tourStore: useTourStore(),

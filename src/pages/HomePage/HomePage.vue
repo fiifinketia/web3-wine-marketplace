@@ -1,6 +1,6 @@
 <template>
   <HeadlineComponent />
-  <ExclusiveOffers />
+  <ExclusiveOffers @shepherd-remove-step="(id) => shepherd.removeStep(id)" />
   <Calculator/>
   <TrendingWines class="trending" />
   <PartnershipWines class="partnership" />
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useShepherd, Tour } from 'vue-shepherd'
 import PartnershipWines from './components/PartnershipWines.vue';
 import Calculator from './components/Calculator.vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
@@ -53,9 +54,12 @@ export default defineComponent({
   data() {
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
-
+    const shepherd = useShepherd({
+	useModalOverlay: true,
+    }) as Tour;
     return {
       tourStore,
+      shepherd,
       nftStore,
       recommendations: [] as ListingWithPricingAndImage[],
       recommendationsFetched: false
@@ -82,7 +86,6 @@ export default defineComponent({
     async startPageTour() {
       if (this.tourStore.homeCompleted) return;
       await this.waitForLoad();
-      this.$shepherd.complete();
 
       const steps: StepOptions[] = [
         {
@@ -96,15 +99,15 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-		this.$shepherd.next();
-		this.$shepherd.removeStep('welcome-step');
+		this.shepherd.next();
+		this.shepherd.removeStep('welcome-step');
 	      }
             },
             {
               text: 'Skip',
               action: () => {
-                this.$shepherd.cancel();
-		this.$shepherd.removeStep('welcome-step');
+                this.shepherd.complete();
+		this.shepherd.removeStep('welcome-step');
                 this.tourStore.setHomeCompleted();
               },
             },
@@ -126,8 +129,8 @@ export default defineComponent({
             {
               text: 'Finish',
               action: () => {
-                this.$shepherd.complete();
-		this.$shepherd.removeStep('go-to-marketplace');
+                this.shepherd.complete();
+		this.shepherd.removeStep('go-to-marketplace');
                 this.tourStore.setHomeCompleted();
               },
             }
@@ -135,8 +138,8 @@ export default defineComponent({
         },
       ];
 
-      this.$shepherd.addSteps(steps);
-      this.$shepherd.start();
+      this.shepherd.addSteps(steps);
+      this.shepherd.start();
       this.tourStore.setHomeCompleted();
     },
     waitForLoad() {

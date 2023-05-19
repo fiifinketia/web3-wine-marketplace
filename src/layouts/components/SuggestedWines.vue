@@ -173,6 +173,7 @@
           no-caps
           class="suggested-skip-button suggested-skip-text"
           unelevated
+	        @click="tourStore.suggestedWinesDialog = false"
         >
           Skip
         </q-btn>
