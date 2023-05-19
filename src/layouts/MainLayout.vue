@@ -154,6 +154,13 @@
     @close-help-center="showHelpCenter = false"
   />
 
+  <ProfileErrors
+    v-model="openUserErrorDialog"
+    :error-type="'user-invalid'"
+    :error-title="'Unable to connect wallet'"
+    :error-message="'Failed to connect wallet. Please try again, or contact support.'"
+  />
+
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
   <q-layout view="lHh Lpr lFf">
     <q-header
@@ -390,7 +397,7 @@
                     v-close-popup
                     clickable
                     href="https://dwc.wiv-tech.org/#/"
-		    target="_blank"
+		                target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -469,8 +476,8 @@
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
         @open-connect-wallet="showConnectWallet = true"
-	@open-help-center-support="openHelpCenter('support')"
-	@open-help-center-faqs="openHelpCenter('topics')"
+        @open-help-center-support="openHelpCenter('support')"
+        @open-help-center-faqs="openHelpCenter('topics')"
       />
     </q-page-container>
   </q-layout>
@@ -496,6 +503,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -504,6 +512,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
+    ProfileErrors: ProfileErrors
   },
   data() {
     const userStore = useUserStore();
@@ -530,7 +539,9 @@ export default defineComponent({
       wivaBalance: 0,
       tourStore,
 
-      FormatNumber
+      FormatNumber,
+
+      openUserErrorDialog: false
     };
   },
   watch: {
@@ -621,17 +632,20 @@ export default defineComponent({
         return;
       }
       //TODO: Catch errors
-      console.log('here')
       try {
         await this.userStore.connectWallet();
+        if (!this.$route.query?.next) {
+          this.$router.go(0);
+        } else {
+          const next = this.$route.query?.next as string;
+          await this.$router.replace({ path: next, replace: true });
+        }
       } catch (error) {
+        this.openUserErrorDialog = true;
+        setTimeout(() => {
+          this.openUserErrorDialog = false;
+        }, 2000)
         throw error;
-      }
-      if (!this.$route.query?.next) {
-        this.$router.go(0);
-      } else {
-        const next = this.$route.query?.next as string;
-        await this.$router.replace({ path: next, replace: true });
       }
     },
 

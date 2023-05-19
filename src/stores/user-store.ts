@@ -19,7 +19,6 @@ export const useUserStore = defineStore(
         method: 'eth_requestAccounts',
       });
       const address = utils.getAddress(accounts[0]);
-      walletAddress.value = address;
       const date = new Date().getTime();
       try {
         const getUser = await axios.get(
@@ -27,6 +26,7 @@ export const useUserStore = defineStore(
         );
         if (!!getUser.data) {
           user.value = getUser.data;
+          walletAddress.value = address;
           return;
         }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,13 +49,15 @@ export const useUserStore = defineStore(
                 apiKey: APIKeyString
               }
             )
+            walletAddress.value = address;
             user.value = newUser.data;
-            return
+            return;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any){
             throw new Error('Unable to connect wallet');
           }
         }
+        throw error;
       }
     };
 
