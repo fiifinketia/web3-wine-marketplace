@@ -8,6 +8,7 @@
         @listing-exists="listed => UpdateListingStatus(listed)"
         @nft-listed="nft.listingDetails.transactionStatus = false"
         @favorite-action="FavoriteAction"
+	@shepherd-remove-step="(id) => shepherd.removeStep(id)"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -47,6 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useShepherd, Tour } from 'vue-shepherd';
 import { useUserStore } from 'src/stores/user-store';
 import { NFTWithListingAndFavorites, SeaportTransactionsModel } from './models/Metadata';
 import { GetMetadata, GetTokenTXNHistory } from './services/Metadata';
@@ -85,6 +87,9 @@ export default defineComponent({
     const userStore = useUserStore();
 		const tourStore = useTourStore();
     const listingsStore = useListingStore();
+    const shepherd = useShepherd({
+	useModalOverlay: true,
+    }) as Tour;
     return {
       nft: {} as NFTWithListingAndFavorites,
       txnHistory: [] as SeaportTransactionsModel[],
@@ -93,6 +98,7 @@ export default defineComponent({
         stableChart: [] as number[][],
       },
       userStore,
+	shepherd,
 			tourStore,
       tab: ref('about'),
       listingsStore,
@@ -277,7 +283,7 @@ export default defineComponent({
       this.$emit('openConnectWallet');
     },
 		metadataTour() {
-			this.$shepherd.complete()
+			this.shepherd.complete()
 			const steps: StepOptions[] = [
 				{
 					id: 'metadata-details',
@@ -290,16 +296,16 @@ export default defineComponent({
 						{
 							text: 'Continue',
 							action: () => {
-		this.$shepherd.next();
-		this.$shepherd.removeStep('metadata-details');
+		this.shepherd.next();
+		this.shepherd.removeStep('metadata-details');
 }
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-		this.$shepherd.removeStep('metadata-details');
-                this.$shepherd.cancel();
+		this.shepherd.removeStep('metadata-details');
+                this.shepherd.cancel();
               },
             },
           ],
@@ -315,16 +321,16 @@ export default defineComponent({
 						{
 							text: 'Continue',
 							action: () => {
-		this.$shepherd.next();
-		this.$shepherd.removeStep('metadata-listing-price');
+		this.shepherd.next();
+		this.shepherd.removeStep('metadata-listing-price');
 		}
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-		this.$shepherd.cancel();
-		this.$shepherd.removeStep('metadata-listing-price');
+		this.shepherd.cancel();
+		this.shepherd.removeStep('metadata-listing-price');
               },
             },
           ],
@@ -340,16 +346,16 @@ export default defineComponent({
 						{
 							text: 'Continue',
 							action: () => {
-	this.$shepherd.next();
-	this.$shepherd.removeStep('metadata-bidding-price');
+	this.shepherd.next();
+	this.shepherd.removeStep('metadata-bidding-price');
 }
 						},
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-                this.$shepherd.cancel();
-	this.$shepherd.removeStep('metadata-bidding-price')
+                this.shepherd.cancel();
+	this.shepherd.removeStep('metadata-bidding-price')
               },
             },
           ],
@@ -371,16 +377,16 @@ export default defineComponent({
               text: 'Finish',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-                this.$shepherd.complete();
-		this.$shepherd.removeStep('metadata-checkout-buttons')
+                this.shepherd.complete();
+		this.shepherd.removeStep('metadata-checkout-buttons')
               },
             },
           ],
 				},
 			]
 
-			this.$shepherd.addSteps(steps)
-			this.$shepherd.start()
+			this.shepherd.addSteps(steps)
+			this.shepherd.start()
 			this.tourStore.setMetadataCompleted();
 		},
     FavoriteAction(state: 'favorited' | 'unfavorited' | 'processing') {

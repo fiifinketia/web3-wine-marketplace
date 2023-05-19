@@ -170,6 +170,7 @@
       >
         <q-btn
           v-close-popup
+	  @click="tourStore.suggestedWinesDialog = false"
           no-caps
           class="suggested-skip-button suggested-skip-text"
           unelevated

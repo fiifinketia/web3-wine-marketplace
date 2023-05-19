@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useQuasar } from 'quasar';
+import 'shepherd.js/dist/css/shepherd.css'
 
 const customIcons: { [key: string]: string } = {
   'app:price': 'img:/icons/price_icon.svg',

@@ -545,6 +545,7 @@ export default defineComponent({
   },
 
   async mounted() {
+    console.log('reloaded')
     await this.userStore.checkConnection();
     if (!this.walletAddress) {
       this.ClearStore();

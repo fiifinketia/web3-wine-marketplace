@@ -249,7 +249,7 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     OngoingTransactionDialog: TxnOngoing
   },
-  emits: ['totalTokens', 'loadingCompleted'],
+  emits: ['totalTokens', 'loadingCompleted', 'shepherdRemoveStep' ],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
@@ -421,14 +421,15 @@ export default defineComponent({
     },
 
     openNFT(token: ListingWithPricingAndImage, where?: string) {
-      const routeData = this.$router.resolve({
-        path: '/nft',
-        query: {
-          id: token.tokenID,
-          network: token.network,
-          contractAddress: token.smartContractAddress,
-        },
-      });
+	this.$emit('shepherdRemoveStep', 'marketplace-nfts')
+	const routeData = this.$router.resolve({
+        	path: '/nft',
+        	query: {
+          		id: token.tokenID,
+          		network: token.network,
+          		contractAddress: token.smartContractAddress,
+        	},
+      	});
       switch (where) {
         case 'here':
           this.$router.push({
