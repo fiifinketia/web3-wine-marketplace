@@ -66,7 +66,7 @@
                     class="currency-logo"
                   />
                   <span class="favorites-b-text-active">
-                    {{ ToInt(nft.orderDetails.listingPrice) }}
+                    {{ nft.orderDetails.listingPrice }}
                   </span>
                 </div>
               </div>
@@ -386,9 +386,6 @@ export default defineComponent({
     },
     async getAllFavoritesWithoutBrand() {
       await this.getAllFavorites(this.userStore.walletAddress, '');
-    },
-    ToInt(price: string) {
-      return parseInt(price);
     },
     truncateText(text: string) {
       if (this.$q.screen.width > 1350) {

@@ -46,6 +46,10 @@ export default defineComponent({
     FAQ,
     SuggestedWines
   },
+  emits: [
+    'openHelpCenterFaqs',
+    'openHelpCenterSupport'
+  ],
   data() {
     const tourStore = useTourStore();
     const nftStore = useNFTStore();

@@ -36,7 +36,7 @@
           :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
+        <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
           anchor="top start"
@@ -94,7 +94,7 @@
             :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
             size="20px"
           />
-          <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
+          <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
         </div>
         <span
           class="profile-nft-number-highlight"

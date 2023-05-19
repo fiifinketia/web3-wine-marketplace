@@ -29,6 +29,13 @@ const RandomIdGenerator = () => {
   return Date.now();
 };
 
+export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
+  const inputDateTime = `${expDate}T${expTime}:00`;
+  const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
+  const currentTimestamp = Math.round(new Date().getTime() / 1000);
+  return inputTimestamp > currentTimestamp;
+}
+
 function SetExpDate(expDate: string, expTime: string) : string{
 	const inputDateTime = `${expDate}T${expTime}:00`
 	return (

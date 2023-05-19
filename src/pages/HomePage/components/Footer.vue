@@ -55,14 +55,14 @@ import ProfileSection from './Footer/ProfileSection.vue';
 import SocialsSection from './Footer/SocialsSection.vue';
 export default defineComponent({
   name: 'LandingPageFooter',
-  emits: ['openHelpCenterSupport', 'openHelpCenterFaqs'],
   components: {
     ContactSection,
     HelpSection,
     NFTsSection,
     ProfileSection,
     SocialsSection
-  }
+  },
+  emits: ['openHelpCenterSupport', 'openHelpCenterFaqs'],
 });
 </script>
 

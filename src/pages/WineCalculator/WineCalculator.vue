@@ -366,7 +366,7 @@
         </div>
         <div
           v-else
-          class="flex column calculator-second-part full-height items-center"
+          class="column calculator-second-part full-height items-center"
         >
           <div class="calculator-second-part-wrapper column">
             <div v-if="secondSection === true" class="flex row q-py-lg">
@@ -464,13 +464,17 @@
                 </q-btn>
               </q-btn-group>
             </div>
-            <div
+            <q-btn
               v-if="calculationFinished === false"
-              class="back-button q-py-lg row items-center justify-start"
+              unelevated
+              dense
+              no-caps
+              align="left"
+              class="back-button q-py-lg"
               @click="activateBackButton()"
             >
               <img src="../../../public/images/back.svg" class="q-pr-xs" /> Back
-            </div>
+            </q-btn>
             <q-btn
               v-else
               class="continue-button full-width q-mt-md"

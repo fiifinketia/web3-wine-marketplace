@@ -54,9 +54,9 @@
 							v-for="(topic, i) in faqs"
 							:key="topic.icon+topic.title"
 							class="col-md-3 col-xs-5 topic-card"
-							@click="setSubject(i)"
 							flat
 							bordered
+							@click="setSubject(i)"
 						>
 							<q-card-section class="q-ma-md">
 								<div class="font-obviously-normal font-weight-400 font-size-18 line-height-26 spacing-02">
@@ -87,7 +87,7 @@
 								group="questions"
 								hide-expand-icon
 							>
-								<template v-slot:header>
+								<template #header>
 								  <q-item-section avatar>
 								    <q-icon color="primary" name="add" />
 								  </q-item-section>
@@ -119,15 +119,15 @@
 						<q-form class="column q-gutter-lg">
 							<div class="text-start text-caption text-grey">
 								{{ 'Name' }}
-								<q-input outlined v-model="form_name" placeholder="Please enter your name" dense />
+								<q-input v-model="form_name" outlined placeholder="Please enter your name" dense />
 							</div>
 							<div class="text-start text-caption text-grey">
 								{{ 'Email' }}
-								<q-input outlined v-model="form_email" type="email" placeholder="Please enter email" required dense />
+								<q-input v-model="form_email" outlined type="email" placeholder="Please enter email" required dense />
 							</div>
 							<div class="text-start text-caption text-grey">
 								{{ 'How can we help?' }}
-								<q-input outlined v-model="form_message" type="textarea" placeholder="How can we help?" required dense />
+								<q-input v-model="form_message" outlined type="textarea" placeholder="How can we help?" required dense />
 							</div>
 							<div class="row justify-end">
 								<q-btn label="Send the message" color="primary" unelevated no-caps/>
@@ -140,7 +140,7 @@
 				<div class="text-body text-center"> Can't find your answer? </div>
 				<div class="text-bold text-center"> Ask our team! </div>
 				<div class="row col-4 justify-center">
-					<q-btn @click="openSupport" color="primary" label="Contact Support" no-caps unelevated />
+					<q-btn color="primary" label="Contact Support" no-caps unelevated @click="openSupport"/>
 				</div>
 			</q-card-section>
 	      	</q-card>
@@ -152,10 +152,13 @@ import faqs from 'src/shared/faqs.json';
 
 export default defineComponent({
   name: 'HelpCenterDialog',
-  emits: ['close-help-center', 'open-contact-us'],
   props: {
-  	openTab: String
+  	openTab: {
+			type: String,
+			required: true
+		}
   },
+  emits: ['close-help-center', 'open-contact-us'],
   data() {
     return {
 	search: ref(''),

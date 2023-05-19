@@ -393,7 +393,7 @@ export default defineComponent({
           (val && val.length > 4) ||
           'Please type something greater than 3 characters',
         (val: string) =>
-          val.length <= 12 || 'Please enter a maximum of 12 charaters',
+          val.length <= 12 || 'Please enter a maximum of 12 characters',
       ],
       notificationsStore,
     };

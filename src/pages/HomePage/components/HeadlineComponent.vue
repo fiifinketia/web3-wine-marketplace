@@ -17,12 +17,27 @@
       We offer the best fine wine investments
     </p>
     <div class="headline-buttons-container row q-mt-md">
-      <q-btn class="headline-buttons" unelevated color="primary" no-caps @click="$router.push('/marketplace?tab=nfts')"
-        >Start collection</q-btn
+      <q-btn
+        class="app-btn-text-lg app-primary-btn-bg"
+        style="width: 254px;"
+        unelevated
+        no-caps
+        @click="$router.push('/marketplace?tab=nfts')"
       >
-      <q-btn class="headline-buttons" unelevated color="primary" outline no-caps disable
-        >Learn about WiV</q-btn
+        Start collection
+      </q-btn>
+      <q-btn
+        class="app-btn-text-lg app-secondary-btn-bg"
+        unelevated
+        outline
+        no-caps
+        disable
+        style="width: 254px;"
       >
+        <span class="app-secondary-btn-text">
+          Learn about WiV
+        </span>
+      </q-btn>
     </div>
   </div>
 </template>

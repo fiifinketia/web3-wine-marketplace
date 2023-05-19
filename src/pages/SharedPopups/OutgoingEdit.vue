@@ -7,7 +7,7 @@
     persistent
     @show="FetchBalances()"
   >
-    <q-card class="q-pa-none column">
+    <q-card class="q-pa-none column no-wrap">
       <q-card-section class="row items-center q-pb-none">
         <div class="dialog-title">
           {{ isEdit ? 'Edit Offer' : 'Bid For' }}
@@ -119,14 +119,32 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Keep active until </span>
-            <q-input
-              v-model="offerExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start" :class="$q.screen.width > 600 ? 'q-gutter-x-xs' : 'q-gutter-x-sm'">
+              <q-input
+                v-model="offerExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="height: 40px;"
+                :style="$q.screen.width > 600 ? 'width: 130px;' : 'width: 140px'"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="offerExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 120px; height: 40px;"
+                :disable="!offerExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <q-separator size="2px" color="accent" />
           <div class="column">
@@ -134,7 +152,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
+                {{ !!offerPrice ? offerPrice : '0.00' }}
               </span>
             </div>
           </div>
@@ -160,6 +178,7 @@
       </q-checkbox>
 
       <div
+        class="q-pb-sm"
         :class="
           $q.screen.width > 450
             ? 'row justify-center q-gutter-x-sm'
@@ -185,7 +204,7 @@
             !acceptTerms ||
             offerExpirationDate === '' ||
             parseFloat(offerPrice) <= 0 ||
-            loadingOffer
+            loadingOffer || !isValidTime
           "
           @click="CreateNewOrder()"
         >
@@ -194,6 +213,7 @@
       </div>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
   <q-dialog
     v-else
@@ -314,7 +334,7 @@
                 type="date"
                 debounce="500"
                 class="input-text"
-                style="width: 125px;"
+                style="width: 150px;"
                 :min="GetCurrentDate()"
               />
               <q-input
@@ -324,7 +344,7 @@
                 type="time"
                 debounce="500"
                 class="input-text"
-                style="width: 100px"
+                style="width: 120px;"
                 :disable="!offerExpirationDate"
                 :rules=[CheckExpirationTime]
                 :no-error-icon="true"
@@ -338,7 +358,7 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!offerPrice ? parseInt(offerPrice) : '0.00' }}
+                {{ !!offerPrice ? offerPrice : '0.00' }}
               </span>
             </div>
           </div>
@@ -407,6 +427,7 @@
       </q-card-section>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 </template>
 
@@ -416,21 +437,24 @@ import { defineComponent, ref } from 'vue';
 import {
   CreateERC721Offer,
   CancelSingleOrder,
+  isInputDateTimeAboveCurrentTime,
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import TxnOngoing from './TxnOngoing.vue';
-import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { FormatNumber, GetCurrencyLabel } from 'src/shared/currency.helper';
 import { Currencies } from 'src/shared/models/entities/currency';
 import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import ExpirationInvalid from './ExpirationInvalid.vue';
 
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing,
-    OfferExpTimer: OrderExpTimer
+    OfferExpTimer: OrderExpTimer,
+    ExpirationInvalid: ExpirationInvalid
   },
   props: {
     orderHash: {
@@ -488,6 +512,7 @@ export default defineComponent({
       offerExpirationDate: '',
       offerExpirationTime: '',
       isValidTime: false,
+      openInvalidTimeDialog: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -525,7 +550,8 @@ export default defineComponent({
 
       usdtBalance: '',
       usdcBalance: '',
-      wivaBalance: ''
+      wivaBalance: '',
+      FormatNumber
     };
   },
   computed: {
@@ -556,6 +582,15 @@ export default defineComponent({
     },
     async CreateNewOrder() {
       if (!this.userStore.user) throw 'Connect Wallet and Login';
+      const isValidExpTime = isInputDateTimeAboveCurrentTime(this.offerExpirationDate, this.offerExpirationTime);
+      if (!isValidExpTime) {
+        this.isValidTime = false;
+        this.openInvalidTimeDialog = true;
+        setTimeout(() => {
+          this.openInvalidTimeDialog = false;
+        }, 2000);
+        return;
+      }
       try {
         this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
@@ -624,18 +659,14 @@ export default defineComponent({
       if (!window.ethereum) return 0;
       const signer = WindowWeb3Provider?.getSigner();
       if (!!signer) {
-        const formatNumber = (num: number) => {
-          let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-          return formatted.replace(/\.0$/, '');
-        }
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
           GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, this.userStore.walletAddress),
           GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, this.userStore.walletAddress),
           GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, this.userStore.walletAddress)
         ]);
-        this.wivaBalance = wivaBalance ? formatNumber(wivaBalance) : '';
-        this.usdtBalance = usdtBalance ? formatNumber(usdtBalance) : '';
-        this.usdcBalance = usdcBalance ? formatNumber(usdcBalance) : '';
+        this.wivaBalance = wivaBalance ? FormatNumber(wivaBalance) : '';
+        this.usdtBalance = usdtBalance ? FormatNumber(usdtBalance) : '';
+        this.usdcBalance = usdcBalance ? FormatNumber(usdcBalance) : '';
       };
     }
   },

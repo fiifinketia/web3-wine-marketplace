@@ -42,6 +42,7 @@
 	font-family: 'ProximaNova-Bold';
 	color: rgba(53, 134, 255, 1);
 	font-size: 18px;
+	text-align: center;
 }
 
 .identify-popup-subtitle {
@@ -96,7 +97,7 @@
 
 .balance-container {
 	padding: 12px;
-	width: 152.67px;
+	width: 150px;
 	height: 83px;
 	background: rgba(255, 255, 255, 0.8);
 	border: 1px solid #3586FF;
@@ -217,16 +218,6 @@
 	.my-wallet-container {
 		width: 100vw;
 	}
-	.balance-container {
-		width: 32%;
-	}
-	.balance-label {
-		font-size: 16px;
-	}
-	.balance-number {
-		font-size: 20px;
-		line-height: 1;
-	}
 }
 @media screen and (max-width: 470px) {
 	.x-icon {
@@ -242,9 +233,3 @@
 		width: 100%;
 	}
 }
-
-/* @media screen and (max-width: 450px) {
-  .my-wallet-header {
-    gap: 1rem;
-  }
-} */

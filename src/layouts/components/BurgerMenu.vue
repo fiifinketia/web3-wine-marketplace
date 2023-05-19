@@ -69,7 +69,7 @@
         "
       />
     </div>
-    <div @click="openDWC" class="burger-bolder-text">digital wine cellar</div>
+    <div class="burger-bolder-text" @click="openDWC">digital wine cellar</div>
     <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
     <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterSupport')">contact us</div>
     <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterFaqs')">faqs</div>

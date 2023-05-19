@@ -68,7 +68,7 @@
             <div class="row items-center">
               <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ parseInt(listingPrice) }}
+                {{ listingPrice }}
               </span>
             </div>
           </div>
@@ -198,7 +198,7 @@
             <div class="row items-center">
               <q-icon :name="`app:${GetCurrencyLabel(listingCurrency)}-icon`" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ parseInt(listingPrice) }}
+                {{ listingPrice }}
               </span>
             </div>
           </div>

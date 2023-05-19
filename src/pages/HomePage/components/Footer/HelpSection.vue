@@ -7,14 +7,14 @@
       Help
     </router-link>
     <div
-      @click="$emit('openHelpCenterSupport')"
       class="item-text footer-normal q-pt-sm"
+      @click="$emit('openHelpCenterSupport')"
     >
       Contact Us
     </div>
     <div
-      @click="$emit('openHelpCenterFaqs')"
       class="item-text footer-normal q-pt-sm"
+      @click="$emit('openHelpCenterFaqs')"
     >
       FAQs
     </div>
@@ -35,9 +35,13 @@
 
 <script lang="ts">
 import 'src/css/Homepage/Footer.css';
-export default {
-
-}
+import { defineComponent } from 'vue';
+export default defineComponent({
+  emits: [
+    'openHelpCenterSupport',
+    'openHelpCenterFaqs'
+  ]
+})
 </script>
 
 <style>

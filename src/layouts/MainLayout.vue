@@ -51,9 +51,9 @@
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
-      :usdc-balance="usdcBalance ? formatNumber(usdcBalance) : ''"
-      :usdt-balance="usdtBalance ? formatNumber(usdtBalance) : ''"
-      :wiva-balance="wivaBalance ? formatNumber(wivaBalance) : ''"
+      :usdc-balance="usdcBalance ? FormatNumber(usdcBalance) : ''"
+      :usdt-balance="usdtBalance ? FormatNumber(usdtBalance) : ''"
+      :wiva-balance="wivaBalance ? FormatNumber(wivaBalance) : ''"
       @close-my-wallet="showMyWallet = false"
       @fund-wallet="fundWallet()"
       @logout="logout"
@@ -149,9 +149,16 @@
   />
 
   <HelpCenterDialog
-	v-model="showHelpCenter"
-	:openTab="this.openHelpCenterTab"
-	@close-help-center="showHelpCenter = false"
+    v-model="showHelpCenter"
+    :open-tab="openHelpCenterTab"
+    @close-help-center="showHelpCenter = false"
+  />
+
+  <ProfileErrors
+    v-model="openUserErrorDialog"
+    :error-type="'user-invalid'"
+    :error-title="'Unable to connect wallet'"
+    :error-message="'Failed to connect wallet. Please try again, or contact support.'"
   />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -390,7 +397,7 @@
                     v-close-popup
                     clickable
                     href="https://dwc.wiv-tech.org/#/"
-		    target="_blank"
+		                target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -469,8 +476,8 @@
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
         @open-connect-wallet="showConnectWallet = true"
-	@open-help-center-support="openHelpCenter('support')"
-	@open-help-center-faqs="openHelpCenter('topics')"
+        @open-help-center-support="openHelpCenter('support')"
+        @open-help-center-faqs="openHelpCenter('topics')"
       />
     </q-page-container>
   </q-layout>
@@ -495,7 +502,8 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
-import { TrackClickEvent } from 'src/shared/amplitude-service';
+import { FormatNumber } from 'src/shared/currency.helper';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -504,6 +512,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
+    ProfileErrors: ProfileErrors
   },
   data() {
     const userStore = useUserStore();
@@ -529,6 +538,10 @@ export default defineComponent({
       usdcBalance: 0,
       wivaBalance: 0,
       tourStore,
+
+      FormatNumber,
+
+      openUserErrorDialog: false
     };
   },
   watch: {
@@ -582,7 +595,7 @@ export default defineComponent({
         widgetHeight: '625px',
         widgetWidth: '500px',
         // Examples of some of the customization parameters you can pass
-        defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+        defaultCryptoCurrency: 'USDT', // Example 'ETH'
         walletAddress: this.userStore.walletAddress, // Your customer's wallet address
         themeColor: '#3586ff', // App theme color
         fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
@@ -621,14 +634,18 @@ export default defineComponent({
       //TODO: Catch errors
       try {
         await this.userStore.connectWallet();
+        if (!this.$route.query?.next) {
+          this.$router.go(0);
+        } else {
+          const next = this.$route.query?.next as string;
+          await this.$router.replace({ path: next, replace: true });
+        }
       } catch (error) {
+        this.openUserErrorDialog = true;
+        setTimeout(() => {
+          this.openUserErrorDialog = false;
+        }, 2000)
         throw error;
-      }
-      if (!this.$route.query?.next) {
-        this.$router.go(0);
-      } else {
-        const next = this.$route.query?.next as string;
-        await this.$router.replace({ path: next, replace: true });
       }
     },
 
@@ -704,13 +721,6 @@ export default defineComponent({
         .onDismiss(() => {
           // console.log('I am triggered on both OK and Cancel')
         });
-    },
-    formatNumber(num: number) {
-      let formatted = num.toLocaleString(undefined, {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
-      });
-      return formatted.replace(/\.0$/, '');
     },
   },
 });

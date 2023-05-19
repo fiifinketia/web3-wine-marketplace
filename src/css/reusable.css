@@ -19,6 +19,46 @@
   color: #212131;
 }
 
+.app-btn-text-lg, .app-btn-text-md {
+	border-radius: 6px;
+	font-family: 'ProximaNova-Bold';
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: 0.02em;
+}
+
+.app-btn-text-lg {
+	font-size: 24px;
+}
+
+.app-btn-text-md {
+	font-size: 20px;
+}
+
+.app-secondary-btn-text {
+  color: #3586ff;
+	background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.app-primary-btn-bg {
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);
+	border-radius: 6px;
+	color: #FFFFFF;
+}
+
+.app-secondary-btn-bg::before {
+	border-radius: 6px;
+  border: 1px solid transparent;
+  background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; 
+	mask-composite: exclude;
+}
+
 .error-subtext img {
   display: inline-block;
   vertical-align: middle;
