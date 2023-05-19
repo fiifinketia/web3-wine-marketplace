@@ -69,10 +69,10 @@
         "
       />
     </div>
-    <div class="burger-bolder-text">digital wine cellar</div>
+    <div class="burger-bolder-text" @click="openDWC">digital wine cellar</div>
     <div v-if="isConnected" @click="$emit('closeBurgerMenu');$emit('openSettings')">settings</div>
-    <div>contact us</div>
-    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenter')">faqs</div>
+    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterSupport')">contact us</div>
+    <div @click="$emit('closeBurgerMenu');$emit('openHelpCenterFaqs')">faqs</div>
     <div v-if="isConnected" @click="Logout()">log out</div>
     <div>&nbsp;</div>
     <div>&nbsp;</div>
@@ -88,7 +88,7 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenter', 'logout'],
+  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenterSupport', 'openHelpCenterFaqs', 'logout'],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();
@@ -132,6 +132,9 @@ export default defineComponent({
       this.nftStore.fetchNFTsStatus = false;
       this.orderStore.$reset();
     },
+    openDWC() {
+    	window.open('https://dwc.wiv-tech.org/#/', '_blank')
+    }
   },
 });
 </script>

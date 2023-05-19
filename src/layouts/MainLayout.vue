@@ -44,7 +44,10 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div v-if="userStore.user" class="my-wallet-background row justify-end hidden">
+  <div
+    v-if="userStore.user"
+    class="my-wallet-background row justify-end hidden"
+  >
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
@@ -69,10 +72,10 @@
     />
   </div>
 
-  <!---------------------------- /SETTINGS ---------------------------->
   <!-- Terms and Conditions -->
   <q-dialog
     v-model="showTermsAndConditions"
+    position="left"
     full-height
     class="terms-and-conditions-background"
   >
@@ -141,12 +144,14 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
-    @openHelpCenter="showHelpCenter = true"
+    @openHelpCenterFaqs="openHelpCenter('topics')"
+    @openHelpCenterSupport="openHelpCenter('support')"
   />
 
   <HelpCenterDialog
-	v-model="showHelpCenter"
-	@close-help-center="showHelpCenter = false"
+    v-model="showHelpCenter"
+    :open-tab="openHelpCenterTab"
+    @close-help-center="showHelpCenter = false"
   />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -249,6 +254,7 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
+              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -383,7 +389,8 @@
                   <q-item
                     v-close-popup
                     clickable
-                    href="https://dwc.wiv-tech.com/#/"
+                    href="https://dwc.wiv-tech.org/#/"
+		    target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -392,7 +399,12 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-if="!!walletAddress" v-close-popup clickable @click="showSettings = true">
+                  <q-item
+                    v-if="!!walletAddress"
+                    v-close-popup
+                    clickable
+                    @click="showSettings = true"
+                  >
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
@@ -408,13 +420,12 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable>
+                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-
-                          <q-item v-close-popup clickable @click="showHelpCenter = true">
+                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -458,13 +469,15 @@
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
         @open-connect-wallet="showConnectWallet = true"
+	@open-help-center-support="openHelpCenter('support')"
+	@open-help-center-faqs="openHelpCenter('topics')"
       />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import transakSDK from '@transak/transak-sdk';
 
@@ -506,6 +519,7 @@ export default defineComponent({
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
       orderStore,
@@ -549,12 +563,20 @@ export default defineComponent({
       this.ReInitAmplitude(this.walletAddress);
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
-        const { _usdtBalance: usdtBalance, _usdcBalance: usdcBalance, _wivaBalance: wivaBalance } = walletBalances;
+        const {
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance,
+          _wivaBalance: wivaBalance,
+        } = walletBalances;
         Object.assign(this, { usdtBalance, usdcBalance, wivaBalance });
       }
     }
   },
   methods: {
+    openHelpCenter(tab: string){
+	this.openHelpCenterTab = tab;
+	this.showHelpCenter = true;
+    },
     async fundWallet() {
       let transak = new transakSDK({
         apiKey: process.env.TRANSAK_API_KEY, // Your API Key
@@ -599,6 +621,7 @@ export default defineComponent({
         return;
       }
       //TODO: Catch errors
+      console.log('here')
       try {
         await this.userStore.connectWallet();
       } catch (error) {

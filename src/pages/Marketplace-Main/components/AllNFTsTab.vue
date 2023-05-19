@@ -192,7 +192,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-    SetSessionID('Marketplace Tab Clicked');
+    SetSessionID();
     this.CheckFilterMode();
     await this.marketplaceTour();
   },
@@ -256,7 +256,7 @@ export default defineComponent({
       return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
     },
     async marketplaceTour() {
-			if(this.tourStore.marketplaceCompleted) return;
+      if (this.tourStore.marketplaceCompleted) return;
       let screenSize = '';
       if (this.$q.screen.width > 1023) screenSize = 'lg';
       else if (this.$q.screen.width > 599) screenSize = 'sm';
@@ -275,14 +275,14 @@ export default defineComponent({
               text: 'Continue',
               action: () => {
                 this.$shepherd.next();
-		this.$shepherd.removeStep('marketplace-sidebar');
+                this.$shepherd.removeStep('marketplace-sidebar');
               },
             },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMarketplaceCompleted();
-		this.$shepherd.removeStep('marketplace-sidebar')
+                this.$shepherd.removeStep('marketplace-sidebar');
                 this.$shepherd.cancel();
               },
             },
@@ -300,15 +300,15 @@ export default defineComponent({
               text: 'Finish',
               action: () => {
                 this.$shepherd.complete();
-		this.$shepherd.removeStep('marketplace-nfts')
+                this.$shepherd.removeStep('marketplace-nfts');
                 this.tourStore.setMarketplaceCompleted();
               },
-            }
+            },
           ],
         },
       ]);
       this.$shepherd.start();
-			this.tourStore.setMarketplaceCompleted();
+      this.tourStore.setMarketplaceCompleted();
     },
     waitForLoad() {
       return new Promise<void>(resolve => {

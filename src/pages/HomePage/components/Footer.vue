@@ -13,7 +13,7 @@
       <div v-if="$q.screen.width > 600" class="row fit justify-between q-px-md">
         <NFTsSection />
         <ProfileSection />
-        <HelpSection />
+        <HelpSection @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
         <div class="column">
           <ContactSection />
           <SocialsSection class="q-pt-md" />
@@ -23,10 +23,10 @@
         <NFTsSection />
         <div class="column">
           <ProfileSection />
-          <HelpSection class="q-pt-md"/>
+          <HelpSection class="q-pt-md" @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
         </div>
         <div class="column">
-          <ContactSection />
+          <ContactSection/>
           <SocialsSection class="q-pt-md" />
         </div>
       </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="column">
           <ProfileSection />
-          <HelpSection class="q-pt-md"/>
+          <HelpSection class="q-pt-md" @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
           <SocialsSection class="q-pt-md" />
         </div>
       </div>
@@ -61,7 +61,8 @@ export default defineComponent({
     NFTsSection,
     ProfileSection,
     SocialsSection
-  }
+  },
+  emits: ['openHelpCenterSupport', 'openHelpCenterFaqs'],
 });
 </script>
 

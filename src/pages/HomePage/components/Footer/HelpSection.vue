@@ -6,18 +6,18 @@
     >
       Help
     </router-link>
-    <router-link
-      to=""
+    <div
       class="item-text footer-normal q-pt-sm"
+      @click="$emit('openHelpCenterSupport')"
     >
       Contact Us
-    </router-link>
-    <router-link
-      to=""
+    </div>
+    <div
       class="item-text footer-normal q-pt-sm"
+      @click="$emit('openHelpCenterFaqs')"
     >
       FAQs
-    </router-link>
+    </div>
     <router-link
       to=""
       class="item-text footer-normal q-pt-sm"
@@ -35,9 +35,13 @@
 
 <script lang="ts">
 import 'src/css/Homepage/Footer.css';
-export default {
-
-}
+import { defineComponent } from 'vue';
+export default defineComponent({
+  emits: [
+    'openHelpCenterSupport',
+    'openHelpCenterFaqs'
+  ]
+})
 </script>
 
 <style>
