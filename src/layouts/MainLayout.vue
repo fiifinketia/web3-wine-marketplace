@@ -73,42 +73,10 @@
   </div>
 
   <!-- Terms and Conditions -->
-  <q-dialog
+  <TermsAndConditionsDialog
     v-model="showTermsAndConditions"
-    full-height
-    class="terms-and-conditions-background"
-  >
-    <q-card class="terms-and-conditions-container column justify-between no-wrap">
-      <q-card-section>
-        <div class="overflow-scroll" v-html="TermsAndConditions">
-	</div>
-      </q-card-section>
-      <q-card-actions class="row terms-and-conditions-btns justify-end">
-        <q-btn
-          class="terms-and-conditions-btn-decline q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          outline
-          @click="showTermsAndConditions = false"
-        >
-          Decline
-        </q-btn>
-        <q-btn
-          class="terms-and-conditions-btn-accept q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          @click="acceptTermsAndConditions"
-        >
-          Accept
-        </q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
-
+    @close-toc="showTermsAndConditions = false"
+  />
   <!-- /Terms and Conditions -->
 
   <BurgerMenu
@@ -625,7 +593,6 @@ export default defineComponent({
     },
 
     acceptTermsAndConditions() {
-      this.tourStore.setTermsAndConditionsAgreed();
       this.showTermsAndConditions = false;
       this.connectWallet();
     },
