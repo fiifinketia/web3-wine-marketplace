@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <q-dialog
     full-height
@@ -5,25 +6,40 @@
     transition-show="scale"
     transition-hide="scale"
     persistent
+		full-width
   >
-    <q-card class="terms-and-conditions-container column justify-between no-wrap">
-      <q-card-section>
-        <div class="overflow-scroll" v-html="TermsAndConditions">
-	    </div>
+    <q-card class="terms-and-conditions-container column justify-between no-wrap no-scroll">
+      <q-card-section class="row wrap" style="overflow-y: scroll;">
+        <div v-html="TermsAndConditions">
+	    	</div>
       </q-card-section>
-      <q-card-actions class="row terms-and-conditions-btns justify-end">
-        <q-btn
+			<q-card-actions v-if="closeButton" class="row terms-and-conditions-btns justify-end">
+				<q-btn
+					v-close-popup
           class="terms-and-conditions-btn-decline q-ma-xs"
           color="primary"
           size="lg"
           unelevated
           no-caps
           outline
-          v-close-popup
+        >
+          Close
+        </q-btn>
+      </q-card-actions>
+      <q-card-actions v-else class="row terms-and-conditions-btns justify-end">
+        <q-btn
+					v-close-popup
+          class="terms-and-conditions-btn-decline q-ma-xs"
+          color="primary"
+          size="lg"
+          unelevated
+          no-caps
+          outline
         >
           Decline
         </q-btn>
         <q-btn
+					v-close-popup
           class="terms-and-conditions-btn-accept q-ma-xs"
           color="primary"
           size="lg"
@@ -42,14 +58,22 @@
 import 'src/css/Profile/Component/dialog.css';
 import { defineComponent } from 'vue';
 import { useTourStore } from 'src/stores/tour-state';
+import TermsAndConditionsJson from 'src/TermsAndConditions.json';
 
 export default defineComponent({
   name: 'TermsAndConditions',
+	props: {
+		closeButton: {
+			type: Boolean,
+			required: false,
+		},
+	},
   emits: ['toc-accepted'],
   data() {
     const tourStore = useTourStore();
     return {
       tourStore,
+			TermsAndConditions: TermsAndConditionsJson.data,
     }
   },
   methods: {
