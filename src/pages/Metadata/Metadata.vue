@@ -64,10 +64,7 @@ import WineDetails from './components/WineDetails.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
-import {
-  NewPolygonCollectionContract_MumbaiInstance,
-  NewPolygonCollectionContract_PolygonInstance,
-} from 'src/shared/web3.helper';
+import { ERC721_PolygonContract } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
 import ListingExists from '../SharedPopups/ListingExists.vue';
@@ -247,17 +244,8 @@ export default defineComponent({
     ): Promise<boolean> {
       let exists = true;
       try {
-        let contract: Contract;
-        switch (contractAddress) {
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_MumbaiInstance;
-            await contract.tokenURI(id);
-            break;
-          case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
-            contract = NewPolygonCollectionContract_PolygonInstance;
-            await contract.tokenURI(id);
-            break;
-        }
+        let contract: Contract = ERC721_PolygonContract;
+        await contract.tokenURI(id);
         exists = true;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
@@ -285,19 +273,9 @@ export default defineComponent({
       let isOwned = false;
       try {
         let actualOwner = '';
-        let contract: Contract;
-        switch (contractAddress) {
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_MumbaiInstance;
-            actualOwner = await contract.ownerOf(tokenID);
-            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-            break;
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_PolygonInstance;
-            actualOwner = await contract.ownerOf(tokenID);
-            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-            break;
-        }
+        let contract: Contract = ERC721_PolygonContract;
+        actualOwner = await contract.ownerOf(tokenID);
+        isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
       } catch (err) {
         throw err;
       } finally {

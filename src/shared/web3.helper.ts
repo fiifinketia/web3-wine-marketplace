@@ -7,27 +7,22 @@ import ERC20ABI from './ABIs/ERC20.abi.json';
 const WindowWeb3Provider: ethers.providers.Web3Provider | undefined =
   window.ethereum ? new ethers.providers.Web3Provider(window.ethereum) : undefined;
 
-const Web3MumbaiProvider: ethers.providers.JsonRpcProvider =
-  new ethers.providers.JsonRpcProvider(<string>process.env.MUMBAI_PROVIDER_URL);
+const JSONWeb3Provider: ethers.providers.JsonRpcProvider =
+  new ethers.providers.JsonRpcProvider(<string>process.env.PROVIDER_URL);
 
-const Web3PolygonProvider: ethers.providers.JsonRpcProvider =
-  new ethers.providers.JsonRpcProvider(
-    <string>process.env.POLYGON_PROVIDER_URL
-  );
-
-const NewPolygonCollectionContract_PolygonInstance: ethers.Contract =
+const ERC721_PolygonContract: ethers.Contract =
   new ethers.Contract(
-    <string>process.env.ERC721_CONTRACT_ADDRESS_POLYGON,
+    <string>process.env.ERC721_CONTRACT_ADDRESS,
     ERC721ABI,
-    Web3PolygonProvider
+    JSONWeb3Provider
   );
 
-const NewPolygonCollectionContract_MumbaiInstance: ethers.Contract =
-  new ethers.Contract(
-    <string>process.env.ERC721_CONTRACT_ADDRESS_MUMBAI,
-    ERC721ABI,
-    Web3MumbaiProvider
-  );
+const ERC1155_PolygonContract: ethers.Contract =
+new ethers.Contract(
+  <string>process.env.ERC1155_CONTRACT_ADDRESS,
+  ERC1155ABI,
+  JSONWeb3Provider
+);
 
 const ERC20_ContractWithSigner = (currencyAddress: string, signer: ethers.Signer) => {
   return new ethers.Contract(
@@ -45,20 +40,11 @@ const ERC721_ContractWithSigner = (tokenAddress: string, signer: ethers.Signer) 
   )
 }
 
-const ERC1155PolygonCollectionContract_MumbaiInstance: ethers.Contract =
-  new ethers.Contract(
-    <string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI,
-    ERC1155ABI,
-    Web3MumbaiProvider
-  );
-
 export {
   WindowWeb3Provider,
-  Web3MumbaiProvider,
-  Web3PolygonProvider,
-  NewPolygonCollectionContract_MumbaiInstance,
-  NewPolygonCollectionContract_PolygonInstance,
-  ERC1155PolygonCollectionContract_MumbaiInstance,
+  JSONWeb3Provider,
+  ERC721_PolygonContract,
+  ERC1155_PolygonContract,
   ERC20_ContractWithSigner,
   ERC721_ContractWithSigner
 };
