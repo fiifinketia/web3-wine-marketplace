@@ -167,15 +167,21 @@
         </div>
       </q-card-section>
 
-      <q-checkbox
-        v-model="acceptTerms"
-        class="q-pb-md"
-        style="align-self: center"
-      >
-        <span class="dialog-terms-conditions">
-          I agree with the Terms and Conditions
-        </span>
-      </q-checkbox>
+			<span class="dialog-terms-conditions">
+				<q-checkbox
+					v-model="acceptTerms"
+					class="q-pb-md"
+					style="align-self: center"
+				/>
+				I agree with the
+				<q-btn
+					class="text-blue-underlined"
+					dense no-caps flat
+					:ripple="false" padding="none"
+					@click="$emit('open-terms-and-conditions');">
+					terms and conditions
+				</q-btn>
+			</span>
 
       <div
         class="q-pb-sm"
@@ -370,11 +376,21 @@
               This is to give permission to make the trade in the future.
             </span>
           </div>
-          <q-checkbox v-model="acceptTerms">
+					<div class="row items-center" style="flex-wrap: nowrap">
             <span class="dialog-terms-conditions">
-              I agree with the Terms and Conditions
-            </span>
-          </q-checkbox>
+							<q-checkbox
+								v-model="acceptTerms"
+							/>
+							I agree with the
+							<q-btn
+								class="text-blue-underlined"
+								dense no-caps flat
+								:ripple="false" padding="none"
+								@click="$emit('open-terms-and-conditions');">
+								terms and conditions
+							</q-btn>
+						</span>
+          </div>
           <div class="row justify-between q-mb-sm">
             <q-btn
               class="dialog-reset"
@@ -503,6 +519,7 @@ export default defineComponent({
     'outgoing-edit-close',
     'outgoing-error-dialog',
     'offer-created',
+		'open-terms-and-conditions'
   ],
   data() {
     const userStore = useUserStore();

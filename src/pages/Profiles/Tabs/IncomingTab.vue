@@ -100,6 +100,7 @@
           @accept-offer="
             req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
           "
+					@open-terms-and-conditions="showTermsAndConditions = true"
         />
       </div>
       <div v-else class="column items-center">
@@ -178,6 +179,7 @@ export default defineComponent({
       openErrorDialog: false,
       openConfirmDialog: false,
       openAcceptedOrderDialog: false,
+			showTermsAndConditions: false,
 
       orderHash: '',
       brand: '',

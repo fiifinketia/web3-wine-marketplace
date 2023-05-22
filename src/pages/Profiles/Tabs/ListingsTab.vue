@@ -89,6 +89,7 @@
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
         @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
+				@open-terms-and-conditions="showTermsAndConditions = true"
       />
       <ListingDialogUnlist
         v-model="openDeleteDialog"
@@ -116,6 +117,7 @@
         @listing-warning-processing="processingListing => UpdateListableNFTWithPrice(processingListing, true)"
         @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
         @refetch-nfts="SetListableNFTs()"
+				@open-terms-and-conditions="showTermsAndConditions = true"
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
@@ -129,6 +131,10 @@
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
       />
+			<wiv-toc-dialog
+				v-model="showTermsAndConditions"
+				close-button
+			/>
     </div>
   </q-page>
 </template>
@@ -223,7 +229,8 @@ export default defineComponent({
       openListingStatusDialog: false,
 
       listingUnavailableStatus: '',
-      openListingUnavailableDialog: false
+      openListingUnavailableDialog: false,
+			showTermsAndConditions: false
     };
   },
   computed: {

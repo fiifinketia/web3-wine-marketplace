@@ -85,6 +85,7 @@
         @remove-offer="val => RemoveRow(val)"
         @outgoing-error-dialog="HandleError"
         @offer-created="SetTimeoutOnOfferProcessedDialog()"
+				@open-terms-and-conditions="showTermsAndConditions = true"
       />
       <OutgoingDialogDelete
         v-model="openDeleteDialog"
@@ -103,6 +104,10 @@
         v-model="openOrderCompletedDialog"
         :order-type="'offer'"
       />
+			<wiv-toc-dialog
+				v-model="showTermsAndConditions"
+				close-button
+			/>
     </div>
   </q-page>
 </template>
@@ -164,7 +169,8 @@ export default defineComponent({
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-      openOrderCompletedDialog: false
+      openOrderCompletedDialog: false,
+			showTermsAndConditions: false,
     };
   },
   computed: {

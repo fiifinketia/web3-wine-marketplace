@@ -117,6 +117,7 @@
         @listing-edit-close="openListingDialog = false"
         @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
         @listing-exists="alreadyListed => UpdateListableNFT(alreadyListed)"
+				@open-terms-and-conditions="$emit('open-terms-and-conditions')"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -223,7 +224,7 @@ export default defineComponent({
     erroredOut: { type: Boolean, default: false },
     isLoading: { type: Boolean, default: false }
   },
-  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing'],
+  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing', 'open-terms-and-conditions'],
   data() {
     const listableFiltersStore = useListableFilters();
     return {

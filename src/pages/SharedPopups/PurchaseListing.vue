@@ -74,15 +74,21 @@
           </div>
         </div>
       </q-card-section>
-      <q-checkbox
-        v-model="acceptTerms"
-        class="q-pb-md"
-        style="align-self: center"
-      >
-        <span class="dialog-terms-conditions">
-          I agree with the Terms and Conditions
-        </span>
-      </q-checkbox>
+      <span class="dialog-terms-conditions">
+				<q-checkbox
+					v-model="acceptTerms"
+					class="q-pb-md"
+					style="align-self: center"
+				/>
+				I agree with the
+				<q-btn
+					class="text-blue-underlined"
+					dense no-caps flat
+					:ripple="false" padding="none"
+					@click="$emit('open-terms-and-conditions');">
+					terms and conditions
+				</q-btn>
+			</span>
       <div
         :class="
           $q.screen.width > 450
@@ -202,11 +208,21 @@
               </span>
             </div>
           </div>
-          <q-checkbox v-model="acceptTerms">
+          <div class="row items-center" style="flex-wrap: nowrap">
             <span class="dialog-terms-conditions">
-              I agree with the Terms and Conditions
-            </span>
-          </q-checkbox>
+							<q-checkbox
+								v-model="acceptTerms"
+							/>
+							I agree with the
+							<q-btn
+								class="text-blue-underlined"
+								dense no-caps flat
+								:ripple="false" padding="none"
+								@click="$emit('open-terms-and-conditions');">
+								terms and conditions
+							</q-btn>
+						</span>
+          </div>
           <div class="row justify-end q-mb-sm">
 	<q-btn
           v-if="!userStore.user"
@@ -305,7 +321,8 @@ export default defineComponent({
   emits: [
     'listing-purchase-close',
     'listing-purchased',
-    'listing-purchase-error'
+    'listing-purchase-error',
+		'open-terms-and-conditions'
   ],
   data() {
     const userStore = useUserStore();

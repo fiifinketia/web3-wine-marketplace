@@ -238,6 +238,7 @@
       @listing-error-dialog="HandleError"
       @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
       @listing-exists="listed => UpdateListingStatus(listed)"
+			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
     />
 
     <CreateOfferDialog
@@ -254,6 +255,7 @@
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
       @offer-created="SetTimeoutOnMetadataCompletedDialog('offer')"
+			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
     />
 
     <DeleteListingDialog
@@ -291,6 +293,7 @@
       :listing-exp-date="nft.listingDetails.expTime"
       @listing-purchase-error="HandleError"
       @listing-purchased="PurchaseListingSuccess"
+			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
     />
 
     <AcceptedOrderDialog
@@ -346,7 +349,8 @@ export default defineComponent({
     'nft-listed',
     'favorite-action',
     'unlist-failed',
-    'shepherd-remove-step'
+    'shepherd-remove-step',
+		'open-terms-and-conditions'
   ],
   data() {
     return {
