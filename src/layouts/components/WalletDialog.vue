@@ -200,7 +200,7 @@
         <div v-if="$q.screen.width > 600" class="row items-center">
           <div class="balance-container column justify-between">
             <span class="balance-label"> USDC Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:USDC-icon" size="24px" />
               <span
                 class="balance-number"
@@ -212,7 +212,7 @@
           </div>
           <div class="balance-container column justify-between q-mx-md">
             <span class="balance-label"> USDT Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:USDT-icon" size="24px" />
               <span
                 class="balance-number"
@@ -224,7 +224,7 @@
           </div>
           <div class="balance-container column justify-between">
             <span class="balance-label"> WIVA Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:WIVA-icon" size="24px"/>
               <span
                 class="balance-number"
@@ -239,7 +239,7 @@
           <div :class="$q.screen.width > 350 ? 'row justify-center q-gutter-x-md full-width' : 'column items-center q-gutter-y-md'">
             <div class="balance-container column justify-between q-ml-none q-mt-none">
               <span class="balance-label"> USDC Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:USDC-icon" size="24px" />
                 <span
                   class="balance-number"
@@ -251,7 +251,7 @@
             </div>
             <div class="balance-container column justify-between">
               <span class="balance-label"> USDT Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:USDT-icon" size="24px" />
                 <span
                   class="balance-number"
@@ -265,7 +265,7 @@
           <div class="row justify-center">
             <div class="balance-container column justify-between">
               <span class="balance-label"> WIVA Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:WIVA-icon" size="24px"/>
                 <span
                   class="balance-number"
