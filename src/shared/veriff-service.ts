@@ -1,22 +1,49 @@
 // eslint-disable-next-line
 // @ts-ignore
-import { Veriff } from '@veriff/js-sdk';
+import axios, { AxiosRequestConfig } from 'axios';
 import { createVeriffFrame } from '@veriff/incontext-sdk';
 
-export const veriff = Veriff({
-  host: process.env.VERIFF_BASE_URL,
-  apiKey: process.env.VERIFF_API_KEY,
-  parentId: 'veriff-root',
-  onSession: function(err: any, response: any) {
-    createVeriffFrame({
-      url: response.verification.url
-    });
+interface VeriffNewSessionResponse {
+  status: string;
+  verification: {
+    id: string;
+    url: string;
+    vendorData: string;
+    host: string;
+    status: string;
+    sessionToken: string;
   }
-});
-veriff.setParams({
-  person: {
-    givenName: ' ',
-    lastName: ' '
-  },
-  vendorData: ' '
-});
+}
+
+// async function CheckSession(walletAddress: string) {
+
+// }
+
+async function CreateSession(walletAddress: string) {
+  const options : AxiosRequestConfig = {
+    method: 'POST',
+    url: `${process.env.VERIFF_BASE_URL}/v1/sessions`,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-AUTH-CLIENT': process.env.VERIFF_API_KEY
+    },
+    data: {
+      verification: {
+        callback: "",
+        vendorData: walletAddress
+      }
+    }
+  }
+  const veriffResponse : VeriffNewSessionResponse = (await axios.request(options)).data;
+
+  const usersURL = <string> process.env.CREATE_NEW_KYC_SESSION;
+  // await axios.post(usersURL, {
+  //   payload: veriffResponse.verification,
+  //   apiKey: process.env.MKTPLACE_API_KEY
+  // });
+  createVeriffFrame({ url: veriffResponse.verification.url });
+};
+
+export {
+  CreateSession
+}
