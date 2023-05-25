@@ -1,30 +1,42 @@
 <template>
   <HeadlineComponent />
-  <ExclusiveOffers @shepherd-remove-step="(id) => shepherd.removeStep(id)" />
-  <Calculator/>
-  <!-- <TrendingWines class="trending" />
-  <PartnershipWines class="partnership" /> -->
-  <FAQ class="faq" @open-help-center-faqs="$emit('openHelpCenterFaqs')" @open-help-center-support="$emit('openHelpCenterSupport')"/>
-  <LandingPageFooter @open-help-center-faqs="$emit('openHelpCenterFaqs')" @open-help-center-support="$emit('openHelpCenterSupport')"/>
+  <ExclusiveOffers @shepherd-remove-step="id => shepherd.removeStep(id)" />
+  <Calculator />
+  <!-- <TrendingWines class="trending" /> -->
+  <!-- <PartnershipWines class="partnership" /> -->
+  <FAQ
+    class="faq"
+    @open-help-center-faqs="$emit('openHelpCenterFaqs')"
+    @open-help-center-support="$emit('openHelpCenterSupport')"
+  />
+  <LandingPageFooter
+    @open-help-center-faqs="$emit('openHelpCenterFaqs')"
+    @open-help-center-support="$emit('openHelpCenterSupport')"
+		@open-terms-and-conditions="showTermsAndConditions = true"
+  />
   <SuggestedWines
     v-model="DisplayRecommendations"
     :recommendations="recommendations"
-    @favorite-action="action => FavoriteAction(action.source, action.nftIndex, action.state)"
+    @favorite-action="
+      action => FavoriteAction(action.source, action.nftIndex, action.state)
+    "
   />
+	<wiv-toc-dialog
+		v-model="showTermsAndConditions"
+		close-button
+	/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useShepherd, Tour } from 'vue-shepherd'
 import Calculator from './components/Calculator.vue';
+import HeadlineComponent from './components/HeadlineComponent.vue';
+import LandingPageFooter from './components/Footer.vue';
+import SuggestedWines from './components/TrendingWines.vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
 // import PartnershipWines from './components/PartnershipWines.vue';
-// import TrendingWines from './components/TrendingWines.vue';
-import LandingPageFooter from './components/Footer.vue';
-import '../../css/Homepage/HomePage.css';
-import HeadlineComponent from './components/HeadlineComponent.vue';
 import FAQ from './components/FAQ.vue';
-import SuggestedWines from 'src/layouts/components/SuggestedWines.vue';
 import { useTourStore } from 'src/stores/tour-state';
 import { StepOptions } from 'vue-shepherd';
 import { useNFTStore } from 'src/stores/nft-store';
@@ -42,29 +54,27 @@ export default defineComponent({
     LandingPageFooter,
     // PartnershipWines,
     FAQ,
-    SuggestedWines
+    SuggestedWines,
   },
-  emits: [
-    'openHelpCenterFaqs',
-    'openHelpCenterSupport'
-  ],
+  emits: ['openHelpCenterFaqs', 'openHelpCenterSupport'],
   data() {
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+      useModalOverlay: true,
     }) as Tour;
     return {
       tourStore,
       shepherd,
       nftStore,
       recommendations: [] as ListingWithPricingAndImage[],
-      recommendationsFetched: false
+      recommendationsFetched: false,
+			showTermsAndConditions: false,
     };
   },
   computed: {
     DisplayRecommendations() {
-      return (this.recommendationsFetched && this.tourStore.suggestedWinesDialog)
+      return this.recommendationsFetched && this.tourStore.suggestedWinesDialog;
     },
   },
 
@@ -75,7 +85,7 @@ export default defineComponent({
         this.startPageTour();
       }
     } catch {
-      return
+      return;
     }
   },
 
@@ -96,15 +106,15 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-		this.shepherd.next();
-		this.shepherd.removeStep('welcome-step');
-	      }
+                this.shepherd.next();
+                this.shepherd.removeStep('welcome-step');
+              },
             },
             {
               text: 'Skip',
               action: () => {
                 this.shepherd.complete();
-		this.shepherd.removeStep('welcome-step');
+                this.shepherd.removeStep('welcome-step');
                 this.tourStore.setHomeCompleted();
               },
             },
@@ -127,10 +137,10 @@ export default defineComponent({
               text: 'Finish',
               action: () => {
                 this.shepherd.complete();
-		this.shepherd.removeStep('go-to-marketplace');
+                this.shepherd.removeStep('go-to-marketplace');
                 this.tourStore.setHomeCompleted();
               },
-            }
+            },
           ],
         },
       ];
@@ -154,7 +164,10 @@ export default defineComponent({
     IncorporateOwnedNFTs(retrievedNFTs: ListingWithPricingAndImage[]) {
       const nftsFetched = this.nftStore.fetchNFTsStatus;
       if (!!nftsFetched) {
-        this.recommendations = AssociateOwned(retrievedNFTs, this.nftStore.ownedNFTs);
+        this.recommendations = AssociateOwned(
+          retrievedNFTs,
+          this.nftStore.ownedNFTs
+        );
       } else {
         this.recommendations = retrievedNFTs;
       }
@@ -163,13 +176,17 @@ export default defineComponent({
       if (this.tourStore.suggestedWinesDialog) {
         const { result: nfts } = await RetrieveFilteredNFTs();
         if (nfts.length > 0) {
-          this.recommendations = nfts.slice(0,4);
+          this.recommendations = nfts.slice(0, 4);
           this.recommendationsFetched = true;
         }
       }
     },
-    FavoriteAction(source: string, nftIndex: number, state: 'favorited' | 'unfavorited' | 'processing') {
-      switch(source) {
+    FavoriteAction(
+      source: string,
+      nftIndex: number,
+      state: 'favorited' | 'unfavorited' | 'processing'
+    ) {
+      switch (source) {
         case 'suggestions':
           if (state == 'favorited') {
             this.recommendations[nftIndex].favorited = true;
@@ -180,7 +197,7 @@ export default defineComponent({
           } else if (state == 'processing') {
             this.recommendations[nftIndex].favoriteLoading = true;
           }
-        break;
+          break;
       }
     },
   },
