@@ -115,6 +115,9 @@
 	font-family: 'ProximaNova-Bold';
 	font-size: 24px;
 	color: #212131;
+	overflow: hidden;
+	text-overflow: ellipsis; 
+	width: 90px;
 }
 
 .ballance-wrapper {

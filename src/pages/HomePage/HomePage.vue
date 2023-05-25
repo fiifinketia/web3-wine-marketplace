@@ -2,8 +2,8 @@
   <HeadlineComponent />
   <ExclusiveOffers @shepherd-remove-step="id => shepherd.removeStep(id)" />
   <Calculator />
-  <TrendingWines class="trending" />
-  <PartnershipWines class="partnership" />
+  <!-- <TrendingWines class="trending" /> -->
+  <!-- <PartnershipWines class="partnership" /> -->
   <FAQ
     class="faq"
     @open-help-center-faqs="$emit('openHelpCenterFaqs')"
@@ -29,19 +29,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useShepherd, Tour } from 'vue-shepherd';
-import PartnershipWines from './components/PartnershipWines.vue';
+import { useShepherd, Tour } from 'vue-shepherd'
 import Calculator from './components/Calculator.vue';
-import ExclusiveOffers from './components/ExclusiveOffers.vue';
-import TrendingWines from './components/TrendingWines.vue';
-
-import LandingPageFooter from './components/Footer.vue';
-import '../../css/Homepage/HomePage.css';
 import HeadlineComponent from './components/HeadlineComponent.vue';
-
+import LandingPageFooter from './components/Footer.vue';
+import SuggestedWines from './components/TrendingWines.vue';
+import ExclusiveOffers from './components/ExclusiveOffers.vue';
+// import PartnershipWines from './components/PartnershipWines.vue';
 import FAQ from './components/FAQ.vue';
-import SuggestedWines from 'src/layouts/components/SuggestedWines.vue';
-
 import { useTourStore } from 'src/stores/tour-state';
 import { StepOptions } from 'vue-shepherd';
 import { useNFTStore } from 'src/stores/nft-store';
@@ -55,9 +50,9 @@ export default defineComponent({
     HeadlineComponent,
     ExclusiveOffers,
     Calculator,
-    TrendingWines,
+    // TrendingWines,
     LandingPageFooter,
-    PartnershipWines,
+    // PartnershipWines,
     FAQ,
     SuggestedWines,
   },

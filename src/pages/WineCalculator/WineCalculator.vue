@@ -20,9 +20,9 @@
             calculateWorth === false &&
             showPrice === false
           "
-          class="flex column calculator-first-part"
+          class="column justify-between calculator-first-part q-pa-md"
         >
-          <div class="q-pl-lg q-pt-lg portfolio-calculation-title">
+          <div class="portfolio-calculation-title q-pt-md q-pl-md">
             Portfolio Calculation
           </div>
           <div
@@ -125,12 +125,8 @@
               </div>
             </div>
           </div>
-          <div
-            class="flex column justify-between q-pt-lg justify-center items-center"
-          >
-            <div
-              class="flex row calculation-images-container portfolio-calculation-mobile justify-between"
-            >
+          <div v-if="$q.screen.width < 768" class="flex column justify-between q-pt-lg justify-center items-center">
+            <div class="flex row calculation-images-container portfolio-calculation-mobile justify-between">
               <q-img src="../../assets/plant.svg" width="50px" height="50px" />
               <q-img
                 src="../../assets/bombUnselected.svg"
@@ -224,7 +220,7 @@
         </div>
         <div
           v-else-if="showPrice === true && calculateWorth === false"
-          class="flex column justify-center items-center calculator-first-part"
+          class="column justify-center items-center calculator-first-part q-py-md"
         >
           <div class="q-pb-lg">
             <q-img
@@ -344,7 +340,7 @@
                       <div class="high-risk-border"></div>
                     </div>
                     <div class="risk-desc q-pt-sm">
-                      Very volitile, highly risky wines
+                      Very volatile, highly risky wines
                     </div>
                   </div>
                 </div>
