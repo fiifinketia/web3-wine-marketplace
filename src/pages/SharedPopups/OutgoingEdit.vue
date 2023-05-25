@@ -428,7 +428,6 @@
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
     <ExpirationInvalid v-model="openInvalidTimeDialog"/>
-    <KYC v-model="openKYC"/>
   </q-dialog>
 </template>
 
@@ -450,14 +449,12 @@ import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import ExpirationInvalid from './ExpirationInvalid.vue';
-import VeriffKYCVue from './VeriffKYC.vue';
 
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing,
     OfferExpTimer: OrderExpTimer,
-    ExpirationInvalid: ExpirationInvalid,
-    KYC: VeriffKYCVue
+    ExpirationInvalid: ExpirationInvalid
   },
   props: {
     orderHash: {

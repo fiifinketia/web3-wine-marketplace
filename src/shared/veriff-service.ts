@@ -19,7 +19,7 @@ interface VeriffNewSessionResponse {
 
 // }
 
-async function CreateSession(walletAddress: string) {
+async function CreateSession(walletAddress: string, currentPage: string) {
   const options : AxiosRequestConfig = {
     method: 'POST',
     url: `${process.env.VERIFF_BASE_URL}/v1/sessions`,
@@ -29,7 +29,7 @@ async function CreateSession(walletAddress: string) {
     },
     data: {
       verification: {
-        callback: "",
+        callback: currentPage,
         vendorData: walletAddress
       }
     }
@@ -37,10 +37,10 @@ async function CreateSession(walletAddress: string) {
   const veriffResponse : VeriffNewSessionResponse = (await axios.request(options)).data;
 
   const usersURL = <string> process.env.CREATE_NEW_KYC_SESSION;
-  // await axios.post(usersURL, {
-  //   payload: veriffResponse.verification,
-  //   apiKey: process.env.MKTPLACE_API_KEY
-  // });
+  await axios.post(usersURL, {
+    payload: veriffResponse.verification,
+    apiKey: process.env.MKTPLACE_API_KEY
+  });
   createVeriffFrame({ url: veriffResponse.verification.url });
 };
 
