@@ -73,42 +73,10 @@
   </div>
 
   <!-- Terms and Conditions -->
-  <q-dialog
+  <wiv-toc-dialog
     v-model="showTermsAndConditions"
-    full-height
-    class="terms-and-conditions-background"
-  >
-    <q-card class="terms-and-conditions-container column justify-between no-wrap">
-      <q-card-section>
-        <div class="overflow-scroll" v-html="TermsAndConditions">
-	</div>
-      </q-card-section>
-      <q-card-actions class="row terms-and-conditions-btns justify-end">
-        <q-btn
-          class="terms-and-conditions-btn-decline q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          outline
-          @click="showTermsAndConditions = false"
-        >
-          Decline
-        </q-btn>
-        <q-btn
-          class="terms-and-conditions-btn-accept q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          @click="acceptTermsAndConditions"
-        >
-          Accept
-        </q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
-
+    @toc-accepted="showTermsAndConditions = false"
+  />
   <!-- /Terms and Conditions -->
 
   <BurgerMenu
@@ -218,11 +186,24 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            Stats
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
         </div>
         <div class="row">
@@ -235,7 +216,6 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
-              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -274,11 +254,7 @@
                     <q-avatar size="24px">
                       <img :src="userStore.user?.avatar" />
                     </q-avatar>
-                    {{
-                      userStore.user !== null
-                        ? userStore.user.username
-                        : walletAddress.slice(0, 10)
-                    }}
+                    {{ userStore.user?.username || walletAddress.slice(0, 10) }}
                   </q-chip>
                 </q-toolbar>
                 <q-list>
@@ -371,7 +347,7 @@
                     v-close-popup
                     clickable
                     href="https://dwc.wiv-tech.org/#/"
-		                target="_blank"
+                    target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -401,12 +377,20 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('support')"
+                          >
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('topics')"
+                          >
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -478,7 +462,6 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import TermsAndConditionsJson from '../TermsAndConditions.json';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -487,7 +470,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
-    ProfileErrors: ProfileErrors
+    ProfileErrors: ProfileErrors,
   },
   data() {
     const userStore = useUserStore();
@@ -497,7 +480,6 @@ export default defineComponent({
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
     return {
       showBurgerMenu: false,
-      TermsAndConditions: TermsAndConditionsJson.data,
       showMyWallet: false,
       showSettings: false,
       showHelpCenter: false,
@@ -516,7 +498,7 @@ export default defineComponent({
 
       FormatNumber,
 
-      openUserErrorDialog: false
+      openUserErrorDialog: false,
     };
   },
   watch: {
@@ -559,9 +541,9 @@ export default defineComponent({
     }
   },
   methods: {
-    openHelpCenter(tab: string){
-	this.openHelpCenterTab = tab;
-	this.showHelpCenter = true;
+    openHelpCenter(tab: string) {
+      this.openHelpCenterTab = tab;
+      this.showHelpCenter = true;
     },
     async fundWallet() {
       let transak = new transakSDK({
@@ -604,10 +586,18 @@ export default defineComponent({
       this.showConnectWallet = false;
       if (!this.tourStore.termsAndConditionsAgreed) {
         this.showTermsAndConditions = true;
-        return;
-      }
-      //TODO: Catch errors
-      try {
+				this.$watch('tourStore.termsAndConditionsAgreed', async (newValue) => {
+					if (newValue) {
+						await this._connectWallet();
+					}
+				});
+      } else {
+				await this._connectWallet();
+			}
+    },
+
+		async _connectWallet() {
+			try {
         await this.userStore.connectWallet();
         if (!this.$route.query?.next) {
           this.$router.go(0);
@@ -619,16 +609,10 @@ export default defineComponent({
         this.openUserErrorDialog = true;
         setTimeout(() => {
           this.openUserErrorDialog = false;
-        }, 2000)
+        }, 2000);
         throw error;
       }
-    },
-
-    acceptTermsAndConditions() {
-      this.tourStore.setTermsAndConditionsAgreed();
-      this.showTermsAndConditions = false;
-      this.connectWallet();
-    },
+		},
 
     setupWallet() {
       this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;

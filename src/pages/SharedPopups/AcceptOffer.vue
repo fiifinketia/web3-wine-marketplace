@@ -15,6 +15,21 @@
           </span>
         </div>
       </q-card-section>
+			<div class="row items-center" style="flex-wrap: nowrap">
+				<span class="dialog-terms-conditions">
+					<q-checkbox
+						v-model="acceptTerms"
+					/>
+					I agree with the
+					<q-btn
+						class="text-blue-underlined"
+						dense no-caps flat
+						:ripple="false" padding="none"
+						@click="$emit('open-terms-and-conditions');">
+						terms and conditions
+					</q-btn>
+				</span>
+			</div>
       <div
         class="q-mb-sm"
         :class="
@@ -72,6 +87,7 @@
           unelevated
           no-caps
           flat
+					:disable="!acceptTerms"
           @click="AcceptOffer()"
         >
           Accept for this price
@@ -106,15 +122,17 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['accept-offer'],
+  emits: ['accept-offer', 'open-terms-and-conditions'],
   data() {
     return {
       userStore: useUserStore(),
-      GetCurrencyLabel
+      GetCurrencyLabel,
+			acceptTerms: false
     };
   },
   methods: {
     async AcceptOffer() {
+			if(!this.acceptTerms) return;
       this.$emit('accept-offer', {
         orderHash: this.orderHash,
         brand: this.brand,

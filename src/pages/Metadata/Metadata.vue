@@ -9,7 +9,8 @@
         @nft-listed="nft.listingDetails.transactionStatus = false"
         @unlist-failed="(unlisted) => InvalidUnlist(unlisted.status)"
         @favorite-action="FavoriteAction"
-	@shepherd-remove-step="(id) => shepherd.removeStep(id)"
+				@shepherd-remove-step="(id) => shepherd.removeStep(id)"
+				@open-terms-and-conditions="showTermsAndConditions = true"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -19,6 +20,10 @@
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
       />
+			<wiv-toc-dialog
+				v-model="showTermsAndConditions"
+				close-button
+			/>
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="about" label="About" />
         <q-tab id="history" name="history" label="NFT history" />
@@ -92,7 +97,7 @@ export default defineComponent({
 		const tourStore = useTourStore();
     const listingsStore = useListingStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+			useModalOverlay: true,
     }) as Tour;
     return {
       nft: {} as NFTWithListingAndFavorites,
@@ -102,7 +107,7 @@ export default defineComponent({
         stableChart: [] as number[][],
       },
       userStore,
-	shepherd,
+		shepherd,
 			tourStore,
       tab: ref('about'),
       listingsStore,
@@ -110,6 +115,7 @@ export default defineComponent({
       loadingMetadata: true,
       loadingPrices: true,
       errorLoadingHistory: false,
+			showTermsAndConditions: false,
 
       openListingStatusDialog: false,
       listingTransactionStatus: false,
