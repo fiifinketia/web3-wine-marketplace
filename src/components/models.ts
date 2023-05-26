@@ -1,3 +1,5 @@
+import { VerificationStatus } from 'src/shared/veriff-service';
+
 export interface Todo {
   id: number;
   content: string;
@@ -5,13 +7,6 @@ export interface Todo {
 
 export interface Meta {
   totalCount: number;
-}
-
-export enum VerificationStatus {
-  NOT_STARTED = 'NOT_STARTED',
-  PENDING = 'PENDING',
-  FAILED = 'FAILED',
-  VERIFIED = 'VERIFIED',
 }
 
 export interface UserModel {
@@ -26,6 +21,10 @@ export interface UserModel {
   isLegal: boolean;
   verificationStatus: VerificationStatus;
   settings: object;
+
+  sessionID?: string;
+  sessionToken?: string;
+  sessionURL?: string;
 }
 
 export interface NotificationsSettings {

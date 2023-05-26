@@ -118,6 +118,7 @@
         @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
         @listing-exists="alreadyListed => UpdateListableNFT(alreadyListed)"
 				@open-terms-and-conditions="$emit('open-terms-and-conditions')"
+        @open-kyc-dialog="OpenKYCDialog()"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -224,7 +225,14 @@ export default defineComponent({
     erroredOut: { type: Boolean, default: false },
     isLoading: { type: Boolean, default: false }
   },
-  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing', 'open-terms-and-conditions'],
+  emits: [
+    'listable-nft-listed',
+    'refetch-nfts',
+    'listing-warning-processed',
+    'listing-warning-processing',
+    'open-terms-and-conditions',
+    'open-kyc-dialog'
+  ],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
@@ -289,6 +297,10 @@ export default defineComponent({
     },
     ReFetchNFTs() {
       this.$emit('refetch-nfts')
+    },
+    OpenKYCDialog() {
+      this.openListingDialog = false;
+      this.$emit('open-kyc-dialog');
     }
   },
 });

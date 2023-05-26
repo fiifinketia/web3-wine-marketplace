@@ -86,6 +86,7 @@
         @outgoing-error-dialog="HandleError"
         @offer-created="SetTimeoutOnOfferProcessedDialog()"
 				@open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="openEditDialog = false; openKYCUpdate = true"
       />
       <OutgoingDialogDelete
         v-model="openDeleteDialog"
@@ -93,6 +94,7 @@
         @outgoing-delete-close="openDeleteDialog = false"
         @remove-offer="val => RemoveRow(val)"
         @outgoing-error-dialog="HandleError"
+        @open-kyc-dialog="openEditDialog = false; openKYCUpdate = true"
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -103,6 +105,12 @@
       <OutgoingProcessedDialog
         v-model="openOrderCompletedDialog"
         :order-type="'offer'"
+      />
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="(sessionDetails) =>
+          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        "
       />
 			<wiv-toc-dialog
 				v-model="showTermsAndConditions"
@@ -130,6 +138,8 @@ import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
+import { StartVeriff } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -144,6 +154,7 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
     OutgoingRows: OutgoingRows,
+    KYCUpdate: KYCUpdate
   },
   emits: ['outgoingAmount'],
   data() {
@@ -171,6 +182,8 @@ export default defineComponent({
       openErrorDialog: false,
       openOrderCompletedDialog: false,
 			showTermsAndConditions: false,
+
+      openKYCUpdate: false
     };
   },
   computed: {
@@ -281,6 +294,10 @@ export default defineComponent({
         errorMessage: 'There are no orders under your current filter',
       });
     },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    }
   },
 });
 </script>

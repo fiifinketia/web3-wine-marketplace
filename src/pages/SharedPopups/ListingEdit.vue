@@ -195,7 +195,7 @@
             parseFloat(listingPrice) <= 0 ||
             loadingListing || !isValidTime
           "
-          @click="CreateNewOrder()"
+          @click="CreateNewListingAttempt()"
         >
           {{ !isEdit ? 'List the NFT' : 'Update' }}
         </q-btn>
@@ -375,7 +375,7 @@
                 parseFloat(listingPrice) <= 0 ||
                 loadingListing || !isValidTime
               "
-              @click="CreateNewOrder()"
+              @click="CreateNewListingAttempt()"
             >
               {{ !isEdit ? 'List the NFT' : 'Update' }}
             </q-btn>
@@ -405,6 +405,8 @@ import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
 import ExpirationInvalid from './ExpirationInvalid.vue';
+import { HandleUserValidity } from 'src/shared/veriff-service';
+
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing,
@@ -446,7 +448,8 @@ export default defineComponent({
     'listing-edit-close',
     'listing-error-dialog',
     'listing-exists',
-		'open-terms-and-conditions'
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();
@@ -528,7 +531,7 @@ export default defineComponent({
         window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
       }
     },
-    async CreateNewOrder() {
+    async CreateNewListingAttempt() {
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.listingExpirationDate, this.listingExpirationTime);
       if (!isValidExpTime) {
         this.isValidTime = false;
@@ -538,8 +541,17 @@ export default defineComponent({
         }, 2000);
         return;
       }
-      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       this.SetPreventingExitListener(true);
+      const isVerified = await HandleUserValidity();
+      if (isVerified) {
+        this.CreateNewListing();
+      } else {
+        this.SetPreventingExitListener(false);
+        this.$emit('open-kyc-dialog');
+      }
+    },
+    async CreateNewListing() {
+      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);

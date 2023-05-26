@@ -90,6 +90,7 @@
         @listing-error-dialog="HandleError"
         @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
 				@open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="openEditDialog = false; openKYCUpdate = true;"
       />
       <ListingDialogUnlist
         v-model="openDeleteDialog"
@@ -101,6 +102,7 @@
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
         @unlist-failed="(unlisted) => InvalidUnlist(unlisted)"
+        @open-kyc-dialog="openDeleteDialog = false; openKYCUpdate = true;"
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -118,6 +120,7 @@
         @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
         @refetch-nfts="SetListableNFTs()"
 				@open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="openNewListingDialog = false; openKYCUpdate = true;"
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
@@ -130,6 +133,12 @@
       <UnlistingStatusDialog
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
+      />
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="(sessionDetails) =>
+          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        "
       />
 			<wiv-toc-dialog
 				v-model="showTermsAndConditions"
@@ -169,6 +178,8 @@ import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
+import { StartVeriff } from 'src/shared/veriff-service';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -187,7 +198,8 @@ export default defineComponent({
     ListingsRows: ListingsRows,
     CreateListing: ListingNew,
     ListingStatusDialog: ListingExists,
-    UnlistingStatusDialog: ListingUnavailable
+    UnlistingStatusDialog: ListingUnavailable,
+    KYCUpdate: KYCUpdate
   },
   emits: ['listingsAmount'],
 
@@ -230,7 +242,9 @@ export default defineComponent({
 
       listingUnavailableStatus: '',
       openListingUnavailableDialog: false,
-			showTermsAndConditions: false
+			showTermsAndConditions: false,
+
+      openKYCUpdate: false
     };
   },
   computed: {
@@ -451,6 +465,10 @@ export default defineComponent({
         this.openListingUnavailableDialog = false;
       }, 2000);
     },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    }
   },
 });
 </script>

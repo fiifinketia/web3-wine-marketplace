@@ -37,6 +37,7 @@ import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { useUserStore } from 'src/stores/user-store';
 import TxnOngoing from './TxnOngoing.vue';
+import { HandleUserValidity } from 'src/shared/veriff-service';
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing
@@ -47,7 +48,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['remove-offer', 'outgoing-delete-close', 'outgoing-error-dialog'],
+  emits: ['remove-offer', 'outgoing-delete-close', 'outgoing-error-dialog', 'open-kyc-dialog'],
   data() {
     const userStore = useUserStore();
     return {
@@ -72,8 +73,14 @@ export default defineComponent({
     async CancelOrder() {
       try {
         this.SetPreventingExitListener(true);
-        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
-        this.$emit('remove-offer', this.orderHash);
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
+          await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
+          this.$emit('remove-offer', this.orderHash);
+        } else {
+          this.SetPreventingExitListener(false);
+          this.$emit('open-kyc-dialog');
+        }
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {

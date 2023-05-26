@@ -9,7 +9,7 @@
       icon="warning_amber"
       no-caps
       align="left"
-      label="Please click to complete your identity verification."
+      label="Please click to begin your identity verification."
     >
       <q-menu
         anchor="bottom middle"
@@ -22,7 +22,7 @@
         <div class="column no-wrap q-pa-md items-center">
           <q-icon name="app:verify-user" size="7rem" />
           <span class="identify-popup-title q-mt-md q-mb-xs">
-            Please complete your identity verification.
+            Please begin your identity verification.
           </span>
           <span class="identify-popup-subtitle">
             Your information is required to abide by European KYC regulators.
@@ -39,7 +39,54 @@
             to="/help/faqs/kyc"
             class="q-mt-md q-mb-xs wrap no-underline identity-popup-route"
           >
-            What is KYC ?
+            What is KYC?
+          </router-link>
+        </div>
+      </q-menu>
+    </q-btn>
+  </q-card-section>
+
+  <q-card-section
+    v-else-if="userStatus === 'STARTED'"
+    class="row items-center justify-center no-wrap"
+  >
+    <q-btn
+      class="shadow-1 overflow-hidden identity-label text-warning"
+      style="border-radius: 10px"
+      icon="warning_amber"
+      no-caps
+      align="left"
+      label="Please click to complete your identity verification."
+    >
+      <q-menu
+        anchor="bottom middle"
+        self="top middle"
+        fit
+        :offset="[0, 15]"
+        max-width="80%"
+        class="identity-popup"
+      >
+        <div class="column no-wrap q-pa-md items-center">
+          <q-icon name="app:verify-pending" size="7rem" />
+          <span class="identify-popup-title q-mt-md q-mb-xs">
+            Please complete your identity verification.
+          </span>
+          <span class="identify-popup-subtitle">
+            Pick up from where you left off in the verification process.
+          </span>
+
+          <q-btn
+            v-close-popup
+            class="wiv-primary-button q-mt-md"
+            unelevated
+            no-caps
+            label="Go to Verification"
+          />
+          <router-link
+            to="/help/faqs/kyc"
+            class="q-mt-md q-mb-xs wrap no-underline identity-popup-route"
+          >
+            What is KYC?
           </router-link>
         </div>
       </q-menu>

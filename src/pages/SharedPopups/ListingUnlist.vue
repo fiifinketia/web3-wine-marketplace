@@ -31,6 +31,7 @@ import { CancelSingleOrder, ValidateUnlist } from 'src/pages/Metadata/services/O
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { useUserStore } from 'src/stores/user-store';
 import TxnOngoing from './TxnOngoing.vue';
+import { HandleUserValidity } from 'src/shared/veriff-service';
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing
@@ -53,7 +54,13 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['remove-listing', 'listing-delete-close', 'listing-error-dialog', 'unlist-failed'],
+  emits: [
+    'remove-listing',
+    'listing-delete-close',
+    'listing-error-dialog',
+    'unlist-failed',
+    'open-kyc-dialog'
+  ],
   data() {
     const userStore = useUserStore();
     return {
@@ -78,6 +85,8 @@ export default defineComponent({
     async CancelOrder() {
       try {
         this.SetPreventingExitListener(true);
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
           const nonExistentListing = await ValidateUnlist(
             {
               contractAddress: this.smartContractAddress,
@@ -96,8 +105,12 @@ export default defineComponent({
             this.SetPreventingExitListener(false);
             return
           }
-        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
-        this.$emit('remove-listing', this.orderHash);
+          await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
+          this.$emit('remove-listing', this.orderHash);
+        } else {
+          this.SetPreventingExitListener(false);
+          this.$emit('open-kyc-dialog')
+        }
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {

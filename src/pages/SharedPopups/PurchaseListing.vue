@@ -96,7 +96,7 @@
             : 'column items-center q-gutter-y-sm'
         "
       >
- 	<q-btn
+        <q-btn
           v-if="!userStore.user"
           class="dialog-confirm"
           :style="$q.screen.width > 600 ? '' : 'width: 100%'"
@@ -108,26 +108,8 @@
         >
           Please Connect Wallet
         </q-btn>
-	<router-link
-          v-else-if="
-            userStore.user.verificationStatus !== 'VERIFIED'
-          "
-          :to="
-            '/profile/' +
-            userStore.user.walletAddress +
-            '/kyc' +
-            '?redirect=' +
-            $route.path +
-            $route.query +
-            $route.hash
-          "
-          class="q-ma-sm q-pa-xs text-warning"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-        >
-          Complete KYC to offer
-        </router-link>
         <q-btn
-	  v-else
+	        v-else
           class="dialog-confirm-small"
           :style="$q.screen.width <= 450 ? 'width: 95% !important;' : ''"
           no-caps
@@ -224,40 +206,21 @@
 						</span>
           </div>
           <div class="row justify-end q-mb-sm">
-	<q-btn
-          v-if="!userStore.user"
-          class="dialog-confirm"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-          unelevated
-          no-caps
-          flat
-          disable
-          size="md"
-        >
-          Please Connect Wallet
-        </q-btn>
-	<router-link
-          v-else-if="
-            userStore.user.verificationStatus !== 'VERIFIED'
-          "
-          :to="
-            '/profile/' +
-            userStore.user.walletAddress +
-            '/kyc' +
-            '?redirect=' +
-            $route.path +
-            $route.query +
-            $route.hash
-          "
-          class="q-ma-sm q-pa-xs text-warning"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-        >
-          Complete KYC to offer
-        </router-link>
-
             <q-btn
-		v-else
-      class="dialog-confirm"
+              v-if="!userStore.user"
+              class="dialog-confirm"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+              unelevated
+              no-caps
+              flat
+              disable
+              size="md"
+            >
+              Please Connect Wallet
+            </q-btn>
+            <q-btn
+              v-else
+              class="dialog-confirm"
               style="width: 70%;"
               no-caps
               flat
@@ -282,6 +245,7 @@ import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderExpTimer from './OrderExpTimer.vue';
 import { useUserStore } from 'src/stores/user-store';
+import { HandleUserValidity } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -322,7 +286,8 @@ export default defineComponent({
     'listing-purchase-close',
     'listing-purchased',
     'listing-purchase-error',
-		'open-terms-and-conditions'
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();
@@ -352,8 +317,14 @@ export default defineComponent({
       if (!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
-        this.$emit('listing-purchased');
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
+          await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
+          this.$emit('listing-purchased');
+        } else {
+          this.SetPreventingExitListener(false);
+          this.$emit('open-kyc-dialog')
+        }
       } catch {
         this.$emit('listing-purchase-error', {
           errorType: 'accept',

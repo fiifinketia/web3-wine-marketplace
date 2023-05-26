@@ -111,6 +111,12 @@
         :order-accepted="'offer'"
       />
       <OngoingTransactionDialog v-model="ongoingTxn"/>
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="(sessionDetails) =>
+          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        "
+      />
     </div>
   </q-page>
 </template>
@@ -138,6 +144,8 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
+import { HandleUserValidity, StartVeriff } from 'src/shared/veriff-service';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();
 
@@ -153,7 +161,8 @@ export default defineComponent({
     AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    KYCUpdate: KYCUpdate
   },
   emits: ['incomingAmount'],
 
@@ -180,6 +189,7 @@ export default defineComponent({
       openConfirmDialog: false,
       openAcceptedOrderDialog: false,
 			showTermsAndConditions: false,
+      openKYCUpdate: false,
 
       orderHash: '',
       brand: '',
@@ -271,13 +281,19 @@ export default defineComponent({
 			if(!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
-        this.RemoveRow(token);
-        this.CheckForEmptyRequest();
-        this.openAcceptedOrderDialog = true;
-        setTimeout(() => {
-          this.openAcceptedOrderDialog = false;
-        }, 3000);
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
+          await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
+          this.RemoveRow(token);
+          this.CheckForEmptyRequest();
+          this.openAcceptedOrderDialog = true;
+          setTimeout(() => {
+            this.openAcceptedOrderDialog = false;
+          }, 3000);
+        } else {
+          this.SetPreventingExitListener(false);
+          this.openKYCUpdate = true;
+        }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError(err);
@@ -375,6 +391,10 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    }
   },
 });
 </script>

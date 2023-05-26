@@ -212,7 +212,7 @@
             parseFloat(offerPrice) <= 0 ||
             loadingOffer || !isValidTime
           "
-          @click="CreateNewOrder()"
+          @click="CreateNewOfferAttempt()"
         >
           Make offer
         </q-btn>
@@ -413,16 +413,6 @@
             >
               Please Connect Wallet
             </q-btn>
-            <router-link
-              v-else-if="
-                userStore.user.verificationStatus !== 'VERIFIED'
-              "
-              :to="'/profile/' + userStore.user.walletAddress + '/kyc'"
-              class="q-ma-sm q-pa-xs text-warning"
-              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-            >
-              Complete KYC to offer
-            </router-link>
             <q-btn
               v-else
               class="dialog-confirm"
@@ -434,7 +424,7 @@
                 parseFloat(offerPrice) <= 0 ||
                 loadingOffer || !isValidTime
               "
-              @click="CreateNewOrder()"
+              @click="CreateNewOfferAttempt()"
             >
               Make offer
             </q-btn>
@@ -465,6 +455,8 @@ import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import ExpirationInvalid from './ExpirationInvalid.vue';
+import { HandleUserValidity } from 'src/shared/veriff-service';
+import { UserModel } from 'src/components/models';
 
 export default defineComponent({
   components: {
@@ -519,7 +511,8 @@ export default defineComponent({
     'outgoing-edit-close',
     'outgoing-error-dialog',
     'offer-created',
-		'open-terms-and-conditions'
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();
@@ -599,7 +592,7 @@ export default defineComponent({
         window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
       }
     },
-    async CreateNewOrder() {
+    async CreateNewOfferAttempt() {
       if (!this.userStore.user) throw 'Connect Wallet and Login';
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.offerExpirationDate, this.offerExpirationTime);
       if (!isValidExpTime) {
@@ -609,9 +602,20 @@ export default defineComponent({
           this.openInvalidTimeDialog = false;
         }, 2000);
         return;
+      };
+
+      this.SetPreventingExitListener(true);
+      const isVerified = await HandleUserValidity();
+      if (isVerified) {
+        this.CreateOffer();
+      } else {
+        this.SetPreventingExitListener(false);
+        this.$emit('open-kyc-dialog');
       }
+    },
+
+    async CreateOffer() {
       try {
-        this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
           this.$emit('remove-offer', this.orderHash);
@@ -627,7 +631,7 @@ export default defineComponent({
             <string> this.currency.value,
             this.offerExpirationDate,
             this.offerExpirationTime,
-            this.userStore.user
+            <UserModel> this.userStore.user
           );
           this.$emit('offer-created');
         } catch (err) {
