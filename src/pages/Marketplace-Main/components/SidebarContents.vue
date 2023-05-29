@@ -46,6 +46,7 @@
             class="sidebar-options"
           />
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.currency"
             :options="wineFiltersStore.currencyOptions"
             type="checkbox"
