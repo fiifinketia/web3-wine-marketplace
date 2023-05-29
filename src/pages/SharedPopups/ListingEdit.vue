@@ -542,12 +542,18 @@ export default defineComponent({
         return;
       }
       this.SetPreventingExitListener(true);
-      const isVerified = await HandleUserValidity();
-      if (isVerified) {
-        this.CreateNewListing();
-      } else {
+      try {
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
+          this.CreateNewListing();
+        } else {
+          this.SetPreventingExitListener(false);
+          this.$emit('open-kyc-dialog');
+        }
+      } catch (err) {
+        this.BuildErrorDialog(err);
+      } finally {
         this.SetPreventingExitListener(false);
-        this.$emit('open-kyc-dialog');
       }
     },
     async CreateNewListing() {

@@ -92,27 +92,31 @@ async function StartVeriff (
 };
 
 async function HandleUserValidity() {
-  const userStore = useUserStore();
-  if (!!userStore.user?.walletAddress) {
-    let { status, sessionID, sessionToken, sessionURL } : UserStatus = await CheckUserVerification(userStore.user.walletAddress);
-    userStore.user.verificationStatus = status;
-    if (status == VerificationStatus.VERIFIED) {
-      return true;
-    } else {
-      if (status == VerificationStatus.STARTED) {
-        const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
-        if (isNewSessionNeeded) {
-          status = VerificationStatus.NOT_STARTED;
-          sessionID = '';
-          sessionToken = '';
-          sessionURL = '';
+  try {
+    const userStore = useUserStore();
+    if (!!userStore.user?.walletAddress) {
+      let { status, sessionID, sessionToken, sessionURL } : UserStatus = await CheckUserVerification(userStore.user.walletAddress);
+      userStore.user.verificationStatus = status;
+      if (status == VerificationStatus.VERIFIED) {
+        return true;
+      } else {
+        if (status == VerificationStatus.STARTED) {
+          const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
+          if (isNewSessionNeeded) {
+            status = VerificationStatus.NOT_STARTED;
+            sessionID = '';
+            sessionToken = '';
+            sessionURL = '';
+          }
         }
+        userStore.user.sessionID = sessionID;
+        userStore.user.sessionToken = sessionToken;
+        userStore.user.sessionURL = sessionURL;
+        return false;
       }
-      userStore.user.sessionID = sessionID;
-      userStore.user.sessionToken = sessionToken;
-      userStore.user.sessionURL = sessionURL;
-      return false;
     }
+  } catch {
+    throw new Error('Failed to verify user KYC status.');
   }
 }
 
