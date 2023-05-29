@@ -34,6 +34,7 @@
             unelevated
             no-caps
             label="Go to Verification"
+            @click="BeginUserVerification()"
           />
           <router-link
             to="/help/faqs/kyc"
@@ -80,7 +81,8 @@
             class="wiv-primary-button q-mt-md"
             unelevated
             no-caps
-            label="Go to Verification"
+            label="Continue Verification"
+            @click="BeginUserVerification()"
           />
           <router-link
             to="/help/faqs/kyc"
@@ -129,6 +131,7 @@
             unelevated
             no-caps
             label="Go to Verification"
+            @click="BeginUserVerification()"
           />
           <router-link
             to="/help/faqs/kyc"
@@ -212,12 +215,29 @@
 import { defineComponent } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { mapState } from 'pinia';
+import { StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 
 export default defineComponent({
+  data() {
+    const userStore = useUserStore();
+    return {
+      userStore
+    }
+  },
   computed: {
     ...mapState(useUserStore, {
-      userStatus: store => store.user?.verificationStatus
+      userStatus: store => store.user?.verificationStatus,
+      sessionURL: store => store.user?.sessionURL,
+      sessionToken: store => store.user?.sessionToken,
+      sessionID: store => store.user?.sessionID
     })
+  },
+  methods: {
+    BeginUserVerification() {
+      const continueSession = this.userStatus == VerificationStatus.STARTED;
+      const lastSessionURL = this.userStatus == VerificationStatus.STARTED ? this.sessionURL : '';
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    }
   }
 })
 </script>

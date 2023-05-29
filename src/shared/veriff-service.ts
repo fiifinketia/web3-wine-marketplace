@@ -3,6 +3,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { createVeriffFrame } from '@veriff/incontext-sdk';
 import { useUserStore } from 'src/stores/user-store';
+import { decode, JwtPayload } from 'jsonwebtoken';
 
 interface VeriffNewSessionResponse {
   status: string;
@@ -29,6 +30,27 @@ interface UserStatus {
   sessionID?: string;
   sessionToken?: string;
   sessionURL?: string;
+}
+
+function CheckJWTValidity(jwt: string) {
+  const decodedToken = decode(jwt) as JwtPayload;
+  if (decodedToken) {
+    // Issued At in seconds
+    const iat = <number> decodedToken.iat;
+    // Exp duration in seconds (3 days)
+    const expDuration = 259200;
+    const expTime = iat + expDuration;
+    const currDate = Math.floor(Date.now() / 1000);
+
+    if (expTime < currDate) {
+      // Token passed 3 days
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return true;
+  }
 }
 
 async function CheckUserVerification(walletAddress: string) : Promise<UserStatus> {
@@ -72,11 +94,20 @@ async function StartVeriff (
 async function HandleUserValidity() {
   const userStore = useUserStore();
   if (!!userStore.user?.walletAddress) {
-    const { status, sessionID, sessionToken, sessionURL } : UserStatus = await CheckUserVerification(userStore.user.walletAddress);
+    let { status, sessionID, sessionToken, sessionURL } : UserStatus = await CheckUserVerification(userStore.user.walletAddress);
     userStore.user.verificationStatus = status;
     if (status == VerificationStatus.VERIFIED) {
       return true;
     } else {
+      if (status == VerificationStatus.STARTED) {
+        const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
+        if (isNewSessionNeeded) {
+          status = VerificationStatus.NOT_STARTED;
+          sessionID = '';
+          sessionToken = '';
+          sessionURL = '';
+        }
+      }
       userStore.user.sessionID = sessionID;
       userStore.user.sessionToken = sessionToken;
       userStore.user.sessionURL = sessionURL;
