@@ -33,7 +33,6 @@ import { useShepherd, Tour } from 'vue-shepherd'
 import Calculator from './components/Calculator.vue';
 import HeadlineComponent from './components/HeadlineComponent.vue';
 import LandingPageFooter from './components/Footer.vue';
-import SuggestedWines from './components/TrendingWines.vue';
 import ExclusiveOffers from './components/ExclusiveOffers.vue';
 // import PartnershipWines from './components/PartnershipWines.vue';
 import FAQ from './components/FAQ.vue';
@@ -43,6 +42,7 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ListingWithPricingAndImage } from '../Marketplace-Main/models/Response.models';
 import { AssociateOwned } from 'src/shared/association.helper';
 import { RetrieveFilteredNFTs } from '../Marketplace-Main/services/RetrieveTokens';
+import SuggestedWines from 'src/layouts/components/SuggestedWines.vue';
 
 export default defineComponent({
   name: 'VueHomepage',
@@ -54,7 +54,7 @@ export default defineComponent({
     LandingPageFooter,
     // PartnershipWines,
     FAQ,
-    SuggestedWines,
+    SuggestedWines: SuggestedWines
   },
   emits: ['openHelpCenterFaqs', 'openHelpCenterSupport'],
   data() {
