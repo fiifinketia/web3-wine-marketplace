@@ -245,7 +245,6 @@ import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import { FulfillBasicOrder } from '../Metadata/services/Orders';
 import OrderExpTimer from './OrderExpTimer.vue';
 import { useUserStore } from 'src/stores/user-store';
-import { HandleUserValidity } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
