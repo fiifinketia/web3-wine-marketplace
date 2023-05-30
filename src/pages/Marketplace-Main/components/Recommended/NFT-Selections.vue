@@ -93,7 +93,7 @@
                 "
               />
               <span class="releases-price-text-b-active">
-                {{ ToInt(token.orderDetails.listingPrice) }}
+                {{ token.orderDetails.listingPrice }}
               </span>
             </div>
           </div>
@@ -319,9 +319,6 @@ export default defineComponent({
           );
         } else return text;
       }
-    },
-    ToInt(price: string) {
-      return parseInt(price);
     },
     RefetchSection() {
       this.$emit('refetch');

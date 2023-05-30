@@ -198,7 +198,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="openPurchaseListingDialog = true"
+          @click="openPurchaseListingDialog = true; shepherdRemoveStep()"
         >
           Buy now
         </q-btn>
@@ -206,7 +206,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenOfferDialog()"
+          @click="OpenOfferDialog(); shepherdRemoveStep()"
         >
           Make an offer
         </q-btn>
@@ -259,9 +259,13 @@
     <DeleteListingDialog
       v-model="openDeleteListingDialog"
       :order-hash="nft.listingDetails.orderHash"
+      :network="nft.network"
+      :smart-contract-address="nft.smartContractAddress"
+      :token-id="nft.tokenID"
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
       @remove-listing="unlisted = true"
+      @unlist-failed="(failedUnlist) => InvalidUnlist(failedUnlist)"
     />
 
     <OrderProcessed
@@ -334,7 +338,16 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['openWallet', 'refresh-metadata', 'connect-wallet', 'listing-exists', 'nft-listed', 'favorite-action'],
+  emits: [
+    'openWallet',
+    'refresh-metadata',
+    'connect-wallet',
+    'listing-exists',
+    'nft-listed',
+    'favorite-action',
+    'unlist-failed',
+    'shepherd-remove-step'
+  ],
   data() {
     return {
       openCreateListingDialog: false,
@@ -381,6 +394,9 @@ export default defineComponent({
         this.openCreateOfferDialog = true;
       }
     },
+    shepherdRemoveStep() {
+    	this.$emit('shepherd-remove-step', 'metadata-checkout-buttons')
+    },
     SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
       if (orderType == 'listing') {
@@ -414,6 +430,10 @@ export default defineComponent({
     },
     UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
       this.$emit('listing-exists', listed);
+    },
+    InvalidUnlist(failedUnlist: TokenIdentifier & { status: 'ongoingUnlist' | 'unlisted' | 'purchased' }) {
+      this.openDeleteListingDialog = false;
+      this.$emit('unlist-failed', failedUnlist);
     },
     RefreshMetadataPage() {
       this.$emit('refresh-metadata');

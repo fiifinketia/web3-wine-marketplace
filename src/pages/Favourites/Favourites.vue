@@ -36,10 +36,7 @@
         class="favorites-card-container"
       >
         <q-card class="q-ma-xs" flat>
-          <img
-            class="favorites-card-image clickable-image"
-            :src="nft.image"
-          />
+          <img class="favorites-card-image clickable-image" :src="nft.image" />
           <div
             class="q-pb-sm favorites-brand column justify-center"
             style="text-align: left"
@@ -48,69 +45,87 @@
               {{ truncateText(nft.brand) }}
             </span>
           </div>
-          <q-card-section class="row justify-between q-py-sm favorites-price-container">
-          <div class="column items-start justify-evenly">
-            <span class="favorites-price-text q-pb-xs"> Price </span>
-            <div
-              v-if="
-                !!nft.orderDetails?.listingPrice &&
-                !!nft.orderDetails?.transactionStatus
-              "
-              class="row items-center justify-between full-width"
-              @click.stop
-            >
-              <div class="row items-center q-gutter-x-xs q-pt-xs">
-                <q-icon :name="`app:${GetCurrencyLabel(nft.orderDetails.currency)}-icon`" class="currency-logo" />
-                <span class="favorites-b-text-active">
-                  {{ ToInt(nft.orderDetails.listingPrice) }}
-                </span>
+          <q-card-section
+            class="row justify-between q-py-sm favorites-price-container"
+          >
+            <div class="column items-start justify-evenly">
+              <span class="favorites-price-text q-pb-xs"> Price </span>
+              <div
+                v-if="
+                  !!nft.orderDetails?.listingPrice &&
+                  !!nft.orderDetails?.transactionStatus
+                "
+                class="row items-center justify-between full-width"
+                @click.stop
+              >
+                <div class="row items-center q-gutter-x-xs q-pt-xs">
+                  <q-icon
+                    :name="`app:${GetCurrencyLabel(
+                      nft.orderDetails.currency
+                    )}-icon`"
+                    class="currency-logo"
+                  />
+                  <span class="favorites-b-text-active">
+                    {{ nft.orderDetails.listingPrice }}
+                  </span>
+                </div>
+              </div>
+              <div v-else class="q-pt-sm" style="display: flex">
+                <span class="favorites-b-text-inactive"> Not Listed </span>
               </div>
             </div>
-            <div v-else class="q-pt-sm" style="display: flex">
-              <span class="favorites-b-text-inactive">
-                Not Listed
-              </span>
-            </div>
-          </div>
-          <div class="column items-center justify-between q-gutter-y-xs">
-            <q-img
-              v-if="!!nft.favoriteLoading"
-              src="../../assets/loading-heart.gif"
-              :style="
-                $q.screen.width > 350
-                  ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
-                  : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
-              "
-            />
-            <q-img
-              v-else
-              src="../../../public/images/heart.svg"
-              class="clickable-image remove-favorite"
-              :width="$q.screen.width > 350 ? '20px' : '16px'"
-              :height="$q.screen.width > 350 ? '20px' : '16px'"
-              @click.stop="removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)"
-            />
-            <q-btn
-              v-if="!nft.isOwned && !!nft.orderDetails?.listingPrice && !!nft.orderDetails?.transactionStatus"
-              dense
-              unelevated
-              flat
-              no-caps
-              :ripple="false"
-              class="q-pa-none"
-              @click.stop="AcceptOffer(nft.orderDetails.orderHash, nft.brand, nft.image, nft)"
-            >
-              <img
-                src="../../assets/small-bag-btn.svg"
-                style="border-radius: 0 !important"
+            <div class="column items-center justify-between q-gutter-y-xs">
+              <q-img
+                v-if="!!nft.favoriteLoading"
+                src="../../assets/loading-heart.gif"
+                :style="
+                  $q.screen.width > 350
+                    ? 'width: 27px; height: 27px; margin: -4px -4px -4px -4px'
+                    : 'width: 22px; height: 22px; margin: -3px -3px -4px -4px'
+                "
               />
-            </q-btn>
-            <img
-              v-if="!!nft.isOwned"
-              src="../../assets/owned-tick.svg"
-              style="border-radius: 0 !important; padding-top: 6px"
-            />
-          </div>
+              <q-img
+                v-else
+                src="../../../public/images/heart.svg"
+                class="clickable-image remove-favorite"
+                :width="$q.screen.width > 350 ? '20px' : '16px'"
+                :height="$q.screen.width > 350 ? '20px' : '16px'"
+                @click.stop="
+                  removeNFT(nft.tokenID, nft.smartContractAddress, nft.network)
+                "
+              />
+              <q-btn
+                v-if="
+                  !nft.isOwned &&
+                  !!nft.orderDetails?.listingPrice &&
+                  !!nft.orderDetails?.transactionStatus
+                "
+                dense
+                unelevated
+                flat
+                no-caps
+                :ripple="false"
+                class="q-pa-none"
+                @click.stop="
+                  AcceptOffer(
+                    nft.orderDetails.orderHash,
+                    nft.brand,
+                    nft.image,
+                    nft
+                  )
+                "
+              >
+                <img
+                  src="../../assets/small-bag-btn.svg"
+                  style="border-radius: 0 !important"
+                />
+              </q-btn>
+              <img
+                v-if="!!nft.isOwned"
+                src="../../assets/owned-tick.svg"
+                style="border-radius: 0 !important; padding-top: 6px"
+              />
+            </div>
           </q-card-section>
           <q-menu touch-position context-menu>
             <q-list dense style="min-width: 100px">
@@ -151,7 +166,7 @@
           :error-title="errorTitle"
           :error-message="errorMessage"
         />
-        <OngoingTransactionDialog v-model="ongoingTxn"/>
+        <OngoingTransactionDialog v-model="ongoingTxn" />
       </div>
     </div>
     <div
@@ -191,13 +206,14 @@
       :network="network"
       :smart-contract-address="smartContractAddress"
       :token-id="tokenID"
-      @unfavorite="(action) => DialogAction(action)"
+      @unfavorite="action => DialogAction(action)"
     />
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useShepherd, Tour } from 'vue-shepherd';
 import '../../css/Favorites/Favorites.css';
 import { FavoritesModel } from './models/Response';
 import {
@@ -230,12 +246,15 @@ export default defineComponent({
     FavsMissing: MissingFavorites,
     AcceptedOrderDialog: OrderAccepted,
     ErrorDialog: ProfileErrors,
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
   },
   data() {
     const userStore = useUserStore();
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
+    const shepherd = useShepherd({
+	useModalOverlay: true,
+    }) as Tour;
     return {
       favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
       loadingFavNFTs: [0, 1, 2, 3, 4, 5, 6, 7],
@@ -248,7 +267,7 @@ export default defineComponent({
       removeDialog: false,
       erroredOut: false,
       tourStore,
-
+      shepherd,
       openOrderAccepted: false,
       openErrorDialog: false,
 
@@ -259,15 +278,14 @@ export default defineComponent({
       ongoingTxn: false,
 
       GetCurrencyLabel,
-
       index: 0,
       smartContractAddress: '',
       tokenID: '',
-      network: ''
+      network: '',
     };
   },
   async mounted() {
-    SetSessionID('pageVisitationTracker');
+    SetSessionID();
     await this.getAllFavoritesWithoutBrand();
     await this.startPageTour();
   },
@@ -286,25 +304,23 @@ export default defineComponent({
       }
     },
     DialogAction(action: {
-      index: number,
-      token: { tokenID: string, cAddress: string, network: string },
-      cancel: boolean
+      index: number;
+      token: { tokenID: string; cAddress: string; network: string };
+      cancel: boolean;
     }) {
       this.removeDialog = false;
       const { index, token, cancel } = action;
-      this.UnfavoriteNFT(
-        index,
-        token,
-        cancel
-      )
+      this.UnfavoriteNFT(index, token, cancel);
     },
     async getAllFavorites(walletAddress: string, brand: string) {
+      this.shepherd.removeStep('favorites-search-button')
       this.isLoading = true;
       try {
         const { result: nfts } = await GetAllFavorites(walletAddress, brand);
-        this.IncorporateOwnedNFTs(nfts);
+        if (nfts.length === 0) this.shepherd.complete();
+	this.IncorporateOwnedNFTs(nfts);
         this.CheckForEmptiness(this.favNFTs, brand);
-        this.erroredOut = false;
+	this.erroredOut = false;
       } catch {
         this.erroredOut = true;
       } finally {
@@ -320,6 +336,7 @@ export default defineComponent({
       }
     },
     async removeNFT(tokenID: string, cAddress: string, network: string) {
+      this.shepherd.removeStep('favorites-item-remove');
       const nftIndex = this.favNFTs.findIndex(
         nft =>
           nft.smartContractAddress == cAddress &&
@@ -334,13 +351,13 @@ export default defineComponent({
         if (nftIndex > -1) {
           this.favNFTs[nftIndex].favoriteLoading = true;
           this.removeDialog = true;
-          await new Promise(resolve => setTimeout(resolve, 1500))
+          await new Promise(resolve => setTimeout(resolve, 1500));
           if (!!this.removeDialog) {
             await this.UnfavoriteNFT(
               nftIndex,
               { tokenID, cAddress, network },
               false
-            )
+            );
           }
         }
       } catch {
@@ -377,9 +394,6 @@ export default defineComponent({
     async getAllFavoritesWithoutBrand() {
       await this.getAllFavorites(this.userStore.walletAddress, '');
     },
-    ToInt(price: string) {
-      return parseInt(price);
-    },
     truncateText(text: string) {
       if (this.$q.screen.width > 1350) {
         if (text.length > 50) {
@@ -414,6 +428,7 @@ export default defineComponent({
       }
     },
     openNFT(token: FavoritesModel, where?: string) {
+      this.shepherd.removeStep('favorites-item');
       const routeData = this.$router.resolve({
         path: '/nft',
         query: {
@@ -474,11 +489,11 @@ export default defineComponent({
 
       await this.waitForLoad();
 
-			if(this.emptyRequest || this.emptySearch || this.erroredOut) return;
+      if (this.emptyRequest || this.emptySearch || this.erroredOut) return;
 
       // Start the tour
 
-      this.$shepherd.addSteps([
+      this.shepherd.addSteps([
         {
           id: 'favorites-search-input',
           attachTo: {
@@ -491,16 +506,16 @@ export default defineComponent({
             {
               text: 'Next',
               action: () => {
-			this.$shepherd.next();
-			this.$shepherd.removeStep('favorites-search-input');
-		},
+              this.shepherd.next();
+              this.shepherd.removeStep('favorites-search-input');
+		          },
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
-                this.$shepherd.cancel();
-		this.$shepherd.removeStep('favorites-search-input');
+                this.shepherd.cancel();
+		            this.shepherd.removeStep('favorites-search-input');
                 this.tourStore.setFavoritesCompleted();
               },
             },
@@ -518,17 +533,17 @@ export default defineComponent({
             {
               text: 'Next',
               action: () => {
-			this.$shepherd.next();
-			this.$shepherd.removeStep('favorites-search-button');
-		},
+                this.shepherd.next();
+                this.shepherd.removeStep('favorites-search-button');
+              },
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
-                this.$shepherd.cancel();
+                this.shepherd.cancel();
                 this.tourStore.setFavoritesCompleted();
-		this.$shepherd.removeStep('favorites-search-button');
+                this.shepherd.removeStep('favorites-search-button');
               },
             },
           ],
@@ -537,7 +552,7 @@ export default defineComponent({
 
       // Check if there are any favorites
       if (this.favNFTs.length > 0) {
-        this.$shepherd.addSteps([
+        this.shepherd.addSteps([
           {
             id: 'favorites-item',
             attachTo: {
@@ -553,17 +568,17 @@ export default defineComponent({
               {
                 text: 'Next',
                 action: () => {
-			this.$shepherd.next();
-			this.$shepherd.removeStep('favorites-item');
-		},
+                  this.shepherd.next();
+                  this.shepherd.removeStep('favorites-item');
+                },
               },
               {
                 text: 'Skip',
                 action: () => {
                   // Cancel and set favoritesCompleted to true
-                  this.$shepherd.cancel();
+                  this.shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
-		this.$shepherd.removeStep('favorites-item');
+		              this.shepherd.removeStep('favorites-item');
                 },
               },
             ],
@@ -583,9 +598,9 @@ export default defineComponent({
                 text: 'Finish',
                 action: () => {
                   // Cancel and set favoritesCompleted to true
-                  this.$shepherd.complete();
+                  this.shepherd.complete();
                   this.tourStore.setFavoritesCompleted();
-		  this.$shepherd.removeStep('favorites-item-remove');
+		              this.shepherd.removeStep('favorites-item-remove');
                 },
               },
             ],
@@ -595,15 +610,15 @@ export default defineComponent({
 
       // Start the tour
       setTimeout(() => {
-        this.$shepherd.start();
+        this.shepherd.start();
       }, 3000);
-			this.tourStore.setFavoritesCompleted();
-		},
+      this.tourStore.setFavoritesCompleted();
+    },
 
 		async waitForLoad () {
         return new Promise<void>(resolve => {
           const checkValue = () => {
-            if (this.isLoading === false && this.tourStore.suggestedWinesDialog) {
+            if (this.isLoading === false ) {
               resolve();
             } else {
               setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
@@ -613,25 +628,28 @@ export default defineComponent({
         });
       },
 
-    async AcceptOffer(
-      orderHash: string,
-      brand: string,
-      image: string
-    ) {
-      if(!this.userStore.user) throw new Error('User not logged in');
+    async AcceptOffer(orderHash: string, brand: string, image: string) {
+      if (!this.userStore.user) throw new Error('User not logged in');
       this.SetPreventingExitListener(true);
       try {
-        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          false,
+          this.userStore.user,
+          image
+        );
         this.openOrderAccepted = true;
         setTimeout(() => {
           this.openOrderAccepted = false;
         }, 2000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError({
           errorType: 'accept',
           errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
+          errorMessage:
+            'It may be due to insufficient balance, disconnected wallet, etc.',
         });
         this.SetPreventingExitListener(false);
       }

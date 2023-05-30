@@ -7,34 +7,36 @@
       :class="$q.screen.width < 1265 ? 'q-py-lg' : ''"
     >
       <div class="row items-center transaction-column-nft">
-        <span
-          v-if="$q.screen.width > 600"
-          class="transaction-number-text q-mr-md"
-          :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"
-        >
-          {{ txn.event }}
-        </span>
-        <q-btn
-          flat
-          unelevated
-          dense
-          no-caps
-          align="left"
-          padding="0px"
-          class="btn--no-hover"
-          @click="
-            $q.screen.width > 600
-              ? ClickBrandAction(txn, 'new tab')
-              : ClickBrandAction(txn, 'nft dialog')
-          "
-        >
-          <img
-            v-if="$q.screen.width > 1265"
-            :src="txn.image"
-            class="profile-nft-image q-mr-md"
-          />
-          <span class="profile-nft-brand"> {{ txn.brand }}</span>
-        </q-btn>
+        <div class="full-width row items-center no-wrap">
+          <span
+            v-if="$q.screen.width > 600"
+            class="transaction-number-text q-mr-md"
+            :style="txn.event == 'Buy' ? 'color: #212131;' : 'color: #3586FF;'"
+          >
+            {{ txn.event }}
+          </span>
+          <q-btn
+            flat
+            unelevated
+            dense
+            no-caps
+            align="left"
+            padding="0px"
+            class="btn--no-hover profile-nft-btn-wrapper"
+            @click="
+              $q.screen.width > 600
+                ? ClickBrandAction(txn, 'new tab')
+                : ClickBrandAction(txn, 'nft dialog')
+            "
+          >
+            <img
+              v-if="$q.screen.width > 1265"
+              :src="txn.image"
+              class="profile-nft-image q-mr-md"
+            />
+            <span class="profile-nft-brand"> {{ txn.brand }}</span>
+          </q-btn>
+        </div>
       </div>
       <div class="row items-center transaction-column-price">
         <q-icon :name="`app:${GetCurrencyLabel(txn.currency)}-icon`" size="20px" />

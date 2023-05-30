@@ -18,7 +18,8 @@
       </div>
       <div class="justify-center items-center">
         <q-btn
-          class="calculate-worth-button calculate-worth-text"
+          class="app-primary-btn-bg app-btn-text-lg"
+          style="width: 286px"
           unelevated
           no-caps
           @click="$router.push('/calculator')"

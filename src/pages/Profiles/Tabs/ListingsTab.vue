@@ -93,9 +93,13 @@
       <ListingDialogUnlist
         v-model="openDeleteDialog"
         :order-hash="singleListing.orderHash"
+        :network="singleListing.network"
+        :smart-contract-address="singleListing.contractAddress"
+        :token-id="singleListing.identifierOrCriteria"
         @listing-delete-close="openDeleteDialog = false"
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
+        @unlist-failed="(unlisted) => InvalidUnlist(unlisted)"
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -120,6 +124,10 @@
       <ListingStatusDialog
         v-model="openListingStatusDialog"
         :transaction-status="true"
+      />
+      <UnlistingStatusDialog
+        v-model="openListingUnavailableDialog"
+        :invalid-status="listingUnavailableStatus"
       />
     </div>
   </q-page>
@@ -154,6 +162,7 @@ import { ReturnMissingNFTDetails } from '../orders.requests';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -171,7 +180,8 @@ export default defineComponent({
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
     CreateListing: ListingNew,
-    ListingStatusDialog: ListingExists
+    ListingStatusDialog: ListingExists,
+    UnlistingStatusDialog: ListingUnavailable
   },
   emits: ['listingsAmount'],
 
@@ -210,7 +220,10 @@ export default defineComponent({
       errorMessage: '',
       openErrorDialog: false,
       openOrderCompletedDialog: false,
-      openListingStatusDialog: false
+      openListingStatusDialog: false,
+
+      listingUnavailableStatus: '',
+      openListingUnavailableDialog: false
     };
   },
   computed: {
@@ -411,7 +424,26 @@ export default defineComponent({
       );
       this.listableNFTs.splice(listedIndex, 1);
       this.listableFiltersStore.RemoveListableNFTInDuplicate(listed);
-    }
+    },
+    async InvalidUnlist(failed: {
+      status: 'ongoingUnlist' | 'unlisted' | 'purchased',
+      contractAddress: string,
+      identifierOrCriteria: string,
+      network: string
+    }) {
+      const listedIndex = this.store.listings.findIndex(
+        nft =>
+          nft.contractAddress == failed.contractAddress &&
+          nft.identifierOrCriteria == failed.identifierOrCriteria &&
+          nft.network == failed.network
+      );
+      this.RemoveRow(this.store.listings[listedIndex].orderHash);
+      this.listingUnavailableStatus = failed.status;
+      this.openListingUnavailableDialog = true;
+      setTimeout(() => {
+        this.openListingUnavailableDialog = false;
+      }, 2000);
+    },
   },
 });
 </script>

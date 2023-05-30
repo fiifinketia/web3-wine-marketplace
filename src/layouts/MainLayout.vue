@@ -44,13 +44,16 @@
 
   <!---------------------------- MY WALLET ---------------------------->
 
-  <div v-if="userStore.user" class="my-wallet-background row justify-end hidden">
+  <div
+    v-if="userStore.user"
+    class="my-wallet-background row justify-end hidden"
+  >
     <WalletDialog
       v-model="showMyWallet"
       :user="userStore.user"
-      :usdc-balance="usdcBalance ? formatNumber(usdcBalance) : ''"
-      :usdt-balance="usdtBalance ? formatNumber(usdtBalance) : ''"
-      :wiva-balance="wivaBalance ? formatNumber(wivaBalance) : ''"
+      :usdc-balance="usdcBalance ? FormatNumber(usdcBalance) : ''"
+      :usdt-balance="usdtBalance ? FormatNumber(usdtBalance) : ''"
+      :wiva-balance="wivaBalance ? FormatNumber(wivaBalance) : ''"
       @close-my-wallet="showMyWallet = false"
       @fund-wallet="fundWallet()"
       @logout="logout"
@@ -69,42 +72,16 @@
     />
   </div>
 
-  <!---------------------------- /SETTINGS ---------------------------->
   <!-- Terms and Conditions -->
   <q-dialog
     v-model="showTermsAndConditions"
     full-height
     class="terms-and-conditions-background"
   >
-    <q-card class="terms-and-conditions-container column justify-between">
-      <q-card-section class="full-width">
-        <div
-          class="terms-and-conditions-title text-h6 bold text-black text-start"
-        >
-          Terms and Conditions
-        </div>
-      </q-card-section>
-
+    <q-card class="terms-and-conditions-container column justify-between no-wrap">
       <q-card-section>
-        <div class="terms-and-conditions-content overflow-scroll">
-          <p>
-            By using this website, you agree to the following terms and
-            conditions. If you do not agree to these terms and conditions, you
-            may not use this website.
-          </p>
-          <p>
-            We reserve the right to change these terms and conditions at any
-            time. You should check these terms and conditions regularly to
-            ensure you are aware of any changes made by us. Your continued use
-            of this website will be deemed acceptance of the updated or amended
-            terms and conditions.
-          </p>
-          <p>
-            We may suspend or terminate your access to this website if you
-            breach these terms and conditions or if we are unable to verify or
-            authenticate any information you provide to us.
-          </p>
-        </div>
+        <div class="overflow-scroll" v-html="TermsAndConditions">
+	</div>
       </q-card-section>
       <q-card-actions class="row terms-and-conditions-btns justify-end">
         <q-btn
@@ -141,12 +118,21 @@
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
-    @openHelpCenter="showHelpCenter = true"
+    @openHelpCenterFaqs="openHelpCenter('topics')"
+    @openHelpCenterSupport="openHelpCenter('support')"
   />
 
   <HelpCenterDialog
-	v-model="showHelpCenter"
-	@close-help-center="showHelpCenter = false"
+    v-model="showHelpCenter"
+    :open-tab="openHelpCenterTab"
+    @close-help-center="showHelpCenter = false"
+  />
+
+  <ProfileErrors
+    v-model="openUserErrorDialog"
+    :error-type="'user-invalid'"
+    :error-title="'Unable to connect wallet'"
+    :error-message="'Failed to connect wallet. Please try again, or contact support.'"
   />
 
   <!-------------------------------------- /POPUP MODALS -------------------------------------->
@@ -232,11 +218,11 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge rounded color="red" align="top" label="Soon" />
+            Stats <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge rounded color="red" align="top" label="Soon" />
+            <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
           </div>
         </div>
         <div class="row">
@@ -249,6 +235,7 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
+              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -383,7 +370,8 @@
                   <q-item
                     v-close-popup
                     clickable
-                    href="https://dwc.wiv-tech.com/#/"
+                    href="https://dwc.wiv-tech.org/#/"
+		                target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -392,7 +380,12 @@
                     </q-item-section>
                   </q-item>
 
-                  <q-item v-if="!!walletAddress" v-close-popup clickable @click="showSettings = true">
+                  <q-item
+                    v-if="!!walletAddress"
+                    v-close-popup
+                    clickable
+                    @click="showSettings = true"
+                  >
                     <q-item-section>
                       <q-item-label>settings</q-item-label>
                     </q-item-section>
@@ -408,13 +401,12 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable>
+                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-
-                          <q-item v-close-popup clickable @click="showHelpCenter = true">
+                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -458,13 +450,15 @@
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
         @open-connect-wallet="showConnectWallet = true"
+        @open-help-center-support="openHelpCenter('support')"
+        @open-help-center-faqs="openHelpCenter('topics')"
       />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import transakSDK from '@transak/transak-sdk';
 
@@ -482,6 +476,9 @@ import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
+import { FormatNumber } from 'src/shared/currency.helper';
+import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import TermsAndConditionsJson from '../TermsAndConditions.json';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -490,6 +487,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
+    ProfileErrors: ProfileErrors
   },
   data() {
     const userStore = useUserStore();
@@ -497,14 +495,15 @@ export default defineComponent({
     const orderStore = ordersStore();
     const tourStore = useTourStore();
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
-
     return {
       showBurgerMenu: false,
+      TermsAndConditions: TermsAndConditionsJson.data,
       showMyWallet: false,
       showSettings: false,
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
       orderStore,
@@ -514,6 +513,10 @@ export default defineComponent({
       usdcBalance: 0,
       wivaBalance: 0,
       tourStore,
+
+      FormatNumber,
+
+      openUserErrorDialog: false
     };
   },
   watch: {
@@ -546,12 +549,20 @@ export default defineComponent({
       this.ReInitAmplitude(this.walletAddress);
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
-        const { _usdtBalance: usdtBalance, _usdcBalance: usdcBalance, _wivaBalance: wivaBalance } = walletBalances;
+        const {
+          _usdtBalance: usdtBalance,
+          _usdcBalance: usdcBalance,
+          _wivaBalance: wivaBalance,
+        } = walletBalances;
         Object.assign(this, { usdtBalance, usdcBalance, wivaBalance });
       }
     }
   },
   methods: {
+    openHelpCenter(tab: string){
+	this.openHelpCenterTab = tab;
+	this.showHelpCenter = true;
+    },
     async fundWallet() {
       let transak = new transakSDK({
         apiKey: process.env.TRANSAK_API_KEY, // Your API Key
@@ -559,7 +570,7 @@ export default defineComponent({
         widgetHeight: '625px',
         widgetWidth: '500px',
         // Examples of some of the customization parameters you can pass
-        defaultCryptoCurrency: 'MATIC', // Example 'ETH'
+        defaultCryptoCurrency: 'USDT', // Example 'ETH'
         walletAddress: this.userStore.walletAddress, // Your customer's wallet address
         themeColor: '#3586ff', // App theme color
         fiatCurrency: 'GBP', // If you want to limit fiat selection eg 'GBP'
@@ -598,14 +609,18 @@ export default defineComponent({
       //TODO: Catch errors
       try {
         await this.userStore.connectWallet();
+        if (!this.$route.query?.next) {
+          this.$router.go(0);
+        } else {
+          const next = this.$route.query?.next as string;
+          await this.$router.replace({ path: next, replace: true });
+        }
       } catch (error) {
+        this.openUserErrorDialog = true;
+        setTimeout(() => {
+          this.openUserErrorDialog = false;
+        }, 2000)
         throw error;
-      }
-      if (!this.$route.query?.next) {
-        this.$router.go(0);
-      } else {
-        const next = this.$route.query?.next as string;
-        await this.$router.replace({ path: next, replace: true });
       }
     },
 
@@ -682,10 +697,6 @@ export default defineComponent({
           // console.log('I am triggered on both OK and Cancel')
         });
     },
-    formatNumber(num: number) {
-      let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      return formatted.replace(/\.0$/, '');
-    }
   },
 });
 </script>

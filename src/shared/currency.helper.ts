@@ -9,4 +9,18 @@ function GetCurrencyLabel(currency: string) {
   }
 }
 
-export { GetCurrencyLabel };
+function FormatNumber(num: number) {
+  const format = (_num: string) => {
+    return parseFloat(_num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  const strAmount = num.toString();
+  const half = strAmount.split('.');
+  if (!half[1]) return format(`${strAmount}.00`);
+  const decimalLen = half[1].length;
+  return decimalLen == 1
+    ? format(`${half[0]}.${half[1]}0`)
+    : format(`${half[0]}.${half[1].substring(0, 2)}`)
+}
+
+export { GetCurrencyLabel, FormatNumber };

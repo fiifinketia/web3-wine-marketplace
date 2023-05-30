@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useQuasar } from 'quasar';
+import 'shepherd.js/dist/css/shepherd.css'
 
 const customIcons: { [key: string]: string } = {
   'app:price': 'img:/icons/price_icon.svg',
@@ -18,12 +19,16 @@ const customIcons: { [key: string]: string } = {
   'app:USDC-icon': 'img:/currencies/USDC-icon.svg',
   'app:USDT-icon': 'img:/currencies/USDT-icon.svg',
   'app:WIVA-icon': 'img:/currencies/WIVA-icon.svg',
+  'app:spinning-icon': 'img:/icons/spinning-icon.gif',
 	'app:caution': 'img:/icons/caution-icon.svg',
 	'app:edit': 'img:/icons/edit-icon.svg',
 	'app:verify-user': 'img:/icons/verify-account-icon.svg',
 	'app:verify-complete': 'img:/icons/verification-completed.svg',
 	'app:verify-pending': 'img:/icons/verification-pending.svg',
 	'app:verify-failed': 'img:/icons/verification-failed.svg',
+	'app:request-call': 'img:/icons/request-call.svg',
+	'app:chat-us': 'img:/icons/chat-us.svg',
+	'app:email-us': 'img:/icons/email-us.svg',
 	'app-rocket': 'img:/icons/rocket.svg',
 	'app-shopping-bag': 'img:/icons/shopping-bag.svg',
 	'app-lock': 'img:/icons/lock.svg',

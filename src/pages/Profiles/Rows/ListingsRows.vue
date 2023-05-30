@@ -13,7 +13,7 @@
         no-caps
         align="left"
         padding="0px"
-        class="listings-column-nft btn--no-hover"
+        class="listings-column-nft profile-nft-btn-wrapper btn--no-hover"
         @click="
           $q.screen.width > 600
             ? ClickBrandAction(listing, 'new tab')
@@ -36,7 +36,7 @@
           :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
+        <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
         <q-tooltip
           v-if="$q.screen.width <= 1265 && $q.screen.width > 600"
           anchor="top start"
@@ -70,7 +70,7 @@
           :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number-highlight">
+        <span class="profile-nft-number-highlight" :class="!!listing.highestOffer ? 'q-ml-xs' : ''">
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
       </div>
@@ -94,7 +94,7 @@
             :name="`app:${GetCurrencyLabel(listing.currency)}-icon`"
             size="20px"
           />
-          <span class="profile-nft-number"> {{ parseFloat((listing.listingPrice)).toFixed(1) }} </span>
+          <span class="profile-nft-number"> {{ listing.listingPrice }} </span>
         </div>
         <span
           class="profile-nft-number-highlight"

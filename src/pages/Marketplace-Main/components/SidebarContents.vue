@@ -80,6 +80,9 @@
       <q-expansion-item
         label="Type"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
@@ -95,6 +98,9 @@
       <q-expansion-item
         label="Brand"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="brandQuery"
@@ -125,6 +131,9 @@
       <q-expansion-item
         label="Producer"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="producerQuery"
@@ -155,6 +164,9 @@
       <q-expansion-item
         label="Country"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="countryQuery"
@@ -185,6 +197,9 @@
       <q-expansion-item
         label="Region"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="regionQuery"
@@ -215,6 +230,9 @@
       <q-expansion-item
         label="Appellation"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="appellationQuery"
@@ -296,6 +314,9 @@
       <q-expansion-item
         label="Case"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
@@ -312,6 +333,9 @@
       <q-expansion-item
         label="Format"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
@@ -328,6 +352,9 @@
       <q-expansion-item
         label="Investment Grade"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
@@ -344,6 +371,9 @@
       <q-expansion-item
         label="LWIN"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-input
           v-model="lwinQuery"
@@ -374,6 +404,9 @@
       <q-expansion-item
         label="Heritage"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
+        :disable="!filtersFetched"
+        :icon="!filtersFetched ? 'app:spinning-icon' : ''"
+        :switch-toggle-side="!filtersFetched ? true : false"
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
@@ -394,6 +427,7 @@ import { useWineFilters } from 'src/stores/wine-filters';
 import { useGeneralSearch } from 'src/stores/general-search-filter';
 import { defineComponent, ref } from 'vue';
 import 'src/css/Marketplace/sidebar.css';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   setup() {
@@ -440,7 +474,10 @@ export default defineComponent({
   computed: {
     disableCurrencies() {
       return !!(this.wineFiltersStore.listedOnly == 'Unlisted')
-    }
+    },
+    ...mapState(useWineFilters, {
+      filtersFetched: store => store.filtersFetched
+    })
   },
   watch: {
     brandQuery: {

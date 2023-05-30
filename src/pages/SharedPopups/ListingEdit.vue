@@ -6,7 +6,7 @@
     transition-hide="scale"
     persistent
   >
-    <q-card class="q-pa-none column">
+    <q-card class="q-pa-none column no-wrap">
       <q-card-section class="row items-center q-pb-lg">
         <div class="dialog-title">
           {{ !isEdit ? 'List' : 'Edit Listing' }}
@@ -97,14 +97,32 @@
           </div>
           <div class="column">
             <span class="dialog-label q-pb-xs"> Expiration date </span>
-            <q-input
-              v-model="listingExpirationDate"
-              outlined
-              dense
-              type="date"
-              debounce="500"
-              class="dialog-date-box"
-            />
+            <div class="row justify-start" :class="$q.screen.width > 600 ? 'q-gutter-x-xs' : 'q-gutter-x-sm'">
+              <q-input
+                v-model="listingExpirationDate"
+                outlined
+                dense
+                type="date"
+                debounce="500"
+                class="input-text"
+                style="height: 40px;"
+                :style="$q.screen.width > 600 ? 'width: 130px;' : 'width: 140px'"
+                :min="GetCurrentDate()"
+              />
+              <q-input
+                v-model="listingExpirationTime"
+                outlined
+                dense
+                type="time"
+                debounce="500"
+                class="input-text"
+                style="width: 120px; height: 40px;"
+                :disable="!listingExpirationDate"
+                :rules=[CheckExpirationTime]
+                :no-error-icon="true"
+                :error-message="'Invalid'"
+              />
+            </div>
           </div>
           <div class="column">
             <span class="dialog-price-label"> Fee </span>
@@ -116,15 +134,16 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+                {{ !!listingPrice ? listingPrice : '0.00' }}
               </span>
             </div>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
-              After the expiration, the NFT will be removed from the listing and
-              will be available for listing in DWC.
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
             </span>
           </div>
         </div>
@@ -141,6 +160,7 @@
       </q-checkbox>
 
       <div
+        class="q-pb-sm"
         :class="
           $q.screen.width > 450
             ? 'row justify-center q-gutter-x-sm'
@@ -167,7 +187,7 @@
             !acceptTerms ||
             listingExpirationDate === '' ||
             parseFloat(listingPrice) <= 0 ||
-            loadingListing
+            loadingListing || !isValidTime
           "
           @click="CreateNewOrder()"
         >
@@ -176,6 +196,7 @@
       </div>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 
   <q-dialog v-else transition-show="scale" transition-hide="scale">
@@ -272,7 +293,7 @@
                 type="date"
                 debounce="500"
                 class="input-text"
-                style="width: 125px;"
+                style="width: 150px;"
                 :min="GetCurrentDate()"
               />
               <q-input
@@ -282,7 +303,7 @@
                 type="time"
                 debounce="500"
                 class="input-text"
-                style="width: 100px;"
+                style="width: 120px;"
                 :disable="!listingExpirationDate"
                 :rules=[CheckExpirationTime]
                 :no-error-icon="true"
@@ -300,15 +321,16 @@
             <div class="row items-center">
               <q-icon :name="currency.icon" size="24px" />
               <span class="dialog-total q-ml-xs">
-                {{ !!listingPrice ? parseInt(listingPrice) : '0.00' }}
+                {{ !!listingPrice ? listingPrice : '0.00' }}
               </span>
             </div>
           </div>
           <div class="row items-center" style="flex-wrap: nowrap">
             <img src="../../assets/info-icon.svg" />
             <span class="dialog-info q-ml-sm">
-              After the expiration, the NFT will be removed from the listing and
-              will be available for listing in DWC.
+              You may be asked by Metamask to approve your token.
+              Please click on “Default” and then approve.
+              This is to give permission to make the trade in the future.
             </span>
           </div>
           <q-checkbox v-model="acceptTerms">
@@ -346,6 +368,7 @@
       </q-card-section>
     </q-card>
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <ExpirationInvalid v-model="openInvalidTimeDialog"/>
   </q-dialog>
 </template>
 
@@ -355,7 +378,8 @@ import { defineComponent, ref } from 'vue';
 import {
   CreateERC721Listing,
   CancelSingleOrder,
-  InspectListingStatus
+  InspectListingStatus,
+  isInputDateTimeAboveCurrentTime
 } from 'src/pages/Metadata/services/Orders';
 import { useUserStore } from 'src/stores/user-store';
 import { useListingStore } from 'src/stores/listing-store';
@@ -364,9 +388,11 @@ import { ListableToken } from 'src/shared/models/entities/NFT.model';
 import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
+import ExpirationInvalid from './ExpirationInvalid.vue';
 export default defineComponent({
   components: {
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    ExpirationInvalid: ExpirationInvalid
   },
   props: {
     orderHash: {
@@ -415,6 +441,7 @@ export default defineComponent({
       listingExpirationDate: '',
       listingExpirationTime: '',
       isValidTime: false,
+      openInvalidTimeDialog: false,
       currency: ref(
         {
           label: 'WIVA',
@@ -485,6 +512,15 @@ export default defineComponent({
       }
     },
     async CreateNewOrder() {
+      const isValidExpTime = isInputDateTimeAboveCurrentTime(this.listingExpirationDate, this.listingExpirationTime);
+      if (!isValidExpTime) {
+        this.isValidTime = false;
+        this.openInvalidTimeDialog = true;
+        setTimeout(() => {
+          this.openInvalidTimeDialog = false;
+        }, 2000);
+        return;
+      }
       const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       this.SetPreventingExitListener(true);
       try {

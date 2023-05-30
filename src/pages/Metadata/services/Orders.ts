@@ -1,5 +1,5 @@
 import { Seaport } from '@opensea/seaport-js';
-import { ethers, utils } from 'ethers';
+import { Contract, ethers, utils } from 'ethers';
 import {
   ChainID,
   ItemType,
@@ -8,7 +8,10 @@ import {
   SeaportInstance,
   FulfillOrderRequest,
 } from '../models/Orders';
-
+import {
+  NewPolygonCollectionContract_MumbaiInstance,
+  NewPolygonCollectionContract_PolygonInstance,
+} from 'src/shared/web3.helper';
 import axios from 'axios';
 import {
   OrderComponents,
@@ -25,6 +28,13 @@ declare let window: Window;
 const RandomIdGenerator = () => {
   return Date.now();
 };
+
+export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
+  const inputDateTime = `${expDate}T${expTime}:00`;
+  const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
+  const currentTimestamp = Math.round(new Date().getTime() / 1000);
+  return inputTimestamp > currentTimestamp;
+}
 
 function SetExpDate(expDate: string, expTime: string) : string{
 	const inputDateTime = `${expDate}T${expTime}:00`
@@ -154,6 +164,50 @@ export async function InspectListingStatus(
   await axios.post(url, { ...nft, apiKey: APIKeyString }).then(res => {
     status = res.data;
   });
+  return status;
+}
+
+export async function ValidateUnlist(
+  nft: TokenIdentifier,
+	ownerAddress: string
+): Promise<
+  false | 'ongoingUnlist' | 'unlisted' | 'purchased'
+> {
+  const url = <string>process.env.RETRIEVE_LISTING_CANCELLATION_STATUS;
+	let status: false | 'ongoingUnlist' | 'nonexistent' = 'nonexistent';
+  await axios.post(url, { ...nft, apiKey: APIKeyString }).then(res => {
+    status = res.data;
+  });
+	if (status == 'nonexistent') {
+		let isUnlisted = false;
+		try {
+			let actualOwner = '';
+			let contract: Contract;
+			switch (nft.contractAddress) {
+				case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
+					contract = NewPolygonCollectionContract_MumbaiInstance;
+					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
+					// if still the same owner, then listing is nonexistent because it was unlisted
+					// else it was bought
+					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
+					break;
+				case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
+					contract = NewPolygonCollectionContract_PolygonInstance;
+					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
+					// if still the same owner, then listing is nonexistent because it was unlisted
+					// else it was bought
+					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
+					break;
+			}
+			if (!!isUnlisted) {
+				return 'unlisted'
+			}
+			return 'purchased'
+		} catch (err) {
+			throw err;
+		}
+	}
+	// is either false or ongoingUnlist
   return status;
 }
 

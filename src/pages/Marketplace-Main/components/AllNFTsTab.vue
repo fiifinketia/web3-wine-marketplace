@@ -113,6 +113,7 @@
       :style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
       style="padding-top: 0px !important"
       @total-tokens="updateTokenCount"
+      @shepherd-remove-step="(id) =>  shepherd.removeStep(id)"
     />
     <q-page-sticky
       id="marketplace-sidebar-xs"
@@ -147,6 +148,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useShepherd, Tour } from 'vue-shepherd'
 import NFTSelections from './NFT-Selections.vue';
 import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
@@ -170,7 +172,9 @@ export default defineComponent({
     const wineFiltersStore = useWineFilters();
     const generalSearchStore = useGeneralSearch();
     const tourStore = useTourStore();
-
+    const shepherd = useShepherd({
+	useModalOverlay: true,
+    }) as Tour;
     return {
       showToogleButton: this.isMobile() ? ref(true) : ref(false),
       wineFiltersStore,
@@ -181,6 +185,7 @@ export default defineComponent({
       generalSearch: '',
       qChipRows: 0,
       tourStore,
+      shepherd
     };
   },
   watch: {
@@ -192,7 +197,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-    SetSessionID('Marketplace Tab Clicked');
+    SetSessionID();
     this.CheckFilterMode();
     await this.marketplaceTour();
   },
@@ -256,13 +261,13 @@ export default defineComponent({
       return `max-height: calc(100% - ${(-200 - extraHeight) * -1}px)`;
     },
     async marketplaceTour() {
-			if(this.tourStore.marketplaceCompleted) return;
+      if (this.tourStore.marketplaceCompleted) return;
       let screenSize = '';
       if (this.$q.screen.width > 1023) screenSize = 'lg';
       else if (this.$q.screen.width > 599) screenSize = 'sm';
       else screenSize = 'xs';
       await this.waitForLoad();
-      this.$shepherd.addSteps([
+      this.shepherd.addSteps([
         {
           id: 'marketplace-sidebar',
           attachTo: {
@@ -274,16 +279,16 @@ export default defineComponent({
             {
               text: 'Continue',
               action: () => {
-                this.$shepherd.next();
-		this.$shepherd.removeStep('marketplace-sidebar');
+                this.shepherd.next();
+		            this.shepherd.removeStep('marketplace-sidebar');
               },
             },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMarketplaceCompleted();
-		this.$shepherd.removeStep('marketplace-sidebar')
-                this.$shepherd.cancel();
+		            this.shepherd.removeStep('marketplace-sidebar');
+                this.shepherd.cancel();
               },
             },
           ],
@@ -299,21 +304,21 @@ export default defineComponent({
             {
               text: 'Finish',
               action: () => {
-                this.$shepherd.complete();
-		this.$shepherd.removeStep('marketplace-nfts')
+                this.shepherd.complete();
+		            this.shepherd.removeStep('marketplace-nfts');
                 this.tourStore.setMarketplaceCompleted();
               },
-            }
+            },
           ],
         },
       ]);
-      this.$shepherd.start();
+      this.shepherd.start();
 			this.tourStore.setMarketplaceCompleted();
     },
     waitForLoad() {
       return new Promise<void>(resolve => {
         const checkValue = () => {
-          if (!this.tourStore.suggestedWinesDialog && !!this.totalNFTs) {
+          if (!!this.totalNFTs) {
             resolve();
           } else {
             setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again

@@ -10,7 +10,8 @@
     "lint:fix": "./node_modules/.bin/eslint --ext .js,.ts,.vue src/** --fix",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "cross-env QENV=development quasar dev"
+    "dev": "cross-env QENV=development quasar dev",
+    "prod": "cross-env QENV=production quasar dev"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^1.9.3",
@@ -19,6 +20,7 @@
     "@popperjs/core": "^2.11.7",
     "@quasar/extras": "^1.0.0",
     "@transak/transak-sdk": "^1.2.3",
+    "ajv": "^8.12.0",
     "apexcharts": "^3.36.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",

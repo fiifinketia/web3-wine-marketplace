@@ -24,10 +24,7 @@
           class="releases-tab-icons"
         />
       </q-banner>
-      <NFTSelections
-        :nft-selections="token.nfts"
-        :is-loading="isLoading"
-      />
+      <NFTSelections :nft-selections="token.nfts" :is-loading="isLoading" />
     </div>
   </div>
 </template>
@@ -64,22 +61,22 @@ export default defineComponent({
       userStore,
     };
   },
-	watch: {
-		'recommendations': {
-			handler: function() {
-				if(!this.recommendations) {
-					this.isEmpty = true;
-				}
-				else {
-					this.isEmpty = false
-				}
-			},
-			deep: true
-		}
-	},
+  watch: {
+    recommendations: {
+      handler: function () {
+        if (!this.recommendations) {
+          this.isEmpty = true;
+        } else {
+          this.isEmpty = false;
+        }
+      },
+      deep: true,
+    },
+  },
   async mounted() {
     this.isLoading = true;
-    SetSessionID('Recommended NFTs Tab Clicked');
+    SetSessionID();
+    // TrackClickEvent('Recommended NFTs Tab Clicked');
     await this.fetchRecommendations();
     this.isLoading = false;
   },
@@ -109,7 +106,11 @@ export default defineComponent({
           const nfts = await this.FetchWineByGroup(res);
           if (nfts.length > 0) {
             this.recommendations.push({
-              title: res.metadataValue.toUpperCase() + '-' + res.metadataField.toUpperCase() + '-Wines',
+              title:
+                res.metadataValue.toUpperCase() +
+                '-' +
+                res.metadataField.toUpperCase() +
+                '-Wines',
               metadataField: res.metadataField,
               metadataValue: res.metadataValue,
               nfts: nfts.slice(0, this.totalView),

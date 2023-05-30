@@ -6,25 +6,40 @@
 .sidebar-options {
   font-family: 'ProximaNova-Regular';
   font-size: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
-[aria-expanded="true"] {
-  border-color: #8CBAFF !important;
+[aria-expanded='true'] {
+  border-color: #8cbaff !important;
 }
 
-[aria-checked="true"] {
+[aria-checked='true'] {
   font-family: 'ProximaNova-Bold';
+  order: -1;
+}
+
+.sidebar-options > div:has([aria-checked='true']) {
+  order: -1;
+}
+
+[aria-disabled="true"] {
+  opacity: 1 !important;
+}
+
+[aria-disabled="true"] .q-item__label {
+  opacity: 0.6 !important;
 }
 
 .sidebar-active-border {
-  border: 1px solid #8CBAFF;
+  border: 1px solid #8cbaff;
   border-radius: 6px !important;
 }
 
 .sidebar-label-light {
   font-family: 'Obviously-Bold';
   font-size: 16px;
-  color: #9D9D9D;
+  color: #9d9d9d;
 }
 
 .sidebar-label-bold {
@@ -70,11 +85,11 @@
 }
 
 .sidebar-go:hover {
-  background: #8CBAFF !important;
+  background: #8cbaff !important;
 }
 
 .sidebar-go.disabled {
-  background: #C0C0C0 !important;
+  background: #c0c0c0 !important;
 }
 
 .sidebar-apply {
@@ -84,11 +99,11 @@
 }
 
 .sidebar-apply:hover {
-  background: #8CBAFF !important;
+  background: #8cbaff !important;
 }
 
 .sidebar-apply.disabled {
-  background: #C0C0C0 !important;
+  background: #c0c0c0 !important;
 }
 
 .sidebar-header-container {
@@ -111,17 +126,17 @@
 }
 
 .main-filter-box {
-	box-sizing: border-box;
-	overflow-y: scroll;
-	background: #ffffff;
-	border-radius: 18px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  background: #ffffff;
+  border-radius: 18px;
 }
 
 .main-filter-box::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 #filter_price .q-slider__thumb,
 #filter_maturity .q-slider__thumb {
-	box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
-	border-radius: 100px;
+  box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
+  border-radius: 100px;
 }

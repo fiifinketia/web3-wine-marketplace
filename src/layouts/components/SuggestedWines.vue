@@ -64,7 +64,7 @@
                   <div class="row items-center q-gutter-x-xs q-pt-xs">
                     <q-icon :name="`app:${GetCurrencyLabel(token.orderDetails.currency)}-icon`" class="currency-logo" />
                     <span class="suggest-price-text-b-active">
-                      {{ ToInt(token.orderDetails.listingPrice) }}
+                      {{ token.orderDetails.listingPrice }}
                     </span>
                   </div>
                 </div>
@@ -173,6 +173,7 @@
           no-caps
           class="suggested-skip-button suggested-skip-text"
           unelevated
+	        @click="tourStore.suggestedWinesDialog = false"
         >
           Skip
         </q-btn>
@@ -355,9 +356,6 @@ export default defineComponent({
       setTimeout(() => {
         this.openErrorDialog = false;
       }, 2500);
-    },
-    ToInt(price: string) {
-      return parseInt(price);
     },
     openNFT(token: ListingWithPricingAndImage) {
       const routeData = this.$router.resolve({
