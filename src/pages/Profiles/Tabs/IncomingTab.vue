@@ -144,7 +144,7 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
-import { HandleUserValidity, StartVeriff } from 'src/shared/veriff-service';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();
@@ -208,6 +208,9 @@ export default defineComponent({
       brandSearched: store => store.getIncomingBrandFilterStatus,
       tabKey: store => store.getIncomingTabKey
     }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    })
   },
 
   watch: {
@@ -256,7 +259,7 @@ export default defineComponent({
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`;
     },
-    OpenConfirmDialog(
+    async OpenConfirmDialog(
       orderHash: string,
       brand: string,
       image: string,
@@ -264,13 +267,26 @@ export default defineComponent({
       offer: string,
       currency: string
     ) {
-      this.orderHash = orderHash;
-      this.brand = brand;
-      this.image = image;
-      this.token = token;
-      this.offer = offer;
-      this.currency = currency;
-      this.openConfirmDialog = true;
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        this.orderHash = orderHash;
+        this.brand = brand;
+        this.image = image;
+        this.token = token;
+        this.offer = offer;
+        this.currency = currency;
+        this.openConfirmDialog = true;
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.OpenConfirmDialog(orderHash, brand, image, token, offer, currency);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        } catch (err) {
+          this.HandleError(err);
+        }
+      }
     },
     async AcceptOffer(
       orderHash: string,
@@ -281,19 +297,13 @@ export default defineComponent({
 			if(!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        const isVerified = await HandleUserValidity();
-        if (isVerified) {
-          await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
-          this.RemoveRow(token);
-          this.CheckForEmptyRequest();
-          this.openAcceptedOrderDialog = true;
-          setTimeout(() => {
-            this.openAcceptedOrderDialog = false;
-          }, 3000);
-        } else {
-          this.SetPreventingExitListener(false);
-          this.openKYCUpdate = true;
-        }
+        await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
+        this.RemoveRow(token);
+        this.CheckForEmptyRequest();
+        this.openAcceptedOrderDialog = true;
+        setTimeout(() => {
+          this.openAcceptedOrderDialog = false;
+        }, 3000);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.HandleError(err);

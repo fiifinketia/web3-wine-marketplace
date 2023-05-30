@@ -317,14 +317,8 @@ export default defineComponent({
       if (!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        const isVerified = await HandleUserValidity();
-        if (isVerified) {
-          await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
-          this.$emit('listing-purchased');
-        } else {
-          this.SetPreventingExitListener(false);
-          this.$emit('open-kyc-dialog')
-        }
+        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
+        this.$emit('listing-purchased');
       } catch {
         this.$emit('listing-purchase-error', {
           errorType: 'accept',

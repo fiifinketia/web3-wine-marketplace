@@ -405,7 +405,6 @@ import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
 import ExpirationInvalid from './ExpirationInvalid.vue';
-import { HandleUserValidity } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -542,19 +541,7 @@ export default defineComponent({
         return;
       }
       this.SetPreventingExitListener(true);
-      try {
-        const isVerified = await HandleUserValidity();
-        if (isVerified) {
-          this.CreateNewListing();
-        } else {
-          this.SetPreventingExitListener(false);
-          this.$emit('open-kyc-dialog');
-        }
-      } catch (err) {
-        this.BuildErrorDialog(err);
-      } finally {
-        this.SetPreventingExitListener(false);
-      }
+      this.CreateNewListing();
     },
     async CreateNewListing() {
       const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;

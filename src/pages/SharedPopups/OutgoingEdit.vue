@@ -455,7 +455,6 @@ import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import ExpirationInvalid from './ExpirationInvalid.vue';
-import { HandleUserValidity } from 'src/shared/veriff-service';
 import { UserModel } from 'src/components/models';
 
 export default defineComponent({
@@ -605,19 +604,7 @@ export default defineComponent({
       };
 
       this.SetPreventingExitListener(true);
-      try {
-        const isVerified = await HandleUserValidity();
-        if (isVerified) {
-          this.CreateOffer();
-        } else {
-          this.SetPreventingExitListener(false);
-          this.$emit('open-kyc-dialog');
-        }
-      } catch (err) {
-        this.BuildErrorDialog(err);
-      } finally {
-        this.SetPreventingExitListener(false);
-      }
+      this.CreateOffer();
     },
 
     async CreateOffer() {

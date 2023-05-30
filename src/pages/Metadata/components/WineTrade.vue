@@ -165,7 +165,7 @@
           class="list-cancel-fulfill-btn items-center justify-center metadata-btn-text"
           no-caps
           flat
-          @click="openCreateListingDialog = true"
+          @click="TransactionPreValidator('LIST')"
         >
           List For Sale
         </q-btn>
@@ -176,7 +176,7 @@
           no-caps
           outline
           flat
-          @click="openDeleteListingDialog = true"
+          @click="TransactionPreValidator('UNLIST')"
         >
           Unlist
         </q-btn>
@@ -198,7 +198,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="openPurchaseListingDialog = true; shepherdRemoveStep()"
+          @click="TransactionPreValidator('PURCHASE');"
         >
           Buy now
         </q-btn>
@@ -206,7 +206,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="OpenOfferDialog(); shepherdRemoveStep()"
+          @click="TransactionPreValidator('OFFER');"
         >
           Make an offer
         </q-btn>
@@ -333,7 +333,8 @@ import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
 import OrderExpTimer from 'src/pages/SharedPopups/OrderExpTimer.vue';
 import { AddFavorites, RemoveFavorites } from 'src/pages/Favourites/services/FavoritesFunctions';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import { StartVeriff } from 'src/shared/veriff-service';
+import { StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import { HandleUserValidity } from 'src/shared/veriff-service';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -393,6 +394,7 @@ export default defineComponent({
   computed: {
     ...mapState(useUserStore, {
       walletAddress: store => store.getWalletAddress(),
+      userStatus: store => store.user?.verificationStatus
     }),
   },
   watch: {
@@ -405,14 +407,6 @@ export default defineComponent({
     },
   },
   methods: {
-    OpenOfferDialog() {
-      if (!this.walletAddress) {
-        this.$emit('connect-wallet');
-        return;
-      } else {
-        this.openCreateOfferDialog = true;
-      }
-    },
     shepherdRemoveStep() {
     	this.$emit('shepherd-remove-step', 'metadata-checkout-buttons')
     },
@@ -497,6 +491,45 @@ export default defineComponent({
     BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
       this.openKYCUpdate = false;
       StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    },
+    async TransactionPreValidator(dialog: string) {
+      if (!this.walletAddress) {
+        this.$emit('connect-wallet');
+        return;
+      }
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        switch (dialog) {
+          case 'LIST':
+            this.openCreateListingDialog = true;
+            break;
+          case 'UNLIST':
+            this.openDeleteListingDialog = true;
+            break;
+          case 'OFFER':
+            this.openCreateOfferDialog = true;
+            this.shepherdRemoveStep();
+            break;
+          case 'PURCHASE':
+            this.openPurchaseListingDialog = true;
+            this.shepherdRemoveStep();
+            break;
+        }
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.TransactionPreValidator(dialog);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        } catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
     }
   },
 });

@@ -53,16 +53,16 @@
           />
           <OutgoingRows
             :outgoing-offers="outgoingOffers"
-            @delete-offer="offer => OpenDeleteDialog(offer)"
-            @edit-offer="offer => OpenEditDialog(offer)"
+            @delete-offer="offer => TransactionPreValidator('UNOFFER', offer)"
+            @edit-offer="offer => TransactionPreValidator('OFFER', offer)"
           />
         </div>
         <div v-else class="full-width" style="width: 100vw">
           <OutgoingColumns />
           <OutgoingRows
             :outgoing-offers="outgoingOffers"
-            @delete-offer="offer => OpenDeleteDialog(offer)"
-            @edit-offer="offer => OpenEditDialog(offer)"
+            @delete-offer="offer => TransactionPreValidator('UNOFFER', offer)"
+            @edit-offer="offer => TransactionPreValidator('OFFER', offer)"
           />
         </div>
       </div>
@@ -139,7 +139,7 @@ import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import { StartVeriff } from 'src/shared/veriff-service';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -192,6 +192,9 @@ export default defineComponent({
       brandSearched: store => store.getOutgoingBrandFilterStatus,
       tabKey: store => store.getOutgoingTabKey
     }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    })
   },
   watch: {
     outgoingSortKey: {
@@ -297,6 +300,34 @@ export default defineComponent({
     BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
       this.openKYCUpdate = false;
       StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    },
+    async TransactionPreValidator(dialog: string, offer: OutgoingOffersResponse) {
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        switch (dialog) {
+          case 'OFFER':
+            this.OpenEditDialog(offer);
+            break;
+          case 'UNOFFER':
+            this.OpenDeleteDialog(offer);
+            break;
+        }
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.TransactionPreValidator(dialog, offer);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        }
+        catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
     }
   },
 });

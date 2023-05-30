@@ -207,6 +207,9 @@ import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 import ListingNewError from './ListingNewError.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import { mapState } from 'pinia';
+import { useUserStore } from 'src/stores/user-store';
+import { HandleUserValidity, VerificationStatus } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -256,14 +259,36 @@ export default defineComponent({
       openListingStatusDialog: false
     };
   },
+  computed: {
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    }),
+  },
   methods: {
-    OpenListingDialog(token: ListableToken) {
-      this.image = token.image;
-      this.brand = token.brand;
-      this.smartContractAddress = token.contractAddress;
-      this.network = token.network;
-      this.tokenID = token.identifierOrCriteria;
-      this.openListingDialog = true;
+    async OpenListingDialog(token: ListableToken) {
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        this.image = token.image;
+        this.brand = token.brand;
+        this.smartContractAddress = token.contractAddress;
+        this.network = token.network;
+        this.tokenID = token.identifierOrCriteria;
+        this.openListingDialog = true;
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.OpenListingDialog(token);
+          } else {
+            this.OpenKYCDialog();
+          }
+        } catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
     },
     HandleError(err: {
       errorType: string;

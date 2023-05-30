@@ -57,16 +57,16 @@
           />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => OpenDeleteDialog(listing)"
-            @edit-listing="listing => OpenEditDialog(listing)"
+            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
         <div v-else class="full-width" style="width: 100vw">
           <ListingsColumns />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => OpenDeleteDialog(listing)"
-            @edit-listing="listing => OpenEditDialog(listing)"
+            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@
         :error-title="errorTitle"
         :error-message="errorMessage"
       />
-      <CreateListing
+      <ListableContainer
         v-model="openNewListingDialog"
         :listable-n-f-ts="listableNFTs"
         :is-loading="loadingNewListingDialog"
@@ -179,7 +179,7 @@ import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import { StartVeriff } from 'src/shared/veriff-service';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -196,7 +196,7 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
-    CreateListing: ListingNew,
+    ListableContainer: ListingNew,
     ListingStatusDialog: ListingExists,
     UnlistingStatusDialog: ListingUnavailable,
     KYCUpdate: KYCUpdate
@@ -255,6 +255,10 @@ export default defineComponent({
     }),
     ...mapState(useListableFilters, {
       listableNFTs: store => store.getParentListableTokens
+    }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus,
+      walletAddress: store => store.walletAddress
     })
   },
   watch: {
@@ -468,6 +472,34 @@ export default defineComponent({
     BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
       this.openKYCUpdate = false;
       StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    },
+    async TransactionPreValidator(dialog: string, listing: ListingsResponse) {
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        switch (dialog) {
+          case 'LIST':
+            this.OpenEditDialog(listing);
+            break;
+          case 'UNLIST':
+            this.OpenDeleteDialog(listing);
+            break;
+        }
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.TransactionPreValidator(dialog, listing);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        }
+        catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
     }
   },
 });

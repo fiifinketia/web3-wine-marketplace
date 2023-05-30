@@ -31,7 +31,7 @@ import { CancelSingleOrder, ValidateUnlist } from 'src/pages/Metadata/services/O
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { useUserStore } from 'src/stores/user-store';
 import TxnOngoing from './TxnOngoing.vue';
-import { HandleUserValidity } from 'src/shared/veriff-service';
+
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing
@@ -85,32 +85,27 @@ export default defineComponent({
     async CancelOrder() {
       try {
         this.SetPreventingExitListener(true);
-        const isVerified = await HandleUserValidity();
-        if (isVerified) {
-          const nonExistentListing = await ValidateUnlist(
-            {
-              contractAddress: this.smartContractAddress,
-              network: this.network,
-              identifierOrCriteria: this.tokenId,
-            },
-            this.userStore.walletAddress
-          )
-          if (nonExistentListing != false) {
-            this.$emit('unlist-failed', {
-              status: nonExistentListing,
-              contractAddress: this.smartContractAddress,
-              identifierOrCriteria: this.tokenId,
-              network: this.network
-            });
-            this.SetPreventingExitListener(false);
-            return
-          }
-          await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
-          this.$emit('remove-listing', this.orderHash);
-        } else {
+        const nonExistentListing = await ValidateUnlist(
+          {
+            contractAddress: this.smartContractAddress,
+            network: this.network,
+            identifierOrCriteria: this.tokenId,
+          },
+          this.userStore.walletAddress
+        )
+        if (nonExistentListing != false) {
+          this.$emit('unlist-failed', {
+            status: nonExistentListing,
+            contractAddress: this.smartContractAddress,
+            identifierOrCriteria: this.tokenId,
+            network: this.network
+          });
           this.SetPreventingExitListener(false);
-          this.$emit('open-kyc-dialog')
+          return
         }
+        await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
+        this.$emit('remove-listing', this.orderHash);
+
       } catch (err) {
         this.BuildErrorDialog(err);
       } finally {
