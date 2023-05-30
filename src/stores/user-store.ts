@@ -75,17 +75,21 @@ export const useUserStore = defineStore(
     };
 
     const checkConnection = async () => {
-      const connectedAccounts: string[] = await window.ethereum.request({
-        method: 'eth_accounts',
-      });
-      if (connectedAccounts.length == 0) {
+      try {
+        const connectedAccounts: string[] = await window.ethereum.request({
+          method: 'eth_accounts',
+        });
+        if (connectedAccounts.length == 0) {
+          walletAddress.value = '';
+        }
+      } catch {
         walletAddress.value = '';
       }
     };
     // eslint-disable-next-line
     const uploadAvatar = async (formData: any) => {
       try {
-	formData.append('apiKey', APIKeyString)
+	      formData.append('apiKey', APIKeyString)
         await axios.post(
           process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
           formData,
