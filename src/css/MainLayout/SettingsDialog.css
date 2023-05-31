@@ -31,8 +31,16 @@
 
 .settings-label-value,
 .settings-avatar-option,
-.settings-notifications-header {
+.settings-notifications-header,
+.settings-main-header {
 	font-family: 'ProximaNova-Bold';
+}
+
+.settings-main-header {
+	font-size: 18px;
+	line-height: 26px;
+	letter-spacing: 0.02em;
+	color: #212131;
 }
 
 .settings-label {

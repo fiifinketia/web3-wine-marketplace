@@ -6,11 +6,13 @@
     <q-btn
       class="shadow-1 overflow-hidden identity-label text-warning"
       style="border-radius: 10px"
-      icon="warning_amber"
       no-caps
       align="left"
-      label="Please click to begin your identity verification."
     >
+      <div class="row items-center no-wrap q-gutter-x-sm">
+        <q-icon name="warning_amber" />
+        <span style="text-align: left"> Please click to begin your identity verification. </span>
+      </div>
       <q-menu
         anchor="bottom middle"
         self="top middle"
@@ -19,7 +21,7 @@
         max-width="80%"
         class="identity-popup"
       >
-        <div class="column no-wrap q-pa-md items-center">
+        <div class="column no-wrap items-center">
           <q-icon name="app:verify-user" size="7rem" />
           <span class="identify-popup-title q-mt-md q-mb-xs">
             Please begin your identity verification.
@@ -30,7 +32,7 @@
 
           <q-btn
             v-close-popup
-            class="wiv-primary-button q-mt-md"
+            class="wiv-primary-button identify-popup-button q-mt-md"
             unelevated
             no-caps
             label="Go to Verification"
@@ -54,11 +56,13 @@
     <q-btn
       class="shadow-1 overflow-hidden identity-label text-warning"
       style="border-radius: 10px"
-      icon="warning_amber"
       no-caps
       align="left"
-      label="Please click to complete your identity verification."
     >
+      <div class="row items-center no-wrap q-gutter-x-sm">
+        <q-icon name="warning_amber" />
+        <span style="text-align: left"> Please click to complete your identity verification. </span>
+      </div>
       <q-menu
         anchor="bottom middle"
         self="top middle"
@@ -67,7 +71,7 @@
         max-width="80%"
         class="identity-popup"
       >
-        <div class="column no-wrap q-pa-md items-center">
+        <div class="column no-wrap items-center">
           <q-icon name="app:verify-pending" size="7rem" />
           <span class="identify-popup-title q-mt-md q-mb-xs">
             Please complete your identity verification.
@@ -78,7 +82,7 @@
 
           <q-btn
             v-close-popup
-            class="wiv-primary-button q-mt-md"
+            class="wiv-primary-button identify-popup-button q-mt-md"
             unelevated
             no-caps
             label="Continue Verification"
@@ -102,11 +106,13 @@
     <q-btn
       class="shadow-1 identity-label overflow-hidden text-negative"
       style="border-radius: 10px"
-      icon="warning_amber"
       no-caps
       align="left"
-      label="Verification failed"
     >
+      <div class="row items-center no-wrap q-gutter-x-sm">
+        <q-icon name="warning_amber" />
+        <span style="text-align: left"> Verification failed. </span>
+      </div>
       <q-menu
         anchor="bottom middle"
         self="top middle"
@@ -127,7 +133,7 @@
 
           <q-btn
             v-close-popup
-            class="wiv-primary-button q-mt-md"
+            class="wiv-primary-button identify-popup-button q-mt-md"
             unelevated
             no-caps
             label="Go to Verification"
@@ -150,11 +156,13 @@
     <q-btn
       class="shadow-1 identity-label overflow-hidden"
       style="border-radius: 10px"
-      icon="pending_actions"
       no-caps
       align="left"
-      label="Verifying your identity"
     >
+      <div class="row items-center no-wrap q-gutter-x-sm">
+        <q-icon name="pending_actions" />
+        <span style="text-align: left"> Verifying your identity </span>
+      </div>
       <q-menu
         anchor="bottom middle"
         self="top middle"
@@ -184,11 +192,13 @@
     <q-btn
       class="shadow-1 identity-label overflow-hidden text-primary"
       style="border-radius: 10px"
-      icon="task_alt"
       no-caps
       align="left"
-      label="Your identity is verified"
     >
+      <div class="row items-center no-wrap q-gutter-x-sm">
+        <q-icon name="task_alt" />
+        <span style="text-align: left"> Your identity is verified </span>
+      </div>
       <q-menu
         anchor="bottom middle"
         self="top middle"

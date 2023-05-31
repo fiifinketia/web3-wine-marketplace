@@ -12,7 +12,7 @@
         class="settings-header full-width row justify-between items-center no-wrap"
       >
         <div class="settings-header-container col">
-          <div>SETTINGS</div>
+          <span class="settings-main-header">SETTINGS</span>
         </div>
         <img
           class="x-icon col-auto"

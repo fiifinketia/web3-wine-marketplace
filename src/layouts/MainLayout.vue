@@ -63,8 +63,8 @@
   <!---------------------------- /MY WALLET ---------------------------->
   <!---------------------------- SETTINGS ---------------------------->
   <div
-    v-if="userStore.user && showSettings"
-    class="settings-background row justify-end hidden"
+    v-if="userStore.user"
+    class="row justify-end hidden"
   >
     <SettingsDialog
       v-model="showSettings"
