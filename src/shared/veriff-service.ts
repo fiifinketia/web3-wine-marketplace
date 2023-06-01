@@ -100,13 +100,17 @@ async function HandleUserValidity() {
       if (status == VerificationStatus.VERIFIED) {
         return true;
       } else {
-        if (status == VerificationStatus.STARTED) {
-          const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
-          if (isNewSessionNeeded) {
-            status = VerificationStatus.NOT_STARTED;
-            sessionID = '';
-            sessionToken = '';
-            sessionURL = '';
+        if (status == VerificationStatus.STARTED || status == VerificationStatus.NOT_STARTED) {
+          if (sessionToken) {
+            const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
+            if (isNewSessionNeeded) {
+              status = VerificationStatus.NOT_STARTED;
+              sessionID = '';
+              sessionToken = '';
+              sessionURL = '';
+            } else if (userStore.user.verificationStatus == VerificationStatus.NOT_STARTED) {
+              userStore.user.verificationStatus = VerificationStatus.STARTED;
+            }
           }
         }
         userStore.user.sessionID = sessionID;
