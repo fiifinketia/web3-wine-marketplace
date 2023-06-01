@@ -24,8 +24,8 @@ import { UserModel } from 'src/components/models';
 
 declare let window: Window;
 
-function GetOrderPrice(isOwner: boolean, parameters: OrderParameters) {
-	if (isOwner) {
+function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
+	if (isListing) {
 		return {
 			listingPrice: (parseFloat(parameters.consideration[0].startAmount) / 0.975).toString(),
 			listingCurrency: parameters.consideration[0].token
@@ -351,7 +351,7 @@ export async function FulfillBasicOrder(
 		});
 
 	const txn = await executeAllFulfillActions();
-	const orderPriceDetails = owner ? GetOrderPrice(true, order.parameters) : GetOrderPrice(false, order.parameters);
+	const orderPriceDetails = owner ? GetOrderPrice(false, order.parameters) : GetOrderPrice(true, order.parameters);
 
 	const updateOrder: FulfillOrderRequest = {
 		identifierOrCriteria: order.identifierOrCriteria,
@@ -368,11 +368,11 @@ export async function FulfillBasicOrder(
 		apiKey: <string> APIKeyString
 	};
 	owner ? () => {
-		updateOrder['listingCurrency'] = orderPriceDetails.listingCurrency;
-		updateOrder['listingPrice'] = orderPriceDetails.listingPrice;
-	} : () => {
 		updateOrder['offerCurrency'] = orderPriceDetails.offerCurrency;
 		updateOrder['offerPrice'] = orderPriceDetails.offerPrice;
+	} : () => {
+		updateOrder['listingCurrency'] = orderPriceDetails.listingCurrency;
+		updateOrder['listingPrice'] = orderPriceDetails.listingPrice;
 	}
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
