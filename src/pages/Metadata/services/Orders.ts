@@ -8,10 +8,7 @@ import {
   SeaportInstance,
   FulfillOrderRequest,
 } from '../models/Orders';
-import {
-  NewPolygonCollectionContract_MumbaiInstance,
-  NewPolygonCollectionContract_PolygonInstance,
-} from 'src/shared/web3.helper';
+import { ERC721_PolygonContract } from 'src/shared/web3.helper';
 import axios from 'axios';
 import {
   OrderComponents,
@@ -182,23 +179,11 @@ export async function ValidateUnlist(
 		let isUnlisted = false;
 		try {
 			let actualOwner = '';
-			let contract: Contract;
-			switch (nft.contractAddress) {
-				case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-					contract = NewPolygonCollectionContract_MumbaiInstance;
-					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
-					// if still the same owner, then listing is nonexistent because it was unlisted
-					// else it was bought
-					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
-					break;
-				case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
-					contract = NewPolygonCollectionContract_PolygonInstance;
-					actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
-					// if still the same owner, then listing is nonexistent because it was unlisted
-					// else it was bought
-					isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
-					break;
-			}
+			const contract: Contract = ERC721_PolygonContract;
+			actualOwner = await contract.ownerOf(nft.identifierOrCriteria);
+			// if still the same owner, then listing is nonexistent because it was unlisted
+			// else it was bought
+			isUnlisted = actualOwner.toLowerCase() === ownerAddress.toLowerCase();
 			if (!!isUnlisted) {
 				return 'unlisted'
 			}

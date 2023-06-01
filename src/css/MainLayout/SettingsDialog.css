@@ -1,74 +1,149 @@
-ProfileSettingettings-background {
-	    height: 100vh;
-	        width: 100%;
-		    -webkit-backdrop-filter: blur(5px);
-		                backdrop-filter: blur(5px);
-			}
+.settings-background .q-dialog__inner--minimized {
+	padding: 0;
+}
 
-			.settings-background .q-dialog__inner--minimized {
-				    padding: 0;
-			    }
+.settings-background .q-card__section {
+	padding: 0;
+}
 
-			    .settings-background .q-card__section {
-				        padding: 0;
-				}
+.settings-background .q-dialog__inner > div {
+	border-radius: 0 !important;
+}
 
-				.settings-background .q-dialog__inner > div {
-					    border-radius: 0 !important;
-				    }
+.settings-header {
+	font-family: 'ProximaNova-Regular';
+	font-size: 18px;
+	line-height: 26px;
+	letter-spacing: 0.02em;
+}
 
-				    .settings-header {
-					        font-family: 'ProximaNova-Regular';
-						    font-style: normal;
-						        font-weight: 700;
-							    font-size: 18px;
-							        line-height: 26px;
-								    letter-spacing: 0.02em;
-							    }
+.settings-tab-value {
+	font-family: 'Obviously-Bold';
+	font-size: 18px;
+}
 
-							    .settings-header-container {
-								        gap: 1rem;
-								}
+.settings-label,
+.settings-sublabel,
+.settings-set-username,
+.settings-notification-options {
+	font-family: 'ProximaNova-Regular';
+}
 
-								.settings-container {
-									    height: 100vh;
-									        width: -webkit-fit-content;
-										    width: -moz-fit-content;
-										        width: fit-content;
-											    padding: 1.5rem 2rem;
-											        background: rgb(255, 255, 255);
-												    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
-												        -webkit-backdrop-filter: blur(20px);
-													            backdrop-filter: blur(20px);
-														        color: #212131;
-														}
+.settings-label-value,
+.settings-avatar-option,
+.settings-notifications-header,
+.settings-main-header {
+	font-family: 'ProximaNova-Bold';
+}
 
-														.x-icon {
-															    cursor: pointer;
-															        left: -1rem;
-																    padding-left: 1rem;
-															    }
+.settings-main-header {
+	font-size: 18px;
+	line-height: 26px;
+	letter-spacing: 0.02em;
+	color: #212131;
+}
 
-															    @media screen and (min-width: 1012px) {
-																        .settings-container {
-																		        margin: 0 auto;
-																			        max-width: 785px;
-																				        min-width: 40vw;
-																					    }
-																				    }
+.settings-label {
+	font-size: 16px;
+	line-height: 21px;
+	color: #212131;
+}
 
-																				    @media screen and (max-width: 570px) {
-																					        .settings-container {
-																							        width: 100vw;
-																								    }
-																							    }
+.settings-label-value {
+	font-size: 18px;
+	line-height: 22px;
+	color: #212131;
+}
 
-																							    @media screen and (max-width: 470px) {
-																								        .x-icon {
-																										        margin-left: 1rem;
-																											    }
-																											        .settings-container {
-																													        padding: 1rem;
-																														    }
-																													    }
+.settings-sublabel {
+	font-size: 14px;
+	line-height: 18px;
+	color: #9D9D9D;
+}
+
+.settings-set-username {
+	font-size: 16px;
+	line-height: 19px;
+	color: #3586FF;
+}
+
+.settings-username-header {
+	font-family: 'Obviously-Bold';
+	font-size: 16px;
+	line-height: 25px;
+	color: #9D9D9D;
+}
+
+.settings-avatar-option {
+	height: 32px;
+}
+
+.settings-notifications-header {
+	font-size: 20px;
+	line-height: 24px;
+	align-items: center;
+	text-align: center;
+	color: #3586FF;
+}
+
+.settings-notification-options {
+	font-size: 16px;
+	line-height: 24px;
+	color: #212131;
+	width: 290px;
+}
+
+.settings-header-container {
+	gap: 1rem;
+}
+
+.settings-container {
+	height: 100vh;
+	width: 560px;
+	padding: 1.5rem 2rem;
+	background: rgb(255, 255, 255);
+	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(20px);
+	color: #212131;
+}
+
+.x-icon {
+	cursor: pointer;
+	left: -1rem;
+	padding-left: 1rem;
+}
+
+.settings-actions {
+	width: 350px;
+}
+
+@media screen and (min-width: 1012px) {
+	.settings-container {
+		margin: 0 auto;
+		max-width: 785px;
+		min-width: 40vw;
+	}
+}
+
+@media screen and (max-width: 570px) {
+	.settings-container {
+		width: 100vw;
+	}
+}
+
+@media screen and (max-width: 470px) {
+	.x-icon {
+		margin-left: 1rem;
+	}
+	.settings-container {
+		padding: 1rem;
+	}
+	.settings-actions {
+		width: 100%;
+	}
+	.settings-notification-options {
+		width: 100%;
+	}
+}
 

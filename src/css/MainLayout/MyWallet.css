@@ -22,7 +22,7 @@
 	padding: 16px 12px;
 	width: 100%;
 	max-width: 490px;
-	height: 56px;
+	height: fit-content;
 	background: rgba(255, 255, 255, 0.85);
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(20px);
@@ -115,6 +115,9 @@
 	font-family: 'ProximaNova-Bold';
 	font-size: 24px;
 	color: #212131;
+	overflow: hidden;
+	text-overflow: ellipsis; 
+	width: 90px;
 }
 
 .ballance-wrapper {
@@ -217,6 +220,9 @@
 	}
 	.my-wallet-container {
 		width: 100vw;
+	}
+	.identify-popup-button {
+		width: 100% !important;
 	}
 }
 @media screen and (max-width: 470px) {

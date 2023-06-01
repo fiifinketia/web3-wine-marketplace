@@ -9,7 +9,8 @@
         @nft-listed="nft.listingDetails.transactionStatus = false"
         @unlist-failed="(unlisted) => InvalidUnlist(unlisted.status)"
         @favorite-action="FavoriteAction"
-	@shepherd-remove-step="(id) => shepherd.removeStep(id)"
+				@shepherd-remove-step="(id) => shepherd.removeStep(id)"
+				@open-terms-and-conditions="showTermsAndConditions = true"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -19,6 +20,10 @@
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
       />
+			<wiv-toc-dialog
+				v-model="showTermsAndConditions"
+				close-button
+			/>
       <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
         <q-tab name="about" label="About" />
         <q-tab id="history" name="history" label="NFT history" />
@@ -64,10 +69,7 @@ import WineDetails from './components/WineDetails.vue';
 import '../../css/Metadata/StatisticsMenu.css';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { Contract } from '@ethersproject/contracts';
-import {
-  NewPolygonCollectionContract_MumbaiInstance,
-  NewPolygonCollectionContract_PolygonInstance,
-} from 'src/shared/web3.helper';
+import { ERC721_PolygonContract } from 'src/shared/web3.helper';
 import UnavailableNFT from './components/UnavailableNFT.vue';
 import LoadingMetadata from './components/LoadingMetadata.vue';
 import ListingExists from '../SharedPopups/ListingExists.vue';
@@ -95,7 +97,7 @@ export default defineComponent({
 		const tourStore = useTourStore();
     const listingsStore = useListingStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+			useModalOverlay: true,
     }) as Tour;
     return {
       nft: {} as NFTWithListingAndFavorites,
@@ -105,7 +107,7 @@ export default defineComponent({
         stableChart: [] as number[][],
       },
       userStore,
-	shepherd,
+		shepherd,
 			tourStore,
       tab: ref('about'),
       listingsStore,
@@ -113,6 +115,7 @@ export default defineComponent({
       loadingMetadata: true,
       loadingPrices: true,
       errorLoadingHistory: false,
+			showTermsAndConditions: false,
 
       openListingStatusDialog: false,
       listingTransactionStatus: false,
@@ -247,17 +250,8 @@ export default defineComponent({
     ): Promise<boolean> {
       let exists = true;
       try {
-        let contract: Contract;
-        switch (contractAddress) {
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_MumbaiInstance;
-            await contract.tokenURI(id);
-            break;
-          case process.env.ERC721_CONTRACT_ADDRESS_POLYGON:
-            contract = NewPolygonCollectionContract_PolygonInstance;
-            await contract.tokenURI(id);
-            break;
-        }
+        let contract: Contract = ERC721_PolygonContract;
+        await contract.tokenURI(id);
         exists = true;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
@@ -285,19 +279,9 @@ export default defineComponent({
       let isOwned = false;
       try {
         let actualOwner = '';
-        let contract: Contract;
-        switch (contractAddress) {
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_MumbaiInstance;
-            actualOwner = await contract.ownerOf(tokenID);
-            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-            break;
-          case process.env.ERC721_CONTRACT_ADDRESS_MUMBAI:
-            contract = NewPolygonCollectionContract_PolygonInstance;
-            actualOwner = await contract.ownerOf(tokenID);
-            isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
-            break;
-        }
+        let contract: Contract = ERC721_PolygonContract;
+        actualOwner = await contract.ownerOf(tokenID);
+        isOwned = actualOwner.toLowerCase() === walletAddress.toLowerCase();
       } catch (err) {
         throw err;
       } finally {

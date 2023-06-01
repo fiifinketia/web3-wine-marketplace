@@ -57,16 +57,16 @@
           />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => OpenDeleteDialog(listing)"
-            @edit-listing="listing => OpenEditDialog(listing)"
+            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
         <div v-else class="full-width" style="width: 100vw">
           <ListingsColumns />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => OpenDeleteDialog(listing)"
-            @edit-listing="listing => OpenEditDialog(listing)"
+            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
       </div>
@@ -89,6 +89,8 @@
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
         @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
+				@open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="openEditDialog = false; openKYCUpdate = true;"
       />
       <ListingDialogUnlist
         v-model="openDeleteDialog"
@@ -100,6 +102,7 @@
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
         @unlist-failed="(unlisted) => InvalidUnlist(unlisted)"
+        @open-kyc-dialog="openDeleteDialog = false; openKYCUpdate = true;"
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -107,7 +110,7 @@
         :error-title="errorTitle"
         :error-message="errorMessage"
       />
-      <CreateListing
+      <ListableContainer
         v-model="openNewListingDialog"
         :listable-n-f-ts="listableNFTs"
         :is-loading="loadingNewListingDialog"
@@ -116,6 +119,8 @@
         @listing-warning-processing="processingListing => UpdateListableNFTWithPrice(processingListing, true)"
         @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
         @refetch-nfts="SetListableNFTs()"
+				@open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="openNewListingDialog = false; openKYCUpdate = true;"
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
@@ -129,6 +134,16 @@
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
       />
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="(sessionDetails) =>
+          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        "
+      />
+			<wiv-toc-dialog
+				v-model="showTermsAndConditions"
+				close-button
+			/>
     </div>
   </q-page>
 </template>
@@ -163,6 +178,8 @@ import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -179,9 +196,10 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     ListingsColumns: ListingsColumns,
     ListingsRows: ListingsRows,
-    CreateListing: ListingNew,
+    ListableContainer: ListingNew,
     ListingStatusDialog: ListingExists,
-    UnlistingStatusDialog: ListingUnavailable
+    UnlistingStatusDialog: ListingUnavailable,
+    KYCUpdate: KYCUpdate
   },
   emits: ['listingsAmount'],
 
@@ -223,7 +241,10 @@ export default defineComponent({
       openListingStatusDialog: false,
 
       listingUnavailableStatus: '',
-      openListingUnavailableDialog: false
+      openListingUnavailableDialog: false,
+			showTermsAndConditions: false,
+
+      openKYCUpdate: false
     };
   },
   computed: {
@@ -234,6 +255,10 @@ export default defineComponent({
     }),
     ...mapState(useListableFilters, {
       listableNFTs: store => store.getParentListableTokens
+    }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus,
+      walletAddress: store => store.walletAddress
     })
   },
   watch: {
@@ -444,6 +469,38 @@ export default defineComponent({
         this.openListingUnavailableDialog = false;
       }, 2000);
     },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    },
+    async TransactionPreValidator(dialog: string, listing: ListingsResponse) {
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        switch (dialog) {
+          case 'LIST':
+            this.OpenEditDialog(listing);
+            break;
+          case 'UNLIST':
+            this.OpenDeleteDialog(listing);
+            break;
+        }
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.TransactionPreValidator(dialog, listing);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        }
+        catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
+    }
   },
 });
 </script>

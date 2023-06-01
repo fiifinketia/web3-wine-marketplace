@@ -149,15 +149,21 @@
         </div>
       </q-card-section>
 
-      <q-checkbox
-        v-model="acceptTerms"
-        class="q-pb-md"
-        style="align-self: center"
-      >
-        <span class="dialog-terms-conditions">
-          I agree with the Terms and Conditions
-        </span>
-      </q-checkbox>
+      <span class="dialog-terms-conditions">
+				<q-checkbox
+					v-model="acceptTerms"
+					class="q-pb-md"
+					style="align-self: center"
+				/>
+				I agree with the
+				<q-btn
+					class="text-blue-underlined"
+					dense no-caps flat
+					:ripple="false" padding="none"
+					@click="$emit('open-terms-and-conditions');">
+					terms and conditions
+				</q-btn>
+			</span>
 
       <div
         class="q-pb-sm"
@@ -189,7 +195,7 @@
             parseFloat(listingPrice) <= 0 ||
             loadingListing || !isValidTime
           "
-          @click="CreateNewOrder()"
+          @click="CreateNewListingAttempt()"
         >
           {{ !isEdit ? 'List the NFT' : 'Update' }}
         </q-btn>
@@ -333,11 +339,21 @@
               This is to give permission to make the trade in the future.
             </span>
           </div>
-          <q-checkbox v-model="acceptTerms">
+          <div class="row items-center" style="flex-wrap: nowrap">
             <span class="dialog-terms-conditions">
-              I agree with the Terms and Conditions
-            </span>
-          </q-checkbox>
+							<q-checkbox
+								v-model="acceptTerms"
+							/>
+							I agree with the
+							<q-btn
+								class="text-blue-underlined"
+								dense no-caps flat
+								:ripple="false" padding="none"
+								@click="$emit('open-terms-and-conditions');">
+								terms and conditions
+							</q-btn>
+						</span>
+          </div>
           <div class="row justify-between q-mb-sm">
             <q-btn
               class="dialog-reset"
@@ -359,7 +375,7 @@
                 parseFloat(listingPrice) <= 0 ||
                 loadingListing || !isValidTime
               "
-              @click="CreateNewOrder()"
+              @click="CreateNewListingAttempt()"
             >
               {{ !isEdit ? 'List the NFT' : 'Update' }}
             </q-btn>
@@ -389,6 +405,7 @@ import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import { share } from 'pinia-shared-state';
 import TxnOngoing from './TxnOngoing.vue';
 import ExpirationInvalid from './ExpirationInvalid.vue';
+
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing,
@@ -429,7 +446,9 @@ export default defineComponent({
     'listable-nft-listed',
     'listing-edit-close',
     'listing-error-dialog',
-    'listing-exists'
+    'listing-exists',
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();
@@ -511,7 +530,7 @@ export default defineComponent({
         window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
       }
     },
-    async CreateNewOrder() {
+    async CreateNewListingAttempt() {
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.listingExpirationDate, this.listingExpirationTime);
       if (!isValidExpTime) {
         this.isValidTime = false;
@@ -521,8 +540,11 @@ export default defineComponent({
         }, 2000);
         return;
       }
-      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       this.SetPreventingExitListener(true);
+      this.CreateNewListing();
+    },
+    async CreateNewListing() {
+      const nftKey = `${this.tokenID},${this.smartContractAddress},${this.network}`;
       try {
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);

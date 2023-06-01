@@ -107,7 +107,7 @@
               no-caps
               :ripple="false"
               class="q-pa-none"
-              @click.stop="AcceptOffer(token.orderDetails.orderHash, token.brand, token.image, token)"
+              @click.stop="PurchaseListing(token.orderDetails.orderHash, token.brand, token.image, token)"
             >
               <img
                 src="../../../../assets/small-bag-btn.svg"
@@ -162,6 +162,12 @@
       :error-message="errorMessage"
     />
     <OngoingTransactionDialog v-model="ongoingTxn"/>
+    <KYCUpdate
+      v-model="openKYCUpdate"
+      @start-veriff="(sessionDetails) =>
+        BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+      "
+    />
   </div>
   <ErrorView
     v-else-if="!isLoading && !!erroredOut"
@@ -207,13 +213,17 @@ import { FulfillBasicOrder } from 'src/pages/Metadata/services/Orders';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   components: {
     ErrorView: NewlyError,
     AcceptedOrderDialog: OrderAccepted,
     ErrorDialog: ProfileErrors,
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    KYCUpdate: KYCUpdate
   },
   props: {
     nftSelections: {
@@ -246,6 +256,7 @@ export default defineComponent({
       openOrderAccepted: false,
       openErrorDialog: false,
       GetCurrencyLabel,
+      openKYCUpdate: false,
 
       errorType: '',
       errorTitle: '',
@@ -253,6 +264,11 @@ export default defineComponent({
 
       ongoingTxn: false
     };
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    })
   },
   beforeUpdate() {
     this.nfts = this.nftSelections;
@@ -384,28 +400,48 @@ export default defineComponent({
     RefetchSection() {
       this.$emit('refetch-release')
     },
-    async AcceptOffer(
+    async PurchaseListing(
       orderHash: string,
       brand: string,
       image: string
     ) {
-			if(!this.userStore.user) throw new Error('User not logged in');
-      this.SetPreventingExitListener(true);
-      try {
-        await FulfillBasicOrder(orderHash, brand, false, this.userStore.user, image);
-        this.openOrderAccepted = true;
-        setTimeout(() => {
-          this.openOrderAccepted = false;
-        }, 2000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        this.SetPreventingExitListener(false);
-        this.HandleError({
-          errorType: 'accept',
-          errorTitle: 'Sorry, the purchase failed',
-          errorMessage: 'It may be due to insufficient balance, disconnected wallet, etc.'
-        });
+      if (!this.userStore.user) throw new Error('User not logged in');
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        this.SetPreventingExitListener(true);
+        try {
+          await FulfillBasicOrder(
+            orderHash,
+            brand,
+            false,
+            this.userStore.user,
+            image
+          );
+          this.openOrderAccepted = true;
+          setTimeout(() => {
+            this.openOrderAccepted = false;
+          }, 2000);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          this.HandleError({
+            errorType: 'accept',
+            errorTitle: 'Sorry, the purchase failed',
+            errorMessage:
+              'It may be due to insufficient balance, disconnected wallet, etc.',
+          });
+          this.SetPreventingExitListener(false);
+        }
+      } else {
+        const isVerified = await HandleUserValidity();
+        if (isVerified) {
+          this.PurchaseListing(orderHash, brand, image);
+        } else {
+          this.openKYCUpdate = true;
+        }
       }
+    },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
     },
     HandleError(err: {
       errorType: string;
