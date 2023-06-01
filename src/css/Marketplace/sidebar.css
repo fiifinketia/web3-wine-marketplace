@@ -143,23 +143,31 @@
 .main-filter-box {
   box-sizing: border-box;
   overflow-y: scroll;
+  /* overflow: auto; */
+  position: relative;
   background: #ffffff;
   border-radius: 18px;
+  /* scroll-padding-top: 18px; */
+  /* scroll-padding-bottom: 18px; */
 }
 
 #marketplace-sidebar-lg > .q-scrollarea__bar--v {
   /* border-radius: 18px; */
-  top: 10px;
-  bottom: 20px;
+  /* top: calc(100%-10px); */
+  /* bottom: calc(100%-20px); */
+  /* top: 10px; */
+  /* bottom: 10px; */
+  /* scroll-padding-top: 20px; */
+  /* scroll-padding-bottom: 20px; */
+  /* position: relative; */
 }
 
 #marketplace-sidebar-lg > .q-scrollarea__thumb--v {
-  overflow: hidden;
+  margin-top: 12px;
 }
 
 .main-filter-box::-webkit-scrollbar {
   display: none;
-  max-height: 210px;
 }
 
 #filter_price .q-slider__thumb,
