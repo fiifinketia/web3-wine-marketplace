@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 // @ts-ignore
 import axios, { AxiosRequestConfig } from 'axios';
-import { createVeriffFrame } from '@veriff/incontext-sdk';
+import { createVeriffFrame, MESSAGES } from '@veriff/incontext-sdk';
 import { useUserStore } from 'src/stores/user-store';
 import { decode, JwtPayload } from 'jsonwebtoken';
 
@@ -64,6 +64,7 @@ async function StartVeriff (
   continueSession: boolean,
   lastSessionURL?: string
 ) {
+  const userStore = useUserStore();
   let VeriffURL = lastSessionURL || '';
   if (!continueSession) {
     const options : AxiosRequestConfig = {
@@ -88,7 +89,18 @@ async function StartVeriff (
     });
     VeriffURL = veriffResponse.verification.url;
   }
-  createVeriffFrame({ url: VeriffURL });
+  createVeriffFrame({
+    url: VeriffURL,
+    onEvent: function(msg) {
+      if (!!userStore.user) {
+        if (msg == MESSAGES.FINISHED) {
+          userStore.user.verificationStatus = VerificationStatus.PENDING;
+        } else if (msg == MESSAGES.CANCELED) {
+          userStore.user.verificationStatus = VerificationStatus.STARTED;
+        }
+      }
+    }
+  });
 };
 
 async function HandleUserValidity() {
@@ -100,13 +112,17 @@ async function HandleUserValidity() {
       if (status == VerificationStatus.VERIFIED) {
         return true;
       } else {
-        if (status == VerificationStatus.STARTED) {
-          const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
-          if (isNewSessionNeeded) {
-            status = VerificationStatus.NOT_STARTED;
-            sessionID = '';
-            sessionToken = '';
-            sessionURL = '';
+        if (status == VerificationStatus.STARTED || status == VerificationStatus.NOT_STARTED) {
+          if (sessionToken) {
+            const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
+            if (isNewSessionNeeded) {
+              status = VerificationStatus.NOT_STARTED;
+              sessionID = '';
+              sessionToken = '';
+              sessionURL = '';
+            } else if (userStore.user.verificationStatus == VerificationStatus.NOT_STARTED) {
+              userStore.user.verificationStatus = VerificationStatus.STARTED;
+            }
           }
         }
         userStore.user.sessionID = sessionID;

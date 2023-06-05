@@ -5,6 +5,7 @@
     transition-hide="slide-right"
     full-height
     class="my-wallet-background"
+    @show="UpdateVerificationStatus()"
   >
     <q-card class="my-wallet-container column justify-between">
       <q-card-section class="column no-wrap">
@@ -32,7 +33,7 @@
           />
         </q-card-section>
 
-        <VerificationStatus />
+        <VerificationStatusMenu />
       </q-card-section>
       <div class="id-mobile">{{ user.walletAddress.slice(0, 20) + '...' }}</div>
 
@@ -135,12 +136,15 @@
 <script lang="ts">
 import { UserModel } from 'src/components/models';
 import { defineComponent } from 'vue';
-import VerificationStatus from './VerificationStatus.vue';
+import VerificationStatusVue from './VerificationStatus.vue';
+import { HandleUserValidity, VerificationStatus } from 'src/shared/veriff-service';
+import { mapState } from 'pinia';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   name: 'WalletDialog',
   components: {
-    VerificationStatus: VerificationStatus
+    VerificationStatusMenu: VerificationStatusVue
   },
   props: {
     user: {
@@ -160,6 +164,25 @@ export default defineComponent({
       required: true
     },
   },
-  emits: ['close-my-wallet', 'fund-wallet', 'logout']
+  emits: ['close-my-wallet', 'fund-wallet', 'logout'],
+  data() {
+    return {
+      HandleUserValidity
+    }
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      verificationStatus: store => store.user?.verificationStatus
+    })
+  },
+  methods: {
+    UpdateVerificationStatus() {
+      if (!!this.verificationStatus) {
+        if (this.verificationStatus !== VerificationStatus.VERIFIED) {
+          HandleUserValidity();
+        }
+      }
+    }
+  }
 });
 </script>
