@@ -11,7 +11,7 @@ function GetCurrencyLabel(currency: string) {
 
 function FormatNumber(num: number) {
   const format = (_num: string) => {
-    return parseFloat(_num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return parseFloat(_num).toString();
   }
 
   const strAmount = num.toString();

@@ -117,6 +117,8 @@
         @listing-edit-close="openListingDialog = false"
         @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
         @listing-exists="alreadyListed => UpdateListableNFT(alreadyListed)"
+				@open-terms-and-conditions="$emit('open-terms-and-conditions')"
+        @open-kyc-dialog="OpenKYCDialog()"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -205,6 +207,9 @@ import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 import ListingNewError from './ListingNewError.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import { mapState } from 'pinia';
+import { useUserStore } from 'src/stores/user-store';
+import { HandleUserValidity, VerificationStatus } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -223,7 +228,14 @@ export default defineComponent({
     erroredOut: { type: Boolean, default: false },
     isLoading: { type: Boolean, default: false }
   },
-  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing'],
+  emits: [
+    'listable-nft-listed',
+    'refetch-nfts',
+    'listing-warning-processed',
+    'listing-warning-processing',
+    'open-terms-and-conditions',
+    'open-kyc-dialog'
+  ],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
@@ -247,14 +259,36 @@ export default defineComponent({
       openListingStatusDialog: false
     };
   },
+  computed: {
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    }),
+  },
   methods: {
-    OpenListingDialog(token: ListableToken) {
-      this.image = token.image;
-      this.brand = token.brand;
-      this.smartContractAddress = token.contractAddress;
-      this.network = token.network;
-      this.tokenID = token.identifierOrCriteria;
-      this.openListingDialog = true;
+    async OpenListingDialog(token: ListableToken) {
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        this.image = token.image;
+        this.brand = token.brand;
+        this.smartContractAddress = token.contractAddress;
+        this.network = token.network;
+        this.tokenID = token.identifierOrCriteria;
+        this.openListingDialog = true;
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.OpenListingDialog(token);
+          } else {
+            this.OpenKYCDialog();
+          }
+        } catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
+      }
     },
     HandleError(err: {
       errorType: string;
@@ -288,6 +322,10 @@ export default defineComponent({
     },
     ReFetchNFTs() {
       this.$emit('refetch-nfts')
+    },
+    OpenKYCDialog() {
+      this.openListingDialog = false;
+      this.$emit('open-kyc-dialog');
     }
   },
 });

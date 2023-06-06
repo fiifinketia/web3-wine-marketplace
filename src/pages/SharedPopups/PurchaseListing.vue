@@ -74,15 +74,21 @@
           </div>
         </div>
       </q-card-section>
-      <q-checkbox
-        v-model="acceptTerms"
-        class="q-pb-md"
-        style="align-self: center"
-      >
-        <span class="dialog-terms-conditions">
-          I agree with the Terms and Conditions
-        </span>
-      </q-checkbox>
+      <span class="dialog-terms-conditions">
+				<q-checkbox
+					v-model="acceptTerms"
+					class="q-pb-md"
+					style="align-self: center"
+				/>
+				I agree with the
+				<q-btn
+					class="text-blue-underlined"
+					dense no-caps flat
+					:ripple="false" padding="none"
+					@click="$emit('open-terms-and-conditions');">
+					terms and conditions
+				</q-btn>
+			</span>
       <div
         :class="
           $q.screen.width > 450
@@ -90,7 +96,7 @@
             : 'column items-center q-gutter-y-sm'
         "
       >
- 	<q-btn
+        <q-btn
           v-if="!userStore.user"
           class="dialog-confirm"
           :style="$q.screen.width > 600 ? '' : 'width: 100%'"
@@ -102,26 +108,8 @@
         >
           Please Connect Wallet
         </q-btn>
-	<router-link
-          v-else-if="
-            userStore.user.verificationStatus !== 'VERIFIED'
-          "
-          :to="
-            '/profile/' +
-            userStore.user.walletAddress +
-            '/kyc' +
-            '?redirect=' +
-            $route.path +
-            $route.query +
-            $route.hash
-          "
-          class="q-ma-sm q-pa-xs text-warning"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-        >
-          Complete KYC to offer
-        </router-link>
         <q-btn
-	  v-else
+	        v-else
           class="dialog-confirm-small"
           :style="$q.screen.width <= 450 ? 'width: 95% !important;' : ''"
           no-caps
@@ -202,46 +190,37 @@
               </span>
             </div>
           </div>
-          <q-checkbox v-model="acceptTerms">
+          <div class="row items-center" style="flex-wrap: nowrap">
             <span class="dialog-terms-conditions">
-              I agree with the Terms and Conditions
-            </span>
-          </q-checkbox>
+							<q-checkbox
+								v-model="acceptTerms"
+							/>
+							I agree with the
+							<q-btn
+								class="text-blue-underlined"
+								dense no-caps flat
+								:ripple="false" padding="none"
+								@click="$emit('open-terms-and-conditions');">
+								terms and conditions
+							</q-btn>
+						</span>
+          </div>
           <div class="row justify-end q-mb-sm">
-	<q-btn
-          v-if="!userStore.user"
-          class="dialog-confirm"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-          unelevated
-          no-caps
-          flat
-          disable
-          size="md"
-        >
-          Please Connect Wallet
-        </q-btn>
-	<router-link
-          v-else-if="
-            userStore.user.verificationStatus !== 'VERIFIED'
-          "
-          :to="
-            '/profile/' +
-            userStore.user.walletAddress +
-            '/kyc' +
-            '?redirect=' +
-            $route.path +
-            $route.query +
-            $route.hash
-          "
-          class="q-ma-sm q-pa-xs text-warning"
-          :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-        >
-          Complete KYC to offer
-        </router-link>
-
             <q-btn
-		v-else
-      class="dialog-confirm"
+              v-if="!userStore.user"
+              class="dialog-confirm"
+              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
+              unelevated
+              no-caps
+              flat
+              disable
+              size="md"
+            >
+              Please Connect Wallet
+            </q-btn>
+            <q-btn
+              v-else
+              class="dialog-confirm"
               style="width: 70%;"
               no-caps
               flat
@@ -305,7 +284,9 @@ export default defineComponent({
   emits: [
     'listing-purchase-close',
     'listing-purchased',
-    'listing-purchase-error'
+    'listing-purchase-error',
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();

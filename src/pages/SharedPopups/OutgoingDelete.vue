@@ -37,6 +37,7 @@ import { CancelSingleOrder } from 'src/pages/Metadata/services/Orders';
 import { ErrorMessageBuilder, ErrorModel } from 'src/shared/error.msg.helper';
 import { useUserStore } from 'src/stores/user-store';
 import TxnOngoing from './TxnOngoing.vue';
+
 export default defineComponent({
   components: {
     OngoingTransactionDialog: TxnOngoing
@@ -47,7 +48,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['remove-offer', 'outgoing-delete-close', 'outgoing-error-dialog'],
+  emits: ['remove-offer', 'outgoing-delete-close', 'outgoing-error-dialog', 'open-kyc-dialog'],
   data() {
     const userStore = useUserStore();
     return {

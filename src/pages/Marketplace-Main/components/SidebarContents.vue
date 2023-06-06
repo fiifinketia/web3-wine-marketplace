@@ -40,6 +40,7 @@
           class="sidebar-active-border rounded-borders q-my-sm"
         >
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.listedOnly"
             :options="wineFiltersStore.listedOnlyOptions"
             type="radio"

@@ -4,8 +4,8 @@ import { TokenIdentifier } from './models/entities/NFT.model';
 import { MoralisAddressNFTs } from './models/response/moralis.response';
 import { EventLog } from './models/response/polygonscan.response';
 import {
-  ERC1155PolygonCollectionContract_MumbaiInstance,
-  NewPolygonCollectionContract_MumbaiInstance,
+  ERC1155_PolygonContract,
+  ERC721_PolygonContract,
 } from './web3.helper';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,19 +18,21 @@ async function MoralisRequestAndResponse(
   contractAddresses: string[] | string,
   walletAddress: string
 ): Promise<MoralisAddressNFTs[]> {
+  const moralisURL= <string> process.env.MORALIS_API_URL;
+  const moralisAPIKey= <string> process.env.MORALIS_X_API_KEY;
+  const network = (<string> process.env.NETWORK).toLowerCase();
   const options: AxiosRequestConfig = {
     method: 'GET',
-    url: `https://deep-index.moralis.io/api/v2/${walletAddress}/nft`,
+    url: `${moralisURL}/${walletAddress}/nft`,
     params: {
-      chain: 'mumbai',
+      chain: network,
       format: 'decimal',
       token_addresses: contractAddresses,
       normalizeMetadata: 'false',
     },
     headers: {
       accept: 'application/json',
-      'X-API-Key':
-        'Pw7D7seAn4GwKQCQgX07kdI2kTvSgaBM7OAvvkx6DQF2GRjPjKEYp7O3uu15YVPG',
+      'X-API-Key': moralisAPIKey,
     },
   };
   const req = await axios.request(options).then(res => res.data.result);
@@ -101,7 +103,7 @@ async function DeconstructEventLog(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .forEach(f => transferredToAndFromMap.set(<string>f?.tokenID, f!));
 
-  const ERC1155Contract = ERC1155PolygonCollectionContract_MumbaiInstance;
+  const ERC1155Contract = ERC1155_PolygonContract;
 
   transferredToAndFromMap.forEach((v, k) => {
     tokensToCheckForValueTokensPromise.push(
@@ -123,7 +125,7 @@ async function FetchERC721TokensStandard(
   walletAddress: string
 ): Promise<Map<string, TokenIdentifier>> {
   const ERC721Map: Map<string, TokenIdentifier> = new Map();
-  const ERC721Contract = NewPolygonCollectionContract_MumbaiInstance;
+  const ERC721Contract = ERC721_PolygonContract;
   let { _hex: balance } = <{ _hex: string | number; _isBigNumber: boolean }>(
     await ERC721Contract.balanceOf(walletAddress)
   );
@@ -141,12 +143,13 @@ async function FetchERC721TokensStandard(
   }
 
   await Promise.all(awaitingTokenIDs).then((tokenIDs: number[]) => {
-    const contractAddress = <string>process.env.ERC721_CONTRACT_ADDRESS_MUMBAI;
+    const contractAddress = <string> process.env.ERC721_CONTRACT_ADDRESS;
+    const network = <string> process.env.NETWORK;
     tokenIDs.forEach(f => {
-      ERC721Map.set(`${f.toString()},${contractAddress},Mumbai`, {
+      ERC721Map.set(`${f.toString()},${contractAddress},${network}`, {
         identifierOrCriteria: f.toString(),
         contractAddress: contractAddress,
-        network: 'Mumbai',
+        network: network,
       });
     });
   });
@@ -160,30 +163,30 @@ async function FetchERC1155TokensOptions(
   walletAddress: string
 ): Promise<Map<string, TokenIdentifier>> {
   const ERC1155Map: Map<string, TokenIdentifier> = new Map();
+  const network = <string>process.env.NETWORK;
 
   try {
     const MoralisResponse = await MoralisRequestAndResponse(
-      <string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI,
+      <string>process.env.ERC1155_CONTRACT_ADDRESS,
       walletAddress
     );
-
     MoralisResponse.forEach(f => {
       const tokenID = parseInt(f.token_id, 16);
       if (!!isInt(tokenID)) {
         const token: TokenIdentifier = {
           identifierOrCriteria: f.token_id,
-          network: 'Mumbai',
+          network: network,
           contractAddress: f.token_address,
         };
-        ERC1155Map.set(`${f.token_id},${f.token_address},Mumbai`, token);
+        ERC1155Map.set(`${f.token_id},${f.token_address},${network}`, token);
       }
     });
   } catch {
     const topic0 = <string>process.env.LOGS_TOPIC_0_ERC1155;
     const fromBlock = <string>process.env.FROM_BLOCK;
     const toBlock = <string>process.env.TO_BLOCK;
-    const contractAddress = <string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI;
-    const mumbaiScanURL = <string>process.env.MUMBAI_SCAN_API_URL;
+    const contractAddress = <string>process.env.ERC1155_CONTRACT_ADDRESS;
+    const polygonScanURL = <string>process.env.POLYGON_SCAN_API_URL;
 
     const hexedAddress = utils.hexZeroPad(walletAddress.toLowerCase(), 32);
 
@@ -191,12 +194,12 @@ async function FetchERC1155TokensOptions(
     const [transferredToRes, transferredFromRes] = await Promise.all([
       axios
         .post(
-          `${mumbaiScanURL}?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${contractAddress}&topic0=${topic0}&topic0_3_opr=and&topic3=${hexedAddress}`
+          `${polygonScanURL}?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${contractAddress}&topic0=${topic0}&topic0_3_opr=and&topic3=${hexedAddress}`
         )
         .then(response => response.data.result),
       axios
         .post(
-          `${mumbaiScanURL}?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${contractAddress}&topic0=${topic0}&topic0_2_opr=and&topic2=${hexedAddress}`
+          `${polygonScanURL}?module=logs&action=getLogs&fromBlock=${fromBlock}&toBlock=${toBlock}&address=${contractAddress}&topic0=${topic0}&topic0_2_opr=and&topic2=${hexedAddress}`
         )
         .then(response => response.data.result),
     ]);
@@ -212,10 +215,10 @@ async function FetchERC1155TokensOptions(
     tokensToCheckForValueTokenExistence.forEach(f => {
       const token: TokenIdentifier = {
         identifierOrCriteria: f,
-        network: 'Mumbai',
+        network: network,
         contractAddress: contractAddress.toLowerCase(),
       };
-      ERC1155Map.set(`${f},${token.contractAddress},Mumbai`, token);
+      ERC1155Map.set(`${f},${token.contractAddress},${network}`, token);
     });
   }
   return ERC1155Map;
@@ -242,10 +245,11 @@ async function GetAllNFTsForAddressMoralis(walletAddress: string): Promise<{
   ERC1155Map: Map<string, TokenIdentifier>;
   ERC721Map: Map<string, TokenIdentifier>;
 }> {
+  const network = <string>process.env.NETWORK;
   const MoralisResponse = await MoralisRequestAndResponse(
     [
-      <string>process.env.ERC721_CONTRACT_ADDRESS_MUMBAI,
-      <string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI,
+      <string>process.env.ERC721_CONTRACT_ADDRESS,
+      <string>process.env.ERC1155_CONTRACT_ADDRESS,
     ],
     walletAddress
   );
@@ -256,18 +260,18 @@ async function GetAllNFTsForAddressMoralis(walletAddress: string): Promise<{
   MoralisResponse.forEach(f => {
     const token: TokenIdentifier = {
       identifierOrCriteria: f.token_id,
-      network: 'Mumbai',
+      network: network,
       contractAddress: utils.getAddress(f.token_address),
     };
     if (
       f.token_address ==
-      (<string>process.env.ERC1155_CONTRACT_ADDRESS_MUMBAI).toLowerCase()
+      (<string>process.env.ERC1155_CONTRACT_ADDRESS).toLowerCase()
     ) {
       const tokenID = parseInt(f.token_id, 16);
       if (!!isInt(tokenID)) {
-        ERC1155Map.set(`${f.token_id},${f.token_address},Mumbai`, token);
+        ERC1155Map.set(`${f.token_id},${f.token_address},${network}`, token);
       }
-    } else ERC721Map.set(`${f.token_id},${f.token_address},Mumbai`, token);
+    } else ERC721Map.set(`${f.token_id},${f.token_address},${network}`, token);
   });
 
   return {
