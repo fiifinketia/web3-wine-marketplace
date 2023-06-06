@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 export const useTourStore = defineStore(
   'tourState',
@@ -23,12 +23,12 @@ export const useTourStore = defineStore(
     //   suggestedWinesDialog.value = true;
     // }
 
-    if (
-      suggestedWinesDialog.value ||
-      Date.now() - suggestionTimeout.value <= 86400000
-    ) {
-      suggestedWinesDialog.value = false;
-    }
+    // if (
+    //   suggestedWinesDialog.value ||
+    //   Date.now() - suggestionTimeout.value <= 86400000
+    // ) {
+    //   suggestedWinesDialog.value = false;
+    // }
 
     const setHomeCompleted = () => {
       homeCompleted.value = true;
@@ -55,15 +55,19 @@ export const useTourStore = defineStore(
       suggestionTimeout.value = Date.now();
     };
 
-    // Show the dialog on page load
-    onMounted(() => {
-      setHomeCompleted();
-      setMarketplaceCompleted();
-      setMetadataCompleted();
-      setFavoritesCompleted();
-      setTermsAndConditionsAgreed();
-      setSuggestedWinesDialog();
-    });
+    const OnMounted = () => {
+      // Show the dialog on page load
+      // setHomeCompleted();
+      homeCompleted.value = false;
+      marketplaceCompleted.value = false;
+      metadataCompleted.value = false;
+      favoritesCompleted.value = false;
+      // setMarketplaceCompleted();
+      // setMetadataCompleted();
+      // setFavoritesCompleted();
+      // setTermsAndConditionsAgreed();
+      // setSuggestedWinesDialog();
+    };
 
     return {
       homeCompleted,
@@ -78,7 +82,7 @@ export const useTourStore = defineStore(
       setFavoritesCompleted,
       setTermsAndConditionsAgreed,
       setSuggestedWinesDialog,
-      onMounted,
+      OnMounted,
     };
   },
   { persist: true }
