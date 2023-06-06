@@ -2,14 +2,15 @@
   <q-page v-if="!loadingMetadata">
     <div v-if="tokenExists">
       <WineTrade
-        :nft="nft" @open-wallet="openWalletSideBar"
+        :nft="nft"
+        @open-wallet="openWalletSideBar"
         @refresh-metadata="ValidateAndFetchNFT()"
         @connect-wallet="ConnectWallet()"
         @listing-exists="listed => UpdateListingStatus(listed)"
         @nft-listed="nft.listingDetails.transactionStatus = false"
-        @unlist-failed="(unlisted) => InvalidUnlist(unlisted.status)"
+        @unlist-failed="unlisted => InvalidUnlist(unlisted.status)"
         @favorite-action="FavoriteAction"
-	@shepherd-remove-step="(id) => shepherd.removeStep(id)"
+        @shepherd-remove-step="id => shepherd.removeStep(id)"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -19,7 +20,7 @@
         v-model="openListingUnavailableDialog"
         :invalid-status="listingUnavailableStatus"
       />
-      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu" >
+      <q-tabs v-model="tab" no-caps align="justify" class="tabs-menu">
         <q-tab name="about" label="About" />
         <q-tab id="history" name="history" label="NFT history" />
       </q-tabs>
@@ -29,8 +30,11 @@
         transition-prev="jump-right"
         transition-next="jump-left"
       >
-			  <q-tab-panel name="about">
-          <WineDetails :nft="nft" :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"/>
+        <q-tab-panel name="about">
+          <WineDetails
+            :nft="nft"
+            :style="$q.screen.width > 600 ? 'padding-bottom: 3rem' : ''"
+          />
         </q-tab-panel>
         <q-tab-panel name="history">
           <WineHistory
@@ -39,7 +43,13 @@
             :is-loading="loadingPrices"
             :errored-out="errorLoadingHistory"
             style="padding-bottom: 3rem"
-            @refetch-history="GetNFTTXNHistory(nft.tokenID, nft.smartContractAddress, nft.network)"
+            @refetch-history="
+              GetNFTTXNHistory(
+                nft.tokenID,
+                nft.smartContractAddress,
+                nft.network
+              )
+            "
           />
         </q-tab-panel>
       </q-tab-panels>
@@ -55,7 +65,12 @@
 import { defineComponent, ref } from 'vue';
 import { useShepherd, Tour } from 'vue-shepherd';
 import { useUserStore } from 'src/stores/user-store';
-import { ListingDetails, NFTWithListingAndFavorites, OfferDetails, SeaportTransactionsModel } from './models/Metadata';
+import {
+  ListingDetails,
+  NFTWithListingAndFavorites,
+  OfferDetails,
+  SeaportTransactionsModel,
+} from './models/Metadata';
 import { GetMetadata, GetTokenTXNHistory } from './services/Metadata';
 import WineHistory from './components/WineHistory.vue';
 import WineTrade from './components/WineTrade.vue';
@@ -86,16 +101,16 @@ export default defineComponent({
     UnavailableNFT: UnavailableNFT,
     LoadingMetadata: LoadingMetadata,
     ListingStatusDialog: ListingExists,
-    UnlistingStatusDialog: ListingUnavailable
+    UnlistingStatusDialog: ListingUnavailable,
   },
   emits: ['openWalletSidebar', 'openConnectWallet'],
 
   data() {
     const userStore = useUserStore();
-		const tourStore = useTourStore();
+    const tourStore = useTourStore();
     const listingsStore = useListingStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+      useModalOverlay: true,
     }) as Tour;
     return {
       nft: {} as NFTWithListingAndFavorites,
@@ -105,8 +120,8 @@ export default defineComponent({
         stableChart: [] as number[][],
       },
       userStore,
-	shepherd,
-			tourStore,
+      shepherd,
+      tourStore,
       tab: ref('about'),
       listingsStore,
       tokenExists: false,
@@ -123,7 +138,7 @@ export default defineComponent({
 
   async mounted() {
     await this.ValidateAndFetchNFT();
-		if (!this.tourStore.metadataCompleted && !this.nft.isOwner) {
+    if (!this.tourStore.metadataCompleted && !this.nft.isOwner) {
       this.metadataTour();
     }
   },
@@ -132,7 +147,12 @@ export default defineComponent({
     async ValidateAndFetchNFT() {
       this.loadingMetadata = true;
       this.tokenExists = false;
-      const { id, contractAddress, network, highlight : target } = this.$route.query;
+      const {
+        id,
+        contractAddress,
+        network,
+        highlight: target,
+      } = this.$route.query;
       if (
         typeof id === 'string' &&
         typeof contractAddress === 'string' &&
@@ -149,14 +169,14 @@ export default defineComponent({
             this.$nextTick(() => {
               this.tab = 'history';
               this.$nextTick(() => {
-                const anchor = document.getElementById(<string> target);
+                const anchor = document.getElementById(<string>target);
                 if (anchor) {
                   anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   return;
                 }
-              })
+              });
               sessionStorage.setItem('scrolledToTarget', 'scrolled');
-            })
+            });
           }
           this.tokenExists = true;
         }
@@ -168,11 +188,11 @@ export default defineComponent({
       if (status == 'ongoingUnlist') {
         this.nft.listingDetails.listingCancellationStatus = true;
       } else {
-        Object.keys(this.nft.listingDetails).forEach((prop) => {
+        Object.keys(this.nft.listingDetails).forEach(prop => {
           this.nft.listingDetails[prop as keyof ListingDetails] = null;
         });
         if (status == 'purchased') {
-          Object.keys(this.nft.offerDetails).forEach((prop) => {
+          Object.keys(this.nft.offerDetails).forEach(prop => {
             this.nft.offerDetails[prop as keyof OfferDetails] = null;
           });
           this.nft.isOwner = false;
@@ -185,7 +205,11 @@ export default defineComponent({
       }, 2000);
     },
 
-    async SetNFTView(identifierOrCriteria: string, contractAddress: string, network: string) {
+    async SetNFTView(
+      identifierOrCriteria: string,
+      contractAddress: string,
+      network: string
+    ) {
       try {
         const nft = await GetMetadata({
           identifierOrCriteria,
@@ -207,7 +231,13 @@ export default defineComponent({
       }
     },
 
-    UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+    UpdateListingStatus(
+      listed: TokenIdentifier & {
+        listingPrice: string;
+        currency: string;
+        transactionStatus: boolean;
+      }
+    ) {
       this.nft.listingDetails.listingPrice = listed.listingPrice;
       this.nft.listingDetails.transactionStatus = listed.transactionStatus;
       this.listingTransactionStatus = listed.transactionStatus;
@@ -220,15 +250,19 @@ export default defineComponent({
       }, 2000);
     },
 
-    async GetNFTTXNHistory(identifierOrCriteria: string, contractAddress: string, network: string) {
+    async GetNFTTXNHistory(
+      identifierOrCriteria: string,
+      contractAddress: string,
+      network: string
+    ) {
       try {
         this.loadingPrices = true;
         this.errorLoadingHistory = false;
         const txnHistory = await GetTokenTXNHistory({
           identifierOrCriteria,
           contractAddress,
-          network
-        })
+          network,
+        });
         const { txns, stableChart, wivaChart } = txnHistory;
         this.txnHistory = txns;
         this.chartDataSets.stableChart = stableChart;
@@ -312,113 +346,117 @@ export default defineComponent({
     ConnectWallet() {
       this.$emit('openConnectWallet');
     },
-		metadataTour() {
-			this.shepherd.complete()
-			const steps: StepOptions[] = [
-				{
-					id: 'metadata-details',
-					attachTo: {
+    metadataTour() {
+      this.shepherd.complete();
+      const steps: StepOptions[] = [
+        {
+          id: 'metadata-details',
+          attachTo: {
             element: '#metadata-details',
             on: 'top',
           },
           text: 'You can read the brief details of the wine',
+          classes: 'tour-style',
           buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-		this.shepherd.next();
-		this.shepherd.removeStep('metadata-details');
-}
-						},
+            {
+              text: 'Continue',
+              action: () => {
+                this.shepherd.next();
+                this.shepherd.removeStep('metadata-details');
+              },
+            },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-		this.shepherd.removeStep('metadata-details');
+                this.shepherd.removeStep('metadata-details');
                 this.shepherd.cancel();
               },
             },
           ],
-				},
-				{
-					id: 'metadata-listing-price',
-					attachTo: {
+        },
+        {
+          id: 'metadata-listing-price',
+          attachTo: {
             element: '#metadata-listing-price',
             on: 'top',
           },
-          text: 'This is the listing price of the wine if you want to purchase immediatly',
+          text: 'This is the listing price of the wine if you want to purchase immediately',
+          classes: 'tour-style',
           buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-		this.shepherd.next();
-		this.shepherd.removeStep('metadata-listing-price');
-		}
-						},
+            {
+              text: 'Continue',
+              action: () => {
+                this.shepherd.next();
+                this.shepherd.removeStep('metadata-listing-price');
+              },
+            },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
-		this.shepherd.cancel();
-		this.shepherd.removeStep('metadata-listing-price');
+                this.shepherd.cancel();
+                this.shepherd.removeStep('metadata-listing-price');
               },
             },
           ],
-				},
-				{
-					id: 'metadata-bidding-price',
-					attachTo: {
+        },
+        {
+          id: 'metadata-bidding-price',
+          attachTo: {
             element: '#metadata-bidding-price',
             on: 'top',
           },
           text: 'This is the bidding price of the wine if you want to bid for the wine.',
+          classes: 'tour-style',
           buttons: [
-						{
-							text: 'Continue',
-							action: () => {
-	this.shepherd.next();
-	this.shepherd.removeStep('metadata-bidding-price');
-}
-						},
+            {
+              text: 'Continue',
+              action: () => {
+                this.shepherd.next();
+                this.shepherd.removeStep('metadata-bidding-price');
+              },
+            },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.shepherd.cancel();
-	this.shepherd.removeStep('metadata-bidding-price')
+                this.shepherd.removeStep('metadata-bidding-price');
               },
             },
           ],
-				},
-				{
-					id: 'metadata-checkout-buttons',
-					attachTo: {
+        },
+        {
+          id: 'metadata-checkout-buttons',
+          attachTo: {
             element: '#metadata-checkout-buttons',
             on: 'top',
           },
-					scrollTo: {
+          scrollTo: {
             // Make sure the element is in the viewport
             behavior: 'smooth',
             block: 'end',
           },
           text: 'Use any of these buttons to purchase the wine depending on your preference',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Finish',
               action: () => {
                 this.tourStore.setMetadataCompleted();
                 this.shepherd.complete();
-		this.shepherd.removeStep('metadata-checkout-buttons')
+                this.shepherd.removeStep('metadata-checkout-buttons');
               },
             },
           ],
-				},
-			]
+        },
+      ];
 
-			this.shepherd.addSteps(steps)
-			this.shepherd.start()
-			this.tourStore.setMetadataCompleted();
-		},
+      this.shepherd.addSteps(steps);
+      this.shepherd.start();
+      this.tourStore.setMetadataCompleted();
+    },
     FavoriteAction(state: 'favorited' | 'unfavorited' | 'processing') {
       if (state == 'favorited') {
         this.nft.favorited = true;

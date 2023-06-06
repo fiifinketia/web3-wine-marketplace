@@ -253,7 +253,7 @@ export default defineComponent({
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+      useModalOverlay: true,
     }) as Tour;
     return {
       favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
@@ -313,14 +313,14 @@ export default defineComponent({
       this.UnfavoriteNFT(index, token, cancel);
     },
     async getAllFavorites(walletAddress: string, brand: string) {
-      this.shepherd.removeStep('favorites-search-button')
+      this.shepherd.removeStep('favorites-search-button');
       this.isLoading = true;
       try {
         const { result: nfts } = await GetAllFavorites(walletAddress, brand);
         if (nfts.length === 0) this.shepherd.complete();
-	this.IncorporateOwnedNFTs(nfts);
+        this.IncorporateOwnedNFTs(nfts);
         this.CheckForEmptiness(this.favNFTs, brand);
-	this.erroredOut = false;
+        this.erroredOut = false;
       } catch {
         this.erroredOut = true;
       } finally {
@@ -502,20 +502,21 @@ export default defineComponent({
           },
           title: 'Search',
           text: 'Search for your favorite NFTs',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Next',
               action: () => {
-              this.shepherd.next();
-              this.shepherd.removeStep('favorites-search-input');
-		          },
+                this.shepherd.next();
+                this.shepherd.removeStep('favorites-search-input');
+              },
             },
             {
               text: 'Skip',
               action: () => {
                 // Cancel and set favoritesCompleted to true
                 this.shepherd.cancel();
-		            this.shepherd.removeStep('favorites-search-input');
+                this.shepherd.removeStep('favorites-search-input');
                 this.tourStore.setFavoritesCompleted();
               },
             },
@@ -529,6 +530,7 @@ export default defineComponent({
           },
           title: 'Search',
           text: 'Click to Search for your favorite NFTs',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Next',
@@ -564,6 +566,7 @@ export default defineComponent({
             },
             title: 'Favorite NFT',
             text: 'Click on the NFT to open it in a new tab',
+            classes: 'tour-style',
             buttons: [
               {
                 text: 'Next',
@@ -578,7 +581,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.shepherd.cancel();
                   this.tourStore.setFavoritesCompleted();
-		              this.shepherd.removeStep('favorites-item');
+                  this.shepherd.removeStep('favorites-item');
                 },
               },
             ],
@@ -593,6 +596,7 @@ export default defineComponent({
               on: 'bottom',
             },
             title: 'Remove Favorite',
+            classes: 'tour-style',
             buttons: [
               {
                 text: 'Finish',
@@ -600,7 +604,7 @@ export default defineComponent({
                   // Cancel and set favoritesCompleted to true
                   this.shepherd.complete();
                   this.tourStore.setFavoritesCompleted();
-		              this.shepherd.removeStep('favorites-item-remove');
+                  this.shepherd.removeStep('favorites-item-remove');
                 },
               },
             ],
@@ -615,18 +619,18 @@ export default defineComponent({
       this.tourStore.setFavoritesCompleted();
     },
 
-		async waitForLoad () {
-        return new Promise<void>(resolve => {
-          const checkValue = () => {
-            if (this.isLoading === false ) {
-              resolve();
-            } else {
-              setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
-            }
-          };
-          checkValue();
-        });
-      },
+    async waitForLoad() {
+      return new Promise<void>(resolve => {
+        const checkValue = () => {
+          if (this.isLoading === false) {
+            resolve();
+          } else {
+            setTimeout(checkValue, 100); // wait for 100 milliseconds before checking again
+          }
+        };
+        checkValue();
+      });
+    },
 
     async AcceptOffer(orderHash: string, brand: string, image: string) {
       if (!this.userStore.user) throw new Error('User not logged in');
