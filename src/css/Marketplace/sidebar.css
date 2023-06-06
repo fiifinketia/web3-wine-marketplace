@@ -151,16 +151,16 @@
   /* scroll-padding-bottom: 18px; */
 }
 
-#marketplace-sidebar-lg > .q-scrollarea__bar--v {
-  /* border-radius: 18px; */
-  /* top: calc(100%-10px); */
-  /* bottom: calc(100%-20px); */
-  /* top: 10px; */
-  /* bottom: 10px; */
-  /* scroll-padding-top: 20px; */
-  /* scroll-padding-bottom: 20px; */
-  /* position: relative; */
-}
+/* #marketplace-sidebar-lg > .q-scrollarea__bar--v { */
+/* border-radius: 18px; */
+/* top: calc(100%-10px); */
+/* bottom: calc(100%-20px); */
+/* top: 10px; */
+/* bottom: 10px; */
+/* scroll-padding-top: 20px; */
+/* scroll-padding-bottom: 20px; */
+/* position: relative; */
+/* } */
 
 #marketplace-sidebar-lg > .q-scrollarea__thumb--v {
   margin-top: 12px;
