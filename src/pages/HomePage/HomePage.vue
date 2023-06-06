@@ -5,7 +5,7 @@
   <!-- <TrendingWines class="trending" /> -->
   <!-- <PartnershipWines class="partnership" /> -->
   <FAQ
-    class="faq"
+    style="margin-bottom: 150px"
     @open-help-center-faqs="$emit('openHelpCenterFaqs')"
     @open-help-center-support="$emit('openHelpCenterSupport')"
   />
