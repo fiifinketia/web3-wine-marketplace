@@ -4,9 +4,11 @@ import {
   ChainID,
   ItemType,
   OrderModel,
-  RetrieveListingResponse,
+  RetrieveOrderResponse,
   SeaportInstance,
   FulfillOrderRequest,
+	CreateOrderRequest,
+	CancelOrderRequest,
 } from '../models/Orders';
 import { ERC721_PolygonContract } from 'src/shared/web3.helper';
 import axios from 'axios';
@@ -22,9 +24,18 @@ import { UserModel } from 'src/components/models';
 
 declare let window: Window;
 
-const RandomIdGenerator = () => {
-  return Date.now();
-};
+function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
+	if (isListing) {
+		return {
+			listingPrice: (parseFloat(parameters.consideration[0].startAmount) / 0.975).toString(),
+			listingCurrency: parameters.consideration[0].token
+		}
+	}
+	return {
+		offerPrice: parameters.offer[0].startAmount,
+		offerCurrency: parameters.offer[0].token
+	}
+}
 
 export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
   const inputDateTime = `${expDate}T${expTime}:00`;
@@ -139,13 +150,14 @@ export async function CreateERC721Listing(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		nonce: txn.nonce
+		nonce: txn.nonce,
+		listingPrice: GetOrderPrice(true, order.parameters).listingPrice,
+		listingCurrency
 	};
-	const OrderRequest = {
+	const OrderRequest: CreateOrderRequest = {
 		order: db_Order,
-		notificationID: RandomIdGenerator(),
 		blockNumber: blockNumber,
-		apiKey: APIKeyString
+		apiKey: <string> APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
@@ -280,11 +292,10 @@ export async function CreateERC721Offer(
 		offerCurrency: offerCurrency,
 		nonce: txn.nonce
 	};
-	const OrderRequest = {
+	const OrderRequest: CreateOrderRequest = {
 		order: db_Order,
-		notificationID: RandomIdGenerator(),
 		blockNumber: blockNumber,
-		apiKey: APIKeyString
+		apiKey: <string> APIKeyString
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	await axios.post(createOrderURL, OrderRequest);
@@ -313,11 +324,12 @@ export async function FulfillBasicOrder(
 		apiKey: APIKeyString,
 		orderHash: orderHash
 	}
-	const order: RetrieveListingResponse = await axios
+	const order: RetrieveOrderResponse = await axios
 		.post(retrieveOrderUrl, body)
 		.then(result => {
 			const data = result.data;
 			return {
+				from: data.from,
 				parameters: data.parameters,
 				signature: data.signature,
 				network: data.network,
@@ -339,9 +351,9 @@ export async function FulfillBasicOrder(
 		});
 
 	const txn = await executeAllFulfillActions();
+	const orderPriceDetails = owner ? GetOrderPrice(false, order.parameters) : GetOrderPrice(true, order.parameters);
 
-	const updateOrder: FulfillOrderRequest & { apiKey: string } = {
-		notificationID: RandomIdGenerator(),
+	const updateOrder: FulfillOrderRequest = {
 		identifierOrCriteria: order.identifierOrCriteria,
 		contractAddress: order.contractAddress,
 		orderHash: orderHash,
@@ -355,6 +367,13 @@ export async function FulfillBasicOrder(
 		blockNumber: blockNumber,
 		apiKey: <string> APIKeyString
 	};
+	owner ? () => {
+		updateOrder['offerCurrency'] = orderPriceDetails.offerCurrency;
+		updateOrder['offerPrice'] = orderPriceDetails.offerPrice;
+	} : () => {
+		updateOrder['listingCurrency'] = orderPriceDetails.listingCurrency;
+		updateOrder['listingPrice'] = orderPriceDetails.listingPrice;
+	}
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
 }
@@ -369,12 +388,20 @@ export async function CancelSingleOrder(
       apiKey: APIKeyString,
       orderHash: orderHash,
     };
+		let orderParameters = {} as OrderComponents;
+		let from = '';
+		const tokenDetails = {} as TokenIdentifier;
     const order: OrderComponents = await axios
       .post(retrieveOrderUrl, body)
       .then(result => {
-        const data = result.data;
+        const data = <RetrieveOrderResponse> result.data;
+				orderParameters = data.parameters;
+				from = data.from;
+				tokenDetails['contractAddress'] = data.contractAddress;
+				tokenDetails['identifierOrCriteria'] = data.identifierOrCriteria;
+				tokenDetails['network'] = data.network;
         return {
-          ...(<OrderParameters & { counter: number }>data.parameters),
+          ...orderParameters,
           signature: <string>data.signature,
         };
       });
@@ -382,14 +409,26 @@ export async function CancelSingleOrder(
     const blockNumber = await GetBlockNumber();
     const { transact } = seaport.cancelOrders([order]);
     const txn = await transact();
+
+		const orderPriceDetails = from == 'Owner' ? GetOrderPrice(true, orderParameters) : GetOrderPrice(false, orderParameters);
     const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-    const requestToCancel = {
+    const requestToCancel: CancelOrderRequest = {
       orderHash: orderHash,
       walletAddress: walletAddress,
       nonce: txn.nonce,
       blockNumber: blockNumber,
-      apiKey: APIKeyString,
+      apiKey: <string> APIKeyString,
+			identifierOrCriteria: tokenDetails.identifierOrCriteria,
+			network: tokenDetails.network,
+			contractAddress: tokenDetails.contractAddress
     };
+		from == 'Owner' ? () => {
+			requestToCancel['listingCurrency'] = orderPriceDetails.listingCurrency;
+			requestToCancel['listingPrice'] = orderPriceDetails.listingPrice;
+		} : () => {
+			requestToCancel['offerCurrency'] = orderPriceDetails.offerCurrency;
+			requestToCancel['offerPrice'] = orderPriceDetails.offerPrice;
+		}
     axios.post(cancelOrderURL, requestToCancel);
   } else {
     throw new Error('Please reconnect/install Metamask wallet to continue')

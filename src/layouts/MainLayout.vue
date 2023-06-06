@@ -529,6 +529,7 @@ export default defineComponent({
       this.ClearStore();
     } else {
       this.ReInitAmplitude(this.walletAddress);
+      require('src/shared/notifications-service');
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
         const {

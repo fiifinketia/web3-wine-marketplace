@@ -58,7 +58,7 @@ async function CheckUserVerification(walletAddress: string) : Promise<UserStatus
   return <UserStatus> (await axios.get(`${usersURL}/${walletAddress}?timestamp=${Date.now()}`)).data;
 }
 
-async function StartVeriff (
+async function StartVeriff(
   walletAddress: string,
   currentPage: string,
   continueSession: boolean,
@@ -66,32 +66,43 @@ async function StartVeriff (
 ) {
   const userStore = useUserStore();
   let VeriffURL = lastSessionURL || '';
-  if (!continueSession) {
-    const options : AxiosRequestConfig = {
+  if (!continueSession || !VeriffURL) {
+    const options: AxiosRequestConfig = {
       method: 'POST',
       url: `${process.env.VERIFF_BASE_URL}/v1/sessions`,
       headers: {
         'Content-Type': 'application/json',
-        'X-AUTH-CLIENT': process.env.VERIFF_API_KEY
+        'X-AUTH-CLIENT': process.env.VERIFF_API_KEY,
       },
       data: {
         verification: {
           callback: currentPage,
-          vendorData: walletAddress
-        }
-      }
+          vendorData: walletAddress,
+          person: {
+            firstName: userStore.user?.username,
+          },
+        },
+      },
+    };
+    const veriffResponse: VeriffNewSessionResponse = (
+      await axios.request(options)
+    ).data;
+
+    const usersURL = <string>process.env.CREATE_NEW_KYC_SESSION;
+    try {
+      await axios.post(usersURL, {
+        payload: veriffResponse.verification,
+        apiKey: process.env.MKTPLACE_API_KEY,
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
-    const veriffResponse : VeriffNewSessionResponse = (await axios.request(options)).data;
-    const usersURL = <string> process.env.CREATE_NEW_KYC_SESSION;
-    await axios.post(usersURL, {
-      payload: veriffResponse.verification,
-      apiKey: process.env.MKTPLACE_API_KEY
-    });
     VeriffURL = veriffResponse.verification.url;
   }
   createVeriffFrame({
     url: VeriffURL,
-    onEvent: function(msg) {
+    onEvent: function (msg) {
       if (!!userStore.user) {
         if (msg == MESSAGES.FINISHED) {
           userStore.user.verificationStatus = VerificationStatus.PENDING;
@@ -99,28 +110,35 @@ async function StartVeriff (
           userStore.user.verificationStatus = VerificationStatus.STARTED;
         }
       }
-    }
+    },
   });
-};
+}
 
 async function HandleUserValidity() {
   try {
     const userStore = useUserStore();
     if (!!userStore.user?.walletAddress) {
-      let { status, sessionID, sessionToken, sessionURL } : UserStatus = await CheckUserVerification(userStore.user.walletAddress);
+      let { status, sessionID, sessionToken, sessionURL }: UserStatus =
+        await CheckUserVerification(userStore.user.walletAddress);
       userStore.user.verificationStatus = status;
       if (status == VerificationStatus.VERIFIED) {
         return true;
       } else {
-        if (status == VerificationStatus.STARTED || status == VerificationStatus.NOT_STARTED) {
+        if (
+          status == VerificationStatus.STARTED ||
+          status == VerificationStatus.NOT_STARTED
+        ) {
           if (sessionToken) {
-            const isNewSessionNeeded = CheckJWTValidity(<string> sessionToken);
+            const isNewSessionNeeded = CheckJWTValidity(<string>sessionToken);
             if (isNewSessionNeeded) {
               status = VerificationStatus.NOT_STARTED;
               sessionID = '';
               sessionToken = '';
               sessionURL = '';
-            } else if (userStore.user.verificationStatus == VerificationStatus.NOT_STARTED) {
+            } else if (
+              userStore.user.verificationStatus ==
+              VerificationStatus.NOT_STARTED
+            ) {
               userStore.user.verificationStatus = VerificationStatus.STARTED;
             }
           }
@@ -141,5 +159,5 @@ export {
   CheckUserVerification,
   HandleUserValidity,
   UserStatus,
-  VerificationStatus
-}
+  VerificationStatus,
+};

@@ -1,5 +1,5 @@
 import { BigNumber, Contract, ethers, utils } from 'ethers';
-import { RetrieveListingResponse } from 'src/pages/Metadata/models/Orders';
+import { RetrieveOrderResponse } from 'src/pages/Metadata/models/Orders';
 import { ERC20_ContractWithSigner, ERC721_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
 
 export async function balanceAndApprovals (
@@ -43,7 +43,7 @@ export async function balanceAndApprovals (
   }
 };
 
-export async function HandleFulfillmentApprovals(owner: boolean, address: string, order: RetrieveListingResponse) {
+export async function HandleFulfillmentApprovals(owner: boolean, address: string, order: RetrieveOrderResponse) {
 	let ERC721Address = '';
 	let tokenID = '';
 

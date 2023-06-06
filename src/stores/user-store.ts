@@ -61,13 +61,34 @@ export const useUserStore = defineStore(
       }
     };
 
+		const fetchUser = async () => {
+      const date = new Date().getTime();
+      try {
+        const getUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            walletAddress.value +
+            '?t=' +
+            date
+        );
+        if (!!getUser.data) {
+          user.value = getUser.data;
+          walletAddress.value = getUser.data.walletAddress;
+          return;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        throw error;
+      }
+    };
+
     const updateUsername = async (username: string) => {
       const updatedUser = await axios.put(
         process.env.MARKETPLACE_USERS_API + '/update/' + walletAddress.value,
         {
           username,
           apiKey: APIKeyString,
-        },
+        }
       );
       user.value = updatedUser.data;
     };
@@ -88,9 +109,11 @@ export const useUserStore = defineStore(
     // eslint-disable-next-line
     const uploadAvatar = async (formData: any) => {
       try {
-	      formData.append('apiKey', APIKeyString)
+        formData.append('apiKey', APIKeyString);
         await axios.post(
-          process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
+          process.env.MARKETPLACE_USERS_API +
+            '/upload-image/' +
+            walletAddress.value,
           formData,
           {
             headers: {
@@ -99,7 +122,7 @@ export const useUserStore = defineStore(
           }
         );
         const updatedUser = await axios.get(
-          process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
+          process.env.MARKETPLACE_USERS_API + '/profile/' + walletAddress.value
         );
         user.value = updatedUser.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,15 +136,27 @@ export const useUserStore = defineStore(
       const signer = WindowWeb3Provider?.getSigner();
       if (!!signer) {
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
-          GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, walletAddress.value),
-          GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, walletAddress.value),
-          GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, walletAddress.value)
+          GetBalanceByCurrency(
+            <string>process.env.WIVA_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
+          GetBalanceByCurrency(
+            <string>process.env.USDT_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
+          GetBalanceByCurrency(
+            <string>process.env.USDC_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
         ]);
         return {
           _wivaBalance: wivaBalance,
           _usdtBalance: usdtBalance,
-          _usdcBalance: usdcBalance
-        }
+          _usdcBalance: usdcBalance,
+        };
       }
       return undefined;
     };
@@ -137,6 +172,7 @@ export const useUserStore = defineStore(
     return {
       walletAddress,
       connectWallet,
+      fetchUser,
       updateUsername,
       uploadAvatar,
       getWalletBalance,
