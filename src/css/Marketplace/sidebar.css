@@ -13,6 +13,10 @@
   flex-direction: column;
 }
 
+.inner-group {
+  padding-left: 30px;
+}
+
 [aria-expanded='true'] {
   border-color: #8cbaff !important;
 }
