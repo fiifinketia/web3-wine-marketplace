@@ -78,10 +78,11 @@
     full-height
     class="terms-and-conditions-background"
   >
-    <q-card class="terms-and-conditions-container column justify-between no-wrap">
+    <q-card
+      class="terms-and-conditions-container column justify-between no-wrap"
+    >
       <q-card-section>
-        <div class="overflow-scroll" v-html="TermsAndConditions">
-	</div>
+        <div class="overflow-scroll" v-html="TermsAndConditions"></div>
       </q-card-section>
       <q-card-actions class="row terms-and-conditions-btns justify-end">
         <q-btn
@@ -218,11 +219,24 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            Stats
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
         </div>
         <div class="row">
@@ -371,7 +385,7 @@
                     v-close-popup
                     clickable
                     href="https://dwc.wiv-tech.org/#/"
-		                target="_blank"
+                    target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -401,12 +415,20 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('support')"
+                          >
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('topics')"
+                          >
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -487,7 +509,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     HelpCenterDialog,
-    ProfileErrors: ProfileErrors
+    ProfileErrors: ProfileErrors,
   },
   data() {
     const userStore = useUserStore();
@@ -516,7 +538,7 @@ export default defineComponent({
 
       FormatNumber,
 
-      openUserErrorDialog: false
+      openUserErrorDialog: false,
     };
   },
   watch: {
@@ -542,6 +564,8 @@ export default defineComponent({
   },
 
   async mounted() {
+    // this.tourStore.onMounted();
+    this.tourStore.onMounted;
     await this.userStore.checkConnection();
     if (!this.walletAddress) {
       this.ClearStore();
@@ -559,9 +583,9 @@ export default defineComponent({
     }
   },
   methods: {
-    openHelpCenter(tab: string){
-	this.openHelpCenterTab = tab;
-	this.showHelpCenter = true;
+    openHelpCenter(tab: string) {
+      this.openHelpCenterTab = tab;
+      this.showHelpCenter = true;
     },
     async fundWallet() {
       let transak = new transakSDK({
@@ -619,7 +643,7 @@ export default defineComponent({
         this.openUserErrorDialog = true;
         setTimeout(() => {
           this.openUserErrorDialog = false;
-        }, 2000)
+        }, 2000);
         throw error;
       }
     },
