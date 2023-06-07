@@ -1,11 +1,11 @@
 <template>
-  <q-card class="column items-center full-width no-wrap no-shadow">
+  <q-card v-if="!errorEncountered" class="column items-center full-width no-wrap no-shadow">
     <div class="column exclusive-offer-title justify-center">
-      <span>Invest in wines to taste & exclusive offers ...</span>
+      <span>Invest in wines to taste & exclusive offers...</span>
     </div>
 
     <q-card-section class="q-pt-lg exclusive-offer-container">
-      <div v-if="!isLoading" class="row no-wrap justify-center q-gutter-x-sm">
+      <div v-if="!isLoading" class="row no-wrap justify-center q-gutter-x-sm" style="max-width: 1300px">
         <div
           v-for="token in exclusiveOffers.slice(0, $q.screen.width > 1024 ? 4 : $q.screen.width > 768 ? 3 : 2)"
           :key="token.tokenID + ',' + token.network + ',' + token.smartContractAddress"
@@ -154,28 +154,26 @@
           </q-card>
         </div>
       </div>
-      <div v-else class="row no-wrap justify-between">
+      <div v-else class="row no-wrap justify-center">
         <div
-          v-for="loading in loadingNFTs"
+          v-for="loading in loadingNFTs.slice(0, $q.screen.width > 1024 ? 4 : $q.screen.width > 768 ? 3 : 2)"
           :key="loading"
-          class="no-shadow q-pa-sm exclusive-card-container col-xs-3"
+          class="no-shadow q-pa-sm exclusive-card-container"
         >
-          <div>
-            <q-card class="q-ma-md" flat>
-              <img
-                src="../../../assets/loading-card.svg"
-                class="releases-card-image"
-              />
-              <img
-                src="../../../assets/loading-brand.svg"
-                :style="
-                  $q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'
-                "
-                class="q-my-md"
-              />
-              <img src="../../../assets/loading-pricebox.svg" />
-            </q-card>
-          </div>
+          <q-card class="q-ma-xs exclusive-card" flat>
+            <img
+              src="../../../assets/loading-card.svg"
+              class="releases-card-image"
+            />
+            <img
+              src="../../../assets/loading-brand.svg"
+              :style="
+                $q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'
+              "
+              class="q-my-md"
+            />
+            <img src="../../../assets/loading-pricebox.svg" />
+          </q-card>
         </div>
       </div>
       <AcceptedOrderDialog
@@ -258,7 +256,8 @@ export default defineComponent({
       openKYCUpdate: false,
       errorType: '',
       errorTitle: '',
-      errorMessage: ''
+      errorMessage: '',
+      errorEncountered: false
     };
   },
   computed: {
@@ -277,11 +276,8 @@ export default defineComponent({
 				this.isLoading = false;
       } catch (error) {
         this.isLoading = true;
-				if(calls > 3) {
-					// Try again in 30 secs
-					setTimeout(()=> {
-						this.fetchRecommendedWines(0)
-					}, 30000)
+				if(calls == 5) {
+					this.errorEncountered = true;
 				} else {
 					setTimeout(()=> {
 						this.fetchRecommendedWines(calls + 1)

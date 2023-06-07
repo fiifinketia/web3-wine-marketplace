@@ -8,7 +8,7 @@
       class="grape-img-right"
       src="../../../../public/images/Grape-right.svg"
     />
-    <q-img
+    <img
       class="grape-mobile"
       src="../../../../public/images/Grape-mobile.svg"
     />
