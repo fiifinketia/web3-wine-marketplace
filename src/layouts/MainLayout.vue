@@ -63,8 +63,8 @@
   <!---------------------------- /MY WALLET ---------------------------->
   <!---------------------------- SETTINGS ---------------------------->
   <div
-    v-if="userStore.user && showSettings"
-    class="settings-background row justify-end hidden"
+    v-if="userStore.user"
+    class="row justify-end hidden"
   >
     <SettingsDialog
       v-model="showSettings"
@@ -73,7 +73,7 @@
   </div>
 
   <!-- Terms and Conditions -->
-  <q-dialog
+  <wiv-toc-dialog
     v-model="showTermsAndConditions"
     full-height
     class="terms-and-conditions-background"
@@ -109,7 +109,8 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-
+    @toc-accepted="showTermsAndConditions = false"
+  />
   <!-- /Terms and Conditions -->
 
   <BurgerMenu
@@ -249,7 +250,6 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
-              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -288,11 +288,7 @@
                     <q-avatar size="24px">
                       <img :src="userStore.user?.avatar" />
                     </q-avatar>
-                    {{
-                      userStore.user !== null
-                        ? userStore.user.username
-                        : walletAddress.slice(0, 10)
-                    }}
+                    {{ userStore.user?.username || walletAddress.slice(0, 10) }}
                   </q-chip>
                 </q-toolbar>
                 <q-list>
@@ -500,7 +496,6 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import TermsAndConditionsJson from '../TermsAndConditions.json';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -519,7 +514,6 @@ export default defineComponent({
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
     return {
       showBurgerMenu: false,
-      TermsAndConditions: TermsAndConditionsJson.data,
       showMyWallet: false,
       showSettings: false,
       showHelpCenter: false,
@@ -570,6 +564,7 @@ export default defineComponent({
       this.ClearStore();
     } else {
       this.ReInitAmplitude(this.walletAddress);
+      require('src/shared/notifications-service');
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
         const {
@@ -627,10 +622,18 @@ export default defineComponent({
       this.showConnectWallet = false;
       if (!this.tourStore.termsAndConditionsAgreed) {
         this.showTermsAndConditions = true;
-        return;
-      }
-      //TODO: Catch errors
-      try {
+				this.$watch('tourStore.termsAndConditionsAgreed', async (newValue) => {
+					if (newValue) {
+						await this._connectWallet();
+					}
+				});
+      } else {
+				await this._connectWallet();
+			}
+    },
+
+		async _connectWallet() {
+			try {
         await this.userStore.connectWallet();
         if (!this.$route.query?.next) {
           this.$router.go(0);
@@ -645,13 +648,7 @@ export default defineComponent({
         }, 2000);
         throw error;
       }
-    },
-
-    acceptTermsAndConditions() {
-      this.tourStore.setTermsAndConditionsAgreed();
-      this.showTermsAndConditions = false;
-      this.connectWallet();
-    },
+		},
 
     setupWallet() {
       this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;

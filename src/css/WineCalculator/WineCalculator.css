@@ -15,9 +15,7 @@
 }
 
 .welcome-to-calculator {
-	font-family: 'Obviously-Bold';
-	font-style: normal;
-	font-weight: 870;
+	font-family: 'Obviously-Bolder';
 	font-size: 32px;
 	line-height: 48px;
 	text-align: center;
@@ -27,8 +25,6 @@
 
 .welcome-to-calculator-desc {
 	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
 	font-size: 24px;
 	line-height: 36px;
 	text-align: center;
@@ -41,8 +37,6 @@
 	width: 80%;
 	height: 680px;
 	background: #ffffff;
-	/* Primary/Light blue */
-
 	border: 1px solid rgba(94, 151, 236, 0.27);
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
 	backdrop-filter: blur(20px);
@@ -459,11 +453,15 @@
 	.risk-wrapper {
 		width: 91.5%;
 	}
+	.welcome-to-calculator {
+		width: 70%;
+	}
 	.calculator {
 		width: 100%;
 		height: auto;
-		border-bottom: none;
-		border-end-end-radius: none;
+		border-radius: 0;
+		border: none;
+    box-shadow: none;
 	}
 	.portfolio-calculation-desktop {
 		display: none;

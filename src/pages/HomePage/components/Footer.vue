@@ -13,31 +13,48 @@
       <div v-if="$q.screen.width > 600" class="row fit justify-between q-px-md">
         <NFTsSection />
         <ProfileSection />
-        <HelpSection @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
+        <HelpSection
+          @open-help-center-support="$emit('openHelpCenterSupport')"
+          @open-help-center-faqs="$emit('openHelpCenterFaqs')"
+          @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+        />
         <div class="column">
           <ContactSection />
           <SocialsSection class="q-pt-md" />
         </div>
       </div>
-      <div v-else-if="$q.screen.width <= 600 && $q.screen.width > 450" class="row justify-between q-px-md">
+      <div
+        v-else-if="$q.screen.width <= 600 && $q.screen.width > 450"
+        class="row justify-between q-px-md"
+      >
         <NFTsSection />
         <div class="column">
           <ProfileSection />
-          <HelpSection class="q-pt-md" @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
+          <HelpSection
+            class="q-pt-md"
+            @open-help-center-support="$emit('openHelpCenterSupport')"
+            @open-help-center-faqs="$emit('openHelpCenterFaqs')"
+            @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+          />
         </div>
         <div class="column">
-          <ContactSection/>
+          <ContactSection />
           <SocialsSection class="q-pt-md" />
         </div>
       </div>
       <div v-else class="row justify-between q-px-md">
         <div class="column">
           <NFTsSection />
-          <ContactSection class="q-pt-md"/>
+          <ContactSection class="q-pt-md" />
         </div>
         <div class="column">
           <ProfileSection />
-          <HelpSection class="q-pt-md" @open-help-center-support="$emit('openHelpCenterSupport')" @open-help-center-faqs="$emit('openHelpCenterFaqs')"/>
+          <HelpSection
+            class="q-pt-md"
+            @open-help-center-support="$emit('openHelpCenterSupport')"
+            @open-help-center-faqs="$emit('openHelpCenterFaqs')"
+            @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+          />
           <SocialsSection class="q-pt-md" />
         </div>
       </div>
@@ -60,9 +77,13 @@ export default defineComponent({
     HelpSection,
     NFTsSection,
     ProfileSection,
-    SocialsSection
+    SocialsSection,
   },
-  emits: ['openHelpCenterSupport', 'openHelpCenterFaqs'],
+  emits: [
+    'openHelpCenterSupport',
+    'openHelpCenterFaqs',
+    'open-terms-and-conditions',
+  ],
 });
 </script>
 

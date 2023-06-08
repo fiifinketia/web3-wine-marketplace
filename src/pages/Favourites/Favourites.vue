@@ -107,7 +107,7 @@
                 :ripple="false"
                 class="q-pa-none"
                 @click.stop="
-                  AcceptOffer(
+                  PurchaseListing(
                     nft.orderDetails.orderHash,
                     nft.brand,
                     nft.image,
@@ -208,6 +208,12 @@
       :token-id="tokenID"
       @unfavorite="action => DialogAction(action)"
     />
+    <KYCUpdate
+      v-model="openKYCUpdate"
+      @start-veriff="(sessionDetails) =>
+        BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+      "
+    />
   </q-page>
 </template>
 
@@ -235,6 +241,9 @@ import OrderAccepted from '../SharedPopups/OrderAccepted.vue';
 import ProfileErrors from '../SharedPopups/ProfileErrors.vue';
 import TxnOngoing from '../SharedPopups/TxnOngoing.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
+import { mapState } from 'pinia';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import KYCUpdate from '../SharedPopups/KYCUpdate.vue';
 
 export default defineComponent({
   name: 'FavouritesPage',
@@ -247,13 +256,14 @@ export default defineComponent({
     AcceptedOrderDialog: OrderAccepted,
     ErrorDialog: ProfileErrors,
     OngoingTransactionDialog: TxnOngoing,
+    KYCUpdate: KYCUpdate
   },
   data() {
     const userStore = useUserStore();
     const tourStore = useTourStore();
     const nftStore = useNFTStore();
     const shepherd = useShepherd({
-      useModalOverlay: true,
+	    useModalOverlay: true,
     }) as Tour;
     return {
       favNFTs: Array<FavoritesModel & { isOwned?: boolean }>(),
@@ -270,6 +280,7 @@ export default defineComponent({
       shepherd,
       openOrderAccepted: false,
       openErrorDialog: false,
+      openKYCUpdate: false,
 
       errorType: '',
       errorTitle: '',
@@ -283,6 +294,11 @@ export default defineComponent({
       tokenID: '',
       network: '',
     };
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    })
   },
   async mounted() {
     SetSessionID();
@@ -632,31 +648,56 @@ export default defineComponent({
       });
     },
 
-    async AcceptOffer(orderHash: string, brand: string, image: string) {
+    async PurchaseListing(
+      orderHash: string,
+      brand: string,
+      image: string
+    ) {
       if (!this.userStore.user) throw new Error('User not logged in');
-      this.SetPreventingExitListener(true);
-      try {
-        await FulfillBasicOrder(
-          orderHash,
-          brand,
-          false,
-          this.userStore.user,
-          image
-        );
-        this.openOrderAccepted = true;
-        setTimeout(() => {
-          this.openOrderAccepted = false;
-        }, 2000);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        this.HandleError({
-          errorType: 'accept',
-          errorTitle: 'Sorry, the purchase failed',
-          errorMessage:
-            'It may be due to insufficient balance, disconnected wallet, etc.',
-        });
-        this.SetPreventingExitListener(false);
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        try {
+          this.SetPreventingExitListener(true);
+          await FulfillBasicOrder(
+            orderHash,
+            brand,
+            false,
+            this.userStore.user,
+            image
+          );
+          this.openOrderAccepted = true;
+          setTimeout(() => {
+            this.openOrderAccepted = false;
+          }, 2000);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          this.HandleError({
+            errorType: 'accept',
+            errorTitle: 'Sorry, the purchase failed',
+            errorMessage:
+              'It may be due to insufficient balance, disconnected wallet, etc.',
+          });
+          this.SetPreventingExitListener(false);
+        }
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.PurchaseListing(orderHash, brand, image);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        } catch {
+          this.HandleError({
+            errorType: 'validation_failed',
+            errorTitle: 'Failed to verify user KYC status.',
+            errorMessage: 'Please try again later.'
+          })
+        }
       }
+    },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
     },
     HandleError(err: {
       errorType: string;

@@ -100,6 +100,7 @@
           @accept-offer="
             req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
           "
+					@open-terms-and-conditions="showTermsAndConditions = true"
         />
       </div>
       <div v-else class="column items-center">
@@ -110,6 +111,12 @@
         :order-accepted="'offer'"
       />
       <OngoingTransactionDialog v-model="ongoingTxn"/>
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="(sessionDetails) =>
+          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        "
+      />
     </div>
   </q-page>
 </template>
@@ -137,6 +144,8 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
+import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();
 
@@ -152,7 +161,8 @@ export default defineComponent({
     AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    KYCUpdate: KYCUpdate
   },
   emits: ['incomingAmount'],
 
@@ -178,6 +188,8 @@ export default defineComponent({
       openErrorDialog: false,
       openConfirmDialog: false,
       openAcceptedOrderDialog: false,
+			showTermsAndConditions: false,
+      openKYCUpdate: false,
 
       orderHash: '',
       brand: '',
@@ -196,6 +208,9 @@ export default defineComponent({
       brandSearched: store => store.getIncomingBrandFilterStatus,
       tabKey: store => store.getIncomingTabKey
     }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus
+    })
   },
 
   watch: {
@@ -244,7 +259,7 @@ export default defineComponent({
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`;
     },
-    OpenConfirmDialog(
+    async OpenConfirmDialog(
       orderHash: string,
       brand: string,
       image: string,
@@ -252,13 +267,26 @@ export default defineComponent({
       offer: string,
       currency: string
     ) {
-      this.orderHash = orderHash;
-      this.brand = brand;
-      this.image = image;
-      this.token = token;
-      this.offer = offer;
-      this.currency = currency;
-      this.openConfirmDialog = true;
+      if (this.userStatus == VerificationStatus.VERIFIED) {
+        this.orderHash = orderHash;
+        this.brand = brand;
+        this.image = image;
+        this.token = token;
+        this.offer = offer;
+        this.currency = currency;
+        this.openConfirmDialog = true;
+      } else {
+        try {
+          const isVerified = await HandleUserValidity();
+          if (isVerified) {
+            this.OpenConfirmDialog(orderHash, brand, image, token, offer, currency);
+          } else {
+            this.openKYCUpdate = true;
+          }
+        } catch (err) {
+          this.HandleError(err);
+        }
+      }
     },
     async AcceptOffer(
       orderHash: string,
@@ -373,6 +401,10 @@ export default defineComponent({
         this.openErrorDialog = false;
       }, 2000);
     },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+    }
   },
 });
 </script>

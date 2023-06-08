@@ -1,59 +1,45 @@
 import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
 import { Seaport } from '@opensea/seaport-js';
-import { Transaction } from 'ethers';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
-interface OfferModel {
-  item_type: number;
-  token: string;
-  identifier_or_criteria: string;
-  startAmount?: number;
-  endAmount?: number;
-}
-
-interface ConsiderationModel extends OfferModel {
-  recipient: string;
-}
-
-interface Fee {
-  recipient: string;
-  basisPoints: number;
-}
-export interface OrderModel extends OrderWithCounter, TokenIdentifier {
-  orderHash: string;
-  network: string;
-  from: string;
-  brand: string;
-  image: string;
+interface OrderPrice {
   offerPrice?: string;
   offerCurrency?: string;
+  listingPrice?: string;
+  listingCurrency?: string;
+}
+
+interface OtherOrderDetails {
+  readonly from: string;
+  readonly orderHash: string;
+  readonly brand: string;
+	readonly image: string;
+}
+
+interface OrderModel extends OrderWithCounter, TokenIdentifier, OrderPrice, OtherOrderDetails {
   nonce?: number;
 }
 
-export interface OrderRequest {
-  Input: {
-    conduitKey?: string;
-    zone?: string;
-    startTime?: string;
-    endTime?: string;
-    offer: OfferModel;
-    consideration: ConsiderationModel;
-    counter?: number;
-    allowPartialFills?: boolean;
-    restrictedByZone?: boolean;
-    fees?: Fee[];
-    salt?: string;
-  };
-  accountAddress: string;
-}
-
-export interface SeaportInstance {
+interface SeaportInstance {
   seaport: Seaport;
   network: string;
 }
 
-export interface FulfillOrderRequest extends TokenIdentifier {
-	readonly notificationID: number;
+interface CreateOrderRequest {
+  readonly order: OrderModel,
+  readonly blockNumber: number;
+  readonly apiKey: string;
+}
+
+interface CancelOrderRequest extends OrderPrice, TokenIdentifier {
+  readonly orderHash: string;
+  readonly walletAddress: string;
+  readonly nonce: number;
+  readonly blockNumber: number;
+  readonly apiKey: string;
+}
+
+interface FulfillOrderRequest extends TokenIdentifier, OrderPrice {
 	readonly brand: string;
 	readonly image: string;
 	readonly orderHash: string;
@@ -62,14 +48,10 @@ export interface FulfillOrderRequest extends TokenIdentifier {
 	readonly walletAddress: string;
 	readonly blockNumber: number;
 	readonly offerer: string;
+  readonly apiKey: string;
 }
 
-export interface UnverifiedFulfillment extends TokenIdentifier {
-  readonly transaction: Transaction;
-  readonly network: string;
-}
-
-export enum ItemType {
+enum ItemType {
   NATIVE = 0,
   ERC20 = 1,
   ERC721 = 2,
@@ -78,89 +60,24 @@ export enum ItemType {
   ERC1155_WITH_CRITERIA = 5,
 }
 
-export enum ChainID {
+enum ChainID {
   ETHEREUM = 1,
   POLYGON = 137,
   RINKEBY = 4,
   MUMBAI = 80001,
 }
 
-export interface RetrieveListingResponse
-  extends OrderWithCounter,
-    TokenIdentifier {
-  network: string;
-}
-
-export interface ListingWithPricingAndImage {
-  smartContractAddress: string;
-  tokenID: string;
-  image: string;
-  lwin: string;
-  // priceData: number;
-  listingPrice: string;
-  priceCurrency: string;
-  brand: string;
-  network: string;
-}
-
-export interface SeaportListingModel {
-  from: string;
-  contractAddress?: string;
-  identifierOrCriteria?: string;
-  parameters: {
-    offerer: string;
-    zone: string;
-    orderType: string;
-    startTime: string;
-    endTime: string;
-    zoneHash: string;
-    salt: string;
-    conduitKey: string;
-    totalOriginalConsiderationItems: string;
-    counter: string;
-    offer: [
-      {
-        itemType: string;
-        token: string;
-        startAmount: string;
-        endAmount: string;
-        identifierOrCriteria: string;
-      }
-    ];
-    consideration: [
-      {
-        itemType: string;
-        token: string;
-        startAmount: string;
-        endAmount: string;
-        identifierOrCriteria: string;
-        recipient: string;
-      }
-    ];
-  };
-  signature: string;
-  orderHash?: string;
-  network?: string;
-}
-
-export interface ListingsDTO {
-  orderHash: string;
-  listPrice: string;
-  listCurrency: string;
-  timeLeft: string;
-  usdPrice?: string;
+interface RetrieveOrderResponse extends OrderWithCounter, TokenIdentifier {
   from: string;
 }
 
-export interface SeaportTransactionsModel {
-  network: string;
-  to?: string;
-  from: string;
-  event: string;
-  transactionHash: string;
-  contractAddress: string;
-  identifierOrCriteria: string;
-  price?: string;
-  timestamp: number;
-  currency: string;
+export {
+  OrderModel,
+  CreateOrderRequest,
+  FulfillOrderRequest,
+  CancelOrderRequest,
+  SeaportInstance,
+  ItemType,
+  ChainID,
+  RetrieveOrderResponse
 }

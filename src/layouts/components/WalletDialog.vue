@@ -5,6 +5,7 @@
     transition-hide="slide-right"
     full-height
     class="my-wallet-background"
+    @show="UpdateVerificationStatus()"
   >
     <q-card class="my-wallet-container column justify-between">
       <q-card-section class="column no-wrap">
@@ -32,166 +33,7 @@
           />
         </q-card-section>
 
-        <q-card-section
-          v-if="user.verificationStatus === 'NOT_STARTED'"
-          class="row items-center justify-center no-wrap"
-        >
-          <q-btn
-            class="shadow-1 overflow-hidden identity-label text-warning"
-            style="border-radius: 10px"
-            icon="warning_amber"
-            no-caps
-            align="left"
-            label="Please click to complete your identity verification."
-          >
-            <q-menu
-              anchor="bottom middle"
-              self="top middle"
-              fit
-              :offset="[0, 15]"
-              max-width="80%"
-              class="identity-popup"
-            >
-              <div class="column no-wrap q-pa-md items-center">
-                <q-icon name="app:verify-user" size="7rem" />
-                <span class="identify-popup-title q-mt-md q-mb-xs">
-                  Please complete your identity verification.
-                </span>
-                <span class="identify-popup-subtitle">
-                  Your information is required to abide by European KYC regulators.
-                </span>
-
-                <q-btn
-                  v-close-popup
-                  class="wiv-primary-button q-mt-md"
-                  unelevated
-                  no-caps
-                  label="Go to Verification"
-                />
-                <router-link
-                  to="/help/faqs/kyc"
-                  class="q-mt-md q-mb-xs wrap no-underline identity-popup-route"
-                >
-                  What is KYC ?
-                </router-link>
-              </div>
-            </q-menu>
-          </q-btn>
-        </q-card-section>
-
-        <q-card-section
-          v-else-if="user.verificationStatus === 'FAILED'"
-          class="row items-center justify-center no-wrap"
-        >
-          <q-btn
-            class="shadow-1 identity-label overflow-hidden text-negative"
-            style="border-radius: 10px"
-            icon="warning_amber"
-            no-caps
-            align="left"
-            label="Verification failed"
-          >
-            <q-menu
-              anchor="bottom middle"
-              self="top middle"
-              fit
-              :offset="[0, 15]"
-              max-width="80%"
-              class="identity-popup"
-            >
-              <div class="column no-wrap items-center">
-                <q-icon name="app:verify-failed" size="7rem" />
-
-                <span class="identify-popup-title q-mt-md q-mb-xs" style="color: #212131;">
-                  Verification failed
-                </span>
-                <span class="identify-popup-subtitle" style="color: #212131;">
-                  Reason
-                </span>
-
-                <q-btn
-                  v-close-popup
-                  class="wiv-primary-button q-mt-md"
-                  unelevated
-                  no-caps
-                  label="Go to Verification"
-                />
-                <router-link
-                  to="/help/faqs/kyc"
-                  class="q-mt-md q-mb-xs wrap no-underline identity-popup-route"
-                  >Contact Customer support</router-link
-                >
-              </div>
-            </q-menu>
-          </q-btn>
-        </q-card-section>
-
-        <q-card-section
-          v-else-if="user.verificationStatus === 'PENDING'"
-          class="row items-center justify-center no-wrap"
-        >
-          <q-btn
-            class="shadow-1 identity-label overflow-hidden"
-            style="border-radius: 10px"
-            icon="pending_actions"
-            no-caps
-            align="left"
-            label="Verifying your identity"
-          >
-            <q-menu
-              anchor="bottom middle"
-              self="top middle"
-              fit
-              :offset="[0, 15]"
-              max-width="80%"
-              class="identity-popup"
-            >
-              <div class="column no-wrap items-center">
-                <q-icon name="app:verify-pending" size="7rem" />
-
-                <span class="identify-popup-title q-mt-md q-mb-xs">
-                  Your identity is being verified.
-                </span>
-                <span class="identify-popup-subtitle">
-                  We will notify you once it is completed.
-                </span>
-              </div>
-            </q-menu>
-          </q-btn>
-        </q-card-section>
-
-        <q-card-section
-          v-else-if="user.verificationStatus === 'VERIFIED'"
-          class="row items-center justify-center no-wrap"
-        >
-          <q-btn
-            class="shadow-1 identity-label overflow-hidden text-primary"
-            style="border-radius: 10px"
-            icon="task_alt"
-            no-caps
-            align="left"
-            label="Your identity is verified"
-          >
-            <q-menu
-              anchor="bottom middle"
-              self="top middle"
-              fit
-              :offset="[0, 15]"
-              max-width="80%"
-              class="identity-popup"
-            >
-              <div class="column no-wrap items-center">
-                <q-icon name="app:verify-complete" size="7rem" />
-                <span class="identify-popup-title q-mt-md q-mb-xs">
-                  Your identity has been successfully verified.
-                </span>
-                <span class="identify-popup-subtitle">
-                  Enjoy exploring the world of wine!
-                </span>
-              </div>
-            </q-menu>
-          </q-btn>
-        </q-card-section>
+        <VerificationStatusMenu />
       </q-card-section>
       <div class="id-mobile">{{ user.walletAddress.slice(0, 20) + '...' }}</div>
 
@@ -200,7 +42,7 @@
         <div v-if="$q.screen.width > 600" class="row items-center">
           <div class="balance-container column justify-between">
             <span class="balance-label"> USDC Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:USDC-icon" size="24px" />
               <span
                 class="balance-number"
@@ -212,7 +54,7 @@
           </div>
           <div class="balance-container column justify-between q-mx-md">
             <span class="balance-label"> USDT Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:USDT-icon" size="24px" />
               <span
                 class="balance-number"
@@ -224,7 +66,7 @@
           </div>
           <div class="balance-container column justify-between">
             <span class="balance-label"> WIVA Balance </span>
-            <div class="row items-center q-gutter-x-xs">
+            <div class="row items-center q-gutter-x-xs no-wrap">
               <q-icon name="app:WIVA-icon" size="24px"/>
               <span
                 class="balance-number"
@@ -239,7 +81,7 @@
           <div :class="$q.screen.width > 350 ? 'row justify-center q-gutter-x-md full-width' : 'column items-center q-gutter-y-md'">
             <div class="balance-container column justify-between q-ml-none q-mt-none">
               <span class="balance-label"> USDC Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:USDC-icon" size="24px" />
                 <span
                   class="balance-number"
@@ -251,7 +93,7 @@
             </div>
             <div class="balance-container column justify-between">
               <span class="balance-label"> USDT Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:USDT-icon" size="24px" />
                 <span
                   class="balance-number"
@@ -265,7 +107,7 @@
           <div class="row justify-center">
             <div class="balance-container column justify-between">
               <span class="balance-label"> WIVA Balance </span>
-              <div class="row items-center q-gutter-x-xs">
+              <div class="row items-center q-gutter-x-xs no-wrap">
                 <q-icon name="app:WIVA-icon" size="24px"/>
                 <span
                   class="balance-number"
@@ -294,9 +136,16 @@
 <script lang="ts">
 import { UserModel } from 'src/components/models';
 import { defineComponent } from 'vue';
+import VerificationStatusVue from './VerificationStatus.vue';
+import { HandleUserValidity, VerificationStatus } from 'src/shared/veriff-service';
+import { mapState } from 'pinia';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   name: 'WalletDialog',
+  components: {
+    VerificationStatusMenu: VerificationStatusVue
+  },
   props: {
     user: {
       type: Object as () => UserModel,
@@ -315,6 +164,25 @@ export default defineComponent({
       required: true
     },
   },
-  emits: ['close-my-wallet', 'fund-wallet', 'logout']
+  emits: ['close-my-wallet', 'fund-wallet', 'logout'],
+  data() {
+    return {
+      HandleUserValidity
+    }
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      verificationStatus: store => store.user?.verificationStatus
+    })
+  },
+  methods: {
+    UpdateVerificationStatus() {
+      if (!!this.verificationStatus) {
+        if (this.verificationStatus !== VerificationStatus.VERIFIED) {
+          HandleUserValidity();
+        }
+      }
+    }
+  }
 });
 </script>

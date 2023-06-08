@@ -8,6 +8,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.sortedAtoZ"
             :options="listableFiltersStore.sortedAtoZOptions"
             type="radio"
@@ -23,6 +24,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.type"
             :options="listableFiltersStore.typeOptions"
             type="checkbox"
@@ -52,6 +54,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.brand"
             :options="brandOptions"
             type="checkbox"
@@ -82,6 +85,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.producer"
             :options="producerOptions"
             type="checkbox"
@@ -112,6 +116,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.country"
             :options="countryOptions"
             type="checkbox"
@@ -142,6 +147,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.region"
             :options="regionOptions"
             type="checkbox"
@@ -172,6 +178,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.appellation"
             :options="appellationOptions"
             type="checkbox"
@@ -188,6 +195,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.wineCase"
             :options="caseOptions"
             type="checkbox"
@@ -204,6 +212,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.format"
             :options="formatOptions"
             type="checkbox"
@@ -220,6 +229,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.investmentGrade"
             :options="investmentGradeOptions"
             type="checkbox"
@@ -250,6 +260,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.LWIN"
             :options="LWINOptions"
             type="checkbox"
@@ -266,6 +277,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="listableFiltersStore.heritage"
             :options="heritageOptions"
             type="checkbox"
