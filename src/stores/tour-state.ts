@@ -16,12 +16,12 @@ export const useTourStore = defineStore(
     // If the dialog has not been shown
     // And the user has not seen it in the past day of their timezone
     // Then show the dialog
-    // if (
-    //   !suggestedWinesDialog.value &&
-    //   Date.now() - suggestionTimeout.value > 86400000
-    // ) {
-    //   suggestedWinesDialog.value = true;
-    // }
+    if (
+      !suggestedWinesDialog.value &&
+      Date.now() - suggestionTimeout.value > 86400000
+    ) {
+      suggestedWinesDialog.value = true;
+    }
 
     // if (
     //   suggestedWinesDialog.value ||
