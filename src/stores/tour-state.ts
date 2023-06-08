@@ -16,12 +16,19 @@ export const useTourStore = defineStore(
     // If the dialog has not been shown
     // And the user has not seen it in the past day of their timezone
     // Then show the dialog
-    if (
-      !suggestedWinesDialog.value &&
-      Date.now() - suggestionTimeout.value > 86400000
-    ) {
-      suggestedWinesDialog.value = true;
-    }
+    // if (
+    //   !suggestedWinesDialog.value &&
+    //   Date.now() - suggestionTimeout.value > 86400000
+    // ) {
+    //   suggestedWinesDialog.value = true;
+    // }
+
+    // if (
+    //   suggestedWinesDialog.value ||
+    //   Date.now() - suggestionTimeout.value <= 86400000
+    // ) {
+    //   suggestedWinesDialog.value = false;
+    // }
 
     const setHomeCompleted = () => {
       homeCompleted.value = true;
@@ -49,18 +56,17 @@ export const useTourStore = defineStore(
     };
 
     const OnMounted = () => {
-      setHomeCompleted();
-      setMarketplaceCompleted();
-      setMetadataCompleted();
-      setFavoritesCompleted();
-      setTermsAndConditionsAgreed();
-      setSuggestedWinesDialog();
-
       // Show the dialog on page load
-      // homeCompleted.value = false;
-      // marketplaceCompleted.value = false;
-      // metadataCompleted.value = false;
-      // favoritesCompleted.value = false;
+      // setHomeCompleted();
+      homeCompleted.value = false;
+      marketplaceCompleted.value = false;
+      metadataCompleted.value = false;
+      favoritesCompleted.value = false;
+      // setMarketplaceCompleted();
+      // setMetadataCompleted();
+      // setFavoritesCompleted();
+      // setTermsAndConditionsAgreed();
+      // setSuggestedWinesDialog();
     };
 
     return {
