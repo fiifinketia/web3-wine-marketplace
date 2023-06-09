@@ -1,20 +1,41 @@
 .partnership {
-margin-top: 20px;
+  margin-top: 20px;
+}
 
+.faq {
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.tour-style {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.shepherd-text {
+  font-size: 20px; /* Customize the font size */
+}
+
+.shepherd-button {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 @media screen and (min-width: 1512px) {
-	.partnership,
-	.wine-calculator-container,
-	.trending,
-	.exclusive-offer-container,
-	.exclusive-offer-title,
-	.go-to-marketplace-wrapper {
-		max-width: 1200px;
-		margin: 0 auto;
-	}
+  .partnership,
+  .wine-calculator-container,
+  .trending,
+  .exclusive-offer-container,
+  .exclusive-offer-title,
+  .go-to-marketplace-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-	.partnership {
-		margin-top: 220px;
-	}
+  .partnership {
+    margin-top: 220px;
+  }
 }
