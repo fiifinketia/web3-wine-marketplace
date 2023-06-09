@@ -6,9 +6,7 @@ import {
   OrderModel,
   RetrieveOrderResponse,
   SeaportInstance,
-  FulfillOrderRequest,
-	CreateOrderRequest,
-	CancelOrderRequest,
+	CancelOrderModel,
 } from '../models/Orders';
 import { ERC721_PolygonContract } from 'src/shared/web3.helper';
 import axios from 'axios';
@@ -20,6 +18,8 @@ import { APIKeyString } from 'src/boot/axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { ERC20_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
 import { UserModel } from 'src/components/models';
+import { NOTIFICATION_CODES, TXN_STATUS } from 'src/shared/models/entities/notifications.model';
+import { CancelOrderRequest, CreateOrderRequest, FulfillOrderRequest } from 'src/shared/models/requests/orders.requests';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: Window;
@@ -27,13 +27,13 @@ declare let window: Window;
 function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
 	if (isListing) {
 		return {
-			listingPrice: (parseFloat(parameters.consideration[0].startAmount) / 0.975).toString(),
-			listingCurrency: parameters.consideration[0].token
+			orderPrice: (parseFloat(parameters.consideration[0].startAmount) / 0.975).toString(),
+			orderCurrency: parameters.consideration[0].token
 		}
 	}
 	return {
-		offerPrice: parameters.offer[0].startAmount,
-		offerCurrency: parameters.offer[0].token
+		orderPrice: parameters.offer[0].startAmount,
+		orderCurrency: parameters.offer[0].token
 	}
 }
 
@@ -151,8 +151,8 @@ export async function CreateERC721Listing(
 		brand: brand,
 		image: image,
 		nonce: txn.nonce,
-		listingPrice: GetOrderPrice(true, order.parameters).listingPrice,
-		listingCurrency
+		orderPrice: GetOrderPrice(true, order.parameters).orderPrice,
+		orderCurrency: listingCurrency
 	};
 	const OrderRequest: CreateOrderRequest = {
 		order: db_Order,
@@ -288,8 +288,8 @@ export async function CreateERC721Offer(
 		identifierOrCriteria: tokenID,
 		brand: brand,
 		image: image,
-		offerPrice: offerPrice,
-		offerCurrency: offerCurrency,
+		orderPrice: offerPrice,
+		orderCurrency: offerCurrency,
 		nonce: txn.nonce
 	};
 	const OrderRequest: CreateOrderRequest = {
@@ -335,6 +335,7 @@ export async function FulfillBasicOrder(
 				network: data.network,
 				identifierOrCriteria: data.identifierOrCriteria,
 				contractAddress: data.contractAddress,
+				brand: data.brand
 			};
 		});
 	const blockNumber = await GetBlockNumber();
@@ -351,7 +352,6 @@ export async function FulfillBasicOrder(
 		});
 
 	const txn = await executeAllFulfillActions();
-	const orderPriceDetails = owner ? GetOrderPrice(false, order.parameters) : GetOrderPrice(true, order.parameters);
 
 	const updateOrder: FulfillOrderRequest = {
 		identifierOrCriteria: order.identifierOrCriteria,
@@ -367,13 +367,6 @@ export async function FulfillBasicOrder(
 		blockNumber: blockNumber,
 		apiKey: <string> APIKeyString
 	};
-	owner ? () => {
-		updateOrder['offerCurrency'] = orderPriceDetails.offerCurrency;
-		updateOrder['offerPrice'] = orderPriceDetails.offerPrice;
-	} : () => {
-		updateOrder['listingCurrency'] = orderPriceDetails.listingCurrency;
-		updateOrder['listingPrice'] = orderPriceDetails.listingPrice;
-	}
 	const fulfillOrderURL = <string>process.env.FULFILL_ORDER_URL;
 	axios.post(fulfillOrderURL, updateOrder);
 }
@@ -390,13 +383,15 @@ export async function CancelSingleOrder(
     };
 		let orderParameters = {} as OrderComponents;
 		let from = '';
+		let brand = '';
 		const tokenDetails = {} as TokenIdentifier;
-    const order: OrderComponents = await axios
+    const orderComponents: OrderComponents = await axios
       .post(retrieveOrderUrl, body)
       .then(result => {
         const data = <RetrieveOrderResponse> result.data;
 				orderParameters = data.parameters;
 				from = data.from;
+				brand = data.brand;
 				tokenDetails['contractAddress'] = data.contractAddress;
 				tokenDetails['identifierOrCriteria'] = data.identifierOrCriteria;
 				tokenDetails['network'] = data.network;
@@ -407,12 +402,12 @@ export async function CancelSingleOrder(
       });
     const { seaport } = await GetWeb3();
     const blockNumber = await GetBlockNumber();
-    const { transact } = seaport.cancelOrders([order]);
+    const { transact } = seaport.cancelOrders([orderComponents]);
     const txn = await transact();
 
-		const orderPriceDetails = from == 'Owner' ? GetOrderPrice(true, orderParameters) : GetOrderPrice(false, orderParameters);
+		const { orderCurrency, orderPrice } = from == 'Owner' ? GetOrderPrice(true, orderParameters) : GetOrderPrice(false, orderParameters);
     const cancelOrderURL = <string>process.env.CANCEL_ORDER_URL;
-    const requestToCancel: CancelOrderRequest = {
+    const cancelOrderDetails: CancelOrderModel = {
       orderHash: orderHash,
       walletAddress: walletAddress,
       nonce: txn.nonce,
@@ -420,16 +415,18 @@ export async function CancelSingleOrder(
       apiKey: <string> APIKeyString,
 			identifierOrCriteria: tokenDetails.identifierOrCriteria,
 			network: tokenDetails.network,
-			contractAddress: tokenDetails.contractAddress
+			contractAddress: tokenDetails.contractAddress,
+			orderPrice: orderPrice,
+			orderCurrency: orderCurrency,
+			brand: brand
     };
-		from == 'Owner' ? () => {
-			requestToCancel['listingCurrency'] = orderPriceDetails.listingCurrency;
-			requestToCancel['listingPrice'] = orderPriceDetails.listingPrice;
-		} : () => {
-			requestToCancel['offerCurrency'] = orderPriceDetails.offerCurrency;
-			requestToCancel['offerPrice'] = orderPriceDetails.offerPrice;
+		const cancelRequest: CancelOrderRequest = {
+			order: cancelOrderDetails,
+			status: TXN_STATUS.TRANSACTION_PENDING,
+			notificationCode: from == 'Owner' ? NOTIFICATION_CODES.LISTING_REMOVED : NOTIFICATION_CODES.OFFER_REMOVED,
+			apiKey: <string> APIKeyString
 		}
-    axios.post(cancelOrderURL, requestToCancel);
+    axios.post(cancelOrderURL, cancelRequest);
   } else {
     throw new Error('Please reconnect/install Metamask wallet to continue')
   }

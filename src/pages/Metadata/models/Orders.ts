@@ -2,11 +2,9 @@ import { OrderWithCounter } from '@opensea/seaport-js/lib/types';
 import { Seaport } from '@opensea/seaport-js';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 
-interface OrderPrice {
-  offerPrice?: string;
-  offerCurrency?: string;
-  listingPrice?: string;
-  listingCurrency?: string;
+interface OrderPriceDetails {
+  orderPrice?: string;
+  orderCurrency?: string;
 }
 
 interface OtherOrderDetails {
@@ -16,7 +14,7 @@ interface OtherOrderDetails {
 	readonly image: string;
 }
 
-interface OrderModel extends OrderWithCounter, TokenIdentifier, OrderPrice, OtherOrderDetails {
+interface OrderModel extends OrderWithCounter, TokenIdentifier, OrderPriceDetails, OtherOrderDetails {
   nonce?: number;
 }
 
@@ -25,30 +23,13 @@ interface SeaportInstance {
   network: string;
 }
 
-interface CreateOrderRequest {
-  readonly order: OrderModel,
-  readonly blockNumber: number;
-  readonly apiKey: string;
-}
-
-interface CancelOrderRequest extends OrderPrice, TokenIdentifier {
+interface CancelOrderModel extends OrderPriceDetails, TokenIdentifier {
   readonly orderHash: string;
   readonly walletAddress: string;
   readonly nonce: number;
   readonly blockNumber: number;
   readonly apiKey: string;
-}
-
-interface FulfillOrderRequest extends TokenIdentifier, OrderPrice {
-	readonly brand: string;
-	readonly image: string;
-	readonly orderHash: string;
-	readonly isOwner: boolean;
-	readonly nonce: number;
-	readonly walletAddress: string;
-	readonly blockNumber: number;
-	readonly offerer: string;
-  readonly apiKey: string;
+  readonly brand: string;
 }
 
 enum ItemType {
@@ -69,13 +50,12 @@ enum ChainID {
 
 interface RetrieveOrderResponse extends OrderWithCounter, TokenIdentifier {
   from: string;
+  brand: string;
 }
 
 export {
   OrderModel,
-  CreateOrderRequest,
-  FulfillOrderRequest,
-  CancelOrderRequest,
+  CancelOrderModel,
   SeaportInstance,
   ItemType,
   ChainID,
