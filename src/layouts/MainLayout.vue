@@ -62,10 +62,7 @@
 
   <!---------------------------- /MY WALLET ---------------------------->
   <!---------------------------- SETTINGS ---------------------------->
-  <div
-    v-if="userStore.user"
-    class="row justify-end hidden"
-  >
+  <div v-if="userStore.user" class="row justify-end hidden">
     <SettingsDialog
       v-model="showSettings"
       @close-settings="showSettings = false"
@@ -75,8 +72,40 @@
   <!-- Terms and Conditions -->
   <wiv-toc-dialog
     v-model="showTermsAndConditions"
+    full-height
+    class="terms-and-conditions-background"
     @toc-accepted="showTermsAndConditions = false"
   />
+  >
+  <q-card class="terms-and-conditions-container column justify-between no-wrap">
+    <q-card-section>
+      <div class="overflow-scroll" v-html="TermsAndConditions"></div>
+    </q-card-section>
+    <q-card-actions class="row terms-and-conditions-btns justify-end">
+      <q-btn
+        class="terms-and-conditions-btn-decline q-ma-xs"
+        color="primary"
+        size="lg"
+        unelevated
+        no-caps
+        outline
+        @click="showTermsAndConditions = false"
+      >
+        Decline
+      </q-btn>
+      <q-btn
+        class="terms-and-conditions-btn-accept q-ma-xs"
+        color="primary"
+        size="lg"
+        unelevated
+        no-caps
+        @click="acceptTermsAndConditions"
+      >
+        Accept
+      </q-btn>
+    </q-card-actions>
+  </q-card>
+
   <!-- /Terms and Conditions -->
 
   <BurgerMenu
@@ -524,6 +553,7 @@ export default defineComponent({
   },
 
   async mounted() {
+    this.tourStore.OnMounted();
     await this.userStore.checkConnection();
     if (!this.walletAddress) {
       this.ClearStore();
@@ -587,18 +617,18 @@ export default defineComponent({
       this.showConnectWallet = false;
       if (!this.tourStore.termsAndConditionsAgreed) {
         this.showTermsAndConditions = true;
-				this.$watch('tourStore.termsAndConditionsAgreed', async (newValue) => {
-					if (newValue) {
-						await this._connectWallet();
-					}
-				});
+        this.$watch('tourStore.termsAndConditionsAgreed', async newValue => {
+          if (newValue) {
+            await this._connectWallet();
+          }
+        });
       } else {
-				await this._connectWallet();
-			}
+        await this._connectWallet();
+      }
     },
 
-		async _connectWallet() {
-			try {
+    async _connectWallet() {
+      try {
         await this.userStore.connectWallet();
         if (!this.$route.query?.next) {
           this.$router.go(0);
@@ -613,7 +643,7 @@ export default defineComponent({
         }, 2000);
         throw error;
       }
-		},
+    },
 
     setupWallet() {
       this.isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;

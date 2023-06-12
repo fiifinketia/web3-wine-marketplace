@@ -14,6 +14,16 @@
 }
 
 @font-face {
+  font-family: Obviously-Bolder-2;
+  src: url(../assets/fonts/Obviously-Bolder-2.otf);
+}
+
+@font-face {
+  font-family: Obviously-Boldest;
+  src: url(../assets/fonts/Obviously-Boldest.otf);
+}
+
+@font-face {
   font-family: ProximaNova-Bold;
   src: url(../assets/fonts/ProximaNova-Bold.otf);
 }

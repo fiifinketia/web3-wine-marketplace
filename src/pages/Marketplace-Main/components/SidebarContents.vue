@@ -35,7 +35,10 @@
         label="Status"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="sidebar-active-border rounded-borders q-my-sm">
+        <q-list
+          id="status-filter"
+          class="sidebar-active-border rounded-borders q-my-sm"
+        >
           <q-option-group
             id="filter-to-top"
             v-model="wineFiltersStore.listedOnly"
@@ -43,23 +46,21 @@
             type="radio"
             class="sidebar-options"
           />
-          <div style="padding-left: 30px">
-            <q-option-group
-              id="filter-to-top"
-              v-model="wineFiltersStore.currency"
-              :options="wineFiltersStore.currencyOptions"
-              type="checkbox"
-              class="sidebar-options"
-              :disable="disableCurrencies"
-            >
-              <template #label="opt">
-                <div class="row items-center q-gutter-x-xs">
-                  <q-icon :name="opt.icon" size="1.5em" />
-                  <span>{{ opt.label }}</span>
-                </div>
-              </template>
-            </q-option-group>
-          </div>
+          <q-option-group
+            id="filter-to-top"
+            v-model="wineFiltersStore.currency"
+            :options="wineFiltersStore.currencyOptions"
+            type="checkbox"
+            class="sidebar-options inner-group"
+            :disable="disableCurrencies"
+          >
+            <template #label="opt">
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon :name="opt.icon" size="1.5em" />
+                <span>{{ opt.label }}</span>
+              </div>
+            </template>
+          </q-option-group>
         </q-list>
       </q-expansion-item>
 

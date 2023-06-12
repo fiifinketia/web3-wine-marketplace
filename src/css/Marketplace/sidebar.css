@@ -13,6 +13,10 @@
   flex-direction: column;
 }
 
+.inner-group {
+  padding-left: 30px;
+}
+
 [aria-expanded='true'] {
   border-color: #8cbaff !important;
 }
@@ -130,15 +134,38 @@
 .main-filter-box {
   box-sizing: border-box;
   overflow-y: scroll;
+  position: relative;
   background: #ffffff;
   border-radius: 18px;
+}
+
+#marketplace-sidebar-lg > .q-scrollarea__thumb--v {
+  margin-top: 12px;
 }
 
 .main-filter-box::-webkit-scrollbar {
   display: none;
 }
+
 #filter_price .q-slider__thumb,
 #filter_maturity .q-slider__thumb {
   box-shadow: inset 0px 0px 3px 0px rgb(0 0 0 / 20%);
   border-radius: 100px;
+}
+
+.tour-style {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.shepherd-text {
+  font-size: 20px; /* Customize the font size */
+}
+
+.shepherd-button {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
 }

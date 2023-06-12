@@ -189,37 +189,67 @@ body {
 }
 
 .wiv-primary-button {
-	font-family: 'ProximaNova-Bold';
-	font-size: 20px;
-	text-align: center;
-	color: #ffffff;
-	padding: 10px 25px !important;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #ffffff;
+  padding: 10px 25px !important;
   width: 426px;
   height: 56px;
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	border-radius: 6px;
-	border: none;
-	cursor: pointer;
+  background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.terms-and-conditions-container {
+  padding: 20px;
+  font-size: 16px;
+  font-family: 'ProximaNova-Regular';
+  border-radius: 10px;
+}
+
+.terms-and-conditions-container::-webkit-scrollbar {
+  border-radius: 9px;
+  background-color: #a8a4a4;
+  width: 9px;
+  opacity: 0.2;
+}
+
+.terms-and-conditions-container::-webkit-scrollbar-thumb {
+  border-radius: 9px;
+  background-color: #3586ff;
+  height: 200px;
+  width: 5px;
+  opacity: 0.75;
 }
 
 .terms-and-conditions-btns {
-	background: rgba(255, 255, 255, 0.8);
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15) !important;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15) !important;
 }
 
 .terms-and-conditions-btn-accept {
-	background: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) !important;
-	border-radius: 6px;
-	padding-right: 1rem !important;
-	padding-left: 1rem !important;
+  background: linear-gradient(
+    102.17deg,
+    #3586ff -1.74%,
+    #83e0b3 139.41%
+  ) !important;
+  border-radius: 6px;
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
 }
 
 .terms-and-conditions-btn-decline {
-	color: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%);	
-	border-color: linear-gradient(102.17deg, #3586FF -1.74%, #83E0B3 139.41%) !important;
-	border-radius: 6px;
-	padding-left: 1rem !important;
-	padding-right: 1rem !important;
+  color: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
+  border-color: linear-gradient(
+    102.17deg,
+    #3586ff -1.74%,
+    #83e0b3 139.41%
+  ) !important;
+  border-radius: 6px;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 @media screen and (min-width: 1512px) {

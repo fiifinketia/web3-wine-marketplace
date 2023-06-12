@@ -1,10 +1,11 @@
 <template>
   <HeadlineComponent />
-  <ExclusiveOffers @shepherd-remove-step="id => shepherd.removeStep(id)" />
+  <ExclusiveOffers class="q-px-md" @shepherd-remove-step="id => shepherd.removeStep(id)" />
   <Calculator />
   <!-- <TrendingWines class="trending" /> -->
   <!-- <PartnershipWines class="partnership" /> -->
   <FAQ
+    style="margin-bottom: 150px"
     class="faq"
     @open-help-center-faqs="$emit('openHelpCenterFaqs')"
     @open-help-center-support="$emit('openHelpCenterSupport')"
@@ -29,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useShepherd, Tour } from 'vue-shepherd'
+import { useShepherd, Tour } from 'vue-shepherd';
 import Calculator from './components/Calculator.vue';
 import HeadlineComponent from './components/HeadlineComponent.vue';
 import LandingPageFooter from './components/Footer.vue';
@@ -102,6 +103,7 @@ export default defineComponent({
             on: 'bottom',
           },
           text: 'Welcome to the WiV Marketplace',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Continue',
@@ -127,6 +129,7 @@ export default defineComponent({
             on: 'bottom',
           },
           text: 'Click here to go to the marketplace',
+          classes: 'tour-style',
           scrollTo: {
             // Make sure the element is in the viewport
             behavior: 'smooth',

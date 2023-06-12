@@ -3,7 +3,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: -5;
+	z-index: 1;
 }
 
 .grape-img-right {
@@ -11,7 +11,7 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	z-index: -5;
+	z-index: 1;
 }
 
 .grape-mobile {
@@ -19,7 +19,8 @@
 }
 
 .headline-container {
-	height: 80vh;
+	margin-top: 10%;
+	margin-bottom: 10%;
 }
 
 .headline-title {
@@ -66,6 +67,12 @@
 	border: none;
 }
 
+@media screen and (max-width: 1500px) {
+	.headline-container {
+		margin-bottom: 15%;
+	}
+}
+
 @media screen and (max-width: 992px) {
 	.headline-title {
 		font-size: 56px;
@@ -84,11 +91,11 @@
 	}
 
 	.grape-img-left {
-		width: 28%;
+		width: 30%;
 	}
 
 	.grape-img-right {
-		width: 31%;
+		width: 33%;
 	}
 }
 
@@ -119,40 +126,19 @@
 	}
 
 	.grape-mobile {
-		width: 75%;
+		width: 80%;
 		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
+		margin-right: auto;
+		margin-bottom: -25%;
 	}
 
 	.headline-container {
-		margin-top: 15rem;
-	}
-}
-@media screen and (max-width: 500px) {
-	.grape-mobile {
-		width: 85%;
-	}
-}
-@media screen and (max-width: 450px) {
-	.grape-mobile {
-		width: 95%;
-	}
-	.headline-container {
-		margin-top: 13rem;
+		margin-bottom: 30%;
+		margin-top: 0;
 	}
 }
 @media screen and (max-width: 400px) {
 	.grape-mobile {
 		width: 100%;
-	}
-	.headline-container {
-		margin-top: 13rem;
-	}
-}
-@media screen and (max-width: 350px) {
-	.headline-container {
-		margin-top: 10rem;
 	}
 }

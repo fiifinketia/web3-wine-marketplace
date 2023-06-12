@@ -96,6 +96,8 @@ padding-top: 20px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		padding-left: 16px;
+		padding-right: 16px;
 	}
 
 	.boost-worth-text {
@@ -119,6 +121,7 @@ padding-top: 20px;
 	.wine-calculator-image-wrapper {
 		width: 100%;
 		display: flex;
+		padding-left: 0;
 		justify-content: center;
 	}
 

@@ -10,7 +10,7 @@ import { VeriffNotificationModel } from './models/entities/notifications.model';
 
 const userStore = useUserStore();
 const socketURL = <string>process.env.NOTIFICATIONS_MSVC_URL;
-// const socketURL = 'http://localhost:3900';
+// const socketURL = 'https://wiv-mkt-notifications-msvc-test.azurewebsites.net/';
 const socket = io(socketURL, {
   query: { walletAddress: userStore.walletAddress },
 });

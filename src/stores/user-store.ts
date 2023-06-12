@@ -94,10 +94,14 @@ export const useUserStore = defineStore(
     };
 
     const checkConnection = async () => {
-      const connectedAccounts: string[] = await window.ethereum.request({
-        method: 'eth_accounts',
-      });
-      if (connectedAccounts.length == 0) {
+      try {
+        const connectedAccounts: string[] = await window.ethereum.request({
+          method: 'eth_accounts',
+        });
+        if (connectedAccounts.length == 0) {
+          walletAddress.value = '';
+        }
+      } catch {
         walletAddress.value = '';
       }
     };
