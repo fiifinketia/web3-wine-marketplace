@@ -1,6 +1,6 @@
-import { CancelOrderModel, OrderModel } from "src/pages/Metadata/models/Orders";
-import { NOTIFICATION_CODES, TXN_STATUS } from "../entities/notifications.model";
-import { TokenIdentifier } from "../entities/NFT.model";
+import { CancelOrderModel, OrderModel } from 'src/pages/Metadata/models/Orders';
+import { NOTIFICATION_CODES, TXN_STATUS } from '../entities/notifications.model';
+import { TokenIdentifier } from '../entities/NFT.model';
 
 interface CancelOrderRequest {
   order: CancelOrderModel;

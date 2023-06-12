@@ -8,7 +8,7 @@ enum NOTIFICATION_CODES {
   VERIFF_RESUBMITTED = 205,
   VERIFF_EXPIRED = 206,
   VERIFF_REVIEW = 207,
-  
+
   LISTING_CREATED = 100,
   OFFER_CREATED = 101,
 
@@ -22,7 +22,7 @@ enum NOTIFICATION_CODES {
   OFFER_ACCEPTED_OLD_OWNER = 131,
   LISTING_PURCHASED_OLD_OWNER = 132,
   LISTING_PURCHASED_NEW_OWNER = 133,
-  
+
   WINE_CHANGED = 140,
 }
 
@@ -53,6 +53,7 @@ interface TransactionNotificationModel
   status: TXN_STATUS;
   orderPrice?: string;
   orderCurrency?: string;
+  brand: string;
 }
 
 interface VeriffNotificationModel extends NotificationSchema {

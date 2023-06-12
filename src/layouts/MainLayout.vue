@@ -76,35 +76,6 @@
     class="terms-and-conditions-background"
     @toc-accepted="showTermsAndConditions = false"
   />
-  >
-  <q-card class="terms-and-conditions-container column justify-between no-wrap">
-    <q-card-section>
-      <div class="overflow-scroll" v-html="TermsAndConditions"></div>
-    </q-card-section>
-    <q-card-actions class="row terms-and-conditions-btns justify-end">
-      <q-btn
-        class="terms-and-conditions-btn-decline q-ma-xs"
-        color="primary"
-        size="lg"
-        unelevated
-        no-caps
-        outline
-        @click="showTermsAndConditions = false"
-      >
-        Decline
-      </q-btn>
-      <q-btn
-        class="terms-and-conditions-btn-accept q-ma-xs"
-        color="primary"
-        size="lg"
-        unelevated
-        no-caps
-        @click="acceptTermsAndConditions"
-      >
-        Accept
-      </q-btn>
-    </q-card-actions>
-  </q-card>
 
   <!-- /Terms and Conditions -->
 
