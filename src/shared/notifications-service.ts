@@ -59,7 +59,7 @@ socket.onAny((code: string, data: NotificationReceived<VeriffNotificationModel |
   if (Object.keys(NOTIFICATION_CODES).includes(code.toString())) {
     // Use first digit of code to determine notification type
     const notificationType = Math.floor(data.code / 100);
-    console.log(data)
+    // console.log(data)
     switch (notificationType) {
       case 1:
         // Transaction notification

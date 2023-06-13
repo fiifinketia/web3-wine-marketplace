@@ -6,6 +6,7 @@
     full-height
     transition-show="scale"
     transition-hide="scale"
+    @show="FetchNotificationSettings()"
   >
     <q-card class="settings-container column items-center no-wrap">
       <q-card-section
@@ -124,56 +125,133 @@
                 <div class="row q-my-md settings-notifications-header justify-center">
                   Select the notifications you would like to receive.
                 </div>
-                <div class="column q-my-sm settings-notification-options">
+                <div class="column q-mt-sm q-mb-md settings-notification-options">
                   <q-checkbox
-                    v-model="notificationsStore.settings.offerReceived"
-                    label="You received an offer on your wine"
+                    v-model="notificationSettings.OFFER_ACCEPTED_NEW_OWNER"
+                    label="Your offer has been accepted"
                   />
                   <q-checkbox
-                    v-model="notificationsStore.settings.offerMade"
-                    label="You have successfully placed a bid"
+                    v-model="notificationSettings.OFFER_ACCEPTED_OLD_OWNER"
+                    label="You have successfully accepted an offer for your Wine"
                   />
                   <q-checkbox
-                    v-model="notificationsStore.settings.offerAccepted"
-                    label="Your bid has been accepted"
-                  />
-                  <q-checkbox
-                    v-model="notificationsStore.settings.offerOutbidded"
-                    label="Your offer has been outbid"
-                  />
-                  <q-checkbox
-                    v-model="notificationsStore.settings.orderFulfilled"
+                    v-model="notificationSettings.LISTING_PURCHASED_OLD_OWNER"
                     label="You sold your Wine"
                   />
                   <q-checkbox
-                    v-model="notificationsStore.settings.wineChanged"
-                    label="Your wine has some changes from the producer"
+                    v-model="notificationSettings.LISTING_PURCHASED_NEW_OWNER"
+                    label="You have successfully purchased your new Wine"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_RECEIVED"
+                    label="You received an offer on your Wine"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_CREATED_COMPLETED"
+                    label="You have successfully placed a Wine offer"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_OFFER_COMPLETED"
+                    label="You have successfully withdrawn your Wine offer"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_CREATED_COMPLETED"
+                    label="You have successfully made a Wine listing"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_LISTING_COMPLETED"
+                    label="You have successfully unlisted your Wine"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_CREATED_PENDING"
+                    label="Your Wine listing is on its way"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_CREATED_PENDING"
+                    label="Your Wine offer is on its way"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_LISTING_PENDING"
+                    label="Your Wine is being unlisted"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_OFFER_PENDING"
+                    label="Your Wine offer is being withdrawn"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_CREATED_CANCELLED"
+                    label="You have cancelled your ongoing Wine listing"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_CREATED_CANCELLED"
+                    label="You have cancelled your ongoing Wine offer"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_LISTING_CANCELLED"
+                    label="You have cancelled your ongoing Wine unlisting"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_OFFER_CANCELLED"
+                    label="You have cancelled your ongoing Wine offer withdrawal"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_CREATED_ERROR"
+                    label="There was a problem with your Wine listing"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_CREATED_ERROR"
+                    label="There was a problem with listing your Wine"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_CREATED_ERROR"
+                    label="There was a problem with creating your Wine offer"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.LISTING_PURCHASED_ERROR"
+                    label="There was a problem with purchasing a Wine listing"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.OFFER_ACCEPTED_ERROR"
+                    label="There was a problem with accepting a Wine offer"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_LISTING_ERROR"
+                    label="There was a problem with unlisting your Wine"
+                  />
+                  <q-checkbox
+                    v-model="notificationSettings.REMOVE_OFFER_ERROR"
+                    label="There was a problem with withdrawing your Wine offer"
                   />
                 </div>
+                <q-btn
+                  class="wiv-primary-button q-my-sm settings-actions"
+                  label="Update settings"
+                  no-caps
+                  unelevated
+                  @click="
+                    notificationsStore.saveNotificationSettings(
+                      userStore.walletAddress
+                    )
+                  "
+                />
 
                 <div class="row q-mb-md q-mt-lg settings-notifications-header justify-center">
-                  Be notified by email once the wine store is going live
+                  Stay Updated with Email Notifications
                 </div>
-                <div class="column q-my-sm no-wrap settings-actions">
+                <div v-if="!notificationSettings.email" class="column q-my-sm no-wrap settings-actions">
                   <span class="q-mb-xs settings-username-header"> Your Email </span>
                   <q-input
-                    v-model="notificationsStore.settings.email"
+                    v-model="email"
                     class="q-mb-md settings-actions"
                     outlined
                     dense
-                    :disabled="!notificationsStore.settings.email"
                     lazy-rules
                   />
                   <q-btn
                     class="wiv-primary-button q-my-sm settings-actions"
-                    label="Save Changes"
+                    label="Verify Email"
                     no-caps
                     unelevated
-                    @click="
-                      notificationsStore.saveNotificationsSettings(
-                        userStore.walletAddress
-                      )
-                    "
                   />
                 </div>
               </q-card-section>
@@ -188,8 +266,9 @@
 import { defineComponent, ref } from 'vue';
 import '../../css/MainLayout/SettingsDialog.css';
 import { useUserStore } from 'src/stores/user-store';
-import { useNotificationsStore } from 'src/stores/notifications-store';
 import VerificationStatus from './VerificationStatus.vue';
+import { useNotificationsStore } from 'src/stores/notifications-store';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   name: 'SettingsDialog',
@@ -200,10 +279,10 @@ export default defineComponent({
   data() {
     const userStore = useUserStore();
     const notificationsStore = useNotificationsStore();
-    notificationsStore.getNotificationsSettings(userStore.walletAddress);
 
     return {
       userStore,
+      notificationsStore,
       tab: ref('profile'),
       loadingSettings: ref(false),
       imageFile: ref(null),
@@ -216,7 +295,8 @@ export default defineComponent({
         (val: string) =>
           val.length <= 12 || 'Please enter a maximum of 12 characters',
       ],
-      notificationsStore,
+      email: '',
+      fetchingSettings: false
     };
   },
   computed: {
@@ -227,6 +307,10 @@ export default defineComponent({
         'https://source.boringavatars.com/beam/40/'
       }?${timestamp}`;
     },
+    ...mapState(useNotificationsStore, {
+      notificationSettings: store => store.notificationSettings,
+      settingsFetched: store => store.settingsFetched
+    })
   },
   watch: {
     imageFile() {
@@ -245,6 +329,13 @@ export default defineComponent({
         // eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
+      }
+    },
+    async FetchNotificationSettings() {
+      if (!this.settingsFetched) {
+        this.fetchingSettings = true;
+        await this.notificationsStore.getNotificationsSettings(this.userStore.walletAddress);
+        this.fetchingSettings = false;
       }
     },
     async uploadProfileAvatar() {

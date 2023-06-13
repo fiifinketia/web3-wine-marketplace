@@ -1,5 +1,38 @@
 import { TokenIdentifier } from './NFT.model';
 
+interface NotificationsSettings {
+	email?: string;
+  LISTING_CREATED_PENDING: boolean, // done
+  LISTING_CREATED_CANCELLED: boolean, // done
+  LISTING_CREATED_COMPLETED: boolean, //done
+  LISTING_CREATED_ERROR: boolean, // done
+
+  OFFER_CREATED_PENDING: boolean, // done
+  OFFER_CREATED_CANCELLED: boolean, // done
+  OFFER_CREATED_COMPLETED: boolean, // done
+  OFFER_CREATED_ERROR: boolean, // done
+
+  OFFER_RECEIVED: boolean, // done
+
+  LISTING_PURCHASED_OLD_OWNER: boolean, // done
+  LISTING_PURCHASED_NEW_OWNER: boolean, // done
+  LISTING_PURCHASED_ERROR: boolean, // done
+
+  OFFER_ACCEPTED_OLD_OWNER: boolean, // done
+  OFFER_ACCEPTED_NEW_OWNER: boolean, // done
+  OFFER_ACCEPTED_ERROR: boolean, // done
+
+  REMOVE_LISTING_PENDING: boolean, // done
+  REMOVE_LISTING_CANCELLED: boolean, // done
+  REMOVE_LISTING_COMPLETED: boolean, // done
+  REMOVE_LISTING_ERROR: boolean,
+
+  REMOVE_OFFER_PENDING: boolean, // done
+  REMOVE_OFFER_CANCELLED: boolean, // done
+  REMOVE_OFFER_COMPLETED: boolean, // done
+  REMOVE_OFFER_ERROR: boolean // done
+}
+
 enum NOTIFICATION_CODES {
   VERIFF_STARTED = 201,
   VERIFF_SUBMITTED = 202,
@@ -73,5 +106,6 @@ export {
   NotificationReceived,
   TransactionNotificationModel,
   VeriffNotificationModel,
-  TXN_STATUS
+  TXN_STATUS,
+  NotificationsSettings
 };
