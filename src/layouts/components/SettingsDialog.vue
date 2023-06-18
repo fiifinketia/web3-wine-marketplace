@@ -1,9 +1,7 @@
 <template>
   <q-dialog
-    position="left"
     persistent
     class="settings-background row"
-    full-height
     transition-show="scale"
     transition-hide="scale"
     @show="FetchNotificationSettings()"
@@ -25,20 +23,37 @@
       <q-tabs
         v-model="tab"
         class="text-grey settings-tab-value full-width"
-        style="border-bottom: 1px solid rgba(157, 157, 157, 0.5);"
+        style="border-bottom: 1px solid rgba(157, 157, 157, 0.5)"
         active-color="primary"
         indicator-color="primary"
         no-caps
       >
-        <q-tab style="width: 50%;" label="Profile" name="profile"></q-tab>
-        <q-tab style="width: 50%;" label="Notifications" name="notifications"></q-tab>
+        <q-tab style="width: 50%" label="Profile" name="profile"></q-tab>
+        <q-tab
+          style="width: 50%"
+          label="Notifications"
+          name="notifications"
+        ></q-tab>
       </q-tabs>
       <q-separator />
       <div v-if="!loadingSettings" class="full-width">
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="profile" :class="$q.screen.width <= 470 ? 'q-px-sm' : ''">
-            <q-card flat class="column items-center justify-around no-wrap">
-              <VerificationStatus class="full-width" />
+          <q-tab-panel
+            name="profile"
+            :class="$q.screen.width <= 470 ? 'q-px-sm' : ''"
+          >
+            <q-card flat class="column items-center justify-around no-wrap q-gutter-y-sm">
+							<EmailVerification
+								v-if="!userStore.user?.email"
+								class="full-width"
+							/>
+              <VerificationStatus
+                v-else-if="
+                  userStore.user?.verificationStatus !==
+                  VerificationStatusEnum.VERIFIED
+                "
+                class="full-width"
+              />
 
               <q-card-section class="column q-mb-md q-mt-lg items-center">
                 <q-avatar size="8em">
@@ -78,13 +93,15 @@
                   </q-badge>
                 </q-avatar>
                 <div class="row q-mt-sm justify-around full-width">
-                  <div class="col settings-label q-mx-xs">{{ userStore.user.username ? 'User Id' : 'Wallet' }}</div>
+                  <div class="col settings-label q-mx-xs">
+                    {{ userStore.user?.username ? 'User Id' : 'Wallet' }}
+                  </div>
                   <div
                     class="col settings-label-value no-wrap q-mx-xs"
                     style="min-width: fit-content"
                   >
                     {{
-                      userStore.user.username ||
+                      userStore.user?.username ||
                       userStore.walletAddress.slice(0.12)
                     }}
                   </div>
@@ -95,7 +112,10 @@
                 <div class="row q-mb-md settings-set-username justify-center">
                   You can set your username
                 </div>
-                <div class="column no-wrap q-pb-sm items-start" :class="$q.screen.width <= 470 ? 'full-width' : ''">
+                <div
+                  class="column no-wrap q-pb-sm items-start"
+                  :class="$q.screen.width <= 470 ? 'full-width' : ''"
+                >
                   <span class="row settings-username-header q-mb-xs">
                     Username
                   </span>
@@ -119,13 +139,20 @@
               </q-card-section>
             </q-card>
           </q-tab-panel>
-          <q-tab-panel name="notifications" :class="$q.screen.width <= 470 ? 'q-px-sm' : ''">
+          <q-tab-panel
+            name="notifications"
+            :class="$q.screen.width <= 470 ? 'q-px-sm' : ''"
+          >
             <q-card flat class="column items-center justify-around no-wrap">
               <q-card-section class="column q-my-xs items-center">
-                <div class="row q-my-md settings-notifications-header justify-center">
+                <div
+                  class="row q-my-md settings-notifications-header justify-center"
+                >
                   Select the notifications you would like to receive.
                 </div>
-                <div class="column q-mt-sm q-mb-md settings-notification-options">
+                <div
+                  class="column q-mt-sm q-mb-md settings-notification-options"
+                >
                   <q-checkbox
                     v-model="notificationSettings.OFFER_ACCEPTED_NEW_OWNER"
                     label="Your offer has been accepted"
@@ -235,11 +262,18 @@
                   "
                 />
 
-                <div class="row q-mb-md q-mt-lg settings-notifications-header justify-center">
+                <div
+                  class="row q-mb-md q-mt-lg settings-notifications-header justify-center"
+                >
                   Stay Updated with Email Notifications
                 </div>
-                <div v-if="!notificationSettings.email" class="column q-my-sm no-wrap settings-actions">
-                  <span class="q-mb-xs settings-username-header"> Your Email </span>
+                <div
+                  v-if="!notificationSettings.email"
+                  class="column q-my-sm no-wrap settings-actions"
+                >
+                  <span class="q-mb-xs settings-username-header">
+                    Your Email
+                  </span>
                   <q-input
                     v-model="email"
                     class="q-mb-md settings-actions"
@@ -266,14 +300,18 @@
 import { defineComponent, ref } from 'vue';
 import '../../css/MainLayout/SettingsDialog.css';
 import { useUserStore } from 'src/stores/user-store';
-import VerificationStatus from './VerificationStatus.vue';
+import VerificationStatusVue from './VerificationStatus.vue';
+
 import { useNotificationsStore } from 'src/stores/notifications-store';
 import { mapState } from 'pinia';
+import { VerificationStatus } from 'src/shared/veriff-service';
+import EmailVerification from './EmailVerification.vue';
 
 export default defineComponent({
   name: 'SettingsDialog',
   components: {
-    VerificationStatus: VerificationStatus
+    VerificationStatus: VerificationStatusVue,
+    EmailVerification: EmailVerification,
   },
   emits: ['close-settings'],
   data() {
@@ -296,7 +334,8 @@ export default defineComponent({
           val.length <= 12 || 'Please enter a maximum of 12 characters',
       ],
       email: '',
-      fetchingSettings: false
+      fetchingSettings: false,
+      VerificationStatusEnum: VerificationStatus,
     };
   },
   computed: {
@@ -309,8 +348,8 @@ export default defineComponent({
     },
     ...mapState(useNotificationsStore, {
       notificationSettings: store => store.notificationSettings,
-      settingsFetched: store => store.settingsFetched
-    })
+      settingsFetched: store => store.settingsFetched,
+    }),
   },
   watch: {
     imageFile() {
@@ -334,7 +373,9 @@ export default defineComponent({
     async FetchNotificationSettings() {
       if (!this.settingsFetched) {
         this.fetchingSettings = true;
-        await this.notificationsStore.getNotificationsSettings(this.userStore.walletAddress);
+        await this.notificationsStore.getNotificationsSettings(
+          this.userStore.walletAddress
+        );
         this.fetchingSettings = false;
       }
     },

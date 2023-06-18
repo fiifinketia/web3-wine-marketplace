@@ -10,15 +10,22 @@
       "
     >
       <div
-        :class="$q.screen.width > 600 ? 'metadata-nft-image-wrapper row justify-end' : ''"
+        :class="
+          $q.screen.width > 600
+            ? 'metadata-nft-image-wrapper row justify-end'
+            : ''
+        "
         :style="$q.screen.width > 600 ? '' : 'position: relative'"
       >
         <img :src="nft.image" class="metadata-nft-image" />
-        <div v-if="!!userStore.walletAddress" class="metadata-favorite-container column items-center justify-center">
+        <div
+          v-if="!!userStore.walletAddress"
+          class="metadata-favorite-container column items-center justify-center"
+        >
           <q-img
             v-if="nft.favoriteLoading"
             src="../../../assets/loading-heart.gif"
-            style="width: 27px; height: 27px;"
+            style="width: 27px; height: 27px"
           />
           <q-img
             v-else-if="nft.favorited"
@@ -96,23 +103,29 @@
             :class="$q.screen.width > 600 ? '' : 'q-gutter-y-sm'"
           >
             <div
-              v-if="nft.listingDetails.expTime && nft.listingDetails.transactionStatus == true"
+              v-if="
+                nft.listingDetails.expTime &&
+                nft.listingDetails.transactionStatus == true
+              "
               :class="$q.screen.width > 600 ? '' : 'column items-center'"
-              style="margin-bottom: 14px;"
+              style="margin-bottom: 14px"
             >
               <ListingExpTimer
                 :time-left="nft.listingDetails.expTime"
-                style="max-width: 500px;"
+                style="max-width: 500px"
               />
             </div>
             <div
-							id="metadata-listing-price"
+              id="metadata-listing-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
               <div class="starting-from">Price</div>
               <div
-                v-if="!!ongoingListingTransaction || nft.listingDetails.transactionStatus == false"
+                v-if="
+                  !!ongoingListingTransaction ||
+                  nft.listingDetails.transactionStatus == false
+                "
                 class="row items-center"
               >
                 <q-img src="../../../assets/processing.svg" width="30px" />
@@ -125,8 +138,15 @@
                 "
                 class="row items-center"
               >
-                <q-icon :name="`app:${GetCurrencyLabel(nft.listingDetails.currency)}-icon`" size="28px"/>
-                <span class="price1 q-pl-sm"> {{ nft.listingDetails.listingPrice }} </span>
+                <q-icon
+                  :name="`app:${GetCurrencyLabel(
+                    nft.listingDetails.currency
+                  )}-icon`"
+                  size="28px"
+                />
+                <span class="price1 q-pl-sm">
+                  {{ nft.listingDetails.listingPrice }}
+                </span>
               </div>
               <div
                 v-else-if="nft.listingDetails.listingPrice == null"
@@ -140,7 +160,7 @@
               </div>
             </div>
             <div
-							id="metadata-bidding-price"
+              id="metadata-bidding-price"
               class="column"
               :class="$q.screen.width > 600 ? 'items-start' : 'items-center'"
             >
@@ -148,10 +168,14 @@
               <div class="row items-center q-pt-sm">
                 <q-icon
                   v-if="!!nft.offerDetails.highestBid"
-                  :name="`app:${GetCurrencyLabel(nft.offerDetails.highestBidCurrency)}-icon`"
+                  :name="`app:${GetCurrencyLabel(
+                    nft.offerDetails.highestBidCurrency
+                  )}-icon`"
                   size="20px"
                 />
-                <span class="bid-price q-pl-sm"> {{ nft.offerDetails.highestBid || '--.--' }} </span>
+                <span class="bid-price q-pl-sm">
+                  {{ nft.offerDetails.highestBid || '--.--' }}
+                </span>
               </div>
             </div>
           </div>
@@ -171,7 +195,11 @@
         </q-btn>
         <q-btn
           v-else
-          :disable="nft.listingDetails.transactionStatus == false || unlisted || nft.listingDetails.listingCancellationStatus == true"
+          :disable="
+            nft.listingDetails.transactionStatus == false ||
+            unlisted ||
+            nft.listingDetails.listingCancellationStatus == true
+          "
           class="unlist-btn items-center justify-center metadata-btn-text_outline"
           no-caps
           outline
@@ -183,7 +211,7 @@
       </div>
       <div
         v-else
-				id="metadata-checkout-buttons"
+        id="metadata-checkout-buttons"
         :class="
           $q.screen.width > 600
             ? 'row q-gutter-x-md'
@@ -198,7 +226,7 @@
             !nft.listingDetails?.orderHash ||
             !nft.listingDetails?.transactionStatus
           "
-          @click="TransactionPreValidator('PURCHASE');"
+          @click="TransactionPreValidator('PURCHASE')"
         >
           Buy now
         </q-btn>
@@ -206,7 +234,7 @@
           no-caps
           flat
           class="offer-btn items-center justify-center metadata-btn-text"
-          @click="TransactionPreValidator('OFFER');"
+          @click="TransactionPreValidator('OFFER')"
         >
           Make an offer
         </q-btn>
@@ -238,8 +266,11 @@
       @listing-error-dialog="HandleError"
       @listable-nft-listed="SetTimeoutOnMetadataCompletedDialog('listing')"
       @listing-exists="listed => UpdateListingStatus(listed)"
-			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
-      @open-kyc-dialog="openCreateListingDialog = false; openKYCUpdate = true;"
+      @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+      @open-kyc-dialog="
+        openCreateListingDialog = false;
+        openKYCUpdate = true;
+      "
     />
 
     <CreateOfferDialog
@@ -256,8 +287,11 @@
       @outgoing-edit-close="openCreateOfferDialog = false"
       @outgoing-error-dialog="HandleError"
       @offer-created="SetTimeoutOnMetadataCompletedDialog('offer')"
-			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
-      @open-kyc-dialog="openCreateOfferDialog = false; openKYCUpdate = true;"
+      @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+      @open-kyc-dialog="
+        openCreateOfferDialog = false;
+        openKYCUpdate = true;
+      "
     />
 
     <DeleteListingDialog
@@ -269,8 +303,11 @@
       @listing-delete-close="openDeleteListingDialog = false"
       @listing-error-dialog="HandleError"
       @remove-listing="unlisted = true"
-      @unlist-failed="(failedUnlist) => InvalidUnlist(failedUnlist)"
-      @open-kyc-dialog="openDeleteListingDialog = false; openKYCUpdate = true;"
+      @unlist-failed="failedUnlist => InvalidUnlist(failedUnlist)"
+      @open-kyc-dialog="
+        openDeleteListingDialog = false;
+        openKYCUpdate = true;
+      "
     />
 
     <OrderProcessed
@@ -296,8 +333,11 @@
       :listing-exp-date="nft.listingDetails.expTime"
       @listing-purchase-error="HandleError"
       @listing-purchased="PurchaseListingSuccess"
-			@open-terms-and-conditions="$emit('open-terms-and-conditions')"
-      @open-kyc-dialog="openPurchaseListingDialog = false; openKYCUpdate = true;"
+      @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+      @open-kyc-dialog="
+        openPurchaseListingDialog = false;
+        openKYCUpdate = true;
+      "
     />
 
     <AcceptedOrderDialog
@@ -307,8 +347,12 @@
 
     <KYCUpdate
       v-model="openKYCUpdate"
-      @start-veriff="(sessionDetails) =>
-        BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+      @start-veriff="
+        sessionDetails =>
+          BeginUserVerification(
+            sessionDetails.continueSession,
+            sessionDetails.lastSessionURL
+          )
       "
     />
   </div>
@@ -331,7 +375,10 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
 import PurchaseListing from 'src/pages/SharedPopups/PurchaseListing.vue';
 import OrderExpTimer from 'src/pages/SharedPopups/OrderExpTimer.vue';
-import { AddFavorites, RemoveFavorites } from 'src/pages/Favourites/services/FavoritesFunctions';
+import {
+  AddFavorites,
+  RemoveFavorites,
+} from 'src/pages/Favourites/services/FavoritesFunctions';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 import { StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 import { HandleUserValidity } from 'src/shared/veriff-service';
@@ -348,7 +395,7 @@ export default defineComponent({
     AcceptedOrderDialog: OrderAccepted,
     PurchaseListingDialog: PurchaseListing,
     ListingExpTimer: OrderExpTimer,
-    KYCUpdate: KYCUpdate
+    KYCUpdate: KYCUpdate,
   },
   props: {
     nft: {
@@ -365,7 +412,7 @@ export default defineComponent({
     'favorite-action',
     'unlist-failed',
     'shepherd-remove-step',
-		'open-terms-and-conditions'
+    'open-terms-and-conditions',
   ],
   data() {
     return {
@@ -388,13 +435,13 @@ export default defineComponent({
       ongoingListingTransaction: false,
 
       GetCurrencyLabel,
-			userStore: useUserStore()
+      userStore: useUserStore(),
     };
   },
   computed: {
     ...mapState(useUserStore, {
       walletAddress: store => store.getWalletAddress(),
-      userStatus: store => store.user?.verificationStatus
+      userStatus: store => store.user?.verificationStatus,
     }),
   },
   watch: {
@@ -408,7 +455,7 @@ export default defineComponent({
   },
   methods: {
     shepherdRemoveStep() {
-    	this.$emit('shepherd-remove-step', 'metadata-checkout-buttons')
+      this.$emit('shepherd-remove-step', 'metadata-checkout-buttons');
     },
     SetTimeoutOnMetadataCompletedDialog(orderType: string) {
       this.orderType = orderType;
@@ -432,7 +479,7 @@ export default defineComponent({
       this.openErrorDialog = true;
       setTimeout(() => {
         this.openErrorDialog = false;
-      }, 2000);
+      }, 3000);
     },
     async PurchaseListingSuccess() {
       this.openPurchaseListingDialog = false;
@@ -441,10 +488,20 @@ export default defineComponent({
         this.openOrderAccepted = false;
       }, 2500);
     },
-    UpdateListingStatus(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+    UpdateListingStatus(
+      listed: TokenIdentifier & {
+        listingPrice: string;
+        currency: string;
+        transactionStatus: boolean;
+      }
+    ) {
       this.$emit('listing-exists', listed);
     },
-    InvalidUnlist(failedUnlist: TokenIdentifier & { status: 'ongoingUnlist' | 'unlisted' | 'purchased' }) {
+    InvalidUnlist(
+      failedUnlist: TokenIdentifier & {
+        status: 'ongoingUnlist' | 'unlisted' | 'purchased';
+      }
+    ) {
       this.openDeleteListingDialog = false;
       this.$emit('unlist-failed', failedUnlist);
     },
@@ -460,28 +517,28 @@ export default defineComponent({
       switch (objective) {
         case 'add':
           try {
-            this.$emit('favorite-action', 'processing')
+            this.$emit('favorite-action', 'processing');
             await AddFavorites({
               walletAddress: this.userStore.walletAddress,
               tokenID: tokenID,
               contractAddress: cAddress,
               network: network,
             });
-            this.$emit('favorite-action', 'favorited')
+            this.$emit('favorite-action', 'favorited');
           } catch {
             return 0;
           }
           break;
         case 'remove':
           try {
-            this.$emit('favorite-action', 'processing')
+            this.$emit('favorite-action', 'processing');
             await RemoveFavorites({
               walletAddress: this.userStore.walletAddress,
               tokenID: tokenID,
               contractAddress: cAddress,
               network: network,
             });
-            this.$emit('favorite-action', 'unfavorited')
+            this.$emit('favorite-action', 'unfavorited');
           } catch {
             return 0;
           }
@@ -490,14 +547,43 @@ export default defineComponent({
     },
     BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
       this.openKYCUpdate = false;
-      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+      StartVeriff(
+        <string>this.userStore.user?.walletAddress,
+        '',
+        continueSession,
+        lastSessionURL
+      );
     },
     async TransactionPreValidator(dialog: string) {
       if (!this.walletAddress) {
         this.$emit('connect-wallet');
         return;
       }
-      if (this.userStatus == VerificationStatus.VERIFIED) {
+      //TODO: add
+      if (!this.userStore.user?.email) {
+        this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+      }
+			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      //   try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.TransactionPreValidator(dialog);
+      //     } else {
+      //       this.openKYCUpdate = true;
+      //     }
+      //   } catch {
+      //     this.HandleError({
+      //       errorType: 'validation_failed',
+      //       errorTitle: 'Failed to verify user KYC status.',
+      //       errorMessage: 'Please try again later.',
+      //     });
+      //   }
+      // }
+			else {
         switch (dialog) {
           case 'LIST':
             this.openCreateListingDialog = true;
@@ -514,23 +600,8 @@ export default defineComponent({
             this.shepherdRemoveStep();
             break;
         }
-      } else {
-        try {
-          const isVerified = await HandleUserValidity();
-          if (isVerified) {
-            this.TransactionPreValidator(dialog);
-          } else {
-            this.openKYCUpdate = true;
-          }
-        } catch {
-          this.HandleError({
-            errorType: 'validation_failed',
-            errorTitle: 'Failed to verify user KYC status.',
-            errorMessage: 'Please try again later.'
-          })
-        }
       }
-    }
+    },
   },
 });
 </script>

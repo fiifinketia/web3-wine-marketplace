@@ -267,15 +267,15 @@ export default defineComponent({
       offer: string,
       currency: string
     ) {
-      if (this.userStatus == VerificationStatus.VERIFIED) {
-        this.orderHash = orderHash;
-        this.brand = brand;
-        this.image = image;
-        this.token = token;
-        this.offer = offer;
-        this.currency = currency;
-        this.openConfirmDialog = true;
-      } else {
+			if (!this.userStore.user?.email)
+			{
+				this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+			}
+      else if (this.userStatus !== VerificationStatus.VERIFIED) {
         try {
           const isVerified = await HandleUserValidity();
           if (isVerified) {
@@ -286,6 +286,14 @@ export default defineComponent({
         } catch (err) {
           this.HandleError(err);
         }
+      } else {
+				this.orderHash = orderHash;
+        this.brand = brand;
+        this.image = image;
+        this.token = token;
+        this.offer = offer;
+        this.currency = currency;
+        this.openConfirmDialog = true;
       }
     },
     async AcceptOffer(

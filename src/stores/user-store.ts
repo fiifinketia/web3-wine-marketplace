@@ -13,7 +13,10 @@ export const useUserStore = defineStore(
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
-    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
+    // const showSettingsDialog: Ref<boolean> = ref(false);
+    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(
+      undefined
+    );
     const connectWallet = async () => {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
@@ -22,16 +25,20 @@ export const useUserStore = defineStore(
       const date = new Date().getTime();
       try {
         const getUser = await axios.get(
-          process.env.MARKETPLACE_USERS_API + '/profile/' + address + '?t=' + date
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            address +
+            '?t=' +
+            date
         );
         if (!!getUser.data) {
           user.value = getUser.data;
           walletAddress.value = address;
           return;
         }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        if(error.response && error.response.status === 404) {
+        if (error.response && error.response.status === 404) {
           try {
             const getColors = [
               generateRandomColor(),
@@ -39,21 +46,21 @@ export const useUserStore = defineStore(
               generateRandomColor(),
             ].join(',');
 
-            const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
+            const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`;
 
             const newUser = await axios.post(
               process.env.MARKETPLACE_USERS_API + '/create',
               {
                 walletAddress: address,
                 avatar,
-                apiKey: APIKeyString
+                apiKey: APIKeyString,
               }
-            )
+            );
             walletAddress.value = address;
             user.value = newUser.data;
             return;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any){
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
             throw new Error('Unable to connect wallet');
           }
         }
@@ -61,7 +68,7 @@ export const useUserStore = defineStore(
       }
     };
 
-		const fetchUser = async () => {
+    const fetchUser = async () => {
       const date = new Date().getTime();
       try {
         const getUser = await axios.get(
@@ -165,12 +172,19 @@ export const useUserStore = defineStore(
       return walletAddress.value;
     };
 
+    // const setSettingsDialog = (show = false) => {
+    //   showSettingsDialog.value = show;
+    // };
+
     const $reset = () => {
       (walletAddress.value = ''), (user.value = undefined);
+      // (showSettingsDialog.value = false);
     };
 
     return {
       walletAddress,
+      // showSettingsDialog,
+      // setSettingsDialog,
       connectWallet,
       fetchUser,
       updateUsername,

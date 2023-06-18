@@ -261,20 +261,21 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useUserStore, {
-      userStatus: store => store.user?.verificationStatus
+      userStatus: store => store.user?.verificationStatus,
+			userEmail: store => store.user?.email,
     }),
   },
   methods: {
     async OpenListingDialog(token: ListableToken) {
-      if (this.userStatus == VerificationStatus.VERIFIED) {
-        this.image = token.image;
-        this.brand = token.brand;
-        this.smartContractAddress = token.contractAddress;
-        this.network = token.network;
-        this.tokenID = token.identifierOrCriteria;
-        this.openListingDialog = true;
-      } else {
-        try {
+			if(!this.userEmail){
+				this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+			}
+      else if (this.userStatus !== VerificationStatus.VERIFIED) {
+				try {
           const isVerified = await HandleUserValidity();
           if (isVerified) {
             this.OpenListingDialog(token);
@@ -288,6 +289,13 @@ export default defineComponent({
             errorMessage: 'Please try again later.'
           })
         }
+      } else {
+        this.image = token.image;
+        this.brand = token.brand;
+        this.smartContractAddress = token.contractAddress;
+        this.network = token.network;
+        this.tokenID = token.identifierOrCriteria;
+        this.openListingDialog = true;
       }
     },
     HandleError(err: {
