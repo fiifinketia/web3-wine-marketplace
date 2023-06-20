@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import axios from 'axios';
 import { utils } from 'ethers';
+import { Dialog } from 'quasar';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 import { APIKeyString } from 'src/boot/axios';
@@ -100,6 +101,17 @@ export const useUserStore = defineStore(
       user.value = updatedUser.data;
     };
 
+    const updateLegalAge = async (isLegal: boolean) => {
+      const updatedUser = await axios.put(
+        process.env.MARKETPLACE_USERS_API + '/update/' + walletAddress.value,
+        {
+          isLegal,
+          apiKey: APIKeyString,
+        }
+      );
+      user.value = updatedUser.data;
+    };
+
     const checkConnection = async () => {
       try {
         const connectedAccounts: string[] = await window.ethereum.request({
@@ -172,6 +184,36 @@ export const useUserStore = defineStore(
       return walletAddress.value;
     };
 
+    async function confirmAge() {
+      let dismissed = false;
+      try {
+        Dialog.create({
+          title: 'Confirm Age',
+          message: 'Are 21 years or older?',
+          cancel: 'No',
+          persistent: true,
+          color: 'primary',
+          ok: 'Yes',
+        })
+          .onOk(async () => {
+            await updateLegalAge(true);
+            dismissed = true;
+          })
+          .onCancel(() => (dismissed = true));
+        await new Promise<void>(resolve => {
+          const interval = setInterval(() => {
+            if (dismissed) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 100);
+        });
+        return user.value?.isLegal || false;
+      } catch (error) {
+        throw error;
+      }
+    }
+
     // const setSettingsDialog = (show = false) => {
     //   showSettingsDialog.value = show;
     // };
@@ -192,6 +234,7 @@ export const useUserStore = defineStore(
       getWalletBalance,
       getWalletAddress,
       checkConnection,
+      confirmAge,
       user,
       $reset,
     };

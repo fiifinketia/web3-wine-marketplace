@@ -54,6 +54,11 @@
                 "
                 class="full-width"
               />
+							<EmailVerification
+								v-if="userStore.user?.email"
+								:change-email="true"
+								class="full-width"
+							/>
 
               <q-card-section class="column q-mb-md q-mt-lg items-center">
                 <q-avatar size="8em">
@@ -106,7 +111,7 @@
                     }}
                   </div>
                 </div>
-                <div class="row settings-sublabel">New User</div>
+                <div v-if="userStore.user?.email" class="row settings-sublabel text-primary text-bold">{{ userStore.user?.email }}</div>
               </q-card-section>
               <q-card-section class="column q-my-md items-center full-width">
                 <div class="row q-mb-md settings-set-username justify-center">

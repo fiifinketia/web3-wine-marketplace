@@ -538,13 +538,28 @@ export default defineComponent({
       //   }
       // }
       else {
-        switch (dialog) {
-          case 'LIST':
-            this.OpenEditDialog(listing);
-            break;
-          case 'UNLIST':
-            this.OpenDeleteDialog(listing);
-            break;
+        try {
+          if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user?.isLegal) {
+            switch (dialog) {
+              case 'LIST':
+                this.OpenEditDialog(listing);
+                break;
+              case 'UNLIST':
+                this.OpenDeleteDialog(listing);
+                break;
+            }
+          } else {
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
+          }
         }
       }
     },

@@ -567,7 +567,7 @@ export default defineComponent({
           errorMessage: 'Please verify your email and try again.',
         });
       }
-			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      // else if (this.userStatus !== VerificationStatus.VERIFIED) {
       //   try {
       //     const isVerified = await HandleUserValidity();
       //     if (isVerified) {
@@ -583,22 +583,37 @@ export default defineComponent({
       //     });
       //   }
       // }
-			else {
-        switch (dialog) {
-          case 'LIST':
-            this.openCreateListingDialog = true;
-            break;
-          case 'UNLIST':
-            this.openDeleteListingDialog = true;
-            break;
-          case 'OFFER':
-            this.openCreateOfferDialog = true;
-            this.shepherdRemoveStep();
-            break;
-          case 'PURCHASE':
-            this.openPurchaseListingDialog = true;
-            this.shepherdRemoveStep();
-            break;
+      else {
+        try {
+          if (!this.userStore.user.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user.isLegal) {
+            switch (dialog) {
+              case 'LIST':
+                this.openCreateListingDialog = true;
+                break;
+              case 'UNLIST':
+                this.openDeleteListingDialog = true;
+                break;
+              case 'OFFER':
+                this.openCreateOfferDialog = true;
+                this.shepherdRemoveStep();
+                break;
+              case 'PURCHASE':
+                this.openPurchaseListingDialog = true;
+                this.shepherdRemoveStep();
+                break;
+            }
+          } else {
+						this.HandleError({
+							errorType: 'under_age',
+							errorTitle: 'User is not old enough',
+							errorMessage:
+								'You must be 21 years or older to use make transactions on this site.',
+						});
+					}
         }
       }
     },

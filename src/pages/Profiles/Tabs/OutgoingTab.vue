@@ -330,29 +330,46 @@ export default defineComponent({
           errorTitle: 'User email not verified',
           errorMessage: 'Please verify your email and try again.',
         });
-      } else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      }
+			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      //   try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.TransactionPreValidator(dialog, offer);
+      //     } else {
+      //       this.openKYCUpdate = true;
+      //     }
+      //   } catch {
+      //     this.HandleError({
+      //       errorType: 'validation_failed',
+      //       errorTitle: 'Failed to verify user KYC status.',
+      //       errorMessage: 'Please try again later.',
+      //     });
+      //   }
+      // }
+			else {
         try {
-          const isVerified = await HandleUserValidity();
-          if (isVerified) {
-            this.TransactionPreValidator(dialog, offer);
+          if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user?.isLegal) {
+            switch (dialog) {
+              case 'OFFER':
+                this.OpenEditDialog(offer);
+                break;
+              case 'UNOFFER':
+                this.OpenDeleteDialog(offer);
+                break;
+            }
           } else {
-            this.openKYCUpdate = true;
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
           }
-        } catch {
-          this.HandleError({
-            errorType: 'validation_failed',
-            errorTitle: 'Failed to verify user KYC status.',
-            errorMessage: 'Please try again later.',
-          });
-        }
-      } else {
-        switch (dialog) {
-          case 'OFFER':
-            this.OpenEditDialog(offer);
-            break;
-          case 'UNOFFER':
-            this.OpenDeleteDialog(offer);
-            break;
         }
       }
     },
