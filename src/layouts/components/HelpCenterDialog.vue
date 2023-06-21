@@ -285,7 +285,8 @@ export default defineComponent({
               from: this.form.email,
               message: this.form.message,
             },
-            to: [this.form.email, process.env.WIVMKT_SUPPORT_EMAIL],
+            to: process.env.WIVMKT_SUPPORT_EMAIL,
+						cc: this.form.email,
 						headers: {
 							'type' : 'contact_us'
 						}
