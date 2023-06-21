@@ -293,14 +293,14 @@ export default defineComponent({
           apiKey: process.env.MKTPLACE_API_KEY,
         });
       } catch (error) {
-        this.sendingMessage = false;
         this.$q.notify({
           type: 'negative',
           message: 'Something went wrong. Please try again later.',
         });
         throw error;
-      }
-      this.sendingMessage = false;
+      } finally {
+				this.sendingMessage = false;
+			}
     },
   },
 });
