@@ -37,6 +37,10 @@ function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
 	}
 }
 
+function TimeNow() {
+	return new Date().getTime();
+}
+
 export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
   const inputDateTime = `${expDate}T${expTime}:00`;
   const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
@@ -157,7 +161,8 @@ export async function CreateERC721Listing(
 	const OrderRequest: CreateOrderRequest = {
 		order: db_Order,
 		blockNumber: blockNumber,
-		apiKey: <string> APIKeyString
+		apiKey: <string> APIKeyString,
+		timestamp: TimeNow()
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	axios.post(createOrderURL, OrderRequest);
@@ -295,7 +300,8 @@ export async function CreateERC721Offer(
 	const OrderRequest: CreateOrderRequest = {
 		order: db_Order,
 		blockNumber: blockNumber,
-		apiKey: <string> APIKeyString
+		apiKey: <string> APIKeyString,
+		timestamp: TimeNow()
 	};
 	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
 	await axios.post(createOrderURL, OrderRequest);
@@ -424,7 +430,8 @@ export async function CancelSingleOrder(
 			order: cancelOrderDetails,
 			status: TXN_STATUS.TRANSACTION_PENDING,
 			notificationCode: from == 'Owner' ? NOTIFICATION_CODES.LISTING_REMOVED : NOTIFICATION_CODES.OFFER_REMOVED,
-			apiKey: <string> APIKeyString
+			apiKey: <string> APIKeyString,
+			timestamp: TimeNow()
 		}
     axios.post(cancelOrderURL, cancelRequest);
   } else {

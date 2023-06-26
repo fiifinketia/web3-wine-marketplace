@@ -125,7 +125,7 @@
                 <div class="row q-my-md settings-notifications-header justify-center">
                   Select the notifications you would like to receive.
                 </div>
-                <div class="column q-mt-sm q-mb-md settings-notification-options">
+                <div class="column q-mt-sm q-mb-md q-pr-md settings-notification-options">
                   <q-checkbox
                     v-model="notificationSettings.OFFER_ACCEPTED_NEW_OWNER"
                     label="Your offer has been accepted"
