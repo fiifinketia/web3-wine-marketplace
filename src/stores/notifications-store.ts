@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import { NotificationsSettings } from 'src/shared/models/entities/notifications.model';
+import axios, { AxiosResponse } from 'axios';
+import { ExtendedNotificationModel, FetchNotificationsRequest, NotificationsSettings } from 'src/shared/models/entities/notifications.model';
 import { APIKeyString } from 'src/boot/axios';
 
 export const useNotificationsStore = defineStore('notificationsStore', {
   state: () => ({
     notificationSettings: {} as NotificationsSettings,
-    settingsFetched: false
+    notifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    settingsFetched: false,
+    sortKey: 'latest' as 'latest' | 'earliest',
+    filterKey: 'all' as 'all' | 'sale' | 'offers'
   }),
   getters: {
     getSettings: state => state.notificationSettings
@@ -31,6 +34,23 @@ export const useNotificationsStore = defineStore('notificationsStore', {
           { updateSettingsDto: this.notificationSettings, apiKey: APIKeyString }
         );
       // eslint-disable-next-line
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+    async getUserNotifications(walletAddress: string) : Promise<void> {
+      const req: FetchNotificationsRequest = {
+        walletAddress: walletAddress,
+        order: this.sortKey,
+        filter: this.filterKey,
+        apiKey: <string> process.env.MKTPLACE_API_KEY
+      }
+      try {
+        const response : AxiosResponse<ExtendedNotificationModel<'veriff' | 'transaction'>[]> = await axios.post(
+          process.env.MARKETPLACE_API_URL + '/market/notifications/retrieve',
+          req
+        );
+        this.notifications = response.data;
       } catch (error: any) {
         throw new Error(error);
       }

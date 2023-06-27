@@ -2,11 +2,9 @@ import { io } from 'socket.io-client';
 import { useUserStore } from 'src/stores/user-store';
 import { Notify } from 'quasar';
 import {
+  ExtendedNotificationModel,
   NOTIFICATION_CODES,
-  NotificationReceived,
-  TransactionNotificationModel,
 } from './models/entities/notifications.model';
-import { VeriffNotificationModel } from './models/entities/notifications.model';
 
 const userStore = useUserStore();
 const socketURL = <string>process.env.NOTIFICATIONS_MSVC_URL;
@@ -34,7 +32,7 @@ const notify = ({
 };
 
 const veriffEventListener = (
-  notification: NotificationReceived<VeriffNotificationModel>
+  notification: ExtendedNotificationModel<'veriff'>
 ) => {
   userStore.fetchUser();
   notify({
@@ -45,16 +43,16 @@ const veriffEventListener = (
 };
 
 const transactionEventListener = (
-  notification: NotificationReceived<TransactionNotificationModel>
+  notification: ExtendedNotificationModel<'transaction'>
 ) => {
   notify({
-    message: `${notification.data.brand},TXN_STATUS: ${notification.data.status},CODE: ${notification.code}`,
+    message: `${notification.brand},TXN_STATUS: ${notification.status},CODE: ${notification.code}`,
     username: userStore.user?.username || '',
     avatar: userStore.user?.avatar || '',
   });
 };
 
-socket.onAny((code: string, data: NotificationReceived<VeriffNotificationModel | TransactionNotificationModel>) => {
+socket.onAny((code: string, data: ExtendedNotificationModel<'veriff' | 'transaction'>) => {
   // Check if data is a notification
   if (Object.keys(NOTIFICATION_CODES).includes(code.toString())) {
     // Use first digit of code to determine notification type
@@ -63,11 +61,11 @@ socket.onAny((code: string, data: NotificationReceived<VeriffNotificationModel |
     switch (notificationType) {
       case 1:
         // Transaction notification
-        transactionEventListener(<NotificationReceived<TransactionNotificationModel>>data);
+        transactionEventListener(<ExtendedNotificationModel<'transaction'>>data);
         break;
       case 2:
         // Veriff notification
-        veriffEventListener(<NotificationReceived<VeriffNotificationModel>> data);
+        veriffEventListener(<ExtendedNotificationModel<'veriff'>> data);
         break;
       default:
         break;

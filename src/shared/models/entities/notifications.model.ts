@@ -94,11 +94,24 @@ interface VeriffNotificationModel extends NotificationSchema {
   text: string;
 }
 
-interface NotificationReceived<T> {
+interface NotificationReceived {
   walletAddress: string;
   code: NOTIFICATION_CODES;
   message: string;
-  data: T;
+  dateCreated: number;
+}
+
+type ExtendedNotificationModel<T> = T extends 'transaction'
+  ? NotificationReceived & TransactionNotificationModel
+  : T extends 'veriff'
+  ? NotificationReceived & VeriffNotificationModel
+  : NotificationReceived;
+
+interface FetchNotificationsRequest {
+  walletAddress: string;
+  order: 'earliest' | 'latest';
+  filter: 'all' | 'offers' | 'sale';
+  apiKey: string;
 }
 
 export {
@@ -106,6 +119,8 @@ export {
   NotificationReceived,
   TransactionNotificationModel,
   VeriffNotificationModel,
+  ExtendedNotificationModel,
   TXN_STATUS,
-  NotificationsSettings
+  NotificationsSettings,
+  FetchNotificationsRequest
 };
