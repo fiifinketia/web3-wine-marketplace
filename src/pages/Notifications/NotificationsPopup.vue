@@ -38,16 +38,19 @@
       </div>
     </div>
     <NotificationsOptions />
+    <NotificationsList />
   </q-menu>
 </template>
 
 <script lang="ts">
 import 'src/css/MainLayout/NotificationsDialog.css';
 import NotificationsOptions from './NotificationsOptions.vue';
+import NotificationsList from './NotificationsList.vue';
 import { defineComponent } from 'vue';
 export default defineComponent({
   components: {
-    NotificationsOptions
+    NotificationsOptions,
+    NotificationsList
   },
 })
 </script>

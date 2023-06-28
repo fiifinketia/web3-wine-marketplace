@@ -34,7 +34,16 @@ const customIcons: { [key: string]: string } = {
 	'app-lock': 'img:/icons/lock.svg',
 	'app-person-avatar': 'img:/icons/person-avatar.svg',
 	'app-seller-tag': 'img:/icons/seller-tag.svg',
-	'app-barrel-top': 'img:/icons/barrel-top.svg'
+	'app-barrel-top': 'img:/icons/barrel-top.svg',
+
+  'app:listing-notif': 'img:/notification_icons/listing-notif.svg',
+  'app:offer-notif': 'img:/notification_icons/offer-notif.svg',
+  'app:unlist-notif': 'img:/notification_icons/unlist-notif.svg',
+  'app:revoke-offer-notif': 'img:/notification_icons/revoke-offer-notif.svg',
+  'app:receive-offer-notif': 'img:/notification_icons/receive-offer-notif.svg',
+  'app:receive-nft-notif': 'img:/notification_icons/receive-nft-notif.svg',
+  'app:offer-accepted-notif': 'img:/notification_icons/offer-accepted-notif.png',
+  'app:listing-purchased-notif': 'img:/notification_icons/listing-purchased-notif.svg',
 };
 export default defineComponent({
   name: 'App',

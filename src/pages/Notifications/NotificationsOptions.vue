@@ -119,8 +119,8 @@ export default defineComponent({
       searchText: '',
       openOptions: false,
       notificationStore,
-      sortKey: 'latest' as 'latest' | 'earliest',
-      filterKey: 'all' as 'all' | 'offers' | 'sale'
+      sortKey: notificationStore.sortKey,
+      filterKey: notificationStore.filterKey
     }
   },
   computed: {
