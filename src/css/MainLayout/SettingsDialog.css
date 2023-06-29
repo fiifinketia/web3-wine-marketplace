@@ -90,7 +90,14 @@
 	font-size: 16px;
 	line-height: 24px;
 	color: #212131;
-	width: 290px;
+	width: 320px;
+	height: 300px;
+	overflow: scroll;
+	flex-wrap: nowrap;
+}
+
+[aria-checked='true'] {
+  font-family: 'ProximaNova-Bold';
 }
 
 .settings-header-container {

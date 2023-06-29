@@ -55,20 +55,6 @@ export const useTourStore = defineStore(
       suggestionTimeout.value = Date.now();
     };
 
-    const OnMounted = () => {
-      // Show the dialog on page load
-      // setHomeCompleted();
-      homeCompleted.value = false;
-      marketplaceCompleted.value = false;
-      metadataCompleted.value = false;
-      favoritesCompleted.value = false;
-      // setMarketplaceCompleted();
-      // setMetadataCompleted();
-      // setFavoritesCompleted();
-      // setTermsAndConditionsAgreed();
-      // setSuggestedWinesDialog();
-    };
-
     return {
       homeCompleted,
       marketplaceCompleted,
@@ -82,7 +68,6 @@ export const useTourStore = defineStore(
       setFavoritesCompleted,
       setTermsAndConditionsAgreed,
       setSuggestedWinesDialog,
-      OnMounted,
     };
   },
   { persist: true }

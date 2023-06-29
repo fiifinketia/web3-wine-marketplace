@@ -1,7 +1,7 @@
 <template>
   <div class="profile-nft-container">
     <div
-      v-for="offer in outgoingOffers"
+      v-for="offer in paginatedOffers"
       :key="offer.orderHash"
       class="q-px-lg q-py-md row items-center"
     >
@@ -121,6 +121,12 @@
         </q-btn>
       </div>
     </div>
+		<q-pagination
+			v-model="currentPage"
+      class="row justify-center q-ma-sm"
+      :max="maxPage"
+      direction-links
+    />
     <NFTDialog
       v-model="showNFTPopup"
       :brand="brand"
@@ -134,7 +140,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import { OutgoingOffersResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
@@ -160,11 +166,24 @@ export default defineComponent({
       offerEndTime: '',
       highestOffer: '',
       tab: 'outgoing',
+			currentPage: ref(1),
+      maxPageLength: 5,
 
       GetCurrencyLabel,
       ConvertUnixToDate,
       ConvertUnixToTime
     };
+  },
+	computed: {
+    paginatedOffers() {
+      return this.outgoingOffers.slice(
+        (this.currentPage - 1) * this.maxPageLength,
+        this.currentPage * this.maxPageLength
+      );
+    },
+    maxPage() {
+      return Math.ceil(this.outgoingOffers.length / this.maxPageLength);
+    },
   },
   methods: {
     OpenDeleteDialog(offer: OutgoingOffersResponse) {

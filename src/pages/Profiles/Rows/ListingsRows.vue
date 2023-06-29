@@ -1,7 +1,7 @@
 <template>
   <div class="profile-nft-container">
     <div
-      v-for="listing in listings"
+      v-for="listing in paginatedListings"
       :key="listing.orderHash"
       class="q-py-md row items-center"
       :class="$q.screen.width > 600 ? 'q-pa-lg' : 'q-px-md'"
@@ -50,7 +50,9 @@
               <div class="row items-center">
                 <q-icon
                   v-if="listing.highestOffer"
-                  :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
+                  :name="`app:${GetCurrencyLabel(
+                    listing.highestOfferCurrency
+                  )}-icon`"
                   size="16px"
                 />
                 <span class="listing-tooltip-price-highest q-pl-xs">
@@ -70,7 +72,10 @@
           :name="`app:${GetCurrencyLabel(listing.highestOfferCurrency)}-icon`"
           size="20px"
         />
-        <span class="profile-nft-number-highlight" :class="!!listing.highestOffer ? 'q-ml-xs' : ''">
+        <span
+          class="profile-nft-number-highlight"
+          :class="!!listing.highestOffer ? 'q-ml-xs' : ''"
+        >
           {{ !!listing.highestOffer ? listing.highestOffer : '0.00' }}
         </span>
       </div>
@@ -78,7 +83,11 @@
         <div class="column items-center" style="width: fit-content">
           <span
             class="profile-nft-number-highlight"
-            :style="ConvertUnixToDate(listing.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+            :style="
+              ConvertUnixToDate(listing.endTime) === 'today'
+                ? 'color: rgba(193, 27, 27, 1)'
+                : ''
+            "
           >
             {{ ConvertUnixToDate(listing.endTime) }}
           </span>
@@ -98,7 +107,11 @@
         </div>
         <span
           class="profile-nft-number-highlight"
-          :style="ConvertUnixToDate(listing.endTime) === 'today' ? 'color: rgba(193, 27, 27, 1)' : ''"
+          :style="
+            ConvertUnixToDate(listing.endTime) === 'today'
+              ? 'color: rgba(193, 27, 27, 1)'
+              : ''
+          "
         >
           {{ ConvertUnixToDate(listing.endTime) }}
         </span>
@@ -115,6 +128,12 @@
         </q-btn>
       </div>
     </div>
+    <q-pagination
+      v-model="currentPage"
+      class="row justify-center q-ma-sm"
+      :max="maxPage"
+      direction-links
+    />
     <NFTDialog
       v-model="showNFTPopup"
       :brand="brand"
@@ -126,7 +145,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import 'src/css/Profile/shared.css';
 import 'src/css/Profile/Component/listings.css';
 import { ListingsResponse } from '../models/response.models';
@@ -152,11 +171,24 @@ export default defineComponent({
       brand: '',
       highestOffer: '',
       tab: 'listings',
+      currentPage: ref(1),
+      maxPageLength: 5,
 
       GetCurrencyLabel,
       ConvertUnixToDate,
-      ConvertUnixToTime
+      ConvertUnixToTime,
     };
+  },
+  computed: {
+    paginatedListings() {
+      return this.listings.slice(
+        (this.currentPage - 1) * this.maxPageLength,
+        this.currentPage * this.maxPageLength
+      );
+    },
+    maxPage() {
+      return Math.ceil(this.listings.length / this.maxPageLength);
+    },
   },
   methods: {
     OpenDeleteDialog(listing: ListingsResponse) {
