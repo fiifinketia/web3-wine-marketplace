@@ -14,7 +14,8 @@ export const useNotificationsStore = defineStore('notificationsStore', {
     filterKey: 'all' as 'all' | 'sale' | 'offers'
   }),
   getters: {
-    getSettings: state => state.notificationSettings
+    getSettings: state => state.notificationSettings,
+    getUnviewedNotifications: state => state.notifications.filter(f => !f.viewed).length
   },
   actions: {
     async getNotificationsSettings (walletAddress: string) {

@@ -15,7 +15,7 @@
           vertical
           color="accent"
           style="height: 15px; margin-top: auto; margin-bottom: auto"/>
-        <span> 0 </span>
+        <span> {{ notifications.filter(f => !f.viewed).length }} </span>
       </div>
       <div class="row items-center">
         <q-btn

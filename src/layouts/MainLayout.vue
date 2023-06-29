@@ -232,6 +232,13 @@
               icon="app:bell-icon"
             >
               <NotificationsPopup />
+              <q-badge
+                v-if="notificationsFetched && !notificationsErrorEncountered"
+                rounded
+                floating
+                color="red"
+                :label="notifications.filter(f => !f.viewed).length"
+              />
             </q-btn>
             <q-btn
               class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
@@ -468,6 +475,8 @@ import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import { useNotificationsStore } from 'src/stores/notifications-store';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -509,6 +518,13 @@ export default defineComponent({
 
       openUserErrorDialog: false,
     };
+  },
+  computed: {
+    ...mapState(useNotificationsStore, {
+      notifications: store => store.notifications,
+      notificationsFetched: store => store.notificationsFetched,
+      notificationsErrorEncountered: store => store.notificationsErrorEncountered
+    })
   },
   watch: {
     $route: {
