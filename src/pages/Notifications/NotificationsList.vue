@@ -2,7 +2,8 @@
   <q-infinite-scroll class="column q-gutter-y-sm" @load="onLoad" :offset="250">
     <div
       v-for="notif in notifications"
-      :key="notif.id"
+      :id="notif.viewed ? 'viewed-notif' : 'unviewed-notif'"
+      :key="notif._id"
       class="column full-width no-wrap q-pa-sm notif-container"
     >
       <div id="notif_details" class="row justify-between no-wrap q-pb-sm">
@@ -10,7 +11,7 @@
         <a
           v-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_CREATED_PENDING"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your listing of
@@ -21,7 +22,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_CREATED_CANCELLED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have cancelled your listing of
@@ -32,7 +33,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_CREATED_COMPLETED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your listing of
@@ -43,7 +44,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_CREATED_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with your listing of
@@ -54,7 +55,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_CREATED_PENDING"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your offer of
@@ -65,7 +66,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_CREATED_CANCELLED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have cancelled your offer of
@@ -76,7 +77,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_CREATED_COMPLETED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your offer of
@@ -87,7 +88,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_CREATED_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with your offer of
@@ -98,7 +99,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_RECEIVED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have received an offer of
@@ -109,7 +110,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_PURCHASED_OLD_OWNER"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your listing for <span> {{ notif.brand }} </span> has been successfully purchased!
@@ -119,7 +120,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_PURCHASED_NEW_OWNER"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have successfully purchased <span> {{ notif.brand }} </span>
@@ -129,7 +130,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_PURCHASED_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with your purchase for <span> {{ notif.brand }} </span>
@@ -139,7 +140,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_ACCEPTED_NEW_OWNER"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your offer of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
@@ -149,7 +150,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_ACCEPTED_OLD_OWNER"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have successfully accepted an offer for <span> {{ notif.brand }} </span>.
@@ -159,7 +160,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.OFFER_ACCEPTED_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with the offer for <span> {{ notif.brand }} </span>
@@ -170,7 +171,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_LISTING_PENDING"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your listing of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
@@ -180,7 +181,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_LISTING_CANCELLED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have cancelled your ongoing wine unlisting for <span> {{ notif.brand }} </span>
@@ -190,7 +191,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_LISTING_COMPLETED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your listing of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
@@ -200,7 +201,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_LISTING_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with removing your listing of
@@ -211,7 +212,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_OFFER_PENDING"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your offer of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
@@ -221,7 +222,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_OFFER_CANCELLED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             You have cancelled your ongoing wine offer withdrawal for <span> {{ notif.brand }} </span>
@@ -231,7 +232,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_OFFER_COMPLETED"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             Your offer of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
@@ -241,7 +242,7 @@
         <a
           v-else-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.REMOVE_OFFER_ERROR"
           :href="notif.link"
-          @click="Viewed(notif.id, notif.viewed)"
+          @click="Viewed(notif._id, notif.viewed)"
         >
           <span>
             There was a problem with withdrawing your wine offer of
@@ -254,7 +255,13 @@
         <span class="notif-time">
           {{ ConvertTimestampToString(notif.dateCreated) }}
         </span>
-        <a class="notif-link" :href="notif.link">{{GetLinkName(notif.code)}}</a>
+        <a
+          class="notif-link"
+          :href="notif.link"
+          @click="Viewed(notif._id, notif.viewed)"
+        >
+          {{GetLinkName(notif.code)}}
+        </a>
       </div>
     </div>
     <template #loading>

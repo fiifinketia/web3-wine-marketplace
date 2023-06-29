@@ -57,11 +57,11 @@ export const useNotificationsStore = defineStore('notificationsStore', {
     },
     async updateNotificationAsViewed(notifID: string) {
       await axios.put(
-        process.env.MARKETPLACE_API_URL + '/market/notifications/viewed',
-        { notificationID: notifID, apiKey: APIKeyString }
+        process.env.MARKETPLACE_API_URL + `/market/notifications/viewed/${notifID}`,
+        { apiKey: APIKeyString }
       )
       const notifIndex = this.notifications.findIndex(
-        notif => notif.id == notifID
+        notif => notif._id == notifID
       );
       this.notifications[notifIndex].viewed = true;
     }

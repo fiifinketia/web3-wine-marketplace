@@ -82,6 +82,7 @@
   <BurgerMenu
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
+    @openNotifications="showNotifications = true"
     @logout="logout"
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
@@ -95,6 +96,8 @@
     :open-tab="openHelpCenterTab"
     @close-help-center="showHelpCenter = false"
   />
+
+  <NotificationsDialog v-model="showNotifications"/>
 
   <ProfileErrors
     v-model="openUserErrorDialog"
@@ -458,6 +461,7 @@ import WalletDialog from './components/WalletDialog.vue';
 import SettingsDialog from './components/SettingsDialog.vue';
 import HelpCenterDialog from './components/HelpCenterDialog.vue';
 import NotificationsPopup from 'src/pages/Notifications/NotificationsPopup.vue'
+import NotificationsDialog from 'src/pages/Notifications/NotificationsDialog.vue'
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
@@ -472,6 +476,7 @@ export default defineComponent({
     WalletDialog,
     SettingsDialog,
     NotificationsPopup,
+    NotificationsDialog,
     HelpCenterDialog,
     ProfileErrors: ProfileErrors,
   },
@@ -488,6 +493,7 @@ export default defineComponent({
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      showNotifications: false,
       openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
