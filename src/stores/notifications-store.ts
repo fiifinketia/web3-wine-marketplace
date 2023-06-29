@@ -54,6 +54,16 @@ export const useNotificationsStore = defineStore('notificationsStore', {
       } catch (error: any) {
         throw new Error(error);
       }
+    },
+    async updateNotificationAsViewed(notifID: string) {
+      await axios.put(
+        process.env.MARKETPLACE_API_URL + '/market/notifications/viewed',
+        { notificationID: notifID, apiKey: APIKeyString }
+      )
+      const notifIndex = this.notifications.findIndex(
+        notif => notif.id == notifID
+      );
+      this.notifications[notifIndex].viewed = true;
     }
   },
 });

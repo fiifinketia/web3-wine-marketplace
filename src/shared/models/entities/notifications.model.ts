@@ -118,6 +118,8 @@ const NotificationSettingCodeEnum = {
 
 interface NotificationSchema {
   link?: string;
+  viewed: boolean;
+  id: string;
 }
 
 interface TransactionNotificationModel
