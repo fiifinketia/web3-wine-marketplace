@@ -6,7 +6,7 @@
       :key="notif._id"
       class="column full-width no-wrap q-pa-sm notif-container"
     >
-      <div id="notif_details" class="row justify-between no-wrap q-pb-sm">
+      <div id="notif_details" class="row justify-start no-wrap q-pb-sm">
         <q-icon :name="`${GetNotificationIcon(notif.code)}`" size="40px" />
         <a
           v-if="GetTransactionType(notif.code, notif.status) == NotificationSettingCodeEnum.LISTING_CREATED_PENDING"

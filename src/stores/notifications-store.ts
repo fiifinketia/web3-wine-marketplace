@@ -8,6 +8,8 @@ export const useNotificationsStore = defineStore('notificationsStore', {
     notificationSettings: {} as NotificationsSettings,
     notifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
     settingsFetched: false,
+    notificationsFetched: false,
+    notificationsErrorEncountered: false,
     sortKey: 'latest' as 'latest' | 'earliest',
     filterKey: 'all' as 'all' | 'sale' | 'offers'
   }),
@@ -46,13 +48,18 @@ export const useNotificationsStore = defineStore('notificationsStore', {
         apiKey: <string> process.env.MKTPLACE_API_KEY
       }
       try {
+        this.notificationsErrorEncountered = false;
+        this.notificationsFetched = false;
         const response : AxiosResponse<ExtendedNotificationModel<'veriff' | 'transaction'>[]> = await axios.post(
           process.env.MARKETPLACE_API_URL + '/market/notifications/retrieve',
           req
         );
         this.notifications = response.data;
       } catch (error: any) {
+        this.notificationsErrorEncountered = true;
         throw new Error(error);
+      } finally {
+        this.notificationsFetched = true;
       }
     },
     async updateNotificationAsViewed(notifID: string) {

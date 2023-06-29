@@ -4,6 +4,7 @@
     max-width="360px"
     max-height="600px"
     :offset="[50, 10]"
+    @show="FetchNotificationsOnLoad()"
   >
     <div class="row q-pa-md justify-between">
       <div class="row items-center justify-center notifications-header">
@@ -26,19 +27,11 @@
         >
           <img src="../../assets/gear.svg" />
         </q-btn>
-        <!-- <q-btn
-          v-close-popup
-          flat
-          dense
-          unelevated
-          class="btn--no-hover no-padding"
-        >
-          <img src="../assets/exit-light.svg" />
-        </q-btn> -->
       </div>
     </div>
     <NotificationsOptions />
-    <NotificationsList />
+    <NotificationsList v-if="!!notificationsFetched && notifications.length > 0 && !notificationsErrorEncountered" />
+    <NotificationsState v-else @refetch-notifications="RefetchNotifications()"/>
   </q-menu>
 </template>
 
@@ -46,12 +39,44 @@
 import 'src/css/MainLayout/NotificationsDialog.css';
 import NotificationsOptions from './NotificationsOptions.vue';
 import NotificationsList from './NotificationsList.vue';
+import NotificationsState from './NotificationsState.vue';
 import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+import { useNotificationsStore } from 'src/stores/notifications-store';
+import { useUserStore } from 'src/stores/user-store';
+
 export default defineComponent({
   components: {
     NotificationsOptions,
-    NotificationsList
+    NotificationsList,
+    NotificationsState
   },
+  data() {
+    const notificationsStore = useNotificationsStore();
+    return {
+      notificationsStore
+    }
+  },
+  computed: {
+    ...mapState(useNotificationsStore, {
+      notificationsFetched: store => store.notificationsFetched,
+      notificationsErrorEncountered: store => store.notificationsErrorEncountered,
+      notifications: store => store.notifications
+    }),
+    ...mapState(useUserStore, {
+      walletAddress: store => store.walletAddress
+    })
+  },
+  methods: {
+    FetchNotificationsOnLoad() {
+      if (!this.notificationsFetched) {
+        this.notificationsStore.getUserNotifications(this.walletAddress);
+      }
+    },
+    RefetchNotifications() {
+      this.notificationsStore.getUserNotifications(this.walletAddress);
+    }
+  }
 })
 </script>
 

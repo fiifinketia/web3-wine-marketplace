@@ -94,3 +94,28 @@
   color: #3586ffd1;
   cursor: pointer;
 }
+
+.notif-state-text {
+  font-family: 'ProximaNova-Bold';
+  color: rgba(53, 134, 255, 1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.notif-error-btn {
+  justify-content: center;
+  align-items: center;
+  width: 147px;
+  height: 48px;
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
+  border-radius: 6px;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.notif-error-btn:hover {
+  background: #212131;
+  opacity: 0.8;
+}
