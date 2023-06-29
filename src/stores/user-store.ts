@@ -9,6 +9,17 @@ import { APIKeyString } from 'src/boot/axios';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 
+const generateAvatar = (name: string) => {
+  const getColors = [
+    generateRandomColor(),
+    generateRandomColor(),
+    generateRandomColor(),
+  ].join(',');
+
+  const avatar = `https://source.boringavatars.com/beam/40/${name}?colors=${getColors}`;
+  return avatar;
+};
+
 export const useUserStore = defineStore(
   'userStore',
   () => {
@@ -41,13 +52,7 @@ export const useUserStore = defineStore(
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           try {
-            const getColors = [
-              generateRandomColor(),
-              generateRandomColor(),
-              generateRandomColor(),
-            ].join(',');
-
-            const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`;
+            const avatar = generateAvatar(address);
 
             const newUser = await axios.post(
               process.env.MARKETPLACE_USERS_API + '/create',
@@ -84,6 +89,26 @@ export const useUserStore = defineStore(
           walletAddress.value = getUser.data.walletAddress;
           return;
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        throw error;
+      }
+    };
+
+    const fetchUserByAddress = async (address: string) => {
+      const date = new Date().getTime();
+      try {
+        const getUser = await axios.get<UserModel>(
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            address +
+            '?t=' +
+            date
+        );
+        return {
+          username: getUser.data.username || address,
+          avatar: getUser.data.avatar || generateAvatar(address),
+        };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         throw error;
@@ -229,6 +254,7 @@ export const useUserStore = defineStore(
       // setSettingsDialog,
       connectWallet,
       fetchUser,
+      fetchUserByAddress,
       updateUsername,
       uploadAvatar,
       getWalletBalance,

@@ -1,7 +1,7 @@
 <template>
   <div class="profile-nft-container">
     <div
-      v-for="txn in transactions"
+      v-for="txn in paginatedTransactions"
       :key="txn.txnHash"
       class="q-px-lg q-py-md row items-center"
       :class="$q.screen.width < 1265 ? 'q-py-lg' : ''"
@@ -95,6 +95,12 @@
         <span class="transaction-time-text"> {{ ConvertUnixToTime(txn.timestamp) }} </span>
       </div>
     </div>
+		<q-pagination
+			v-model="currentPage"
+      class="row justify-center q-ma-sm"
+      :max="maxPage"
+      direction-links
+    />
     <NFTDialog
       v-model="showNFTPopup"
       :brand="brand"
@@ -110,7 +116,7 @@
 
 <script lang="ts">
 import { ordersStore } from 'src/stores/orders-store';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { TransactionResponse } from '../models/response.models';
 import NFTDetails from '../Popups/NFTDetails.vue';
 import { GetCurrencyLabel } from 'src/shared/currency.helper';
@@ -134,11 +140,24 @@ export default defineComponent({
       time: '',
       tab: 'transactions',
       txnLinkPrepend: <string>process.env.POLYGON_SCAN_TXN_LINK,
+			currentPage: ref(1),
+      maxPageLength: 5,
 
       GetCurrencyLabel,
       ConvertUnixToDate,
       ConvertUnixToTime
     };
+  },
+	computed: {
+    paginatedTransactions() {
+      return this.transactions.slice(
+        (this.currentPage - 1) * this.maxPageLength,
+        this.currentPage * this.maxPageLength
+      );
+    },
+    maxPage() {
+      return Math.ceil(this.transactions.length / this.maxPageLength);
+    },
   },
   methods: {
     ReduceAddress(walletAddress: string) {

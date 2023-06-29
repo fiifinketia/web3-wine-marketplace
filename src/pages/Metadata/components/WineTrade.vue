@@ -63,14 +63,14 @@
       <div class="column nft-takeaways-container q-pa-sm">
         <div class="row">
           <q-img
-            src="../../../../public/images/profile-icon.svg"
+            :src="owner.avatar || '../../../../public/images/profile-icon.svg'"
             width="40px"
             height="40px"
             style="border-radius: 50%"
           />
           <div class="column q-pl-sm">
             <div class="owned-by">Owned by</div>
-            <div class="user-id">WiV</div>
+            <div class="user-id">{{ owner.username || 'unknown' }}</div>
           </div>
         </div>
         <div id="metadata-details" class="q-py-md">
@@ -382,6 +382,7 @@ import {
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 import { StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
 import { HandleUserValidity } from 'src/shared/veriff-service';
+import { GetTokenOwnerAddress } from 'src/shared/web3.helper';
 
 export default defineComponent({
   name: 'WineMetadata',
@@ -436,6 +437,10 @@ export default defineComponent({
 
       GetCurrencyLabel,
       userStore: useUserStore(),
+			owner: {
+				username: '' as string | undefined,
+				avatar: '' as string | undefined,
+			},
     };
   },
   computed: {
@@ -452,6 +457,22 @@ export default defineComponent({
         }
       },
     },
+  },
+  async beforeMount() {
+    try {
+      const ownerAddress = await GetTokenOwnerAddress(
+        this.nft.tokenID,
+        this.nft.tokenType
+      );
+
+      const user = await this.userStore.fetchUserByAddress(ownerAddress);
+      this.owner = user;
+    } catch (error) {
+      return this.owner = {
+				username: undefined,
+				avatar: undefined,
+			};
+    }
   },
   methods: {
     shepherdRemoveStep() {
@@ -607,13 +628,13 @@ export default defineComponent({
                 break;
             }
           } else {
-						this.HandleError({
-							errorType: 'under_age',
-							errorTitle: 'User is not old enough',
-							errorMessage:
-								'You must be 21 years or older to use make transactions on this site.',
-						});
-					}
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
+          }
         }
       }
     },
