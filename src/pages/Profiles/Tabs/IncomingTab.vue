@@ -151,11 +151,7 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
-import {
-  HandleUserValidity,
-  StartVeriff,
-  VerificationStatus,
-} from 'src/shared/veriff-service';
+import { StartVeriff } from 'src/shared/veriff-service';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();
@@ -285,7 +281,7 @@ export default defineComponent({
           errorMessage: 'Please verify your email and try again.',
         });
       }
-			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      // else if (this.userStatus !== VerificationStatus.VERIFIED) {
       //   try {
       //     const isVerified = await HandleUserValidity();
       //     if (isVerified) {
@@ -304,7 +300,7 @@ export default defineComponent({
       //     this.HandleError(err);
       //   }
       // }
-			else {
+      else {
         try {
           if (!this.userStore.user.isLegal) await this.userStore.confirmAge();
         } catch (error) {

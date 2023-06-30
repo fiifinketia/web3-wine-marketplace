@@ -149,11 +149,7 @@ import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import {
-  HandleUserValidity,
-  StartVeriff,
-  VerificationStatus,
-} from 'src/shared/veriff-service';
+import { StartVeriff } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -331,7 +327,7 @@ export default defineComponent({
           errorMessage: 'Please verify your email and try again.',
         });
       }
-			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      // else if (this.userStatus !== VerificationStatus.VERIFIED) {
       //   try {
       //     const isVerified = await HandleUserValidity();
       //     if (isVerified) {
@@ -347,7 +343,7 @@ export default defineComponent({
       //     });
       //   }
       // }
-			else {
+      else {
         try {
           if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
         } catch (error) {

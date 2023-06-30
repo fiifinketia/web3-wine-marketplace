@@ -83,7 +83,7 @@
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
     @logout="logout"
-    @openConnectWallet="showConnectWallet = true"
+    @openConnectWallet="connectWallet()"
     @openMyWallet="showMyWallet = true"
     @openSettings="showSettings = true"
     @openHelpCenterFaqs="openHelpCenter('topics')"
@@ -336,7 +336,7 @@
                     v-else
                     v-close-popup
                     clickable
-                    @click="showConnectWallet = true"
+                    @click="connectWallet()"
                   >
                     <q-item-section>
                       <q-item-label>connect wallet</q-item-label>
@@ -433,7 +433,7 @@
     <q-page-container>
       <router-view
         @open-wallet-sidebar="showMyWallet = !showMyWallet"
-        @open-connect-wallet="showConnectWallet = true"
+        @open-connect-wallet="connectWallet()"
         @open-help-center-support="openHelpCenter('support')"
         @open-help-center-faqs="openHelpCenter('topics')"
       />
@@ -508,7 +508,7 @@ export default defineComponent({
           this.$route.query?.connect &&
           this.$route.query?.connect === 'open'
         ) {
-          this.showConnectWallet = true;
+          this.connectWallet();
         }
       },
       immediate: true,
@@ -584,7 +584,7 @@ export default defineComponent({
       });
     },
     async connectWallet() {
-      this.showConnectWallet = false;
+      // this.showConnectWallet = false;
       if (!this.tourStore.termsAndConditionsAgreed) {
         this.showTermsAndConditions = true;
         this.$watch('tourStore.termsAndConditionsAgreed', async newValue => {
@@ -599,6 +599,7 @@ export default defineComponent({
 
     async _connectWallet() {
       try {
+				this.$q.loading.show({ message: 'Connecting wallet...' })
         await this.userStore.connectWallet();
         if (!this.$route.query?.next) {
           this.$router.go(0);
@@ -612,7 +613,9 @@ export default defineComponent({
           this.openUserErrorDialog = false;
         }, 2000);
         throw error;
-      }
+      } finally {
+				this.$q.loading.hide();
+			}
     },
 
     setupWallet() {
@@ -641,13 +644,16 @@ export default defineComponent({
     },
 
     async logout() {
+			this.$q.loading.show({ message: 'Disconnecting wallet...' });
       this.showMyWallet = false;
+			await this.userStore.disconnectWallet();
       this.ClearStore();
 
       if (this.$route.meta.requiresAuth) {
         this.$router.push('/');
         return;
       }
+			this.$q.loading.hide();
       window.location.reload();
     },
     ClearStore() {

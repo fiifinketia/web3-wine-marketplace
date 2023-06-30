@@ -6,8 +6,10 @@ import { Dialog } from 'quasar';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 import { APIKeyString } from 'src/boot/axios';
-import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import { GetWeb3Provider, magic } from 'src/shared/web3.helper';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
+
+// import { recoverPersonalSignature } from '@metamask/eth-sig-util';
 
 const generateAvatar = (name: string) => {
   const getColors = [
@@ -29,10 +31,15 @@ export const useUserStore = defineStore(
     const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(
       undefined
     );
+
     const connectWallet = async () => {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      const accounts = await magic.wallet.connectWithUI();
+      // const signedMessage = await web3.eth.personal.sign(
+      //   'Here is a basic message!',
+      //   accounts[0],
+      //   ''
+      // );
+      // console.log('signedMessage:', signedMessage);
       const address = utils.getAddress(accounts[0]);
       const date = new Date().getTime();
       try {
@@ -72,6 +79,17 @@ export const useUserStore = defineStore(
         }
         throw error;
       }
+    };
+
+    const disconnectWallet = async () => {
+      const provider = await GetWeb3Provider();
+      if (!!provider) {
+        provider.removeAllListeners();
+      }
+
+      await magic.wallet.disconnect();
+      walletAddress.value = '';
+      user.value = undefined;
     };
 
     const fetchUser = async () => {
@@ -139,14 +157,17 @@ export const useUserStore = defineStore(
 
     const checkConnection = async () => {
       try {
-        const connectedAccounts: string[] = await window.ethereum.request({
+        const web3Provider = await GetWeb3Provider();
+        const accounts: string[] = await web3Provider.provider.request?.({
           method: 'eth_accounts',
         });
-        if (connectedAccounts.length == 0) {
+        if (accounts.length === 0) {
           walletAddress.value = '';
+          user.value = undefined;
         }
       } catch {
         walletAddress.value = '';
+        user.value = undefined;
       }
     };
 
@@ -176,8 +197,8 @@ export const useUserStore = defineStore(
     };
 
     const getWalletBalance = async () => {
-      if (!window.ethereum) return 0;
-      const signer = WindowWeb3Provider?.getSigner();
+      const web3Provider = await GetWeb3Provider();
+      const signer = web3Provider.getSigner();
       if (!!signer) {
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
           GetBalanceByCurrency(
@@ -253,6 +274,7 @@ export const useUserStore = defineStore(
       // showSettingsDialog,
       // setSettingsDialog,
       connectWallet,
+      disconnectWallet,
       fetchUser,
       fetchUserByAddress,
       updateUsername,

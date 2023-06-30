@@ -212,10 +212,6 @@ import ListingNewError from './ListingNewError.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import { mapState } from 'pinia';
 import { useUserStore } from 'src/stores/user-store';
-import {
-  HandleUserValidity,
-  VerificationStatus,
-} from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {

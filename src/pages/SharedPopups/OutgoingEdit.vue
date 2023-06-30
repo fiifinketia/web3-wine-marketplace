@@ -453,7 +453,7 @@ import { Currencies } from 'src/shared/models/entities/currency';
 import { GetCurrentDate, GetValidTime } from 'src/shared/date.helper';
 import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
-import { WindowWeb3Provider } from 'src/shared/web3.helper';
+import { GetWeb3Provider } from 'src/shared/web3.helper';
 import ExpirationInvalid from './ExpirationInvalid.vue';
 import { UserModel } from 'src/components/models';
 
@@ -672,8 +672,8 @@ export default defineComponent({
       }
     },
     async FetchBalances() {
-      if (!window.ethereum) return 0;
-      const signer = WindowWeb3Provider?.getSigner();
+			const web3Provider = await GetWeb3Provider();
+      const signer = web3Provider.getSigner();
       if (!!signer) {
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
           GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, this.userStore.walletAddress),

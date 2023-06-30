@@ -16,44 +16,57 @@ import {
 } from '@opensea/seaport-js/lib/types';
 import { APIKeyString } from 'src/boot/axios';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
-import { ERC20_ContractWithSigner, WindowWeb3Provider } from 'src/shared/web3.helper';
+import {
+  ERC20_ContractWithSigner,
+  GetWeb3Provider,
+} from 'src/shared/web3.helper';
 import { UserModel } from 'src/components/models';
-import { NOTIFICATION_CODES, TXN_STATUS } from 'src/shared/models/entities/notifications.model';
-import { CancelOrderRequest, CreateOrderRequest, FulfillOrderRequest } from 'src/shared/models/requests/orders.requests';
+import {
+  NOTIFICATION_CODES,
+  TXN_STATUS,
+} from 'src/shared/models/entities/notifications.model';
+import {
+  CancelOrderRequest,
+  CreateOrderRequest,
+  FulfillOrderRequest,
+} from 'src/shared/models/requests/orders.requests';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 declare let window: Window;
 
 function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
-	if (isListing) {
-		return {
-			orderPrice: (parseFloat(parameters.consideration[0].startAmount) / 0.975).toString(),
-			orderCurrency: parameters.consideration[0].token
-		}
-	}
-	return {
-		orderPrice: parameters.offer[0].startAmount,
-		orderCurrency: parameters.offer[0].token
-	}
+  if (isListing) {
+    return {
+      orderPrice: (
+        parseFloat(parameters.consideration[0].startAmount) / 0.975
+      ).toString(),
+      orderCurrency: parameters.consideration[0].token,
+    };
+  }
+  return {
+    orderPrice: parameters.offer[0].startAmount,
+    orderCurrency: parameters.offer[0].token,
+  };
 }
 
-export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
+export function isInputDateTimeAboveCurrentTime(
+  expDate: string,
+  expTime: string
+): boolean {
   const inputDateTime = `${expDate}T${expTime}:00`;
   const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
   const currentTimestamp = Math.round(new Date().getTime() / 1000);
   return inputTimestamp > currentTimestamp;
 }
 
-function SetExpDate(expDate: string, expTime: string) : string{
-	const inputDateTime = `${expDate}T${expTime}:00`
-	return (
-		Math.round(new Date(inputDateTime).getTime() / 1000)
-	).toString()
+function SetExpDate(expDate: string, expTime: string): string {
+  const inputDateTime = `${expDate}T${expTime}:00`;
+  return Math.round(new Date(inputDateTime).getTime() / 1000).toString();
 }
 
 export async function GetBlockNumber(): Promise<number> {
-  const web3 = new ethers.providers.Web3Provider(window.ethereum);
-  return await web3.getBlockNumber();
+  const web3Provider = await GetWeb3Provider();
+  return await web3Provider.getBlockNumber();
 }
 
 function CheckUser(user: UserModel): { success: boolean; error?: Error } {
@@ -122,9 +135,9 @@ export async function CreateERC721Listing(
   expirationDate: string,
   expirationTime: string
 ) {
-  const signer = WindowWeb3Provider?.getSigner();
-  if (!signer)
-    throw new Error('Please reconnect/install Metamask wallet to continue');
+  const web3Provider = await GetWeb3Provider();
+  const signer = web3Provider.getSigner();
+  if (!signer) throw new Error('Please reconnect wallet to continue');
   // const ERC721Contract = ERC721_ContractWithSigner(smartContractAddress, signer);
   const ERC20Contract = ERC20_ContractWithSigner(listingCurrency, signer);
   const decimalOfToken = <number>await ERC20Contract.decimals();
@@ -257,9 +270,10 @@ export async function CreateERC721Offer(
     throw checkUser.error;
   }
 
-  const signer = WindowWeb3Provider?.getSigner();
-  if (!signer)
-    throw new Error('Please reconnect/install Metamask wallet to continue');
+  const web3Provider = await GetWeb3Provider();
+
+  const signer = web3Provider.getSigner();
+  if (!signer) throw new Error('Please connect wallet to continue');
   const contract = ERC20_ContractWithSigner(offerCurrency, signer);
   const decimalOfToken = <number>await contract.decimals();
 

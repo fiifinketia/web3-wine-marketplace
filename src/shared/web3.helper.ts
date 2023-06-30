@@ -3,12 +3,21 @@ import ERC721ABI from './ABIs/ERC721.json';
 import ERC1155ABI from './ABIs/ERC1155.abi.json';
 import ERC20ABI from './ABIs/ERC20.abi.json';
 import { TOKENTYPE } from 'src/pages/Metadata/models/Metadata';
+import { Magic } from 'magic-sdk';
 
 ////////////////// Return providers here //////////////////
-const WindowWeb3Provider: ethers.providers.Web3Provider | undefined =
-  window.ethereum
-    ? new ethers.providers.Web3Provider(window.ethereum)
-    : undefined;
+// TODO: checkout
+const magic = new Magic(<string>process.env.MAGIC_LINK_API_KEY, {
+  network: {
+    rpcUrl: <string>process.env.PROVIDER_URL,
+    chainId: parseInt(<string>process.env.PROVIDER_CHAIN_ID),
+  },
+});
+
+const getMagicProvider = async () => await magic.wallet.getProvider();
+
+const GetWeb3Provider = async () =>
+  new ethers.providers.Web3Provider(await getMagicProvider());
 
 const JSONWeb3Provider: ethers.providers.JsonRpcProvider =
   new ethers.providers.JsonRpcProvider(<string>process.env.PROVIDER_URL);
@@ -54,7 +63,9 @@ const GetTokenOwnerAddress = async (tokenID: string, tokenType?: TOKENTYPE) => {
 };
 
 export {
-  WindowWeb3Provider,
+  GetWeb3Provider,
+  getMagicProvider,
+  magic,
   JSONWeb3Provider,
   ERC721_PolygonContract,
   ERC1155_PolygonContract,
