@@ -7,6 +7,7 @@ export const useNotificationsStore = defineStore('notificationsStore', {
   state: () => ({
     notificationSettings: {} as NotificationsSettings,
     notifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    storedNotifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
     settingsFetched: false,
     notificationsFetched: false,
     notificationsErrorEncountered: false,
@@ -51,12 +52,14 @@ export const useNotificationsStore = defineStore('notificationsStore', {
       try {
         this.notificationsErrorEncountered = false;
         this.notificationsFetched = false;
+        this.notifications = [];
         const response : AxiosResponse<ExtendedNotificationModel<'veriff' | 'transaction'>[]> = await axios.post(
           process.env.MARKETPLACE_API_URL + '/market/notifications/retrieve',
           req
         );
-        this.notifications = response.data;
-      } catch (error: any) {
+        this.storedNotifications = response.data;
+        this.addMoreNotificationsToView();
+      } catch (error: any) { // eslint-disable-line
         this.notificationsErrorEncountered = true;
         throw new Error(error);
       } finally {
@@ -72,6 +75,16 @@ export const useNotificationsStore = defineStore('notificationsStore', {
         notif => notif._id == notifID
       );
       this.notifications[notifIndex].viewed = true;
+    },
+    addMoreNotificationsToView() {
+      const startIndex = this.notifications.length;
+      const endIndex = Math.min(startIndex + 2, this.storedNotifications.length);
+
+      for (let i = startIndex; i < endIndex; i++) {
+        this.notifications.push(this.storedNotifications[i])
+      }
+
+      return this.storedNotifications.length > this.notifications.length;
     }
   },
 });

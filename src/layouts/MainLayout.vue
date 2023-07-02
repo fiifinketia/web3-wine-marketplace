@@ -233,11 +233,10 @@
             >
               <NotificationsPopup />
               <q-badge
-                v-if="notificationsFetched && !notificationsErrorEncountered"
+                v-if="notificationsFetched && !notificationsErrorEncountered && notifications.length > 0"
                 rounded
                 floating
                 color="red"
-                :label="notifications.filter(f => !f.viewed).length"
               />
             </q-btn>
             <q-btn
@@ -521,7 +520,7 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useNotificationsStore, {
-      notifications: store => store.notifications,
+      notifications: store => store.storedNotifications,
       notificationsFetched: store => store.notificationsFetched,
       notificationsErrorEncountered: store => store.notificationsErrorEncountered
     })

@@ -72,7 +72,7 @@ export default defineComponent({
     ...mapState(useNotificationsStore, {
       notificationsFetched: store => store.notificationsFetched,
       notificationsErrorEncountered: store => store.notificationsErrorEncountered,
-      notifications: store => store.notifications
+      notifications: store => store.storedNotifications
     }),
     ...mapState(useUserStore, {
       walletAddress: store => store.walletAddress

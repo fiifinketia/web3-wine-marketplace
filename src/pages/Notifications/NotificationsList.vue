@@ -1,5 +1,5 @@
 <template>
-  <q-infinite-scroll class="column q-gutter-y-sm" @load="onLoad" :offset="250">
+  <q-infinite-scroll class="column q-gutter-y-sm" :offset="250" @load="onLoad">
     <div
       v-for="notif in notifications"
       :id="notif.viewed ? 'viewed-notif' : 'unviewed-notif'"
@@ -347,6 +347,14 @@ export default defineComponent({
       if (!isAlreadyViewed) {
         this.notificationsStore.updateNotificationAsViewed(notifID);
       }
+    },
+    onLoad(index: any, done: any) { //eslint-disable-line
+      setTimeout(() => {
+        const isThereRemaining = this.notificationsStore.addMoreNotificationsToView();
+        if (isThereRemaining) {
+          done()
+        } else done(true)
+      }, 1000)
     }
   }
 })
