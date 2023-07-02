@@ -122,7 +122,7 @@ export default defineComponent({
         stableChart: [] as number[][],
       },
       userStore,
-		shepherd,
+		  shepherd,
 			tourStore,
       tab: ref('about'),
       listingsStore,
@@ -137,6 +137,17 @@ export default defineComponent({
       openListingUnavailableDialog: false,
       listingUnavailableStatus: '',
     };
+  },
+
+  watch: {
+    $route(to, from) {
+      // Check if the query parameters have changed
+      if (to.path == from.path) {
+        if (to.query.id !== from.query.id) {
+          this.ValidateAndFetchNFT()
+        }
+      }
+    }
   },
 
   async mounted() {

@@ -233,7 +233,7 @@
             >
               <NotificationsPopup />
               <q-badge
-                v-if="notificationsFetched && !notificationsErrorEncountered && notifications.length > 0"
+                v-if="notificationsFetched && !notificationsErrorEncountered && notifications.filter(f => !f.viewed).length > 0"
                 rounded
                 floating
                 color="red"
