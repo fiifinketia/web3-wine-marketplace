@@ -14,11 +14,12 @@
       </q-btn>
       <q-input
         v-model="searchText"
+        :disable="storedNotifications.length == 0"
         dense
         outlined
+        debounce="500"
         color="blue-6"
         placeholder="Search"
-        :input-style="!!searchText ? 'color: #212131' : ''"
         class="notifications-search"
       >
         <template #prepend>
@@ -126,6 +127,9 @@ export default defineComponent({
   computed: {
     ...mapState(useUserStore, {
       walletAddress: store => store.walletAddress
+    }),
+    ...mapState(useNotificationsStore, {
+      storedNotifications: store => store.storedNotifications
     })
   },
   watch: {
@@ -145,6 +149,11 @@ export default defineComponent({
         }
       },
     },
+    searchText: {
+      handler: function() {
+        this.notificationStore.searchNotification(this.searchText.toLowerCase())
+      }
+    }
   },
   methods: {
     IsSelectedSortKey(sortKey: string): boolean {

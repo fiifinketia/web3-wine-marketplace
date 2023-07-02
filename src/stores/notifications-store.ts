@@ -8,11 +8,13 @@ export const useNotificationsStore = defineStore('notificationsStore', {
     notificationSettings: {} as NotificationsSettings,
     notifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
     storedNotifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    searchedNotifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
     settingsFetched: false,
     notificationsFetched: false,
     notificationsErrorEncountered: false,
     sortKey: 'latest' as 'latest' | 'earliest',
-    filterKey: 'all' as 'all' | 'sale' | 'offers'
+    filterKey: 'all' as 'all' | 'sale' | 'offers',
+    isSearching: false
   }),
   getters: {
     getSettings: state => state.notificationSettings,
@@ -85,6 +87,14 @@ export const useNotificationsStore = defineStore('notificationsStore', {
       }
 
       return this.storedNotifications.length > this.notifications.length;
+    },
+    searchNotification(searchString: string) {
+      if (!searchString) {
+        this.isSearching = false;
+      } else {
+        this.searchedNotifications = this.storedNotifications.filter((obj) => obj.message.includes(searchString));
+        this.isSearching = true;
+      }
     }
   },
 });

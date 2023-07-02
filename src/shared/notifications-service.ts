@@ -5,8 +5,10 @@ import {
   ExtendedNotificationModel,
   NOTIFICATION_CODES,
 } from './models/entities/notifications.model';
+import { useNotificationsStore } from 'src/stores/notifications-store';
 
 const userStore = useUserStore();
+const notificationsStore = useNotificationsStore();
 const socketURL = <string>process.env.NOTIFICATIONS_MSVC_URL;
 // const socketURL = 'https://wiv-mkt-notifications-msvc-test.azurewebsites.net/';
 const socket = io(socketURL, {
@@ -62,6 +64,25 @@ socket.onAny((code: string, data: ExtendedNotificationModel<'veriff' | 'transact
       case 1:
         // Transaction notification
         transactionEventListener(<ExtendedNotificationModel<'transaction'>>data);
+        const sortKey = notificationsStore.sortKey;
+        const filterKey = notificationsStore.filterKey;
+        const isSearching = notificationsStore.isSearching;
+        if (sortKey == 'latest' && !isSearching) {
+          if (filterKey == 'offers') {
+            if (data.code == NOTIFICATION_CODES.OFFER_RECEIVED) {
+              notificationsStore.notifications.unshift(data);
+              notificationsStore.storedNotifications.unshift(data);
+            }
+          } else if (filterKey == 'sale') {
+            if (data.code == NOTIFICATION_CODES.LISTING_PURCHASED_OLD_OWNER) {
+              notificationsStore.notifications.unshift(data);
+              notificationsStore.storedNotifications.unshift(data);
+            }
+          } else {
+            notificationsStore.notifications.unshift(data);
+            notificationsStore.storedNotifications.unshift(data);
+          }
+        }
         break;
       case 2:
         // Veriff notification

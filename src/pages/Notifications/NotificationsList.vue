@@ -1,7 +1,7 @@
 <template>
   <q-infinite-scroll class="column q-gutter-y-sm" :offset="250" @load="onLoad">
     <div
-      v-for="notif in notifications"
+      v-for="notif in activeNotifications"
       :id="notif.viewed ? 'viewed-notif' : 'unviewed-notif'"
       :key="notif._id"
       class="column full-width no-wrap q-pa-sm notif-container"
@@ -293,8 +293,13 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useNotificationsStore, {
-      notifications: store => store.notifications
-    })
+      notifications: store => store.notifications,
+      isSearching: store => store.isSearching,
+      searchedNotifications: store => store.searchedNotifications
+    }),
+    activeNotifications() {
+      return this.isSearching ? this.searchedNotifications : this.notifications
+    }
   },
   methods: {
     GetNotificationIcon(code: NOTIFICATION_CODES) {
@@ -349,12 +354,14 @@ export default defineComponent({
       }
     },
     onLoad(index: any, done: any) { //eslint-disable-line
-      setTimeout(() => {
-        const isThereRemaining = this.notificationsStore.addMoreNotificationsToView();
-        if (isThereRemaining) {
-          done()
-        } else done(true)
-      }, 1000)
+      if (!this.isSearching) {
+        setTimeout(() => {
+          const isThereRemaining = this.notificationsStore.addMoreNotificationsToView();
+          if (isThereRemaining) {
+            done()
+          } else done(true)
+        }, 1000)
+      }
     }
   }
 })
