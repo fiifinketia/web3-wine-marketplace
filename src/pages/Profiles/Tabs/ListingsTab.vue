@@ -12,7 +12,10 @@
       :tab-error="'listings'"
       @reload-tab="FetchListings(listingSortKey, listingBrandFilter)"
     />
-    <div v-else class="column items-center full-width q-mx-none profile-page-container">
+    <div
+      v-else
+      class="column items-center full-width q-mx-none profile-page-container"
+    >
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -57,7 +60,9 @@
           />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @delete-listing="
+              listing => TransactionPreValidator('UNLIST', listing)
+            "
             @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
@@ -65,7 +70,9 @@
           <ListingsColumns />
           <ListingsRows
             :listings="listings"
-            @delete-listing="listing => TransactionPreValidator('UNLIST', listing)"
+            @delete-listing="
+              listing => TransactionPreValidator('UNLIST', listing)
+            "
             @edit-listing="listing => TransactionPreValidator('LIST', listing)"
           />
         </div>
@@ -89,8 +96,11 @@
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
         @listable-nft-listed="SetTimeoutOnListingProcessedDialog()"
-				@open-terms-and-conditions="showTermsAndConditions = true"
-        @open-kyc-dialog="openEditDialog = false; openKYCUpdate = true;"
+        @open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="
+          openEditDialog = false;
+          openKYCUpdate = true;
+        "
       />
       <ListingDialogUnlist
         v-model="openDeleteDialog"
@@ -101,8 +111,11 @@
         @listing-delete-close="openDeleteDialog = false"
         @remove-listing="val => RemoveRow(val)"
         @listing-error-dialog="HandleError"
-        @unlist-failed="(unlisted) => InvalidUnlist(unlisted)"
-        @open-kyc-dialog="openDeleteDialog = false; openKYCUpdate = true;"
+        @unlist-failed="unlisted => InvalidUnlist(unlisted)"
+        @open-kyc-dialog="
+          openDeleteDialog = false;
+          openKYCUpdate = true;
+        "
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -115,12 +128,22 @@
         :listable-n-f-ts="listableNFTs"
         :is-loading="loadingNewListingDialog"
         :errored-out="errorNewListingDialog"
-        @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed, false)"
-        @listing-warning-processing="processingListing => UpdateListableNFTWithPrice(processingListing, true)"
-        @listing-warning-processed="processedListing => RemoveListableNFT(processedListing)"
+        @listable-nft-listed="
+          listed => UpdateListableNFTWithPrice(listed, false)
+        "
+        @listing-warning-processing="
+          processingListing =>
+            UpdateListableNFTWithPrice(processingListing, true)
+        "
+        @listing-warning-processed="
+          processedListing => RemoveListableNFT(processedListing)
+        "
         @refetch-nfts="SetListableNFTs()"
-				@open-terms-and-conditions="showTermsAndConditions = true"
-        @open-kyc-dialog="openNewListingDialog = false; openKYCUpdate = true;"
+        @open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="
+          openNewListingDialog = false;
+          openKYCUpdate = true;
+        "
       />
       <ListingProcessedDialog
         v-model="openOrderCompletedDialog"
@@ -136,14 +159,15 @@
       />
       <KYCUpdate
         v-model="openKYCUpdate"
-        @start-veriff="(sessionDetails) =>
-          BeginUserVerification(sessionDetails.continueSession, sessionDetails.lastSessionURL)
+        @start-veriff="
+          sessionDetails =>
+            BeginUserVerification(
+              sessionDetails.continueSession,
+              sessionDetails.lastSessionURL
+            )
         "
       />
-			<wiv-toc-dialog
-				v-model="showTermsAndConditions"
-				close-button
-			/>
+      <wiv-toc-dialog v-model="showTermsAndConditions" close-button />
     </div>
   </q-page>
 </template>
@@ -179,7 +203,11 @@ import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import { HandleUserValidity, StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import {
+  HandleUserValidity,
+  StartVeriff,
+  VerificationStatus,
+} from 'src/shared/veriff-service';
 
 setCssVar('custom', '#5e97ec45');
 
@@ -199,7 +227,7 @@ export default defineComponent({
     ListableContainer: ListingNew,
     ListingStatusDialog: ListingExists,
     UnlistingStatusDialog: ListingUnavailable,
-    KYCUpdate: KYCUpdate
+    KYCUpdate: KYCUpdate,
   },
   emits: ['listingsAmount'],
 
@@ -242,24 +270,24 @@ export default defineComponent({
 
       listingUnavailableStatus: '',
       openListingUnavailableDialog: false,
-			showTermsAndConditions: false,
+      showTermsAndConditions: false,
 
-      openKYCUpdate: false
+      openKYCUpdate: false,
     };
   },
   computed: {
     ...mapState(ordersStore, {
       listings: store => store.getListings,
       brandSearched: store => store.getListingBrandFilterStatus,
-      tabKey: store => store.getListingTabKey
+      tabKey: store => store.getListingTabKey,
     }),
     ...mapState(useListableFilters, {
-      listableNFTs: store => store.getParentListableTokens
+      listableNFTs: store => store.getParentListableTokens,
     }),
     ...mapState(useUserStore, {
       userStatus: store => store.user?.verificationStatus,
-      walletAddress: store => store.walletAddress
-    })
+      walletAddress: store => store.walletAddress,
+    }),
   },
   watch: {
     listingSortKey: {
@@ -280,8 +308,8 @@ export default defineComponent({
     tabKey: {
       async handler() {
         await this.FetchListings('', '');
-      }
-    }
+      },
+    },
   },
 
   async mounted() {
@@ -303,7 +331,7 @@ export default defineComponent({
     SetTimeoutOnListingProcessedDialog() {
       this.openOrderCompletedDialog = true;
       setTimeout(() => {
-        this.openOrderCompletedDialog = false
+        this.openOrderCompletedDialog = false;
       }, 3000);
     },
     async FetchListings(sortKey: string, brandFilter: string) {
@@ -373,7 +401,7 @@ export default defineComponent({
     async SetListableNFTs() {
       try {
         this.loadingNewListingDialog = true;
-        await this.RefetchNFTs()
+        await this.RefetchNFTs();
         const currentListings = this.listings;
         const ownedNFTs = this.nftStore.ownedNFTs;
         if (ownedNFTs.length > currentListings.length) {
@@ -404,10 +432,13 @@ export default defineComponent({
           });
           if (ownedNFTsMap.size > 0) {
             const listableOwnedNFTs = Array.from(ownedNFTsMap.values());
-            const listableTokens = await ReturnMissingNFTDetails(listableOwnedNFTs);
+            const listableTokens = await ReturnMissingNFTDetails(
+              listableOwnedNFTs
+            );
             this.listableFiltersStore.setParentListableTokens(listableTokens);
             this.listableFiltersStore.setAllFilters(this.listableNFTs);
-            this.listableFiltersStore.filteredListableTokens = this.listableNFTs;
+            this.listableFiltersStore.filteredListableTokens =
+              this.listableNFTs;
           }
           this.errorNewListingDialog = false;
         }
@@ -417,10 +448,7 @@ export default defineComponent({
         this.loadingNewListingDialog = false;
       }
     },
-    UpdateListableNFTWithPrice(
-      listed: ListableToken,
-      warning: boolean
-    ) {
+    UpdateListableNFTWithPrice(listed: ListableToken, warning: boolean) {
       if (!warning) {
         this.SetTimeoutOnListingProcessedDialog();
       }
@@ -434,7 +462,13 @@ export default defineComponent({
       this.listableNFTs[listedIndex].listingCurrency = listed.listingCurrency;
       this.listableFiltersStore.UpdateListableNFTPriceInDuplicate(listed);
     },
-    RemoveListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+    RemoveListableNFT(
+      listed: TokenIdentifier & {
+        listingPrice: string;
+        currency: string;
+        transactionStatus: boolean;
+      }
+    ) {
       this.openNewListingDialog = false;
       this.openNewListingDialog = false;
       this.openListingStatusDialog = true;
@@ -451,10 +485,10 @@ export default defineComponent({
       this.listableFiltersStore.RemoveListableNFTInDuplicate(listed);
     },
     async InvalidUnlist(failed: {
-      status: 'ongoingUnlist' | 'unlisted' | 'purchased',
-      contractAddress: string,
-      identifierOrCriteria: string,
-      network: string
+      status: 'ongoingUnlist' | 'unlisted' | 'purchased';
+      contractAddress: string;
+      identifierOrCriteria: string;
+      network: string;
     }) {
       const listedIndex = this.store.listings.findIndex(
         nft =>
@@ -471,36 +505,64 @@ export default defineComponent({
     },
     BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
       this.openKYCUpdate = false;
-      StartVeriff(<string> this.userStore.user?.walletAddress, '', continueSession, lastSessionURL);
+      StartVeriff(
+        <string>this.userStore.user?.walletAddress,
+        '',
+        continueSession,
+        lastSessionURL
+      );
     },
     async TransactionPreValidator(dialog: string, listing: ListingsResponse) {
-      if (this.userStatus == VerificationStatus.VERIFIED) {
-        switch (dialog) {
-          case 'LIST':
-            this.OpenEditDialog(listing);
-            break;
-          case 'UNLIST':
-            this.OpenDeleteDialog(listing);
-            break;
-        }
-      } else {
+      if (!this.userStore.user?.email) {
+        this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+      }
+      // else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      // 	try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.TransactionPreValidator(dialog, listing);
+      //     } else {
+      //       this.openKYCUpdate = true;
+      //     }
+      //   }
+      //   catch {
+      //     this.HandleError({
+      //       errorType: 'validation_failed',
+      //       errorTitle: 'Failed to verify user KYC status.',
+      //       errorMessage: 'Please try again later.'
+      //     })
+      //   }
+      // }
+      else {
         try {
-          const isVerified = await HandleUserValidity();
-          if (isVerified) {
-            this.TransactionPreValidator(dialog, listing);
+          if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user?.isLegal) {
+            switch (dialog) {
+              case 'LIST':
+                this.OpenEditDialog(listing);
+                break;
+              case 'UNLIST':
+                this.OpenDeleteDialog(listing);
+                break;
+            }
           } else {
-            this.openKYCUpdate = true;
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
           }
         }
-        catch {
-          this.HandleError({
-            errorType: 'validation_failed',
-            errorTitle: 'Failed to verify user KYC status.',
-            errorMessage: 'Please try again later.'
-          })
-        }
       }
-    }
+    },
   },
 });
 </script>

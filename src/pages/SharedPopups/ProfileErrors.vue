@@ -26,6 +26,20 @@
         </span>
         <span class="profile-error-text"> {{ errorMessage }} </span>
       </q-card-section>
+      <!-- <q-card-actions
+        v-if="errorType === 'email_unverified'"
+        class="column items-center justify-center q-gutter-y-sm"
+      >
+        <q-btn
+          v-close-popup
+          class="q-mt-md"
+					color="primary"
+          unelevated
+          no-caps
+          label="Open Settings"
+          @click="userStore.setSettingsDialog(true)"
+        />
+      </q-card-actions> -->
     </q-card>
   </q-dialog>
 </template>
@@ -33,6 +47,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import 'src/css/Profile/Component/errorDialog.css';
+import { useUserStore } from 'src/stores/user-store';
 
 export default defineComponent({
   props: {
@@ -48,6 +63,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      userStore: useUserStore(),
+    };
   },
 });
 </script>

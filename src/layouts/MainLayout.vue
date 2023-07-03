@@ -548,7 +548,6 @@ export default defineComponent({
   },
 
   async mounted() {
-    this.tourStore.OnMounted();
     await this.userStore.checkConnection();
     if (!this.walletAddress) {
       this.ClearStore();
