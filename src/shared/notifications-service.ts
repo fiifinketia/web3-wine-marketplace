@@ -6,11 +6,13 @@ import {
   NOTIFICATION_CODES,
 } from './models/entities/notifications.model';
 import { useNotificationsStore } from 'src/stores/notifications-store';
+import { NotificationsHelper } from './notifications.helper';
+import 'src/css/MainLayout/NotificationsDialog.css';
 
 const userStore = useUserStore();
 const notificationsStore = useNotificationsStore();
+const notificationsHelper = new NotificationsHelper();
 const socketURL = <string>process.env.NOTIFICATIONS_MSVC_URL;
-// const socketURL = 'https://wiv-mkt-notifications-msvc-test.azurewebsites.net/';
 const socket = io(socketURL, {
   query: { walletAddress: userStore.walletAddress },
 });
@@ -44,15 +46,53 @@ const veriffEventListener = (
   });
 };
 
-const transactionEventListener = (
-  notification: ExtendedNotificationModel<'transaction'>
+const TransactionEventManager = (
+  linkName: string,
+  icon: string,
+  message: string,
+  link: string,
+  notifID: string
 ) => {
-  notify({
-    message: `${notification.brand},TXN_STATUS: ${notification.status},CODE: ${notification.code}`,
-    username: userStore.user?.username || '',
-    avatar: userStore.user?.avatar || '',
-  });
+  const clickLink = async (link: string) => {
+    await notificationsStore.updateNotificationAsViewed(notifID);
+    window.location.href = link;
+  }
+  const screenWidth = window.innerWidth;
+  Notify.create({
+    message: message,
+    multiLine: true,
+    icon: icon,
+    actions: [
+      { label: linkName, color: 'primary', handler: () => clickLink(link) }
+    ],
+    badgeStyle: 'opacity: 0',
+    timeout: 2000,
+    iconSize: '50px',
+    classes: 'notification-popup',
+    position: screenWidth <= 600 ? 'top' : undefined
+  })
 };
+
+function TransactionNotifBuilder(incomingNotif: ExtendedNotificationModel<'transaction'>) {
+  const { code, orderPrice, orderCurrency, status, brand, link, _id } = incomingNotif;
+  const linkName = notificationsHelper.GetTransactionLinkName(code);
+  const icon = notificationsHelper.GetNotificationIcon(code);
+  const message = notificationsHelper.GetTransactionNotificationMessage(
+    code,
+    status,
+    <string> orderPrice,
+    <string> orderCurrency,
+    brand
+  );
+
+  TransactionEventManager(
+    linkName,
+    <string> icon,
+    <string> message,
+    <string> link,
+    _id
+  )
+}
 
 socket.onAny((code: string, data: ExtendedNotificationModel<'veriff' | 'transaction'>) => {
   // Check if data is a notification
@@ -63,7 +103,6 @@ socket.onAny((code: string, data: ExtendedNotificationModel<'veriff' | 'transact
     switch (notificationType) {
       case 1:
         // Transaction notification
-        transactionEventListener(<ExtendedNotificationModel<'transaction'>>data);
         const sortKey = notificationsStore.sortKey;
         const filterKey = notificationsStore.filterKey;
         const isSearching = notificationsStore.isSearching;
@@ -83,6 +122,7 @@ socket.onAny((code: string, data: ExtendedNotificationModel<'veriff' | 'transact
             notificationsStore.storedNotifications.unshift(data);
           }
         }
+        TransactionNotifBuilder(<ExtendedNotificationModel<'transaction'>>data);
         break;
       case 2:
         // Veriff notification
