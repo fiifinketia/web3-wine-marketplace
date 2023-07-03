@@ -150,9 +150,9 @@ import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 import {
-  HandleUserValidity,
+  // HandleUserValidity,
   StartVeriff,
-  VerificationStatus,
+  // VerificationStatus,
 } from 'src/shared/veriff-service';
 
 export default defineComponent({

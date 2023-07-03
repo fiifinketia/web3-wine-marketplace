@@ -269,7 +269,7 @@ export default defineComponent({
               this.status.lastRetry + 300000
             )),
               1000;
-        }) as any; // eslint-disable-line}
+        }) as any; // eslint-disable-line
       }
     },
     StopTimer() {

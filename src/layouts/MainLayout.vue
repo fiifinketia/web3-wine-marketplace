@@ -97,7 +97,7 @@
     @close-help-center="showHelpCenter = false"
   />
 
-  <NotificationsDialog v-model="showNotifications"/>
+  <NotificationsDialog v-model="showNotifications" @open-settings="showNotifications = false; showSettings = true"/>
 
   <ProfileErrors
     v-model="openUserErrorDialog"
@@ -231,7 +231,7 @@
               class="route-btn btn--no-hover q-mx-xs no-padding profile-dropdown"
               icon="app:bell-icon"
             >
-              <NotificationsPopup />
+              <NotificationsPopup @open-settings="showNotifications = false; showSettings = true"/>
               <q-badge
                 v-if="notificationsFetched && !notificationsErrorEncountered && notifications.filter(f => !f.viewed).length > 0"
                 rounded

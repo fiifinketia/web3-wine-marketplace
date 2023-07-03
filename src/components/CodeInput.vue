@@ -45,7 +45,10 @@
 import { defineProps, defineEmits, ref, toRef, onBeforeUpdate } from 'vue';
 
 const props = defineProps({
-  className: String,
+  className: {
+    type: String,
+    default: ''
+  },
   fields: {
     type: Number,
     default: 3,
@@ -76,7 +79,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  title: String,
+  title: {
+    type: String,
+    default: ''
+  }
 });
 
 const emit = defineEmits(['change', 'complete']);

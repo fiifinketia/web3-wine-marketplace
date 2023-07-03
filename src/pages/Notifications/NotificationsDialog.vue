@@ -20,11 +20,11 @@
         </div>
         <div class="row items-center">
           <q-btn
-            v-close-popup
             flat
             dense
             unelevated
             class="btn--no-hover no-padding gear-btn"
+            @click="$emit('open-settings')"
           >
             <img src="../../assets/gear.svg" />
           </q-btn>
@@ -62,6 +62,7 @@ export default defineComponent({
     NotificationsList,
     NotificationsState
   },
+  emits: ['open-settings'],
   data() {
     const notificationsStore = useNotificationsStore();
     return {
