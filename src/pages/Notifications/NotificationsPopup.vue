@@ -19,6 +19,7 @@
       </div>
       <div class="row items-center">
         <q-btn
+          v-close-popup
           flat
           dense
           unelevated
