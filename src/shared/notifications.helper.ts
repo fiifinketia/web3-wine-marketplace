@@ -89,9 +89,9 @@ export class NotificationsHelper {
     } else if (type == NotificationSettingCodeEnum.OFFER_ACCEPTED_ERROR) {
       return `There was a problem with the offer for ${brand} of ${orderPrice} ${orderCurrencyLabel} that you accepted.`
     } else if (type == NotificationSettingCodeEnum.REMOVE_LISTING_PENDING) {
-      return `Your listing of ${orderPrice} ${orderCurrencyLabel} for ${brand} is currently being cancelled!`
+      return `Your listing of ${orderPrice} ${orderCurrencyLabel} for ${brand} is currently being unlisted!`
     } else if (type == NotificationSettingCodeEnum.REMOVE_OFFER_PENDING) {
-      return `Your offer of ${orderPrice} ${orderCurrencyLabel} for ${brand} is currently being cancelled!`
+      return `Your offer of ${orderPrice} ${orderCurrencyLabel} for ${brand} is currently being withdrawn!`
     } else if (type == NotificationSettingCodeEnum.REMOVE_LISTING_CANCELLED) {
       return `You have cancelled your ongoing wine unlisting for ${brand} of ${orderPrice} ${orderCurrencyLabel}`
     } else if (type == NotificationSettingCodeEnum.REMOVE_OFFER_CANCELLED) {

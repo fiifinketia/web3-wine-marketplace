@@ -159,7 +159,7 @@
         >
           <span>
             Your listing of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
-            for <span> {{ notif.brand }} </span> is currently being cancelled!
+            for <span> {{ notif.brand }} </span> is currently being unlisted!
           </span>
         </a>
         <a
@@ -196,7 +196,7 @@
         >
           <span>
             Your offer of <span id="price"> {{ ` ${notif.orderPrice} ${GetCurrencyLabel(notif.orderCurrency)} ` }} </span>
-            for <span> {{ notif.brand }} </span> is currently being cancelled!
+            for <span> {{ notif.brand }} </span> is currently being withdrawn!
           </span>
         </a>
         <a
