@@ -42,6 +42,7 @@
 
 #notif_details > a {
   text-decoration: none !important;
+  cursor: pointer;
 }
 
 #notif_details > a > span {

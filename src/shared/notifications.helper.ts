@@ -86,7 +86,7 @@ export class NotificationsHelper {
       return `Your offer of ${orderPrice} ${orderCurrencyLabel} for ${brand} has been successfully accepted!`
     } else if (type == NotificationSettingCodeEnum.OFFER_ACCEPTED_OLD_OWNER) {
       return `You have successfully accepted an offer for ${brand}. You have received ${orderPrice} ${orderCurrencyLabel}.`
-    } else if (type == NotificationSettingCodeEnum.OFFER_CREATED_ERROR) {
+    } else if (type == NotificationSettingCodeEnum.OFFER_ACCEPTED_ERROR) {
       return `There was a problem with the offer for ${brand} of ${orderPrice} ${orderCurrencyLabel} that you accepted.`
     } else if (type == NotificationSettingCodeEnum.REMOVE_LISTING_PENDING) {
       return `Your listing of ${orderPrice} ${orderCurrencyLabel} for ${brand} is currently being cancelled!`

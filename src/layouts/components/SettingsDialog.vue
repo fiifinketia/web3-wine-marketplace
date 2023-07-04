@@ -229,10 +229,6 @@
                     label="There was a problem with your Wine listing"
                   />
                   <q-checkbox
-                    v-model="notificationSettings.LISTING_CREATED_ERROR"
-                    label="There was a problem with listing your Wine"
-                  />
-                  <q-checkbox
                     v-model="notificationSettings.OFFER_CREATED_ERROR"
                     label="There was a problem with creating your Wine offer"
                   />
