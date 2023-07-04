@@ -54,8 +54,7 @@ const TransactionEventManager = (
   notifID: string
 ) => {
   const clickLink = async (link: string) => {
-    await notificationsStore.updateNotificationAsViewed(notifID);
-    window.location.href = link;
+    notificationsStore.updateNotificationAsViewed(notifID, false, link);
   }
   const screenWidth = window.innerWidth;
   Notify.create({

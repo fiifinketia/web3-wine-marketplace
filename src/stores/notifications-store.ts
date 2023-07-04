@@ -68,15 +68,18 @@ export const useNotificationsStore = defineStore('notificationsStore', {
         this.notificationsFetched = true;
       }
     },
-    async updateNotificationAsViewed(notifID: string) {
-      await axios.put(
-        process.env.MARKETPLACE_API_URL + `/market/notifications/viewed/${notifID}`,
-        { apiKey: APIKeyString }
-      )
-      const notifIndex = this.notifications.findIndex(
-        notif => notif._id == notifID
-      );
-      this.notifications[notifIndex].viewed = true;
+    async updateNotificationAsViewed(notifID: string, isAlreadyViewed: boolean, url: string) {
+      if (!isAlreadyViewed) {
+        await axios.put(
+          process.env.MARKETPLACE_API_URL + `/market/notifications/viewed/${notifID}`,
+          { apiKey: APIKeyString }
+        )
+        const notifIndex = this.notifications.findIndex(
+          notif => notif._id == notifID
+        );
+        this.notifications[notifIndex].viewed = true;
+      }
+      window.location.href = url;
     },
     addMoreNotificationsToView() {
       const startIndex = this.notifications.length;
