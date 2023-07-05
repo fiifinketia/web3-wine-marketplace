@@ -380,7 +380,10 @@ import {
   RemoveFavorites,
 } from 'src/pages/Favourites/services/FavoritesFunctions';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-// import { StartVeriff, VerificationStatus } from 'src/shared/veriff-service';
+import {
+	StartVeriff,
+	// VerificationStatus
+} from 'src/shared/veriff-service';
 // import { HandleUserValidity } from 'src/shared/veriff-service';
 import { GetTokenOwnerAddress } from 'src/shared/web3.helper';
 
