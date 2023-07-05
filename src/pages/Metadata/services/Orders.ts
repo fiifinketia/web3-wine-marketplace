@@ -49,10 +49,11 @@ function GetOrderPrice(isListing: boolean, parameters: OrderParameters) {
   };
 }
 
-export function isInputDateTimeAboveCurrentTime(
-  expDate: string,
-  expTime: string
-): boolean {
+function TimeNow() {
+	return new Date().getTime();
+}
+
+export function isInputDateTimeAboveCurrentTime(expDate: string, expTime: string): boolean {
   const inputDateTime = `${expDate}T${expTime}:00`;
   const inputTimestamp = Math.round(new Date(inputDateTime).getTime() / 1000);
   const currentTimestamp = Math.round(new Date().getTime() / 1000);
@@ -152,61 +153,62 @@ export async function CreateERC721Listing(
     .parseUnits(<string>listingPrice, decimalOfToken)
     .toString();
 
-  const { seaport, network } = await GetWeb3();
-  const blockNumber = await GetBlockNumber();
-  const { executeAllActions } = await seaport.createOrder(
-    {
-      offer: [
-        // owner's offer
-        {
-          itemType: ItemType.ERC721,
-          token: smartContractAddress,
-          identifier: tokenID,
-        },
-      ],
-      consideration: [
-        // owner's ask
-        {
-          amount: listingPrice,
-          recipient: address,
-          token: listingCurrency,
-        },
-      ],
-      fees: [
-        {
-          basisPoints: Number(process.env.WIV_FEE),
-          recipient: <string>process.env.WIV_FEE_RECEIVER,
-        },
-      ],
-      endTime: SetExpDate(expirationDate, expirationTime),
-    },
-    address
-  );
-  const order = await executeAllActions();
-  const { transact } = seaport.validate([order]);
-  const txn = await transact();
-  const orderHash = seaport.getOrderHash({ ...order.parameters });
-  const db_Order: OrderModel = {
-    parameters: order.parameters,
-    signature: order.signature,
-    orderHash: orderHash,
-    network: network,
-    from: 'Owner', // process env here
-    contractAddress: smartContractAddress,
-    identifierOrCriteria: tokenID,
-    brand: brand,
-    image: image,
-    nonce: txn.nonce,
-    orderPrice: GetOrderPrice(true, order.parameters).orderPrice,
-    orderCurrency: listingCurrency,
-  };
-  const OrderRequest: CreateOrderRequest = {
-    order: db_Order,
-    blockNumber: blockNumber,
-    apiKey: <string>APIKeyString,
-  };
-  const createOrderURL = <string>process.env.CREATE_ORDER_URL;
-  axios.post(createOrderURL, OrderRequest);
+	const { seaport, network } = await GetWeb3();
+	const blockNumber = await GetBlockNumber();
+	const { executeAllActions } = await seaport.createOrder(
+		{
+			offer: [
+				// owner's offer
+				{
+					itemType: ItemType.ERC721,
+					token: smartContractAddress,
+					identifier: tokenID,
+				},
+			],
+			consideration: [
+				// owner's ask
+				{
+					amount: listingPrice,
+					recipient: address,
+					token: listingCurrency,
+				},
+			],
+			fees: [
+				{
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient: <string> process.env.WIV_FEE_RECEIVER
+				},
+			],
+			endTime: SetExpDate(expirationDate, expirationTime),
+		},
+		address
+	);
+	const order = await executeAllActions();
+	const { transact } = seaport.validate([order]);
+	const txn = await transact();
+	const orderHash = seaport.getOrderHash({ ...order.parameters });
+	const db_Order: OrderModel = {
+		parameters: order.parameters,
+		signature: order.signature,
+		orderHash: orderHash,
+		network: network,
+		from: 'Owner', // process env here
+		contractAddress: smartContractAddress,
+		identifierOrCriteria: tokenID,
+		brand: brand,
+		image: image,
+		nonce: txn.nonce,
+		orderPrice: GetOrderPrice(true, order.parameters).orderPrice,
+		orderCurrency: listingCurrency
+	};
+	const OrderRequest: CreateOrderRequest = {
+		order: db_Order,
+		blockNumber: blockNumber,
+		apiKey: <string> APIKeyString,
+		timestamp: TimeNow()
+	};
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	axios.post(createOrderURL, OrderRequest);
 }
 
 export async function InspectListingStatus(
@@ -288,61 +290,62 @@ export async function CreateERC721Offer(
 
   offerPrice = utils.parseUnits(<string>offerPrice, decimalOfToken).toString();
 
-  const blockNumber = await GetBlockNumber();
-  const { seaport, network } = await GetWeb3();
-  const { executeAllActions } = await seaport.createOrder(
-    {
-      offer: [
-        // buyer's offer
-        {
-          amount: offerPrice,
-          token: offerCurrency,
-        },
-      ],
-      consideration: [
-        // buyer's ask
-        {
-          itemType: ItemType.ERC721,
-          token: smartContractAddress,
-          identifier: tokenID,
-          recipient: address, // recipient for token is the buyer
-        },
-      ],
-      fees: [
-        {
-          basisPoints: Number(process.env.WIV_FEE),
-          recipient: <string>process.env.WIV_FEE_RECEIVER,
-        },
-      ],
-      endTime: SetExpDate(expirationDate, expirationTime),
-    },
-    address
-  );
-  const order = await executeAllActions();
-  const { transact } = seaport.validate([order]);
-  const txn = await transact();
-  const orderHash = seaport.getOrderHash({ ...order.parameters });
-  const db_Order: OrderModel = {
-    parameters: order.parameters,
-    signature: order.signature,
-    orderHash: orderHash,
-    network: network,
-    from: 'Buyer', // process env here
-    contractAddress: smartContractAddress,
-    identifierOrCriteria: tokenID,
-    brand: brand,
-    image: image,
-    orderPrice: offerPrice,
-    orderCurrency: offerCurrency,
-    nonce: txn.nonce,
-  };
-  const OrderRequest: CreateOrderRequest = {
-    order: db_Order,
-    blockNumber: blockNumber,
-    apiKey: <string>APIKeyString,
-  };
-  const createOrderURL = <string>process.env.CREATE_ORDER_URL;
-  await axios.post(createOrderURL, OrderRequest);
+	const blockNumber = await GetBlockNumber();
+	const { seaport, network } = await GetWeb3();
+	const { executeAllActions } = await seaport.createOrder(
+		{
+			offer: [
+				// buyer's offer
+				{
+					amount: offerPrice,
+					token: offerCurrency,
+				},
+			],
+			consideration: [
+				// buyer's ask
+				{
+					itemType: ItemType.ERC721,
+					token: smartContractAddress,
+					identifier: tokenID,
+					recipient: address, // recipient for token is the buyer
+				},
+			],
+			fees: [
+				{
+					basisPoints: Number(process.env.WIV_FEE),
+					recipient: <string> process.env.WIV_FEE_RECEIVER
+				},
+			],
+			endTime: SetExpDate(expirationDate, expirationTime),
+		},
+		address
+	);
+	const order = await executeAllActions();
+	const { transact } = seaport.validate([order]);
+	const txn = await transact();
+	const orderHash = seaport.getOrderHash({ ...order.parameters });
+	const db_Order: OrderModel = {
+		parameters: order.parameters,
+		signature: order.signature,
+		orderHash: orderHash,
+		network: network,
+		from: 'Buyer', // process env here
+		contractAddress: smartContractAddress,
+		identifierOrCriteria: tokenID,
+		brand: brand,
+		image: image,
+		orderPrice: offerPrice,
+		orderCurrency: offerCurrency,
+		nonce: txn.nonce
+	};
+	const OrderRequest: CreateOrderRequest = {
+		order: db_Order,
+		blockNumber: blockNumber,
+		apiKey: <string> APIKeyString,
+		timestamp: TimeNow()
+	};
+	const createOrderURL = <string>process.env.CREATE_ORDER_URL;
+	await axios.post(createOrderURL, OrderRequest);
 }
 
 export async function FulfillBasicOrder(
@@ -463,7 +466,8 @@ export async function CancelSingleOrder(
 			order: cancelOrderDetails,
 			status: TXN_STATUS.TRANSACTION_PENDING,
 			notificationCode: from == 'Owner' ? NOTIFICATION_CODES.LISTING_REMOVED : NOTIFICATION_CODES.OFFER_REMOVED,
-			apiKey: <string> APIKeyString
+			apiKey: <string> APIKeyString,
+			timestamp: TimeNow()
 		}
     axios.post(cancelOrderURL, cancelRequest);
   } else {

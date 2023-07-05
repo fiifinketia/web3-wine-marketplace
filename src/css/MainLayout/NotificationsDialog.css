@@ -1,0 +1,148 @@
+.notifications-container {
+  min-width: 360px;
+  background: rgba(242, 242, 243, 0.85);
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(20px);
+  padding-bottom: 24px;
+}
+
+.notifications-header {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  line-height: 0;
+}
+
+.notifications-options-container {
+  background: #FFF;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+  margin-bottom: 15px;
+}
+
+.notifications-options-main {
+  height: 70px;
+  padding: 16px;
+  gap: 10px;
+}
+
+.notifications-search {
+  flex-grow: 1;
+}
+
+.notifications-search .q-field__native {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  color: #212131;
+}
+
+.notifications-radio {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  line-height: 0;
+}
+
+#notif_details > a {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+#notif_details > a > span {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  color: rgba(33, 33, 49, 1);
+}
+
+#notif_details > a > span > span {
+  font-family: 'ProximaNova-Bold';
+}
+
+#price {
+  color: rgba(53, 134, 255, 1);
+}
+
+#notif_details {
+  gap: 10px;
+}
+
+.notif-container {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+
+#unviewed-notif {
+  background: rgba(255, 255, 255, 1);
+}
+
+#viewed-notif {
+  background: linear-gradient(
+    92.74deg,
+    rgba(255, 255, 255, 0.6) -14.01%,
+    rgba(255, 255, 255, 0) 31.71%,
+    rgba(255, 255, 255, 0) 61.4%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+}
+
+.notif-time {
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  color: rgba(157, 157, 157, 1);
+}
+
+.notif-link {
+  font-family: 'ProximaNova-Regular';
+  font-size: 18px;
+  line-height: 20px;
+  text-decoration: underline;
+  color: #3586ffd1;
+  cursor: pointer;
+}
+
+.notif-state-text {
+  font-family: 'ProximaNova-Bold';
+  color: rgba(53, 134, 255, 1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.notif-error-btn {
+  justify-content: center;
+  align-items: center;
+  width: 147px;
+  height: 48px;
+  background: linear-gradient(270.59deg, #33335B 25.46%, #83E0B3 206.28%);
+  border-radius: 6px;
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.notif-error-btn:hover {
+  background: #212131;
+  opacity: 0.8;
+}
+
+.notification-popup {
+  border: 1px solid rgba(94, 151, 236, 0.27);
+  background: rgba(255, 255, 255, 1);
+  min-width: 270px;
+  max-width: 450px;
+  border-radius: 16px;
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2);
+}
+
+.notification-popup * .q-btn {
+  font-family: 'ProximaNova-Bold';
+  font-size: 18px;
+  line-height: 20px;
+  text-decoration: underline;
+  text-transform: none !important;
+  color: #3586ffd1;
+  cursor: pointer;
+}
+
+div.q-notification__message {
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color:rgba(33, 33, 49, 1);
+  line-height: 0.8;
+}

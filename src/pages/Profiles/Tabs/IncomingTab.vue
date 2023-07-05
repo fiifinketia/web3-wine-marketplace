@@ -151,7 +151,11 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
-import { StartVeriff } from 'src/shared/veriff-service';
+import {
+  // HandleUserValidity,
+  StartVeriff,
+  // VerificationStatus,
+} from 'src/shared/veriff-service';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();

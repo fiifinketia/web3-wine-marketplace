@@ -1,6 +1,6 @@
 <template>
-  <HeadlineComponent />
-  <ExclusiveOffers class="q-px-md" @shepherd-remove-step="id => shepherd.removeStep(id)" />
+  <HeadlineComponent style="z-index: 0"/>
+  <ExclusiveOffers class="q-px-md" style="z-index: 0" @shepherd-remove-step="id => shepherd.removeStep(id)" />
   <Calculator />
   <!-- <TrendingWines class="trending" /> -->
   <!-- <PartnershipWines class="partnership" /> -->

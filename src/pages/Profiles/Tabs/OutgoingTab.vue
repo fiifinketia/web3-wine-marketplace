@@ -149,7 +149,11 @@ import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
-import { StartVeriff } from 'src/shared/veriff-service';
+import {
+  // HandleUserValidity,
+  StartVeriff,
+  // VerificationStatus,
+} from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
