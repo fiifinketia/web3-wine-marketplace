@@ -3,6 +3,7 @@ import { Ref, ref } from 'vue';
 import axios from 'axios';
 import { utils } from 'ethers';
 import { Dialog } from 'quasar';
+import { JwtPayload, decode } from 'jsonwebtoken';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 import { APIKeyString } from 'src/boot/axios';
@@ -27,6 +28,7 @@ export const useUserStore = defineStore(
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
+    const accessToken = ref('');
     // const showSettingsDialog: Ref<boolean> = ref(false);
     const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(
       undefined
@@ -34,49 +36,28 @@ export const useUserStore = defineStore(
 
     const connectWallet = async () => {
       const accounts = await magic.wallet.connectWithUI();
-      // const signedMessage = await web3.eth.personal.sign(
-      //   'Here is a basic message!',
-      //   accounts[0],
-      //   ''
-      // );
-      // console.log('signedMessage:', signedMessage);
+      const web3Provider = await GetWeb3Provider();
+      const message = 'Connect wallet to WiV Marketplace?';
+      const signedMessage = await web3Provider.getSigner().signMessage(message);
       const address = utils.getAddress(accounts[0]);
-      const date = new Date().getTime();
       try {
-        const getUser = await axios.get(
-          process.env.MARKETPLACE_USERS_API +
-            '/profile/' +
-            address +
-            '?t=' +
-            date
+        const avatar = generateAvatar(address);
+        const getUser = await axios.post(
+          process.env.MARKETPLACE_USERS_API + '/connect',
+          {
+            walletAddress: address,
+            signature: signedMessage,
+            apiKey: APIKeyString,
+            avatar,
+          }
         );
         if (!!getUser.data) {
-          user.value = getUser.data;
-          walletAddress.value = address;
-          return;
+          const payload = decode(getUser.data.access_token) as JwtPayload;
+          user.value = payload.user as UserModel;
+          walletAddress.value = payload.user.walletAddress;
+          accessToken.value = getUser.data.access_token;
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (error.response && error.response.status === 404) {
-          try {
-            const avatar = generateAvatar(address);
-
-            const newUser = await axios.post(
-              process.env.MARKETPLACE_USERS_API + '/create',
-              {
-                walletAddress: address,
-                avatar,
-                apiKey: APIKeyString,
-              }
-            );
-            walletAddress.value = address;
-            user.value = newUser.data;
-            return;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            throw new Error('Unable to connect wallet');
-          }
-        }
+      } catch (error) {
         throw error;
       }
     };
