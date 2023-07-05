@@ -204,9 +204,9 @@ import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
 import ListingUnavailable from 'src/pages/SharedPopups/ListingUnavailable.vue';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 import {
-  HandleUserValidity,
+  // HandleUserValidity,
   StartVeriff,
-  VerificationStatus,
+  // VerificationStatus,
 } from 'src/shared/veriff-service';
 
 setCssVar('custom', '#5e97ec45');

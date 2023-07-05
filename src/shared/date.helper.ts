@@ -53,7 +53,7 @@ function ConvertUnixToDate(date: string) {
 
 function ConvertUnixToTime(date: string) {
   const newDate = GetUnixAsDate(date);
-  let meridiem = ''
+  let meridiem = '';
   let hours = +('0' + newDate.getHours()).slice(-2);
   const minutes = ('0' + newDate.getMinutes()).slice(-2);
 
@@ -70,9 +70,39 @@ function ConvertUnixToTime(date: string) {
   return `${hours}:${minutes} ${meridiem}`
 }
 
+function ConvertTimestampToString(timestamp: number) {
+  const date = new Date(timestamp);
+
+  let meridiem = '';
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  let hours = +('0' + date.getHours()).slice(-2);
+  const minutes = ('0' + date.getMinutes()).slice(-2);
+
+  if (hours > 12) {
+    hours = hours - 12
+    meridiem = 'PM'
+  } else if (hours == 0) {
+    hours = 12;
+    meridiem = 'AM'
+  } else {
+    meridiem = 'AM'
+  }
+
+  const formattedString = `${month} ${day}, ${year} | ${hours}:${minutes} ${meridiem}`;
+  return formattedString;
+}
+
 export {
   GetCurrentDate,
   GetValidTime,
   ConvertUnixToDate,
-  ConvertUnixToTime
+  ConvertUnixToTime,
+  ConvertTimestampToString
 }

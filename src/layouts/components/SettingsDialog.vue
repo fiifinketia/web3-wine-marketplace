@@ -155,9 +155,7 @@
                 >
                   Select the notifications you would like to receive.
                 </div>
-                <div
-                  class="column q-mt-sm q-mb-md settings-notification-options"
-                >
+                <div class="column q-mt-sm q-mb-md q-pr-md settings-notification-options">
                   <q-checkbox
                     v-model="notificationSettings.OFFER_ACCEPTED_NEW_OWNER"
                     label="Your offer has been accepted"
@@ -229,10 +227,6 @@
                   <q-checkbox
                     v-model="notificationSettings.LISTING_CREATED_ERROR"
                     label="There was a problem with your Wine listing"
-                  />
-                  <q-checkbox
-                    v-model="notificationSettings.LISTING_CREATED_ERROR"
-                    label="There was a problem with listing your Wine"
                   />
                   <q-checkbox
                     v-model="notificationSettings.OFFER_CREATED_ERROR"

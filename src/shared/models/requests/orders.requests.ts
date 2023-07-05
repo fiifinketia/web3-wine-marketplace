@@ -7,12 +7,14 @@ interface CancelOrderRequest {
   status: TXN_STATUS;
   notificationCode: NOTIFICATION_CODES.LISTING_REMOVED | NOTIFICATION_CODES.OFFER_REMOVED;
   apiKey: string;
+  timestamp: number;
 }
 
 interface CreateOrderRequest {
   order: OrderModel;
   blockNumber: number;
   apiKey: string;
+  timestamp: number;
 }
 
 interface FulfillOrderRequest extends TokenIdentifier{

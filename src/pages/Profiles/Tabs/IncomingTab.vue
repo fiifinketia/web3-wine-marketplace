@@ -152,9 +152,9 @@ import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
 import {
-  HandleUserValidity,
+  // HandleUserValidity,
   StartVeriff,
-  VerificationStatus,
+  // VerificationStatus,
 } from 'src/shared/veriff-service';
 import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 

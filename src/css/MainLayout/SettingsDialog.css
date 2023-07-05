@@ -96,7 +96,7 @@
 	flex-wrap: nowrap;
 }
 
-[aria-checked='true'] {
+.settings-notification-options [aria-checked='true'] {
   font-family: 'ProximaNova-Bold';
 }
 

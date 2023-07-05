@@ -15,6 +15,7 @@
             <img
               :src="token.image"
               class="exclusive-card-image clickable-image"
+              @click="openNFT(token)"
             />
             <div
               class="q-pb-sm exclusive-card-brand column justify-center"

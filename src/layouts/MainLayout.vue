@@ -82,6 +82,7 @@
   <BurgerMenu
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
+    @openNotifications="showNotifications = true"
     @logout="logout"
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
@@ -95,6 +96,8 @@
     :open-tab="openHelpCenterTab"
     @close-help-center="showHelpCenter = false"
   />
+
+  <NotificationsDialog v-model="showNotifications" @open-settings="showNotifications = false; showSettings = true"/>
 
   <ProfileErrors
     v-model="openUserErrorDialog"
@@ -224,11 +227,17 @@
               dense
               :ripple="false"
               unelevated
-              disable
               flat
-              class="route-btn btn--no-hover q-mx-xs no-padding"
+              class="route-btn btn--no-hover q-mx-xs no-padding profile-dropdown"
+              icon="app:bell-icon"
             >
-              <img src="../../public/images/bell-icon.svg" class="icons" />
+              <NotificationsPopup @open-settings="showNotifications = false; showSettings = true"/>
+              <q-badge
+                v-if="notificationsFetched && !notificationsErrorEncountered && notifications.filter(f => !f.viewed).length > 0"
+                rounded
+                floating
+                color="red"
+              />
             </q-btn>
             <q-btn
               class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
@@ -449,6 +458,7 @@ import transakSDK from '@transak/transak-sdk';
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';
 import '../css/MainLayout/MyWallet.css';
+import '../css/MainLayout/NotificationsDialog.css';
 import 'src/css/reusable.css';
 
 import { useUserStore } from 'src/stores/user-store';
@@ -456,12 +466,16 @@ import BurgerMenu from './components/BurgerMenu.vue';
 import WalletDialog from './components/WalletDialog.vue';
 import SettingsDialog from './components/SettingsDialog.vue';
 import HelpCenterDialog from './components/HelpCenterDialog.vue';
+import NotificationsPopup from 'src/pages/Notifications/NotificationsPopup.vue'
+import NotificationsDialog from 'src/pages/Notifications/NotificationsDialog.vue'
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
+import { useNotificationsStore } from 'src/stores/notifications-store';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -469,6 +483,8 @@ export default defineComponent({
     BurgerMenu,
     WalletDialog,
     SettingsDialog,
+    NotificationsPopup,
+    NotificationsDialog,
     HelpCenterDialog,
     ProfileErrors: ProfileErrors,
   },
@@ -485,6 +501,7 @@ export default defineComponent({
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      showNotifications: false,
       openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
@@ -500,6 +517,13 @@ export default defineComponent({
 
       openUserErrorDialog: false,
     };
+  },
+  computed: {
+    ...mapState(useNotificationsStore, {
+      notifications: store => store.storedNotifications,
+      notificationsFetched: store => store.notificationsFetched,
+      notificationsErrorEncountered: store => store.notificationsErrorEncountered
+    })
   },
   watch: {
     $route: {
