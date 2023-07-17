@@ -12,7 +12,10 @@
       :tab-error="'outgoing'"
       @reload-tab="FetchOutgoingOffers(outgoingSortKey, outgoingBrandFilter)"
     />
-    <div v-else class="column items-center full-width q-mx-none profile-page-container">
+    <div
+      v-else
+      class="column items-center full-width q-mx-none profile-page-container"
+    >
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -53,16 +56,16 @@
           />
           <OutgoingRows
             :outgoing-offers="outgoingOffers"
-            @delete-offer="offer => OpenDeleteDialog(offer)"
-            @edit-offer="offer => OpenEditDialog(offer)"
+            @delete-offer="offer => TransactionPreValidator('UNOFFER', offer)"
+            @edit-offer="offer => TransactionPreValidator('OFFER', offer)"
           />
         </div>
         <div v-else class="full-width" style="width: 100vw">
           <OutgoingColumns />
           <OutgoingRows
             :outgoing-offers="outgoingOffers"
-            @delete-offer="offer => OpenDeleteDialog(offer)"
-            @edit-offer="offer => OpenEditDialog(offer)"
+            @delete-offer="offer => TransactionPreValidator('UNOFFER', offer)"
+            @edit-offer="offer => TransactionPreValidator('OFFER', offer)"
           />
         </div>
       </div>
@@ -85,6 +88,11 @@
         @remove-offer="val => RemoveRow(val)"
         @outgoing-error-dialog="HandleError"
         @offer-created="SetTimeoutOnOfferProcessedDialog()"
+        @open-terms-and-conditions="showTermsAndConditions = true"
+        @open-kyc-dialog="
+          openEditDialog = false;
+          openKYCUpdate = true;
+        "
       />
       <OutgoingDialogDelete
         v-model="openDeleteDialog"
@@ -92,6 +100,10 @@
         @outgoing-delete-close="openDeleteDialog = false"
         @remove-offer="val => RemoveRow(val)"
         @outgoing-error-dialog="HandleError"
+        @open-kyc-dialog="
+          openEditDialog = false;
+          openKYCUpdate = true;
+        "
       />
       <ErrorDialog
         v-model="openErrorDialog"
@@ -103,6 +115,17 @@
         v-model="openOrderCompletedDialog"
         :order-type="'offer'"
       />
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="
+          sessionDetails =>
+            BeginUserVerification(
+              sessionDetails.continueSession,
+              sessionDetails.lastSessionURL
+            )
+        "
+      />
+      <wiv-toc-dialog v-model="showTermsAndConditions" close-button />
     </div>
   </q-page>
 </template>
@@ -125,6 +148,12 @@ import OutgoingColumns from '../Columns/OutgoingColumns.vue';
 import OutgoingRows from '../Rows/OutgoingRows.vue';
 import { mapState } from 'pinia';
 import OrderProcessed from 'src/pages/SharedPopups/OrderProcessed.vue';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
+import {
+  // HandleUserValidity,
+  StartVeriff,
+  // VerificationStatus,
+} from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -139,6 +168,7 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     OutgoingColumns: OutgoingColumns,
     OutgoingRows: OutgoingRows,
+    KYCUpdate: KYCUpdate,
   },
   emits: ['outgoingAmount'],
   data() {
@@ -164,14 +194,20 @@ export default defineComponent({
       errorTitle: '',
       errorMessage: '',
       openErrorDialog: false,
-      openOrderCompletedDialog: false
+      openOrderCompletedDialog: false,
+      showTermsAndConditions: false,
+
+      openKYCUpdate: false,
     };
   },
   computed: {
     ...mapState(ordersStore, {
       outgoingOffers: store => store.getOutgoingOffers,
       brandSearched: store => store.getOutgoingBrandFilterStatus,
-      tabKey: store => store.getOutgoingTabKey
+      tabKey: store => store.getOutgoingTabKey,
+    }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus,
     }),
   },
   watch: {
@@ -193,8 +229,8 @@ export default defineComponent({
     tabKey: {
       async handler() {
         await this.FetchOutgoingOffers('', '');
-      }
-    }
+      },
+    },
   },
   async mounted() {
     const outgoingOffersRequestStatus =
@@ -211,7 +247,7 @@ export default defineComponent({
     SetTimeoutOnOfferProcessedDialog() {
       this.openOrderCompletedDialog = true;
       setTimeout(() => {
-        this.openOrderCompletedDialog = false
+        this.openOrderCompletedDialog = false;
       }, 3000);
     },
     async FetchOutgoingOffers(sortKey: string, brandFilter: string) {
@@ -274,6 +310,68 @@ export default defineComponent({
         errorTitle: 'Unable to fetch your orders',
         errorMessage: 'There are no orders under your current filter',
       });
+    },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(
+        <string>this.userStore.user?.walletAddress,
+        '',
+        continueSession,
+        lastSessionURL
+      );
+    },
+    async TransactionPreValidator(
+      dialog: string,
+      offer: OutgoingOffersResponse
+    ) {
+      if (!this.userStore.user?.email) {
+        this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+      }
+			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      //   try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.TransactionPreValidator(dialog, offer);
+      //     } else {
+      //       this.openKYCUpdate = true;
+      //     }
+      //   } catch {
+      //     this.HandleError({
+      //       errorType: 'validation_failed',
+      //       errorTitle: 'Failed to verify user KYC status.',
+      //       errorMessage: 'Please try again later.',
+      //     });
+      //   }
+      // }
+			else {
+        try {
+          if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user?.isLegal) {
+            switch (dialog) {
+              case 'OFFER':
+                this.OpenEditDialog(offer);
+                break;
+              case 'UNOFFER':
+                this.OpenDeleteDialog(offer);
+                break;
+            }
+          } else {
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
+          }
+        }
+      }
     },
   },
 });

@@ -62,10 +62,7 @@
 
   <!---------------------------- /MY WALLET ---------------------------->
   <!---------------------------- SETTINGS ---------------------------->
-  <div
-    v-if="userStore.user && showSettings"
-    class="settings-background row justify-end hidden"
-  >
+  <div v-if="userStore.user" class="row justify-end hidden">
     <SettingsDialog
       v-model="showSettings"
       @close-settings="showSettings = false"
@@ -73,47 +70,19 @@
   </div>
 
   <!-- Terms and Conditions -->
-  <q-dialog
+  <wiv-toc-dialog
     v-model="showTermsAndConditions"
     full-height
     class="terms-and-conditions-background"
-  >
-    <q-card class="terms-and-conditions-container column justify-between no-wrap">
-      <q-card-section>
-        <div class="overflow-scroll" v-html="TermsAndConditions">
-	</div>
-      </q-card-section>
-      <q-card-actions class="row terms-and-conditions-btns justify-end">
-        <q-btn
-          class="terms-and-conditions-btn-decline q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          outline
-          @click="showTermsAndConditions = false"
-        >
-          Decline
-        </q-btn>
-        <q-btn
-          class="terms-and-conditions-btn-accept q-ma-xs"
-          color="primary"
-          size="lg"
-          unelevated
-          no-caps
-          @click="acceptTermsAndConditions"
-        >
-          Accept
-        </q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    @toc-accepted="showTermsAndConditions = false"
+  />
 
   <!-- /Terms and Conditions -->
 
   <BurgerMenu
     v-if="showBurgerMenu"
     @closeBurgerMenu="onBurgerMenu('close')"
+    @openNotifications="showNotifications = true"
     @logout="logout"
     @openConnectWallet="showConnectWallet = true"
     @openMyWallet="showMyWallet = true"
@@ -127,6 +96,8 @@
     :open-tab="openHelpCenterTab"
     @close-help-center="showHelpCenter = false"
   />
+
+  <NotificationsDialog v-model="showNotifications" @open-settings="showNotifications = false; showSettings = true"/>
 
   <ProfileErrors
     v-model="openUserErrorDialog"
@@ -218,11 +189,24 @@
             </div>
           </q-btn-dropdown>
           <div clickable class="text-h6">
-            Stats <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            Stats
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
           <div clickable class="text-h6">
             Storefront
-            <q-badge rounded color="red" align="top" label="Soon" style="padding-bottom: 5px"/>
+            <q-badge
+              rounded
+              color="red"
+              align="top"
+              label="Soon"
+              style="padding-bottom: 5px"
+            />
           </div>
         </div>
         <div class="row">
@@ -235,7 +219,6 @@
               flat
               class="route-btn btn--no-hover q-mx-xs no-padding"
               :to="{ path: '/favorites' }"
-              @click="favoritesPageClick"
             >
               <img src="../../public/images/favs-icon.svg" class="icons" />
             </q-btn>
@@ -244,11 +227,17 @@
               dense
               :ripple="false"
               unelevated
-              disable
               flat
-              class="route-btn btn--no-hover q-mx-xs no-padding"
+              class="route-btn btn--no-hover q-mx-xs no-padding profile-dropdown"
+              icon="app:bell-icon"
             >
-              <img src="../../public/images/bell-icon.svg" class="icons" />
+              <NotificationsPopup @open-settings="showNotifications = false; showSettings = true"/>
+              <q-badge
+                v-if="notificationsFetched && !notificationsErrorEncountered && notifications.filter(f => !f.viewed).length > 0"
+                rounded
+                floating
+                color="red"
+              />
             </q-btn>
             <q-btn
               class="btn-dropdown-menu profile-dropdown q-mx-xs route-btn btn--no-hover"
@@ -274,11 +263,7 @@
                     <q-avatar size="24px">
                       <img :src="userStore.user?.avatar" />
                     </q-avatar>
-                    {{
-                      userStore.user !== null
-                        ? userStore.user.username
-                        : walletAddress.slice(0, 10)
-                    }}
+                    {{ userStore.user?.username || walletAddress.slice(0, 10) }}
                   </q-chip>
                 </q-toolbar>
                 <q-list>
@@ -371,7 +356,7 @@
                     v-close-popup
                     clickable
                     href="https://dwc.wiv-tech.org/#/"
-		                target="_blank"
+                    target="_blank"
                   >
                     <q-item-section>
                       <q-item-label class="text-no-wrap"
@@ -401,12 +386,20 @@
                     >
                       <div>
                         <q-list class="q-ml-md">
-                          <q-item v-close-popup clickable @click="openHelpCenter('support')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('support')"
+                          >
                             <q-item-section>
                               <q-item-label>contact us</q-item-label>
                             </q-item-section>
                           </q-item>
-                          <q-item v-close-popup clickable @click="openHelpCenter('topics')">
+                          <q-item
+                            v-close-popup
+                            clickable
+                            @click="openHelpCenter('topics')"
+                          >
                             <q-item-section>
                               <q-item-label>Faqs</q-item-label>
                             </q-item-section>
@@ -465,6 +458,7 @@ import transakSDK from '@transak/transak-sdk';
 import '../css/MainLayout/MainLayout.scss';
 import '../css/MainLayout/ConnectWallet.css';
 import '../css/MainLayout/MyWallet.css';
+import '../css/MainLayout/NotificationsDialog.css';
 import 'src/css/reusable.css';
 
 import { useUserStore } from 'src/stores/user-store';
@@ -472,13 +466,16 @@ import BurgerMenu from './components/BurgerMenu.vue';
 import WalletDialog from './components/WalletDialog.vue';
 import SettingsDialog from './components/SettingsDialog.vue';
 import HelpCenterDialog from './components/HelpCenterDialog.vue';
+import NotificationsPopup from 'src/pages/Notifications/NotificationsPopup.vue'
+import NotificationsDialog from 'src/pages/Notifications/NotificationsDialog.vue'
 import { useNFTStore } from 'src/stores/nft-store';
 import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 import { useTourStore } from 'src/stores/tour-state';
 import { FormatNumber } from 'src/shared/currency.helper';
 import ProfileErrors from 'src/pages/SharedPopups/ProfileErrors.vue';
-import TermsAndConditionsJson from '../TermsAndConditions.json';
+import { useNotificationsStore } from 'src/stores/notifications-store';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -486,8 +483,10 @@ export default defineComponent({
     BurgerMenu,
     WalletDialog,
     SettingsDialog,
+    NotificationsPopup,
+    NotificationsDialog,
     HelpCenterDialog,
-    ProfileErrors: ProfileErrors
+    ProfileErrors: ProfileErrors,
   },
   data() {
     const userStore = useUserStore();
@@ -497,12 +496,12 @@ export default defineComponent({
     const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
     return {
       showBurgerMenu: false,
-      TermsAndConditions: TermsAndConditionsJson.data,
       showMyWallet: false,
       showSettings: false,
       showHelpCenter: false,
       showConnectWallet: false,
       showTermsAndConditions: false,
+      showNotifications: false,
       openHelpCenterTab: ref('topics'),
       userStore,
       nftStore,
@@ -516,8 +515,15 @@ export default defineComponent({
 
       FormatNumber,
 
-      openUserErrorDialog: false
+      openUserErrorDialog: false,
     };
+  },
+  computed: {
+    ...mapState(useNotificationsStore, {
+      notifications: store => store.storedNotifications,
+      notificationsFetched: store => store.notificationsFetched,
+      notificationsErrorEncountered: store => store.notificationsErrorEncountered
+    })
   },
   watch: {
     $route: {
@@ -547,6 +553,7 @@ export default defineComponent({
       this.ClearStore();
     } else {
       this.ReInitAmplitude(this.walletAddress);
+      require('src/shared/notifications-service');
       const walletBalances = await this.userStore.getWalletBalance();
       if (walletBalances) {
         const {
@@ -559,9 +566,9 @@ export default defineComponent({
     }
   },
   methods: {
-    openHelpCenter(tab: string){
-	this.openHelpCenterTab = tab;
-	this.showHelpCenter = true;
+    openHelpCenter(tab: string) {
+      this.openHelpCenterTab = tab;
+      this.showHelpCenter = true;
     },
     async fundWallet() {
       let transak = new transakSDK({
@@ -604,9 +611,17 @@ export default defineComponent({
       this.showConnectWallet = false;
       if (!this.tourStore.termsAndConditionsAgreed) {
         this.showTermsAndConditions = true;
-        return;
+        this.$watch('tourStore.termsAndConditionsAgreed', async newValue => {
+          if (newValue) {
+            await this._connectWallet();
+          }
+        });
+      } else {
+        await this._connectWallet();
       }
-      //TODO: Catch errors
+    },
+
+    async _connectWallet() {
       try {
         await this.userStore.connectWallet();
         if (!this.$route.query?.next) {
@@ -619,15 +634,9 @@ export default defineComponent({
         this.openUserErrorDialog = true;
         setTimeout(() => {
           this.openUserErrorDialog = false;
-        }, 2000)
+        }, 2000);
         throw error;
       }
-    },
-
-    acceptTermsAndConditions() {
-      this.tourStore.setTermsAndConditionsAgreed();
-      this.showTermsAndConditions = false;
-      this.connectWallet();
     },
 
     setupWallet() {

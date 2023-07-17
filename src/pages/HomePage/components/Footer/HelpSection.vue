@@ -24,12 +24,12 @@
     >
       Privacy Policy
     </router-link>
-    <router-link
-      to=""
+    <div
       class="item-text footer-normal q-pt-sm"
+			@click="$emit('open-terms-and-conditions')"
     >
       Terms and Conditions
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -39,7 +39,8 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   emits: [
     'openHelpCenterSupport',
-    'openHelpCenterFaqs'
+    'openHelpCenterFaqs',
+		'open-terms-and-conditions',
   ]
 })
 </script>

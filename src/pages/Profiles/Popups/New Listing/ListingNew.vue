@@ -41,7 +41,9 @@
               />
               <img
                 src="../../../../assets/loading-brand.svg"
-                :style="$q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'"
+                :style="
+                  $q.screen.width > 1025 ? 'height: 25px' : 'height: 30px'
+                "
                 class="q-my-md"
               />
               <img src="../../../../assets/loading-pricebox.svg" />
@@ -70,9 +72,7 @@
           <img src="../../../../assets/exit-light.svg" />
         </q-btn>
       </div>
-      <NewListingError
-        @refetch-nfts="ReFetchNFTs()"
-      />
+      <NewListingError @refetch-nfts="ReFetchNFTs()" />
     </q-card>
     <q-card
       v-else-if="listableNFTs.length > 0"
@@ -117,6 +117,8 @@
         @listing-edit-close="openListingDialog = false"
         @listable-nft-listed="listed => UpdateListableNFTWithPrice(listed)"
         @listing-exists="alreadyListed => UpdateListableNFT(alreadyListed)"
+        @open-terms-and-conditions="$emit('open-terms-and-conditions')"
+        @open-kyc-dialog="OpenKYCDialog()"
       />
       <ListingStatusDialog
         v-model="openListingStatusDialog"
@@ -196,7 +198,10 @@ import { defineComponent, PropType } from 'vue';
 import 'src/css/Profile/Component/newListing.css';
 import ListingNewHeader from './ListingNewHeader.vue';
 import ListingNewNFTs from './ListingNewNFTs.vue';
-import { ListableToken, TokenIdentifier } from 'src/shared/models/entities/NFT.model';
+import {
+  ListableToken,
+  TokenIdentifier,
+} from 'src/shared/models/entities/NFT.model';
 import ListingEdit from '../../../SharedPopups/ListingEdit.vue';
 import ProfileErrors from '../../../SharedPopups/ProfileErrors.vue';
 import SidebarNormal from '../Sidebar/SidebarNormal.vue';
@@ -205,6 +210,12 @@ import { useListableFilters } from 'src/stores/listable-filters';
 import ListingNewEmpty from './ListingNewEmpty.vue';
 import ListingNewError from './ListingNewError.vue';
 import ListingExists from 'src/pages/SharedPopups/ListingExists.vue';
+import { mapState } from 'pinia';
+import { useUserStore } from 'src/stores/user-store';
+// import {
+//   HandleUserValidity,
+//   VerificationStatus,
+// } from 'src/shared/veriff-service';
 
 export default defineComponent({
   components: {
@@ -216,14 +227,21 @@ export default defineComponent({
     ErrorDialog: ProfileErrors,
     SidebarNormal: SidebarNormal,
     SidebarMobile: SidebarMobile,
-    ListingStatusDialog: ListingExists
+    ListingStatusDialog: ListingExists,
   },
   props: {
     listableNFTs: { type: [] as PropType<ListableToken[]>, default: [] },
     erroredOut: { type: Boolean, default: false },
-    isLoading: { type: Boolean, default: false }
+    isLoading: { type: Boolean, default: false },
   },
-  emits: ['listable-nft-listed', 'refetch-nfts', 'listing-warning-processed', 'listing-warning-processing'],
+  emits: [
+    'listable-nft-listed',
+    'refetch-nfts',
+    'listing-warning-processed',
+    'listing-warning-processing',
+    'open-terms-and-conditions',
+    'open-kyc-dialog',
+  ],
   data() {
     const listableFiltersStore = useListableFilters();
     return {
@@ -244,17 +262,64 @@ export default defineComponent({
 
       listableFiltersStore,
 
-      openListingStatusDialog: false
+      openListingStatusDialog: false,
+			userStore: useUserStore(),
     };
   },
+  computed: {
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus,
+      userEmail: store => store.user?.email,
+    }),
+  },
   methods: {
-    OpenListingDialog(token: ListableToken) {
-      this.image = token.image;
-      this.brand = token.brand;
-      this.smartContractAddress = token.contractAddress;
-      this.network = token.network;
-      this.tokenID = token.identifierOrCriteria;
-      this.openListingDialog = true;
+    async OpenListingDialog(token: ListableToken) {
+      if (!this.userEmail) {
+        this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+      }
+			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      //   try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.OpenListingDialog(token);
+      //     } else {
+      //       this.OpenKYCDialog();
+      //     }
+      //   } catch {
+      //     this.HandleError({
+      //       errorType: 'validation_failed',
+      //       errorTitle: 'Failed to verify user KYC status.',
+      //       errorMessage: 'Please try again later.',
+      //     });
+      //   }
+      // }
+			else {
+        try {
+          if (!this.userStore.user?.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user?.isLegal) {
+            this.image = token.image;
+            this.brand = token.brand;
+            this.smartContractAddress = token.contractAddress;
+            this.network = token.network;
+            this.tokenID = token.identifierOrCriteria;
+            this.openListingDialog = true;
+          } else {
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
+          }
+        }
+      }
     },
     HandleError(err: {
       errorType: string;
@@ -272,7 +337,13 @@ export default defineComponent({
     UpdateListableNFTWithPrice(listed: ListableToken) {
       this.$emit('listable-nft-listed', listed);
     },
-    UpdateListableNFT(listed: TokenIdentifier & { listingPrice: string, currency: string, transactionStatus: boolean }) {
+    UpdateListableNFT(
+      listed: TokenIdentifier & {
+        listingPrice: string;
+        currency: string;
+        transactionStatus: boolean;
+      }
+    ) {
       // If still processing, emit listing-warning-processing
       if (!listed.transactionStatus) {
         this.$emit('listing-warning-processing', listed);
@@ -287,8 +358,12 @@ export default defineComponent({
       }
     },
     ReFetchNFTs() {
-      this.$emit('refetch-nfts')
-    }
+      this.$emit('refetch-nfts');
+    },
+    OpenKYCDialog() {
+      this.openListingDialog = false;
+      this.$emit('open-kyc-dialog');
+    },
   },
 });
 </script>

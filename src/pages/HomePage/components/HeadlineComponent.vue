@@ -8,7 +8,7 @@
       class="grape-img-right"
       src="../../../../public/images/Grape-right.svg"
     />
-    <q-img
+    <img
       class="grape-mobile"
       src="../../../../public/images/Grape-mobile.svg"
     />
@@ -31,8 +31,9 @@
         unelevated
         outline
         no-caps
-        disable
         style="width: 254px;"
+				href="https://wiv.io/about/"
+				target="_blank"
       >
         <span class="app-secondary-btn-text">
           Learn about WiV

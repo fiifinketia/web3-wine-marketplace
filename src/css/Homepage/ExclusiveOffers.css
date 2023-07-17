@@ -4,52 +4,68 @@
 	font-weight: 900;
 	font-size: 32px;
 	line-height: 48px;
-
 	text-align: center;
 	letter-spacing: 0.03em;
-
 	color: #212131;
 }
 
-
-.card-title-text {
-	font-family: 'Obviously';
-	font-style: normal;
-	font-weight: 460;
-	font-size: 18px;
-	line-height: 27px;
-	letter-spacing: 0.02em;
-	color: #212131;
+.exclusive-card {
+	font-family: 'Obviously-Bolder';
+  font-size: 18px;
+  font-weight: 460;
 }
 
-.exclusive-offer-container {
-max-width: 100%;
-overflow-x: scroll;
-overflow-y: scroll;
+.exclusive-card-container {
+	transition: 0.2s;
+}
 
-	margin: 0 auto;
+.exclusive-card-container:hover {
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+}
+
+.exclusive-card-image {
+  border-radius: 6px !important;
+}
+
+.exclusive-card-brand {
+  height: 57px;
+  line-height: 1.2;
+}
+
+.exclusive-price-header {
+  line-height: 1;
+  font-family: 'ProximaNova-Regular';
+  font-size: 16px;
+  color: #9d9d9d;
+}
+
+.exclusive-price-container {
+  background: linear-gradient(
+    109.05deg,
+    rgba(255, 255, 255, 0.13) 15.61%,
+    rgba(255, 255, 255, 0.04) 98.78%
+  );
+  border: 1px solid rgba(94, 151, 236, 0.27) !important;
+  backdrop-filter: blur(20px);
+  border-radius: 6px !important;
+  padding-left: 8px;
+  padding-right: 8px;
+	border: 1px solid rgba(94, 151, 236, 0.27) !important;
+	border-radius: 6px !important;
+}
+
+.exclusive-price-text-b-active,
+.exclusive-price-text-b-inactive {
+  font-family: 'ProximaNova-Bold';
+  font-size: 20px;
+  color: rgba(33, 33, 49, 1);
+  line-height: 0.8;
 }
 
 .exclusive-offer-container::-webkit-scrollbar {
   width: 0px;
-  height: 8px; /* Optional: add a height to increase the clickable area */
-}
-
-.exclusive-card-container {
-  min-width: 150px !important;
-  min-height: 150px !important;
-}
-
-.card-starting-from-title {
-	font-family: 'ProximaNova-Regular';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 19px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.5px;
-	color: #9d9d9d;
+  height: 8px;
 }
 
 .exclusive-price-container {
@@ -57,79 +73,50 @@ overflow-y: scroll;
   border-radius: 6px !important;
 }
 
-.go-to-marketplace {
-	font-family: 'ProximaNova-Bold';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 20px;
-	line-height: 24px;
-	text-align: center;
-	letter-spacing: 0.02em;
-
-	color: #ffffff;
-
-	width: 230px;
-	background: linear-gradient(102.17deg, #3586ff -1.74%, #83e0b3 139.41%);
-	border-radius: 6px;
-	border: none;
-	cursor: pointer;
-	padding: 4px 6px !important;
-}
-
 .go-to-marketplace-wrapper {
 	width: 86.5%;
 	margin: 0 auto;
 }
 
-.exclusive-wine-name {
-	font-family: 'Obviously-Bold';
-	font-style: normal;
-line-height: 1;
-
-
-letter-spacing: 0.02em;
-
-
-
-
-	color: #212131;
-order: 1;
-align-self: stretch;
-display: -webkit-box;
--webkit-box-orient: vertical;
--webkit-line-clamp: 1;
-max-height: 1;
-
-}
-
-.exclusive-starting-from {
-	font-family: 'ProximaNova-All';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 19px;
-	display: flex;
-	align-items: center;
-	letter-spacing: 0.5px;
-	color: #9d9d9d;
-}
-
-.exclusive-price {
-	font-family: 'ProximaNova-Bold';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 20px;
-	line-height: 24px;
-	display: flex;
-	align-items: center;
-color: #212131;
-
-}
-
-
-/* @media screen and (max-width: 1255px) {
+@media screen and (min-width: 1025px) {
+  .exclusive-card-container {
+    width: 23%;
+  }
 	.exclusive-offer-container {
-		width: 95%;
+		max-width: 80vw;
+		margin: 0 auto;
 	}
-} */
+}
+
+@media screen and (max-width: 1024px) {
+  .exclusive-card-container {
+    width: 32%;
+  }
+	.exclusive-offer-container {
+		width: 100%;
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+  .exclusive-card-container {
+    width: 48%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .exclusive-price-text-b-inactive {
+    font-size: 14px;
+  }
+  .exclusive-price-text-b-active {
+    font-size: 16px;
+  }
+  .exclusive-price-header {
+    font-size: 14px;
+  }
+  .exclusive-card {
+    font-size: 16px;
+  }
+}
 

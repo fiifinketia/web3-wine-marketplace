@@ -35,29 +35,32 @@
         label="Status"
         header-class="dark-blue-border rounded-borders q-my-sm sidebar-title"
       >
-        <q-list class="sidebar-active-border rounded-borders q-my-sm">
+        <q-list
+          id="status-filter"
+          class="sidebar-active-border rounded-borders q-my-sm"
+        >
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.listedOnly"
             :options="wineFiltersStore.listedOnlyOptions"
             type="radio"
             class="sidebar-options"
           />
-          <div style="padding-left: 30px">
-            <q-option-group
-              v-model="wineFiltersStore.currency"
-              :options="wineFiltersStore.currencyOptions"
-              type="checkbox"
-              class="sidebar-options"
-              :disable="disableCurrencies"
-            >
-              <template #label="opt">
-                <div class="row items-center q-gutter-x-xs">
-                  <q-icon :name="opt.icon" size="1.5em" />
-                  <span>{{ opt.label }}</span>
-                </div>
-              </template>
-            </q-option-group>
-          </div>
+          <q-option-group
+            id="filter-to-top"
+            v-model="wineFiltersStore.currency"
+            :options="wineFiltersStore.currencyOptions"
+            type="checkbox"
+            class="sidebar-options inner-group"
+            :disable="disableCurrencies"
+          >
+            <template #label="opt">
+              <div class="row items-center q-gutter-x-xs">
+                <q-icon :name="opt.icon" size="1.5em" />
+                <span>{{ opt.label }}</span>
+              </div>
+            </template>
+          </q-option-group>
         </q-list>
       </q-expansion-item>
 
@@ -68,6 +71,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.sortedAtoZ"
             :options="wineFiltersStore.sortedAtoZOptions"
             type="radio"
@@ -86,6 +90,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.type"
             :options="wineFiltersStore.typeOptions"
             type="checkbox"
@@ -118,6 +123,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.brand"
             :options="brandOptions"
             type="checkbox"
@@ -151,6 +157,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.producer"
             :options="producerOptions"
             type="checkbox"
@@ -184,6 +191,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.country"
             :options="countryOptions"
             type="checkbox"
@@ -217,6 +225,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.region"
             :options="regionOptions"
             type="checkbox"
@@ -250,6 +259,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.appellation"
             :options="appellationOptions"
             type="checkbox"
@@ -320,6 +330,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.wineCase"
             :options="caseOptions"
             type="checkbox"
@@ -339,6 +350,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.format"
             :options="formatOptions"
             type="checkbox"
@@ -358,6 +370,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.investmentGrade"
             :options="investmentGradeOptions"
             type="checkbox"
@@ -391,6 +404,7 @@
         </q-input>
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.LWIN"
             :options="LWINOptions"
             type="checkbox"
@@ -410,6 +424,7 @@
       >
         <q-list class="sidebar-active-border rounded-borders q-my-sm">
           <q-option-group
+            id="filter-to-top"
             v-model="wineFiltersStore.heritage"
             :options="heritageOptions"
             type="checkbox"
@@ -473,11 +488,11 @@ export default defineComponent({
   },
   computed: {
     disableCurrencies() {
-      return !!(this.wineFiltersStore.listedOnly == 'Unlisted')
+      return !!(this.wineFiltersStore.listedOnly == 'Unlisted');
     },
     ...mapState(useWineFilters, {
-      filtersFetched: store => store.filtersFetched
-    })
+      filtersFetched: store => store.filtersFetched,
+    }),
   },
   watch: {
     brandQuery: {

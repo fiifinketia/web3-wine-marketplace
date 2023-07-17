@@ -1,69 +1,103 @@
 import { defineStore } from 'pinia';
-import { Ref, ref } from 'vue';
-import axios from 'axios';
-import { NotificationsSettings } from 'src/components/models';
+import axios, { AxiosResponse } from 'axios';
+import { ExtendedNotificationModel, FetchNotificationsRequest, NotificationsSettings } from 'src/shared/models/entities/notifications.model';
 import { APIKeyString } from 'src/boot/axios';
 
-export const useNotificationsStore = defineStore(
-  'notificationsStore',
-  () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const settings: Ref<NotificationsSettings | undefined> = ref<NotificationsSettings | undefined>(undefined);
-
-    const getNotificationsSettings = async (walletAddress: string) => {
-     try {
+export const useNotificationsStore = defineStore('notificationsStore', {
+  state: () => ({
+    notificationSettings: {} as NotificationsSettings,
+    notifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    storedNotifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    searchedNotifications: [] as ExtendedNotificationModel<'veriff' | 'transaction'>[],
+    settingsFetched: false,
+    notificationsFetched: false,
+    notificationsErrorEncountered: false,
+    sortKey: 'latest' as 'latest' | 'earliest',
+    filterKey: 'all' as 'all' | 'sale' | 'offers',
+    isSearching: false
+  }),
+  getters: {
+    getSettings: state => state.notificationSettings,
+    getUnviewedNotifications: state => state.notifications.filter(f => !f.viewed).length
+  },
+  actions: {
+    async getNotificationsSettings (walletAddress: string) {
+      try {
         const updatedSettings = await axios.get(
           process.env.MARKETPLACE_API_URL + '/market/notifications/settings/' + walletAddress,
         );
-       settings.value = updatedSettings.data;
+        this.notificationSettings = updatedSettings.data;
+        this.settingsFetched = true;
       //  eslint-disable-next-line
       } catch (error: any) {
-	      if(!settings.value) {
-          settings.value = {
-            offerMade: false,
-            email: undefined,
-            offerReceived: false,
-            offerAccepted: false,
-            orderFulfilled: false,
-            offerOutbidded: false,
-            wineChanged: false
-          }
-        }
         throw new Error(error);
       }
-    }
-
-    const saveNotificationsSettings = async (walletAddress: string) => {
+    },
+    async saveNotificationSettings(walletAddress: string) {
       try {
-        const updatedSettings = await axios.put(
-          process.env.MARKETPLACE_NOTIFICATIONS_API + '/settings/' + walletAddress,
-          {
-            offerMade: settings.value?.offerMade,
-            email: settings.value?.email || undefined,
-            offerReceived: settings.value?.offerReceived,
-            offerAccepted: settings.value?.offerAccepted,
-            offerOutbidded: settings.value?.offerOutbidded,
-            orderFulfilled: settings.value?.orderFulfilled,
-            wineChanged: settings.value?.wineChanged
-          },
-          {
-            headers: {
-              'x-api-key': APIKeyString,
-            },
-          }
+        await axios.put(
+          process.env.MARKETPLACE_API_URL + '/market/notifications/settings/' + walletAddress,
+          { updateSettingsDto: this.notificationSettings, apiKey: APIKeyString }
         );
-       	settings.value = updatedSettings.data;
       // eslint-disable-next-line
       } catch (error: any) {
         throw new Error(error);
       }
-    };
+    },
+    async getUserNotifications(walletAddress: string) : Promise<void> {
+      const req: FetchNotificationsRequest = {
+        walletAddress: walletAddress,
+        order: this.sortKey,
+        filter: this.filterKey,
+        apiKey: <string> process.env.MKTPLACE_API_KEY
+      }
+      try {
+        this.notificationsErrorEncountered = false;
+        this.notificationsFetched = false;
+        this.notifications = [];
+        const response : AxiosResponse<ExtendedNotificationModel<'veriff' | 'transaction'>[]> = await axios.post(
+          process.env.MARKETPLACE_API_URL + '/market/notifications/retrieve',
+          req
+        );
+        this.storedNotifications = response.data;
+        this.addMoreNotificationsToView();
+      } catch (error: any) { // eslint-disable-line
+        this.notificationsErrorEncountered = true;
+        throw new Error(error);
+      } finally {
+        this.notificationsFetched = true;
+      }
+    },
+    async updateNotificationAsViewed(notifID: string, isAlreadyViewed: boolean, url: string) {
+      if (!isAlreadyViewed) {
+        await axios.put(
+          process.env.MARKETPLACE_API_URL + `/market/notifications/viewed/${notifID}`,
+          { apiKey: APIKeyString }
+        )
+        const notifIndex = this.notifications.findIndex(
+          notif => notif._id == notifID
+        );
+        this.notifications[notifIndex].viewed = true;
+      }
+      window.location.href = url;
+    },
+    addMoreNotificationsToView() {
+      const startIndex = this.notifications.length;
+      const endIndex = Math.min(startIndex + 2, this.storedNotifications.length);
 
-   return {
-      saveNotificationsSettings,
-      getNotificationsSettings,
-      settings,
-    };
+      for (let i = startIndex; i < endIndex; i++) {
+        this.notifications.push(this.storedNotifications[i])
+      }
+
+      return this.storedNotifications.length > this.notifications.length;
+    },
+    searchNotification(searchString: string) {
+      if (!searchString) {
+        this.isSearching = false;
+      } else {
+        this.searchedNotifications = this.storedNotifications.filter((obj) => obj.message.includes(searchString));
+        this.isSearching = true;
+      }
+    }
   },
-  { persist: false }
-);
+});

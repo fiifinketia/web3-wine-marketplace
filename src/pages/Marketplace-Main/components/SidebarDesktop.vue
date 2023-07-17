@@ -13,6 +13,7 @@
     }"
     :bar-style="{
       right: '2px',
+      top: '10px',
       borderRadius: '9px',
       backgroundColor: '#027be3',
       width: '9px',

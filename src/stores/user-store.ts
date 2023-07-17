@@ -2,18 +2,33 @@ import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import axios from 'axios';
 import { utils } from 'ethers';
+import { Dialog } from 'quasar';
 import { generateRandomColor } from 'src/utils';
 import { UserModel } from 'src/components/models';
 import { APIKeyString } from 'src/boot/axios';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 
+const generateAvatar = (name: string) => {
+  const getColors = [
+    generateRandomColor(),
+    generateRandomColor(),
+    generateRandomColor(),
+  ].join(',');
+
+  const avatar = `https://source.boringavatars.com/beam/40/${name}?colors=${getColors}`;
+  return avatar;
+};
+
 export const useUserStore = defineStore(
   'userStore',
   () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const walletAddress: Ref<string> = ref('');
-    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(undefined);
+    // const showSettingsDialog: Ref<boolean> = ref(false);
+    const user: Ref<UserModel | undefined> = ref<UserModel | undefined>(
+      undefined
+    );
     const connectWallet = async () => {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
@@ -22,41 +37,80 @@ export const useUserStore = defineStore(
       const date = new Date().getTime();
       try {
         const getUser = await axios.get(
-          process.env.MARKETPLACE_USERS_API + '/profile/' + address + '?t=' + date
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            address +
+            '?t=' +
+            date
         );
         if (!!getUser.data) {
           user.value = getUser.data;
           walletAddress.value = address;
           return;
         }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        if(error.response && error.response.status === 404) {
+        if (error.response && error.response.status === 404) {
           try {
-            const getColors = [
-              generateRandomColor(),
-              generateRandomColor(),
-              generateRandomColor(),
-            ].join(',');
-
-            const avatar = `https://source.boringavatars.com/beam/40/${address}?colors=${getColors}`
+            const avatar = generateAvatar(address);
 
             const newUser = await axios.post(
               process.env.MARKETPLACE_USERS_API + '/create',
               {
                 walletAddress: address,
                 avatar,
-                apiKey: APIKeyString
+                apiKey: APIKeyString,
               }
-            )
+            );
             walletAddress.value = address;
             user.value = newUser.data;
             return;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any){
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
             throw new Error('Unable to connect wallet');
           }
         }
+        throw error;
+      }
+    };
+
+    const fetchUser = async () => {
+      const date = new Date().getTime();
+      try {
+        const getUser = await axios.get(
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            walletAddress.value +
+            '?t=' +
+            date
+        );
+        if (!!getUser.data) {
+          user.value = getUser.data;
+          walletAddress.value = getUser.data.walletAddress;
+          return;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        throw error;
+      }
+    };
+
+    const fetchUserByAddress = async (address: string) => {
+      const date = new Date().getTime();
+      try {
+        const getUser = await axios.get<UserModel>(
+          process.env.MARKETPLACE_USERS_API +
+            '/profile/' +
+            address +
+            '?t=' +
+            date
+        );
+        return {
+          username: getUser.data.username || address,
+          avatar: getUser.data.avatar || generateAvatar(address),
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
         throw error;
       }
     };
@@ -67,16 +121,31 @@ export const useUserStore = defineStore(
         {
           username,
           apiKey: APIKeyString,
-        },
+        }
+      );
+      user.value = updatedUser.data;
+    };
+
+    const updateLegalAge = async (isLegal: boolean) => {
+      const updatedUser = await axios.put(
+        process.env.MARKETPLACE_USERS_API + '/update/' + walletAddress.value,
+        {
+          isLegal,
+          apiKey: APIKeyString,
+        }
       );
       user.value = updatedUser.data;
     };
 
     const checkConnection = async () => {
-      const connectedAccounts: string[] = await window.ethereum.request({
-        method: 'eth_accounts',
-      });
-      if (connectedAccounts.length == 0) {
+      try {
+        const connectedAccounts: string[] = await window.ethereum.request({
+          method: 'eth_accounts',
+        });
+        if (connectedAccounts.length == 0) {
+          walletAddress.value = '';
+        }
+      } catch {
         walletAddress.value = '';
       }
     };
@@ -84,9 +153,11 @@ export const useUserStore = defineStore(
     // eslint-disable-next-line
     const uploadAvatar = async (formData: any) => {
       try {
-	      formData.append('apiKey', APIKeyString)
+        formData.append('apiKey', APIKeyString);
         await axios.post(
-          process.env.MARKETPLACE_USERS_API + '/upload-image/' + walletAddress.value,
+          process.env.MARKETPLACE_USERS_API +
+            '/upload-image/' +
+            walletAddress.value,
           formData,
           {
             headers: {
@@ -95,7 +166,7 @@ export const useUserStore = defineStore(
           }
         );
         const updatedUser = await axios.get(
-          process.env.MARKETPLACE_USERS_API+ '/profile/' + walletAddress.value,
+          process.env.MARKETPLACE_USERS_API + '/profile/' + walletAddress.value
         );
         user.value = updatedUser.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,15 +180,27 @@ export const useUserStore = defineStore(
       const signer = WindowWeb3Provider?.getSigner();
       if (!!signer) {
         const [wivaBalance, usdtBalance, usdcBalance] = await Promise.all([
-          GetBalanceByCurrency(<string> process.env.WIVA_CURRENCY, signer, walletAddress.value),
-          GetBalanceByCurrency(<string> process.env.USDT_CURRENCY, signer, walletAddress.value),
-          GetBalanceByCurrency(<string> process.env.USDC_CURRENCY, signer, walletAddress.value)
+          GetBalanceByCurrency(
+            <string>process.env.WIVA_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
+          GetBalanceByCurrency(
+            <string>process.env.USDT_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
+          GetBalanceByCurrency(
+            <string>process.env.USDC_CURRENCY,
+            signer,
+            walletAddress.value
+          ),
         ]);
         return {
           _wivaBalance: wivaBalance,
           _usdtBalance: usdtBalance,
-          _usdcBalance: usdcBalance
-        }
+          _usdcBalance: usdcBalance,
+        };
       }
       return undefined;
     };
@@ -126,18 +209,58 @@ export const useUserStore = defineStore(
       return walletAddress.value;
     };
 
+    async function confirmAge() {
+      let dismissed = false;
+      try {
+        Dialog.create({
+          title: 'Confirm Age',
+          message: 'Are 21 years or older?',
+          cancel: 'No',
+          persistent: true,
+          color: 'primary',
+          ok: 'Yes',
+        })
+          .onOk(async () => {
+            await updateLegalAge(true);
+            dismissed = true;
+          })
+          .onCancel(() => (dismissed = true));
+        await new Promise<void>(resolve => {
+          const interval = setInterval(() => {
+            if (dismissed) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 100);
+        });
+        return user.value?.isLegal || false;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    // const setSettingsDialog = (show = false) => {
+    //   showSettingsDialog.value = show;
+    // };
+
     const $reset = () => {
       (walletAddress.value = ''), (user.value = undefined);
+      // (showSettingsDialog.value = false);
     };
 
     return {
       walletAddress,
+      // showSettingsDialog,
+      // setSettingsDialog,
       connectWallet,
+      fetchUser,
+      fetchUserByAddress,
       updateUsername,
       uploadAvatar,
       getWalletBalance,
       getWalletAddress,
       checkConnection,
+      confirmAge,
       user,
       $reset,
     };

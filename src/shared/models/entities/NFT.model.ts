@@ -1,7 +1,7 @@
 interface TokenIdentifier {
-  readonly contractAddress: string;
-  readonly identifierOrCriteria: string;
-  readonly network: string;
+  contractAddress: string;
+  identifierOrCriteria: string;
+  network: string;
 }
 
 interface ListableToken extends TokenIdentifier {

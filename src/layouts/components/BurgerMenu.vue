@@ -58,6 +58,9 @@
         class="icons"
         src="../../../public/images/bell-icon.svg"
         alt="bell-icon"
+        @click="
+          $emit('openNotifications');
+        "
       />
       <img
         class="icons"
@@ -88,7 +91,17 @@ import { ordersStore } from 'src/stores/orders-store';
 import { TokenIdentifier } from 'src/shared/models/entities/NFT.model';
 export default defineComponent({
   name: 'BurgerMenu',
-  emits: ['closeBurgerMenu', 'clicked', 'openConnectWallet', 'openMyWallet', 'openSettings', 'openHelpCenterSupport', 'openHelpCenterFaqs', 'logout'],
+  emits: [
+    'closeBurgerMenu',
+    'clicked',
+    'openConnectWallet',
+    'openMyWallet',
+    'openSettings',
+    'openHelpCenterSupport',
+    'openHelpCenterFaqs',
+    'logout',
+    'openNotifications'
+  ],
   data() {
     const userStore = useUserStore();
     const nftStore = useNFTStore();

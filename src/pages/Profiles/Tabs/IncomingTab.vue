@@ -12,7 +12,10 @@
       :tab-error="'trading'"
       @reload-tab="FetchIncomingOffers(incomingSortKey, incomingBrandFilter)"
     />
-    <div v-else class="column items-center full-width q-mx-none profile-page-container">
+    <div
+      v-else
+      class="column items-center full-width q-mx-none profile-page-container"
+    >
       <div
         v-if="!emptyRequest"
         class="column items-center"
@@ -100,6 +103,7 @@
           @accept-offer="
             req => AcceptOffer(req.orderHash, req.brand, req.image, req.token)
           "
+          @open-terms-and-conditions="showTermsAndConditions = true"
         />
       </div>
       <div v-else class="column items-center">
@@ -109,7 +113,17 @@
         v-model="openAcceptedOrderDialog"
         :order-accepted="'offer'"
       />
-      <OngoingTransactionDialog v-model="ongoingTxn"/>
+      <OngoingTransactionDialog v-model="ongoingTxn" />
+      <KYCUpdate
+        v-model="openKYCUpdate"
+        @start-veriff="
+          sessionDetails =>
+            BeginUserVerification(
+              sessionDetails.continueSession,
+              sessionDetails.lastSessionURL
+            )
+        "
+      />
     </div>
   </q-page>
 </template>
@@ -137,6 +151,12 @@ import IncomingRows from '../Rows/IncomingRows.vue';
 import { mapState } from 'pinia';
 import OrderAccepted from 'src/pages/SharedPopups/OrderAccepted.vue';
 import TxnOngoing from 'src/pages/SharedPopups/TxnOngoing.vue';
+import {
+  // HandleUserValidity,
+  StartVeriff,
+  // VerificationStatus,
+} from 'src/shared/veriff-service';
+import KYCUpdate from 'src/pages/SharedPopups/KYCUpdate.vue';
 
 const nftStore = useNFTStore();
 
@@ -152,7 +172,8 @@ export default defineComponent({
     AcceptedOfferDialog: OrderAccepted,
     IncomingColumns: IncomingColumns,
     IncomingRows: IncomingRows,
-    OngoingTransactionDialog: TxnOngoing
+    OngoingTransactionDialog: TxnOngoing,
+    KYCUpdate: KYCUpdate,
   },
   emits: ['incomingAmount'],
 
@@ -178,6 +199,8 @@ export default defineComponent({
       openErrorDialog: false,
       openConfirmDialog: false,
       openAcceptedOrderDialog: false,
+      showTermsAndConditions: false,
+      openKYCUpdate: false,
 
       orderHash: '',
       brand: '',
@@ -186,7 +209,7 @@ export default defineComponent({
       currency: '',
       offer: '',
 
-      ongoingTxn: false
+      ongoingTxn: false,
     };
   },
 
@@ -194,7 +217,10 @@ export default defineComponent({
     ...mapState(ordersStore, {
       incomingOffers: store => store.getIncomingOffers,
       brandSearched: store => store.getIncomingBrandFilterStatus,
-      tabKey: store => store.getIncomingTabKey
+      tabKey: store => store.getIncomingTabKey,
+    }),
+    ...mapState(useUserStore, {
+      userStatus: store => store.user?.verificationStatus,
     }),
   },
 
@@ -218,8 +244,8 @@ export default defineComponent({
     tabKey: {
       async handler() {
         await this.FetchIncomingOffers('', '');
-      }
-    }
+      },
+    },
   },
 
   async mounted() {
@@ -244,7 +270,7 @@ export default defineComponent({
     ReduceAddress(walletAddress: string) {
       return `${walletAddress.slice(0, 11)}...`;
     },
-    OpenConfirmDialog(
+    async OpenConfirmDialog(
       orderHash: string,
       brand: string,
       image: string,
@@ -252,13 +278,56 @@ export default defineComponent({
       offer: string,
       currency: string
     ) {
-      this.orderHash = orderHash;
-      this.brand = brand;
-      this.image = image;
-      this.token = token;
-      this.offer = offer;
-      this.currency = currency;
-      this.openConfirmDialog = true;
+      if (!this.userStore.user?.email) {
+        this.HandleError({
+          errorType: 'email_unverified',
+          errorTitle: 'User email not verified',
+          errorMessage: 'Please verify your email and try again.',
+        });
+      }
+			// else if (this.userStatus !== VerificationStatus.VERIFIED) {
+      //   try {
+      //     const isVerified = await HandleUserValidity();
+      //     if (isVerified) {
+      //       this.OpenConfirmDialog(
+      //         orderHash,
+      //         brand,
+      //         image,
+      //         token,
+      //         offer,
+      //         currency
+      //       );
+      //     } else {
+      //       this.openKYCUpdate = true;
+      //     }
+      //   } catch (err) {
+      //     this.HandleError(err);
+      //   }
+      // }
+			else {
+        try {
+          if (!this.userStore.user.isLegal) await this.userStore.confirmAge();
+        } catch (error) {
+          throw error;
+        } finally {
+          if (this.userStore.user.isLegal) {
+            this.orderHash = orderHash;
+            this.brand = brand;
+            this.image = image;
+            this.token = token;
+            this.offer = offer;
+            this.currency = currency;
+            this.openConfirmDialog = true;
+          } else {
+            this.HandleError({
+              errorType: 'under_age',
+              errorTitle: 'User is not old enough',
+              errorMessage:
+                'You must be 21 years or older to use make transactions on this site.',
+            });
+          }
+        }
+      }
     },
     async AcceptOffer(
       orderHash: string,
@@ -266,10 +335,16 @@ export default defineComponent({
       image: string,
       token: TokenIdentifier
     ) {
-			if(!this.userStore.user) throw new Error('User not logged in');
+      if (!this.userStore.user) throw new Error('User not logged in');
       try {
         this.SetPreventingExitListener(true);
-        await FulfillBasicOrder(orderHash, brand, true, this.userStore.user, image);
+        await FulfillBasicOrder(
+          orderHash,
+          brand,
+          true,
+          this.userStore.user,
+          image
+        );
         this.RemoveRow(token);
         this.CheckForEmptyRequest();
         this.openAcceptedOrderDialog = true;
@@ -372,6 +447,15 @@ export default defineComponent({
       setTimeout(() => {
         this.openErrorDialog = false;
       }, 2000);
+    },
+    BeginUserVerification(continueSession: boolean, lastSessionURL: string) {
+      this.openKYCUpdate = false;
+      StartVeriff(
+        <string>this.userStore.user?.walletAddress,
+        '',
+        continueSession,
+        lastSessionURL
+      );
     },
   },
 });

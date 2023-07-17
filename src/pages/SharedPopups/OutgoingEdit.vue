@@ -167,15 +167,21 @@
         </div>
       </q-card-section>
 
-      <q-checkbox
-        v-model="acceptTerms"
-        class="q-pb-md"
-        style="align-self: center"
-      >
-        <span class="dialog-terms-conditions">
-          I agree with the Terms and Conditions
-        </span>
-      </q-checkbox>
+			<span class="dialog-terms-conditions">
+				<q-checkbox
+					v-model="acceptTerms"
+					class="q-pb-md"
+					style="align-self: center"
+				/>
+				I agree with the
+				<q-btn
+					class="text-blue-underlined"
+					dense no-caps flat
+					:ripple="false" padding="none"
+					@click="$emit('open-terms-and-conditions');">
+					terms and conditions
+				</q-btn>
+			</span>
 
       <div
         class="q-pb-sm"
@@ -206,7 +212,7 @@
             parseFloat(offerPrice) <= 0 ||
             loadingOffer || !isValidTime
           "
-          @click="CreateNewOrder()"
+          @click="CreateNewOfferAttempt()"
         >
           Make offer
         </q-btn>
@@ -370,11 +376,21 @@
               This is to give permission to make the trade in the future.
             </span>
           </div>
-          <q-checkbox v-model="acceptTerms">
+					<div class="row items-center" style="flex-wrap: nowrap">
             <span class="dialog-terms-conditions">
-              I agree with the Terms and Conditions
-            </span>
-          </q-checkbox>
+							<q-checkbox
+								v-model="acceptTerms"
+							/>
+							I agree with the
+							<q-btn
+								class="text-blue-underlined"
+								dense no-caps flat
+								:ripple="false" padding="none"
+								@click="$emit('open-terms-and-conditions');">
+								terms and conditions
+							</q-btn>
+						</span>
+          </div>
           <div class="row justify-between q-mb-sm">
             <q-btn
               class="dialog-reset"
@@ -397,16 +413,6 @@
             >
               Please Connect Wallet
             </q-btn>
-            <router-link
-              v-else-if="
-                userStore.user.verificationStatus !== 'VERIFIED'
-              "
-              :to="'/profile/' + userStore.user.walletAddress + '/kyc'"
-              class="q-ma-sm q-pa-xs text-warning"
-              :style="$q.screen.width > 600 ? '' : 'width: 100%'"
-            >
-              Complete KYC to offer
-            </router-link>
             <q-btn
               v-else
               class="dialog-confirm"
@@ -418,7 +424,7 @@
                 parseFloat(offerPrice) <= 0 ||
                 loadingOffer || !isValidTime
               "
-              @click="CreateNewOrder()"
+              @click="CreateNewOfferAttempt()"
             >
               Make offer
             </q-btn>
@@ -449,6 +455,7 @@ import OrderExpTimer from './OrderExpTimer.vue';
 import { GetBalanceByCurrency } from 'src/shared/balanceAndApprovals';
 import { WindowWeb3Provider } from 'src/shared/web3.helper';
 import ExpirationInvalid from './ExpirationInvalid.vue';
+import { UserModel } from 'src/components/models';
 
 export default defineComponent({
   components: {
@@ -503,6 +510,8 @@ export default defineComponent({
     'outgoing-edit-close',
     'outgoing-error-dialog',
     'offer-created',
+		'open-terms-and-conditions',
+    'open-kyc-dialog'
   ],
   data() {
     const userStore = useUserStore();
@@ -551,7 +560,9 @@ export default defineComponent({
       usdtBalance: '',
       usdcBalance: '',
       wivaBalance: '',
-      FormatNumber
+      FormatNumber,
+
+      openKYC: false
     };
   },
   computed: {
@@ -580,7 +591,7 @@ export default defineComponent({
         window.removeEventListener('beforeunload', this.PreventExitDuringTxn);
       }
     },
-    async CreateNewOrder() {
+    async CreateNewOfferAttempt() {
       if (!this.userStore.user) throw 'Connect Wallet and Login';
       const isValidExpTime = isInputDateTimeAboveCurrentTime(this.offerExpirationDate, this.offerExpirationTime);
       if (!isValidExpTime) {
@@ -590,9 +601,14 @@ export default defineComponent({
           this.openInvalidTimeDialog = false;
         }, 2000);
         return;
-      }
+      };
+
+      this.SetPreventingExitListener(true);
+      this.CreateOffer();
+    },
+
+    async CreateOffer() {
       try {
-        this.SetPreventingExitListener(true);
         if (!!this.isEdit) {
           await CancelSingleOrder(this.orderHash, this.userStore.walletAddress);
           this.$emit('remove-offer', this.orderHash);
@@ -608,7 +624,7 @@ export default defineComponent({
             <string> this.currency.value,
             this.offerExpirationDate,
             this.offerExpirationTime,
-            this.userStore.user
+            <UserModel> this.userStore.user
           );
           this.$emit('offer-created');
         } catch (err) {

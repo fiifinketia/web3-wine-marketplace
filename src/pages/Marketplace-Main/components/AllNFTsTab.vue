@@ -113,7 +113,7 @@
       :style="qChipRows > 1 ? calculateExtraHeightNFTs(qChipRows) : ''"
       style="padding-top: 0px !important"
       @total-tokens="updateTokenCount"
-      @shepherd-remove-step="(id) =>  shepherd.removeStep(id)"
+      @shepherd-remove-step="id => shepherd.removeStep(id)"
     />
     <q-page-sticky
       id="marketplace-sidebar-xs"
@@ -148,7 +148,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useShepherd, Tour } from 'vue-shepherd'
+import { useShepherd, Tour } from 'vue-shepherd';
 import NFTSelections from './NFT-Selections.vue';
 import SidebarDesktop from './SidebarDesktop.vue';
 import { useWineFilters } from 'src/stores/wine-filters';
@@ -173,7 +173,7 @@ export default defineComponent({
     const generalSearchStore = useGeneralSearch();
     const tourStore = useTourStore();
     const shepherd = useShepherd({
-	useModalOverlay: true,
+      useModalOverlay: true,
     }) as Tour;
     return {
       showToogleButton: this.isMobile() ? ref(true) : ref(false),
@@ -185,7 +185,7 @@ export default defineComponent({
       generalSearch: '',
       qChipRows: 0,
       tourStore,
-      shepherd
+      shepherd,
     };
   },
   watch: {
@@ -275,19 +275,20 @@ export default defineComponent({
             on: screenSize === 'xs' ? 'top' : 'left',
           },
           text: 'You can filter out the particular metadata here.',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Continue',
               action: () => {
                 this.shepherd.next();
-		            this.shepherd.removeStep('marketplace-sidebar');
+                this.shepherd.removeStep('marketplace-sidebar');
               },
             },
             {
               text: 'Skip',
               action: () => {
                 this.tourStore.setMarketplaceCompleted();
-		            this.shepherd.removeStep('marketplace-sidebar');
+                this.shepherd.removeStep('marketplace-sidebar');
                 this.shepherd.cancel();
               },
             },
@@ -300,12 +301,13 @@ export default defineComponent({
             on: 'top',
           },
           text: 'You can select any NFTs here.',
+          classes: 'tour-style',
           buttons: [
             {
               text: 'Finish',
               action: () => {
                 this.shepherd.complete();
-		            this.shepherd.removeStep('marketplace-nfts');
+                this.shepherd.removeStep('marketplace-nfts');
                 this.tourStore.setMarketplaceCompleted();
               },
             },
@@ -313,7 +315,7 @@ export default defineComponent({
         },
       ]);
       this.shepherd.start();
-			this.tourStore.setMarketplaceCompleted();
+      this.tourStore.setMarketplaceCompleted();
     },
     waitForLoad() {
       return new Promise<void>(resolve => {
