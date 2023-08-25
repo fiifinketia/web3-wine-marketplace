@@ -573,7 +573,7 @@ export default defineComponent({
     async fundWallet() {
       let transak = new transakSDK({
         apiKey: process.env.TRANSAK_API_KEY, // Your API Key
-        environment: 'STAGING', // STAGING/PRODUCTION
+        environment: process.env.NODE_ENV == 'production' ? 'PRODUCTION' : 'STAGING', // STAGING/PRODUCTION
         widgetHeight: '625px',
         widgetWidth: '500px',
         // Examples of some of the customization parameters you can pass
