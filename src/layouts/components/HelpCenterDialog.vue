@@ -276,9 +276,9 @@ export default defineComponent({
     async onSubmitMessage() {
       this.sendingMessage = true;
       // Send the code
-      const marketplaceUsersUrl = process.env.MARKETPLACE_API_URL;
+      const marketplaceAPIUrl = process.env.MARKETPLACE_API_URL;
       try {
-        await this.$axios.post(`${marketplaceUsersUrl}/market/messenger`, {
+        await this.$axios.post(`${marketplaceAPIUrl}/market/messenger/send-email`, {
           payload: {
             context: {
               name: this.form.name,
