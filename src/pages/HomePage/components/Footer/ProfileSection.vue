@@ -24,12 +24,12 @@
     >
       Trading History
     </router-link>
-    <router-link
+    <!-- <router-link
       to=""
       class="item-title footer-normal q-pt-md"
     >
       Settings
-    </router-link>
+    </router-link> -->
   </div>
 </template>
 

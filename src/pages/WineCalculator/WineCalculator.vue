@@ -179,7 +179,7 @@
               </div>
             </div>
           </div>
-          <div class="help-section row justify-end">
+          <!-- <div class="help-section row justify-end">
             <q-btn
               class="calc-help-btn"
               no-caps
@@ -188,7 +188,7 @@
             >
               Help
             </q-btn>
-          </div>
+          </div> -->
         </div>
         <div
           v-else-if="calculating === true && calculateWorth === false"
