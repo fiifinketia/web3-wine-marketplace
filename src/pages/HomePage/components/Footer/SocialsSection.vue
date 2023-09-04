@@ -2,13 +2,13 @@
   <div class="column q-gutter-y-md">
     <span class="item-title footer-normal">Integrations</span>
     <div class="row">
-      <a
+      <!-- <a
         href="https://discord.gg/znkRDJDXvr"
         target="_blank"
         class="q-pr-sm"
       >
         <q-img src="../../../../../public/images/discord.svg" width="23px" />
-      </a>
+      </a> -->
       <a
         href="https://twitter.com/wivteam"
         target="_blank"
