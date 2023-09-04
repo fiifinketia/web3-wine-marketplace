@@ -538,24 +538,23 @@ export default defineComponent({
 
       switch (type) {
         case 'low':
-          this.potentialGain =
-            (this.investmentPrincipal * 1.08) ** (Math.floor(this.investmentAge / 12));
+          this.potentialReturn =
+            this.investmentPrincipal * (1.08 ** (Math.floor(this.investmentAge / 12)));
           break;
         case 'medium':
-          this.potentialGain =
-            (this.investmentPrincipal * 2.28) ** (Math.floor(this.investmentAge / 12));
+          this.potentialReturn =
+            this.investmentPrincipal * (2.28 ** (Math.floor(this.investmentAge / 12)));
           break;
         case 'high':
-          this.potentialGain =
-            (this.investmentPrincipal * 3.55) ** (Math.floor(this.investmentAge / 12));
+          this.potentialReturn =
+            this.investmentPrincipal * (3.55 ** (Math.floor(this.investmentAge / 12)));
           break;
         default:
-          this.potentialGain = 0.0;
+          this.potentialReturn = this.investmentPrincipal;
           break;
       }
-      this.potentialReturn = this.investmentPrincipal + this.potentialGain;
       this.percentage =
-        (this.potentialGain /
+        (this.potentialReturn /
           this.investmentPrincipal) *
         100;
       this.showPrice = true;
