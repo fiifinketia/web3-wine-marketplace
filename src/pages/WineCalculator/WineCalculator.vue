@@ -543,11 +543,11 @@ export default defineComponent({
           break;
         case 'medium':
           this.potentialReturn =
-            this.investmentPrincipal * (2.28 ** (Math.floor(this.investmentAge / 12)));
+            this.investmentPrincipal * (1.16 ** (Math.floor(this.investmentAge / 12)));
           break;
         case 'high':
           this.potentialReturn =
-            this.investmentPrincipal * (3.55 ** (Math.floor(this.investmentAge / 12)));
+            this.investmentPrincipal * (1.24 ** (Math.floor(this.investmentAge / 12)));
           break;
         default:
           this.potentialReturn = this.investmentPrincipal;
