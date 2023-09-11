@@ -149,8 +149,6 @@
               </div>
             </q-card-section>
             <q-card-section class="row justify-center">
-              <q-icon name="app:request-call" size="7rem" />
-              <q-icon name="app:chat-us" size="7rem" />
               <q-icon name="app:email-us" size="7rem" />
             </q-card-section>
             <q-form
