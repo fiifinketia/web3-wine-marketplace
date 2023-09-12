@@ -554,9 +554,9 @@ export default defineComponent({
           break;
       }
       this.percentage =
-        (this.potentialReturn /
+        ((this.potentialReturn /
           this.investmentPrincipal) *
-        100;
+        100) - 100;
       this.showPrice = true;
     },
     activateBackButton() {
