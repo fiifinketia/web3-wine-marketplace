@@ -43,10 +43,10 @@
             :class="$q.screen.width <= 470 ? 'q-px-sm' : ''"
           >
             <q-card flat class="column items-center justify-around no-wrap q-gutter-y-sm">
-							<EmailVerification
-								v-if="!userStore.user?.email"
-								class="full-width"
-							/>
+              <EmailVerification
+                v-if="!userStore.user?.email"
+                class="full-width"
+              />
               <VerificationStatus
                 v-else-if="
                   userStore.user?.verificationStatus !==
@@ -54,11 +54,11 @@
                 "
                 class="full-width"
               />
-							<EmailVerification
-								v-if="userStore.user?.email"
-								:change-email="true"
-								class="full-width"
-							/>
+              <EmailVerification
+                v-if="userStore.user?.email"
+                :change-email="true"
+                class="full-width"
+              />
 
               <q-card-section class="column q-mb-md q-mt-lg items-center">
                 <q-avatar size="8em">
@@ -261,7 +261,7 @@
                   "
                 />
 
-                <div
+                <!-- <div
                   class="row q-mb-md q-mt-lg settings-notifications-header justify-center"
                 >
                   Stay Updated with Email Notifications
@@ -274,7 +274,7 @@
                     Your Email
                   </span>
                   <q-input
-                    v-model="email"
+                    v-model="notificationSettings.email"
                     class="q-mb-md settings-actions"
                     outlined
                     dense
@@ -285,8 +285,12 @@
                     label="Verify Email"
                     no-caps
                     unelevated
+                    @click="notificationsStore.saveNotificationSettings(
+                      userStore.walletAddress
+                      )
+                    "
                   />
-                </div>
+                </div> -->
               </q-card-section>
             </q-card>
           </q-tab-panel>
